@@ -17,25 +17,28 @@ function FeaturesAndAmenities({ headerTitle, data,handleModal }: Props) {
 
     return (
         <div className='mt-10'>
-            <ProjectHeader title={headerTitle} />
-            <div className="flex gap-2 mt-3 flex-wrap">
+            <ProjectHeader
+        contentClassName='font-medium text-[18.75px]' 
+            
+            title={headerTitle} />
+            <div className="flex gap-2 mt-[15px] flex-wrap">
                 {
                     visibleData.map((item, index) => (
-                        <div key={index} className="rounded-md gap-3 flex items-center justify-center flex-col w-[120px] h-[120px] p-4 bg-[#F5F5F5] border-[#DEDEDE]">
+                        <div key={index} className="rounded-[3px] gap-[8.25px] flex items-center justify-center flex-col w-[99px] h-[99px] p-4 bg-[#F5F5F5] border-[#DEDEDE]">
                             <Image
-                                height={40}
-                                width={40}
+                                height={25.5}
+                                width={25.5}
                                 src={item.icon}
                                 alt={`Thumbnail ${index}`}
                                 className={`cursor-pointer object-cover`}
                             />
-                            <p className='text-[10px] font-poppins text-center text-black/70'>{item.name}</p>
+                            <p className='text-[9px] font-medium  font-poppins text-center text-black/70'>{item.name}</p>
                         </div>
                     ))
                 }
 
                 {remainingCount > 0 && (
-                    <div onClick={handleModal} className="border-[#DEDEDE] gap-2 text-[#FF1645] flex font-medium font-poppins text-xs px-3 text-center rounded-md justify-center items-center border w-[120px] h-[120px] cursor-pointer">
+                    <div onClick={handleModal} className="border-[#DEDEDE] gap-2 text-[#FF1645] flex font-medium font-poppins text-[11.25px] px-3 text-center rounded-[3px] justify-center items-center border w-[99px] h-[99px] cursor-pointer">
                         +{remainingCount} More Amenities
                     </div>
                 )}

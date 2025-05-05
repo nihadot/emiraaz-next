@@ -4,6 +4,7 @@ import { close_icon, drop_down__red_icon, drop_up_red_icon } from '@/app/assets'
 import Image from 'next/image';
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import clsx from 'clsx';
 
 interface OptionType {
   label: string;
@@ -68,10 +69,10 @@ function SelectOption({ className,options,search, onSelect, clearSelection,label
     <div
       ref={ref}
       onClick={toggleDropdown}
-      className='border flex-1 py-3 rounded w-full px-3 gap-3 text-[13px] border-[#DEDEDE] cursor-pointer h-full flex select-none relative '
+      className='outline flex-1 py-3  rounded w-full px-3 gap-3 text-[13px] outline-[#DEDEDE] cursor-pointer h-full  flex select-none relative '
     >
-      <div className='flex flex-1 justify-between items-center'>
-        <label className='text-nowrap capitalize'>{selected ? selected.label : label}</label>
+      <div className='flex  flex-1 justify-between items-center '>
+        <label className='text-ellipsis no-scrollbar line-clamp-1 overflow-x-auto capitalize text-[12px] font-normal  font-poppins'>{selected ? selected.label : label}</label>
 
         <motion.div
           key={isOpen ? 'up' : 'down'}
@@ -84,17 +85,17 @@ function SelectOption({ className,options,search, onSelect, clearSelection,label
             <Image
               src={isOpen ? drop_up_red_icon : drop_down__red_icon}
               alt='dropdown icon'
-              width={24}
+              width={15} height={15} className={clsx('object-cover',isOpen ? 'rotate-180' : '')}
             />
           ) : (
             <div
-              className='ml-2 text-xs text-red-500 underline cursor-pointer'
+              className='w-6 h-6 items-center justify-center flex  text-xs text-red-500 underline cursor-pointer'
               onClick={(e) => {
                 e.stopPropagation(); // Prevent dropdown toggle
                 handleSelect(null); // Clear selection
               }}
             >
-              <Image src={close_icon} alt='clear icon' width={10} />
+              <Image src={close_icon} alt='clear icon' width={12} height={12} className='object-cover' />
             </div>
           )}
         </motion.div>
@@ -107,7 +108,7 @@ function SelectOption({ className,options,search, onSelect, clearSelection,label
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className={`absolute flex flex-col top-full left-0 mt-2 bg-white border-[#DEDEDE] border rounded shadow-md z-10 p-2 text-sm text-black max-h-[300px] overflow-hidden ${className}`}
+            className={`absolute z-40 flex flex-col top-full left-0 mt-2 bg-white border-[#DEDEDE] border rounded shadow-md p-2 text-sm text-black max-h-[300px] overflow-hidden ${className}`}
           >
             { search && <input
               type='text'

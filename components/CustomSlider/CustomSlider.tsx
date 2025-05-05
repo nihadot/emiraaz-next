@@ -14,7 +14,7 @@ export default function CustomSlider({
   images,
   containerClassName = '',
   imageClassName = '',
-  autoSlideInterval = 3000, // 3 seconds by default
+  autoSlideInterval = 30000, // 3 seconds by default
 }: CustomSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
@@ -72,13 +72,17 @@ export default function CustomSlider({
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {images.map((img, index) => (
-          <Image
-          alt=''
-            key={index}
-            src={img.desktopImage?.secure_url || ''}
-            className={`min-w-full object-cover ${imageClassName}`}
-            draggable={false}
-          />
+          <div key={index} className="relative h-[653px] w-full">
+
+            <Image
+              alt={''}
+              fill
+
+              src={img.desktopImage?.secure_url || ''}
+              className={` object-contain ${imageClassName}`}
+              draggable={false}
+            />
+          </div>
         ))}
       </div>
 

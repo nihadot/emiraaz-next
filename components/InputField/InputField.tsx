@@ -26,7 +26,7 @@ const InputField: React.FC<InputFieldProps> = ({
 }) => {
   return (
     <div
-      className={`flex gap-3 items-center border rounded px-3 py-3 w-full bg-white border-[#DEDEDE] text-[#767676] text-sm ${className}`}
+      className={`flex gap-3 items-center border rounded-[3.5px] px-3 py-3 w-full bg-white border-[#DEDEDE] text-[#767676] text-sm ${className}`}
     >
       {icon && <Image src={icon} alt="icon" width={24} height={24} />}
       <input
@@ -36,7 +36,7 @@ const InputField: React.FC<InputFieldProps> = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="flex-1 outline-none bg-transparent text-gray-800 placeholder:text-gray-400"
+        className="flex-1 outline-none text-[10.5px] font-normal font-poppins bg-transparent text-[#767676] placeholder:text-[#767676]"
         required={required}
       />
     </div>

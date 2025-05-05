@@ -6,12 +6,13 @@ type Props = {
 
 function MapContainer({mapUrl}: Props) {
   return (
-    <div className='flex h-full'>
+    <div className='flex h-full '>
           <iframe
                         width="100%"
                         height="100%"
                         style={{ border: 0 }}
                         loading="lazy"
+                        className='rounded-[3.75px]'
                         src={mapUrl}
                         title="Google Map"
                     ></iframe>

@@ -11,8 +11,8 @@ function CustomSliderUi({shuffledImages}: Props) {
         <div className="">
                         <CustomSlider
                             images={shuffledImages}
-                            containerClassName="max-w-xl mx-auto shadow-lg"
-                            imageClassName="h-[600px]"
+                            containerClassName=""
+                            imageClassName="h-[226.5px]"
                             buttonClassName="hover:bg-white"
                         />
                     </div>

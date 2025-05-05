@@ -16,3 +16,21 @@ export type ProjectType =
 | "land-commercial"
 | "land-residential"
 | "secondary-commercial";
+
+
+export enum FolderName {
+    Developer = "developer",
+    Agent = "agent",
+    VideoThumbnail = "video-thumbnail",
+    Video = "video",
+    OpenHouse = "open-house",
+    Projects = "projects",
+    Layouts = "layouts",
+    QrCode = "qr-code",
+    DesktopImage = "desktop-image",
+    SmallVideo = "small-video",
+    MobileImage = "mobile-image",
+    Thumbnail = "thumbnail",
+    Users = "user",
+    
+}

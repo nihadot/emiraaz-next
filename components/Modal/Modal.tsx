@@ -1,4 +1,3 @@
-// components/Modal.tsx
 import React, { useEffect } from 'react';
 
 interface ModalProps {
@@ -12,19 +11,27 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [onClose]);
+
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.addEventListener('keydown', handleEscape);
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed  inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="relative rounded-md bg-white   mx-4"
+        className="relative rounded-md bg-white mx-4"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -42,3 +49,4 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 };
 
 export default Modal;
+  

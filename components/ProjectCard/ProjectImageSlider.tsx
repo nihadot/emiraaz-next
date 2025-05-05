@@ -6,11 +6,12 @@ import Image from 'next/image';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { black_down_icon, black_right_down_icon } from '@/app/assets';
+import { black_down_icon, black_right_down_icon, down_icon } from '@/app/assets';
 import { AllProjectsItems } from '@/redux/project/types';
-
 function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
+    const prevRef = useRef(null);
     const swiperRef = useRef<any>(null);
+    const nextRef = useRef(null);
 
     const [isBeginning, setIsBeginning] = useState(true);
     const [isEnd, setIsEnd] = useState(false);
@@ -26,43 +27,43 @@ function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
         setIsEnd(swiper.isEnd);
     };
     type ProjectType =
-    | "commercial-residential"
-    | "project-commercial"
-    | "project-residential"
-    | "resale-commercial"
-    | "resale-residential"
-    | "secondary-residential"
-    | "land-commercial"
-    | "land-residential"
-    | "secondary-commercial";
+        | "commercial-residential"
+        | "project-commercial"
+        | "project-residential"
+        | "resale-commercial"
+        | "resale-residential"
+        | "secondary-residential"
+        | "land-commercial"
+        | "land-residential"
+        | "secondary-commercial";
 
-    
+
     const getProjectTypeLabel = (projectType: ProjectType): string => {
         switch (projectType) {
-          case 'commercial-residential':
-            return 'Commercial & Residential';
-          case 'project-commercial':
-            return 'Commercial Project';
-          case 'project-residential':
-            return 'Residential Project';
-          case 'resale-commercial':
-            return 'Commercial Resale';
-          case 'resale-residential':
-            return 'Residential Resale';
-          case 'secondary-residential':
-            return 'Secondary Residential';
-          case 'land-commercial':
-            return 'Commercial Land';
-          case 'land-residential':
-            return 'Residential Land';
-          case 'secondary-commercial':
-            return 'Secondary Commercial';
-          default:
-            // This ensures TypeScript will warn us if we add a new ProjectType but forget to add a label
-            const exhaustiveCheck: never = projectType;
-            return exhaustiveCheck;
+            case 'commercial-residential':
+                return 'Commercial & Residential';
+            case 'project-commercial':
+                return 'Commercial Project';
+            case 'project-residential':
+                return 'Residential Project';
+            case 'resale-commercial':
+                return 'Commercial Resale';
+            case 'resale-residential':
+                return 'Residential Resale';
+            case 'secondary-residential':
+                return 'Secondary Residential';
+            case 'land-commercial':
+                return 'Commercial Land';
+            case 'land-residential':
+                return 'Residential Land';
+            case 'secondary-commercial':
+                return 'Secondary Commercial';
+            default:
+                // This ensures TypeScript will warn us if we add a new ProjectType but forget to add a label
+                const exhaustiveCheck: never = projectType;
+                return exhaustiveCheck;
         }
-      };
+    };
 
     return (
         <div className="relative group  lg:max-w-[350px] w-full rounded h-full">
@@ -75,20 +76,32 @@ function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
                     prevEl: '.image-swiper-button-prev',
                     nextEl: '.image-swiper-button-next',
                 }}
+                onSwiper={(swiper) => {
+                    // Delay navigation assignment until refs are defined
+                    setTimeout(() => {
+                        if (swiper.params.navigation) {
+                            swiper.params.navigation.prevEl = prevRef.current;
+                            swiper.params.navigation.nextEl = nextRef.current;
+                            swiper.navigation.destroy();
+                            swiper.navigation.init();
+                            swiper.navigation.update();
+                        }
+                    });
+                }}
                 modules={[Pagination, Navigation, Keyboard]}
-                onSwiper={handleSwiper}
+
                 onSlideChange={handleSlideChange}
                 className="mySwiper relative w-full h-full"
             >
                 <div className="left-3 absolute z-[1000] top-3">
 
-               { (item.handOverQuarter && item.handOverYear)  &&<div className="bg-white flex text-[10px] items-center rounded-[2px] py-1  px-2">
-                    Handover Date : {item.handOverQuarter} {item.handOverYear} 
-                </div>}
+                    {(item.handOverQuarter && item.handOverYear) && <div className="bg-white font-poppins font-medium flex text-[9.5px] items-center rounded-[2px] py-1  px-2">
+                        Handover Date : {item.handOverQuarter} {item.handOverYear}
+                    </div>}
 
-                { (item.projectType)  &&<div className="bg-white mt-1  w-fit flex text-[10px] items-center rounded-[2px] py-1  px-2">
-                    {getProjectTypeLabel(item.projectType)} 
-                </div>}
+                    {(item.projectType) && <div className="bg-white mt-1  w-fit flex font-poppins font-medium text-[9.5px] items-center rounded-[2px] py-1  px-2">
+                        {getProjectTypeLabel(item.projectType)}
+                    </div>}
                 </div>
 
                 {item.mainImages.length > 0 &&
@@ -99,38 +112,41 @@ function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
                                 className="object-cover"
                                 fill
                                 alt="project image"
-
                             />
                         </SwiperSlide>
                     ))}
             </Swiper>
 
+
+
             <button
-                className={`image-swiper-button-prev absolute left-2 top-1/2 z-10 transform -translate-y-1/2 h-6 w-6 bg-white text-red-500 rounded-full p-2 shadow-md hover:bg-red-100 transition-opacity duration-200 ${isBeginning ? 'opacity-30 cursor-not-allowed' : 'opacity-100 cursor-pointer'
-                    } hidden group-hover:flex`}
-                disabled={isBeginning}
+                ref={prevRef}
+                className="absolute left-2 top-1/2 z-10 transform -translate-y-1/2 h-[20px] w-[20px] bg-white/75 text-red-500 rounded-[4.5px] justify-center items-center p-1 hover:opacity-80 transition-opacity duration-200 hidden group-hover:flex"
             >
-
-                <Image
-                    src={black_down_icon}
-                    className="object-cover p-2"
-                    fill
-                    alt="previous icon"
-
-                />
+                <div className="">
+                    <Image
+                        src={down_icon}
+                        className="object-cover relative "
+                        width={6}
+                        height={3}
+                        alt="next icon"
+                    />
+                </div>
             </button>
-            <button
-                className={`image-swiper-button-next absolute right-2 top-1/2 z-10 transform -translate-y-1/2 h-6 w-6 bg-white text-red-500 rounded-full p-2 shadow-md hover:bg-red-100 transition-opacity duration-200 ${isEnd ? 'opacity-30 cursor-not-allowed' : 'opacity-100 cursor-pointer'
-                    } hidden group-hover:flex`}
-                disabled={isEnd}
-            >
-                <Image
-                    src={black_right_down_icon}
-                    className="object-cover p-2"
-                    fill
-                    alt="next icon"
 
-                />
+            <button
+                ref={nextRef}
+                className="absolute right-2 top-1/2 z-10 transform -translate-y-1/2 h-[20px] justify-center items-center w-[20px] bg-white/75 text-red-500 rotate-180 p-1 rounded-[4.5px] hover:opacity-80 transition-opacity duration-200 hidden group-hover:flex"
+            >
+                <div className="">
+                    <Image
+                        src={down_icon}
+                        className="object-cover relative "
+                        width={6}
+                        height={3}
+                        alt="next icon"
+                    />
+                </div>
             </button>
         </div>
     );

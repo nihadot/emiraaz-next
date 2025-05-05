@@ -11,6 +11,7 @@ import React, {
   forwardRef,
 } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import clsx from 'clsx';
 
 export interface ExpandableComponentDropdownProps {
   label?: string;
@@ -27,7 +28,7 @@ export interface ExpandableDropdownRef {
   open: () => void;
 }
 
-const ExpandableComponentDropdown = forwardRef<ExpandableDropdownRef, ExpandableComponentDropdownProps>(
+const   ExpandableComponentDropdown = forwardRef<ExpandableDropdownRef, ExpandableComponentDropdownProps>(
   (
     {
       label = 'Select',
@@ -86,7 +87,7 @@ const ExpandableComponentDropdown = forwardRef<ExpandableDropdownRef, Expandable
       <div
         ref={containerRef}
         onClick={toggleDropdown}
-        className='border py-3 rounded px-3 gap-3 text-sm border-[#DEDEDE] cursor-pointer flex select-none relative'
+        className='border py-3 rounded-[3px] px-3 gap-3 text-sm border-[#DEDEDE] cursor-pointer h-[50px] flex select-none relative'
       >
         <div className='flex w-full justify-between items-center'>
           <label>{label}</label>
@@ -102,7 +103,8 @@ const ExpandableComponentDropdown = forwardRef<ExpandableDropdownRef, Expandable
               <Image
                 src={isOpen ? drop_up_red_icon : drop_down__red_icon}
                 alt='dropdown icon'
-                width={24}
+                width={15} height={15} className={clsx('object-cover',isOpen ? 'rotate-180' : '')}
+
               />
             ) : customCloseControl ? (
               <div onClick={handleClear}>{customCloseControl}</div>

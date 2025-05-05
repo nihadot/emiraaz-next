@@ -12,7 +12,7 @@ const baseQuery = fetchBaseQuery({
 });
 
 const refreshTokenBaseQuery = fetchBaseQuery({
-  baseUrl: `${baseUrl}/auth/admin/`,
+  baseUrl: `${baseUrl}/auth/user/`,
   credentials: "include",
 });
 

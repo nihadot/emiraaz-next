@@ -1,6 +1,8 @@
-const ProjectHeader = ({  title }: { title?: string }) => (
+import clsx from "clsx";
+
+const ProjectHeader = ({  title,contentClassName }: { title?: string;contentClassName?: string }) => (
     <div className="">
-      <h1 className="text-[23px] font-medium font-poppins">{title}</h1>
+      <h1 className={clsx("font-poppins",contentClassName)}>{title}</h1>
     </div>
   );
 

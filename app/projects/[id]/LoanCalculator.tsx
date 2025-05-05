@@ -9,12 +9,12 @@ type Props = {
     interestRate: number;
     downPayment: number;
     years: number;
-  }) => void;defaultTotalPrice?: number;
+  }) => void; defaultTotalPrice?: number;
   defaultYears?: number;
   defaultDownPayment?: number;
   defaultInterestRate?: number;
-  description?:string;
-  wrapperContainerClassName?:string;
+  description?: string;
+  wrapperContainerClassName?: string;
 }
 
 const MortgageCalculator = ({
@@ -63,12 +63,14 @@ const MortgageCalculator = ({
   return (
     <div className="">
       <div className="py-3">
-        {headerTitle &&<ProjectHeader
+        {headerTitle && <ProjectHeader
           title={headerTitle || 'Mortgage'}
+        contentClassName='font-medium text-[18.75px]' 
+
         />}
       </div>
-      { description && <p className='text-[14px] font-poppins text-gray-600 py-3'>Calculate and view the monthly mortgage on this apartment</p>}
-      <div className={`flex  gap-6 p-6  border border-[#DEDEDE] rounded ${wrapperContainerClassName}`}>
+      {description && <p className='text-[14px] font-poppins text-gray-600 py-3'>Calculate and view the monthly mortgage on this apartment</p>}
+      <div className={`flex  gap-6 p-6  border border-[#DEDEDE] rounded-[3px] ${wrapperContainerClassName}`}>
 
         <div className="flex-1  space-y-4">
           {/* Total Price */}
@@ -118,9 +120,9 @@ const MortgageCalculator = ({
 
         {/* Result */}
         <div className="sm:flex hidden  flex-col w-full font-poppins max-w-[280px] justify-center items-center pl-8 border-[#DEDEDE] border-l">
-          <h2 className="text-lg font-medium mb-2">AED <span className="text-3xl font-bold">{monthlyPayment.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span> <span className="text-xs">Per Month</span></h2>
-          <p className="mt-6 text-xs text-center w-full">Total Loan Amount</p>
-          <h2 className="text-lg mt-1 font-medium mb-2">AED <span className="text-3xl font-bold">{loanAmount.toLocaleString()}</span></h2>
+          <h2 className="text-[20px] font-poppins font-medium mb-[28.5px]">AED <span className="text-[33.75px] font-medium font-poppins">{monthlyPayment.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span> <span className="text-[13.5px] font-normal font-poppins">Per Month</span></h2>
+          <p className="font-normal text-[13.5px] text-[#373737] text-center w-full">Total Loan Amount</p>
+          <h2 className="text-[20px] font-poppins font-medium mb-2 mt-1">AED <span className="text-[33.75px] font-medium font-poppins">{loanAmount.toLocaleString()}</span></h2>
         </div>
       </div>
     </div>
@@ -141,15 +143,15 @@ const InputWithSlider = ({ label, value, min, max, step, onChange, unit }: {
   return (
     <div className='flex gap-8  items-center justify-center'>
       <div className="flex flex-1 h-full flex-col">
-        <label className="block font-medium font-poppins text-md mb-1">{label}</label>
+        <label className="block font-medium font-poppins text-[15px] mb-1">{label}</label>
         <div className="flex rounded px-2 border-[#DEDEDE] border items-center space-x-2 mb-1">
           <input
             type="number"
             value={value}
             onChange={(e) => onChange(Number(e.target.value))}
-            className="border border-none rounded p-2 w-full"
+            className="border border-none text-[13.5px] font-poppins font-medium rounded p-2 w-full"
           />
-          <span className="text-[12px] font-poppins text-gray-500">{unit}</span>
+          <span className="text-[13.5px] font-medium font-poppins text-[#767676]">{unit}</span>
         </div>
       </div>
       <div className="flex flex-1 h-full mt-6 items-center ">

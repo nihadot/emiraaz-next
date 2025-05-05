@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import InputField from '../InputField/InputField'
 import PrimaryButton from '../Buttons';
-import { details_icon } from '@/app/assets';
+import { notes_icon } from '@/app/assets';
 import Image from 'next/image';
 
 
@@ -17,7 +17,7 @@ function EnquiryForm() {
     }
 
     return (
-        <div className='border p-3 rounded flex flex-col gap-1  border-[#DEDEDE]'>
+        <div className='border p-3 rounded-[3.5px] flex flex-col gap-1  border-[#DEDEDE]'>
             <InputField
                 type="text"
                 name='name'
@@ -34,7 +34,7 @@ function EnquiryForm() {
                 placeholder="Mobile"
             />
 
-            <PrimaryButton
+            {/* <PrimaryButton
                 type='submit'
                 className='flex mt-1 justify-center bg-[#FF1645] rounded border-none items-center gap-1'
               
@@ -44,6 +44,14 @@ function EnquiryForm() {
 
                         <label className='text-white text-sm' htmlFor="">Enquiry Now</label>
                     </div>
+            </PrimaryButton> */}
+
+            <PrimaryButton
+                type="button"
+                className="flex w-full h-[36px] items-center gap-2 rounded border-none bg-[#FF1645]"
+            >
+                <Image src={notes_icon} alt="enquiry icon" width={16.5} height={16.5} />
+                <span className="text-[14px] text-white">Enquiry Now</span>
             </PrimaryButton>
         </div>
     )

@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ReduxProvider } from "@/redux/provider";
 import { Toaster } from 'react-hot-toast'
+import AppInitializer from "./AppInitializer";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -20,13 +21,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
   return (
     <html lang="en" className="">
       <body className={`${poppins.variable} antialiased`}>
         <ReduxProvider>
+          <AppInitializer />
           <Toaster />
           {children}
-
         </ReduxProvider>
       </body>
     </html>

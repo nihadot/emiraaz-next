@@ -8,10 +8,10 @@ function Footer() {
     return (
         <>
 
-            <footer className=''>
+            <footer className='bg-black'>
 
 
-                <section className='bg-black flex gap-10 max-w-[1440px] px-5 flex-col lg:flex-row lg:px-8 xl:px-24 mx-auto w-full py-10 '>
+                <section className=' flex gap-10 max-w-[1440px] px-5 flex-col lg:flex-row lg:px-8 xl:px-24 mx-auto w-full py-10 '>
                     <section className=''>
                         <div className="flex w-[180px] m-auto justify-center items-center relative h-[80px] object-cover ">
 

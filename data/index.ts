@@ -1,5 +1,10 @@
 export const PropertyTypes: { count:number,value: string; label: string }[] = [
     {
+        value: "all",
+        label: "All",
+        count:10,
+
+    },{
         value: "villa",
         label: "Villa",
         count:10,
@@ -26,7 +31,11 @@ export const PropertyTypes: { count:number,value: string; label: string }[] = [
 ]
 
 
-export const DiscountType: { count:number,value: string; label: string }[] = [
+export const DiscountType: { count?:number,value: string; label: string }[] = [
+    {
+        value: "all",
+        label: "All",
+    },
     {
         value: "with-discount",
         label: "With Discount",
@@ -42,6 +51,10 @@ export const DiscountType: { count:number,value: string; label: string }[] = [
 
 
 export const CompletionTypes: { value: string; label: string }[] = [
+    {
+        value: "all",
+        label: "All",
+    },
     {
         value: "just-launched",
         label: "Just Launched",
@@ -59,6 +72,9 @@ export const CompletionTypes: { value: string; label: string }[] = [
 
 export const FurnishTypes: { value: string; label: string }[] = [
     {
+        value: "all",
+        label: "All",
+    }, {
         value: "fully-furnished",
         label: "Fully Furnished",
     },
@@ -73,8 +89,12 @@ export const FurnishTypes: { value: string; label: string }[] = [
 ]
 
 
-export const PaymentPlan: { count: number, value: string; label: string }[] = [
+export const PaymentPlan: { count?: number, value: string; label: string }[] = [
+   
     {
+        value: "all",
+        label: "All",
+        }, {
         value: "on-handover",
         label: "On Handover",
         count: 20,

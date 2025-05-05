@@ -72,13 +72,17 @@ export default function CustomMobileSlider({
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {images.map((img, index) => (
+          <div  key={index} className="relative h-[604.5px] w-full">
+          
           <Image
-            key={index}
+           
           alt=''
+          fill
             src={img.mobileImage?.secure_url || ''}
-            className={`min-w-full object-cover ${imageClassName}`}
+            className={` object-cover ${imageClassName}`}
             draggable={false}
           />
+          </div>
         ))}
       </div>
 

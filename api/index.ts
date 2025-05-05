@@ -1,10 +1,12 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 // import { LOCAL_STORAGE_KEYS } from "../utils/storage";
 import { store } from "../redux/store";
+import { LOCAL_STORAGE_KEYS } from "./storage";
+import { logoutStart, logoutSuccess } from "@/redux/userSlice/userSlice";
 // import { logoutStart, logoutSuccess } from "../features/adminSlice/adminSlice";
 
-export const baseUrl = `https://api.propertyseller.com/api/v1`
-// export const baseUrl = `http://localhost:4000/api/v1`
+// export const baseUrl = `https://api.propertyseller.com/api/v1`
+export const baseUrl = `http://localhost:4000/api/v1`
 // export const baseUrl = `https://ai-updations-api.onrender.com/api/v1`
 export const placeHolderLink = 'https://placehold.co/300x468'
 
@@ -32,19 +34,18 @@ export const createBaseQueryWithReAuth = (
           extraOptions
         );
   
-        // if (refreshResult.data) {
-        //     localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN,refreshResult?.data?.token);
-        //   result = await baseQuery(args, api, extraOptions);
+        if (refreshResult.data) {
+            localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN,refreshResult?.data?.token);
+          result = await baseQuery(args, api, extraOptions);
 
-        // } else {
+        } else {
 
-        //     localStorage.removeItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
-        //     api.dispatch(logoutStart());
-        //     api.dispatch(logoutSuccess());
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
+            api.dispatch(logoutStart());
+            api.dispatch(logoutSuccess());
 
-        //   console.log("Refresh token failed.");
-        //   window.location.href = ''
-        // }
+          console.log("Refresh token failed.");
+        }
       }
   
       return result;

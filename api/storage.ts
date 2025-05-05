@@ -1,10 +1,11 @@
 // Define a unique prefix for your project to avoid conflicts
-const PROJECT_PREFIX = 'ai_updations_dashboard'; // Change this per project
+const PROJECT_PREFIX = 'property_seller'; // Change this per project
 
 export const LOCAL_STORAGE_KEYS = {
   ACCESS_TOKEN: `${PROJECT_PREFIX}_accessToken`,
   REFRESH_TOKEN: `${PROJECT_PREFIX}_refreshToken`,
   USER_DATA: `${PROJECT_PREFIX}_userData`,
+  RESET_PASSWORD_TOKEN: `${PROJECT_PREFIX}_resetPasswordToken`,
 };
 
 /**

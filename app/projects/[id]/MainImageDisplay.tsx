@@ -9,8 +9,8 @@ const MainImageDisplay = ({
     onSelectImage: (index: number) => void
 }) => (
     <>
-    
-        <div className="relative w-full h-[400px] sm:h-[600px] rounded-md overflow-hidden">
+
+        <div className="relative w-full h-[489px] rounded-md overflow-hidden">
             <Image src={mainImage} alt="Main image" fill className="object-cover rounded-md" />
         </div>
 

@@ -11,11 +11,12 @@ function RecommendedProjects({ projects }: Props) {
             <div className="pt-3">
 
                 <ProjectHeader
+                contentClassName='font-medium mb-[16.5px] text-[18.75px]'
                     title='Recommended For You'
                 />
             </div>
 
-            <div className="sm:grid flex overflow-x-auto sm:overflow-auto gap-3 my-2 md:grid-cols-3  w-full">
+            <div className="sm:grid flex gap-[21px] my-2 md:grid-cols-3  w-full">
                 {projects && projects.map((item, index) => {
                     return (
                         <Card

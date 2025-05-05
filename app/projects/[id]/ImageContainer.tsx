@@ -2,12 +2,13 @@
 
 import Image from 'next/image'
 import React, { useState, useRef, useEffect } from 'react'
+import { FaAlignLeft, FaArrowLeft, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 
 type Props = {
   images: { secure_url: string }[]
 }
 
-function  ImageContainer({ images }: Props) {
+function ImageContainer({ images }: Props) {
   const [previewIndex, setPreviewIndex] = useState<number | null>(null)
   const previewRef = useRef<HTMLDivElement>(null)
 
@@ -43,37 +44,39 @@ function  ImageContainer({ images }: Props) {
   return (
     <div className="h-full w-full  overflow-auto">
       {previewIndex !== null ? (
-        <div className="fixed rounded-md overflow-hidden inset-0 bg-black/40 bg-opacity-80 flex justify-center items-center z-50">
+        <div className="fixed rounded-md overflow-hidden inset-0 bg-black/70 bg-opacity-80 flex justify-center items-center z-50">
           <div ref={previewRef} className="relative w-[90%]  max-w-4xl h-[80vh] flex justify-center items-center rounded-md overflow-hidden shadow-lg">
-           <div className="relative w-full h-[300px] sm:h-full">
-           <Image
-              src={images[previewIndex].secure_url}
-              alt="Preview"
-              fill
-              className="object-cover rounded-md overflow-hidden"
-            />
-           </div>
+            <div className="relative w-full h-[580px] sm:h-full">
+              <Image
+                src={images[previewIndex].secure_url}
+                alt="Preview"
+                fill
+                className="object-cover rounded-[3.75px] overflow-hidden"
+              />
+            </div>
             <button
               onClick={() => setPreviewIndex(null)}
-              className="absolute top-4 left-4 bg-white text-black px-4 py-1 rounded shadow"
+              className="absolute flex items-center justify-center bg-[#FFE8ED] top-4 left-4 text-[#FF1645] w-[152.25px] h-[35.25px] rounded-[3.5px]"
             >
-              Back to Images
+              <FaChevronLeft size={10} color='' />
+              <span className='text-[14.25px] font-medium font-poppins ms-[12px]'>Back to Gallery</span>
             </button>
 
             {/* Prev Button */}
             <button
               onClick={handlePrev}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white text-black px-3 py-1 rounded shadow"
+              className="absolute left-4 top-1/2 transform -translate-y-1/2  px-3 py-1 rounded"
             >
-              ◀
+              <FaChevronLeft size={28} color='white' />
             </button>
 
             {/* Next Button */}
             <button
               onClick={handleNext}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white text-black px-3 py-1 rounded shadow"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2  px-3 py-1 rounded"
             >
-              ▶
+              <FaChevronRight size={28} color='white' />
+
             </button>
           </div>
         </div>

@@ -18,15 +18,15 @@ function AdsCard({ item }: Props) {
     
 
     return (
-        <div className='flex border rounded max-w-[350px] w-full p-4 gap-1 border-[#DEDEDE] bg-white'>
+        <div className='flex border rounded-[3px] h-[226.5px] w-full p-[12px] gap-1 border-[#DEDEDE] bg-white'>
             <div className="flex gap-0 w-full flex-col">
-                <p className='text-lg  font-normal font-poppins pb-1 capitalize'>{item.title}</p>
-                <p className='text-sm font-normal font-poppins pb-1 capitalize text-black/60 line-clamp-3'>{item.description}</p>
+                <p className='text-[15px] mb-[12.75px] font-bold font-poppins pb-1 capitalize'>{item.title}</p>
+                <p className='text-[12px] font-normal font-poppins pb-1 capitalize text-black/60 line-clamp-3'>{item.description}</p>
 
                 <div className="w-full h-[1px] bg-black/10 my-2"></div>
-                <div className="flex items-center">
-                    <Image src={item.image?.secure_url || ''} width={180} height={140} className='w-[180px] h-[140px] p-4 object-contain' alt="" />
-                    <button onClick={()=>handleNavigateClick()} className='bg-black h-10 rounded-md text-white px-6 hover:bg-black/60 py-2 text-sm font-normal'>More Details</button>
+                <div className="flex flex-1 justify-between items-center ">
+                    <Image src={item.image?.secure_url || ''} width={180} height={140} className='w-[84px] h-[58.5px] object-cover' alt="" />
+                    <button onClick={()=>handleNavigateClick()} className='bg-black text-nowrap text-center font-poppins rounded-[3.75px] text-white hover:bg-black/60 w-[132px] h-[31.5px] text-[14.25px] font-normal'>More Details</button>
                 </div>
 
             </div>

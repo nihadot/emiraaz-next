@@ -8,24 +8,25 @@ function LayoutInformation({
   images
 }: Props) {
   return (
-    <div className='mt-8'>
+    <div className=''>
       <ProjectHeader
         title='Floor Plans and Layouts'
+        contentClassName='font-poppins text-[18.75px] mb-[13.5px] font-medium'
       />
-      <div className="flex gap-2 mt-2 flex-wrap">
+      <div className="flex gap-[8.25px] mt-2 flex-wrap">
         {images.slice(0, 2).map((item, index) => (
-         <div key={index} className="relative  object-cover w-full rounded-md sm:rounded-none sm:w-[300px] h-[250px]">
+         <div key={index} className="relative border-[#DEDEDE] border object-cover rounded-[3.5px] w-[271px] h-[174.75px]">
            <Image
             key={index}
            fill
             src={item.secure_url}
             alt={`Thumbnail ${index}`}
-            className={`rounded-md cursor-pointer border`}
+            className={`cursor-pointer border-none`}
           />
          </div>
         ))}
 
-        <div className="border-[#DEDEDE] font-medium font-poppins gap-2 text-[#FF1645] flex rounded-md justify-center items-center border w-full sm:w-[220px] h-[60px] sm:h-[250px]">
+        <div className="border-[#DEDEDE] text-[15px] font-medium font-poppins gap-2 text-[#FF1645] flex rounded-[3.5px] justify-center items-center border w-[174.75px] h-[174.75px]">
           +{images && images.length > 2 && images.length - 2 || 0} More
         </div>
       </div>

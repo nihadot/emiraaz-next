@@ -1,12 +1,18 @@
 "use client";
 
-import { logo, menu_icon, user_icon } from '@/app/assets';
+import { drop_down_icon, logo, menu_icon, user_icon } from '@/app/assets';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import NavMenu from './NavMenu';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
 import PrimaryButton from '../Buttons';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { loginFailure, logoutFailure, logoutStart, logoutSuccess } from '@/redux/userSlice/userSlice';
+import { LOCAL_STORAGE_KEYS } from '@/api/storage';
+import { useRouter } from 'next/navigation';
+import { errorToast } from '../Toast';
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,11 +24,41 @@ function Header() {
     { name: 'Developers', link: '/developers' },
     { name: 'Cities', link: '/cities' }
   ];
-  
+
+  const dispatch = useDispatch();
+  const router = useRouter();
+
   const toggleMenu = () => setIsOpen(prev => !prev);
+  const { isAuthentication } = useSelector((state: RootState) => state.user);
+  const handleLogout = async () => {
+
+    if (!window.confirm('Logout?')) {
+      return true;
+    }
+    try {
+      dispatch(logoutStart());
+
+      localStorage.removeItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN)
+      localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA)
+
+      dispatch(logoutSuccess());
+
+
+      router.push("/login");
+
+    } catch (error: any) {
+      dispatch(logoutFailure(error))
+      errorToast(error?.response?.data?.message || error?.data?.message || error?.response?.message || error?.message || 'Error occurred, please try again later');
+
+
+
+    }
+  };
+
+
 
   return (
-    <header className='px-5  lg:px-8 xl:px-24  relative flex py-4 justify-between items-center w-full max-w-[1440px] mx-auto'>
+    <header className='px-5  lg:px-8 xl:px-[144.75px] relative flex py-4 justify-between items-center w-full max-w-[1440px] mx-auto'>
 
       {/* Mobile Menu Button */}
       <button
@@ -37,20 +73,20 @@ function Header() {
 
 
       {/* Logo */}
-<div className="w-[140px] sm:w-[200px] ms-8 sm:ms-0 h-[50px] sm:h-[40px] relative ">
-<Image src={logo} alt='user icon' fill className='bg-cover' />
+      <div onClick={()=>router.push("/")} className="w-[140px] cursor-pointer sm:w-[138.75px] ms-8 sm:ms-0 h-[50px] sm:h-[32.25px] relative ">
+        <Image src={logo} alt='logo' fill className='bg-cover' />
 
-</div>
+      </div>
       <div className="min-laptop:hidden block">
         <PrimaryButton
           type='button'
           className='flex !px-3 items-center gap-1'
-         
+
         >
           <>
-              <Image src={user_icon} alt='menu icon' width={20} />
-              <label htmlFor="" className='text-xs'>Login</label>
-            </>  
+            <Image src={user_icon} alt='menu icon' width={20} />
+            <label htmlFor="" className='text-xs'>Login</label>
+          </>
         </PrimaryButton>
       </div>
 
@@ -66,31 +102,75 @@ function Header() {
 
         <div className="lmin-laptop:block hidden">
           <PrimaryButton
+
             type='button'
             className='flex items-center gap-1'
-           
+
           >
 
-              <>
-                <Image src={user_icon} alt='menu icon' width={12} />
-                <label htmlFor="">Login</label>
-              </>
-            
+            <>
+              <Image src={user_icon} alt='menu icon' width={12} />
+              <label htmlFor="">Logout</label>
+            </>
+
           </PrimaryButton>
         </div>
 
 
-        <div className="min-laptop:block hidden">
-          <PrimaryButton
-            type='button'
-            className='flex items-center gap-1'
-          >
+        {isAuthentication ?
+
+          <div className="min-laptop:flex  gap-1 hidden">
+            <PrimaryButton
+              type='button'
+              className='flex items-center gap-1'
+            >
               <>
                 <Image src={user_icon} alt='menu icon' width={20} />
-                <label htmlFor="">AED</label>
+                <label htmlFor="">User</label>
               </>
-        </PrimaryButton>
-        </div>
+
+
+            </PrimaryButton>
+
+            <PrimaryButton
+              onClick={() => handleLogout()}
+              type='button'
+              className='flex items-center gap-1'
+            >
+              <>
+                <Image src={user_icon} alt='menu icon' width={20} />
+                <label htmlFor="">Lgout</label>
+              </>
+
+
+            </PrimaryButton>
+          </div>
+
+          : <div className="min-laptop:flex  gap-1 hidden">
+            <PrimaryButton
+              type='button'
+              className='flex w-[66.75px] items-center gap-1'
+            >
+              <>
+                <label htmlFor="" className='text-[12px] font-normal  font-poppins'>AED</label>
+                <Image src={drop_down_icon} alt='menu icon' width={9} height={4.5} />
+              </>
+
+
+            </PrimaryButton>
+
+            <PrimaryButton
+              type='button'
+              className='flex w-[77.25px] h-[33px] items-center gap-1'
+            >
+              <>
+                <Image src={user_icon} alt='menu icon' width={15} height={15} />
+                <label htmlFor="" className='text-[12px] font-medium  font-poppins'>Login</label>
+              </>
+
+
+            </PrimaryButton>
+          </div>}
       </div>
 
 

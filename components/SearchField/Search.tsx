@@ -17,16 +17,16 @@ const SearchInput: React.FC<SearchInputProps> = ({
 }) => {
     return (
         <div
-            className={`flex flex-1  gap-3 h-full w-full text-[13px] items-center border rounded px-3 py-3   border-[#DEDEDE] text-sm ${className}`}
+            className={`flex flex-1   gap-3 h-full w-full text-[13px] items-center border rounded px-3 py-3   border-[#DEDEDE] text-sm ${className}`}
         >
-            <Image src={search_icon} alt='menu icon' width={24} />
+            <Image src={search_icon} alt='menu icon' width={17.25} className="object-cover" height={17.25} />
 
             <input
                 type="text"
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
-                className="outline-none text-[13px] bg-transparent  "
+                className="outline-none h-full flex-1 text-[12px] font-normal  font-poppins bg-transparent  "
             />
         </div>
     );

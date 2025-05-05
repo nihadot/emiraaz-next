@@ -14,6 +14,7 @@ import ProjectCard from "@/components/ProjectCard/ProjectCard";
 import { useFetchAllCityNamesQuery } from "@/redux/cities/citiesApi";
 import { useFetchAllEmirateNamesQuery } from "@/redux/emirates/emiratesApi";
 import { useFetchAllProjectsQuery } from "@/redux/project/projectApi";
+import { IoCloseOutline } from "react-icons/io5";
 
 import { AllProjectsItems } from "@/redux/project/types";
 import {
@@ -26,7 +27,7 @@ import {
     propertyTypeSecond,
 } from "@/data";
 
-import { filter_icon, search_icon } from "../assets";
+import { close_icon, filter_icon, search_icon } from "../assets";
 import Modal from "@/components/Modal/Modal";
 import ModalForm from "@/components/EnquiryForm/ModalForm";
 import RegistrationSuccess from "@/components/EnquiryForm/RegistrationSuccess";
@@ -41,6 +42,15 @@ import Recommendations from "./Recommendations";
 import CustomSliderUi from "./CustomSliderUi";
 import BottomNavigation from "@/components/BottomNavigation/BottomNavigation";
 import Pagination from "@/components/Pagination/Pagination";
+import { useViewAllWishlistsQuery } from "@/redux/wishlist/wishlistApi";
+import { LOCAL_STORAGE_KEYS } from "@/api/storage";
+import { AllWishlistItems } from "@/redux/wishlist/types";
+import { useDispatch } from "react-redux";
+import { setWishlist } from "@/redux/wishlistSlice/wishlistSlice";
+import clsx from "clsx";
+import VideoPreview from "./VideoPreview";
+import { useViewAllSmallVideosQuery } from "@/redux/smallVideo/smallViewApi";
+import { AllSmallVideoItems } from "@/redux/smallVideo/types";
 
 type FiltersState = {
     developers?: string[];
@@ -64,56 +74,105 @@ type FiltersState = {
     completionType?: string,
     furnishing?: string,
     cities?: string[],
-    projectTypeLast?:string
+    projectTypeLast?: string
     year?: number | '',
     qtr?: string,
-    paymentPlan?:string,
-    discount?:string,
-    maxPrice?:string,
-    minPrice?:string,
-  };
-  
-  type HandoverDate = {
+    paymentPlan?: string,
+    discount?: string,
+    maxPrice?: string,
+    minPrice?: string,
+};
+
+type HandoverDate = {
     year?: number | "";
     quarter?: string | "";
-  };
-  
-  type PaymentPlan = {
+};
+
+type PaymentPlan = {
     label?: string;
     value?: string;
-  };
+};
 
-  
+interface UserData {
+    _id: string;
+    // Add more fields if needed
+}
+
+
 // Home Component
 export default function HomePage() {
 
     const router = useRouter();
 
-    
+    const userDataString = useMemo(() => {
+        return typeof window !== "undefined" ? localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA) : null;
+    }, []);
 
-const [filters, setFilters] = useState<FiltersState>({
-    page: 1,
-    search: "",
-    cities: [],
-    developers: [],
-    facilities: [],
-    propertyType: [],
-    propertyTypeSecond: undefined,
-    emirate: "",
-    completionType: "",
-    handoverDate: undefined,
-    projectType: "",
-    paymentPlan: undefined,
-    furnishType: "",
-    discount: "",
-    bedAndBath: "",
-    minPrice: '',
-    maxPrice: '',
-    minSqft: "",
-    maxSqft: "",
-    beds: "",
-    bath: "",
-  });
+
+    const userId = useMemo(() => {
+        if (!userDataString) return null;
+        try {
+            const parsed = JSON.parse(userDataString);
+            return parsed?._id || null;
+        } catch (err) {
+            return null;
+        }
+    }, [userDataString]);
+
+
+    const [wishlistData, setWishlistData] = useState<AllWishlistItems[]>();
+    const { data: wishlistDataItem } = useViewAllWishlistsQuery(
+        { userId },
+        { skip: !userId } // <- only call if userId is available
+    );
+
+    const [smallVideoAds, setSmallVideoAds] = useState<AllSmallVideoItems[]>();
+
+    const { data: smallVideoAdsResponse } = useViewAllSmallVideosQuery({});
+
+    const dispatch = useDispatch();
+
+
+
+
+    useEffect(() => {
+        if (wishlistDataItem?.data) {
+            dispatch(setWishlist(wishlistDataItem?.data))
+            setWishlistData(wishlistDataItem?.data)
+        }
+
+        if (smallVideoAdsResponse?.data) {
+            console.log(smallVideoAdsResponse?.data, 'smallVideoAdsResponse')
+            setSmallVideoAds(smallVideoAdsResponse?.data);
+        }
+    }, [wishlistDataItem, smallVideoAdsResponse]);
+
+
+    console.log(wishlistData, 'wishlistData')
+
+    const [filters, setFilters] = useState<FiltersState>({
+        page: 1,
+        search: "",
+        cities: [],
+        developers: [],
+        facilities: [],
+        propertyType: [],
+        propertyTypeSecond: undefined,
+        emirate: "",
+        completionType: "",
+        handoverDate: undefined,
+        projectType: "",
+        paymentPlan: undefined,
+        furnishType: "",
+        discount: "",
+        bedAndBath: "",
+        minPrice: '',
+        maxPrice: '',
+        minSqft: "",
+        maxSqft: "",
+        beds: "",
+        bath: "",
+    });
 
     const [debouncedSearch, setDebouncedSearch] = useState<any>("");
     const [clear, setClear] = useState(false);
@@ -125,7 +184,6 @@ const [filters, setFilters] = useState<FiltersState>({
     const [bedsAndBath, setBedsAndBath] = useState(false);
 
     // Debounce search input
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebouncedSearch(filters.search);
@@ -167,21 +225,31 @@ const [filters, setFilters] = useState<FiltersState>({
     const { data: projects } = useFetchAllProjectsQuery(queryParams);
     // projects?.data
     // Memoized data mapping
-    const emirateOptions = useMemo(() =>
-        emiratesData?.data.map((item) => ({
+    const emirateOptions = useMemo(() => {
+        const mappedOptions = emiratesData?.data.map((item) => ({
             label: item.name,
             value: item._id,
             count: 100,
-        })) || [],
-        [emiratesData]);
+        })) || [];
 
-    const cityOptions = useMemo(() =>
-        cities?.data.map((item) => ({
+        return [
+            { label: "All", value: "all" }, // <--- Add "All" option at the top
+            ...mappedOptions,
+        ];
+    }, [emiratesData]);
+
+    const cityOptions = useMemo(() => {
+        const mappedOptions = cities?.data.map((item) => ({
             label: item.name,
             value: item.name,
             count: 100,
-        })) || [],
-        [cities]);
+        })) || [];
+
+        return [
+            { label: "All", value: "all", count: 0 }, // <--- Add "All" option at the top
+            ...mappedOptions,
+        ];
+    }, [cities]);
 
     const banners = portraitBannerData?.data || [];
     const shuffledImages = useMemo(() => shuffle(banners), [banners]);
@@ -233,6 +301,8 @@ const [filters, setFilters] = useState<FiltersState>({
         setFilterModel(prev => !prev);
     }, []);
 
+
+
     const handleClear = useCallback(() => {
         setFilters({
             page: 1,
@@ -261,6 +331,11 @@ const [filters, setFilters] = useState<FiltersState>({
         setClear(true);
         setTimeout(() => setClear(false), 100);
     }, []);
+
+
+    const propertyTypesCondition = !((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-projects' && filters.propertyTypeSecond === 'commercial'));
+    const bedAndBathCondition = ((filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential'))
+    const furnishTypesCondition = (!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial')))
     return (
 
         <main>
@@ -268,7 +343,7 @@ const [filters, setFilters] = useState<FiltersState>({
             <div className=" min-h-screen max-w-[1440px] mx-auto w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
                 <Header />
 
-                <section className="px-5  lg:px-8 xl:px-24 flex-wrap w-full flex items-center  gap-2">
+                {/* <section className="px-5  lg:px-8 xl:px-[144px] flex-wrap w-full flex items-center  gap-2">
                     <div className="sm:flex-[18%] w-full  h-[50px]">
                         <SearchInput
                             value={filters?.search || ''}
@@ -361,12 +436,116 @@ const [filters, setFilters] = useState<FiltersState>({
                         </div>
 
                     </Modal>
+                </section> */}
+                <section className="px-5  lg:px-8 xl:px-[144.75px]  grid grid-cols-1  lg:grid-cols-[19.8%_9.8%_9.8%_39%_19%] gap-2">
+
+                    <div className="h-[50px]">
+                        <SearchInput
+                            value={filters?.search || ''}
+                            onChange={handleChangeSearch}
+                            placeholder="Search..."
+                        />
+                    </div>
+
+
+                    {/* Desktop and Laptop */}
+                    <div className="hidden lg:flex h-[50px]">
+                        <SelectOption
+                            className="w-[200px]"
+                            search
+                            clearSelection={clear}
+                            label="Emirates"
+                            options={emirateOptions}
+                            onSelect={handleSelect.emirate}
+                        />
+                    </div>
+
+
+
+
+                    <div className="hidden lg:flex h-[50px]">
+                        <SelectOption
+                            search
+                            clearSelection={clear}
+                            className="w-[220px]"
+                            label="Cities"
+                            options={cityOptions}
+                            onSelect={handleChangeCities}
+                        />
+                    </div>
+
+
+
+
+
+
+
+
+
+                    {/* Mobile */}
+                    <div className="flex lg:hidden w-full gap-2">
+
+                        <div className=" h-[50px] w-full">
+                            <SelectOption
+                                className="w-[200px]"
+                                search
+                                clearSelection={clear}
+                                label="Emirates"
+                                options={emirateOptions}
+                                onSelect={handleSelect.emirate}
+                            />
+                        </div>
+
+
+                        <div className=" h-[50px] w-full">
+                            <SelectOption
+                                search
+                                clearSelection={clear}
+                                className="w-[220px]  sm:!left-0 !-left-14 "
+                                label="Cities"
+                                options={cityOptions}
+                                onSelect={handleChangeCities}
+                            />
+                        </div>
+
+                    </div>
+
+
+                    <div className="h-[50px]">
+                        <SwitchSelector
+                            onSelect={handleSelect.projectType}
+                            defaultValue=""
+                            options={propertyTypeFirst}
+                        />
+                    </div>
+
+
+                    <div className="flex gap-2 h-[50px]">
+                        <SwitchSelector
+                            onSelect={handleSelect.propertyTypeSecond}
+                            defaultValue=""
+                            options={propertyTypeSecond}
+                        />
+                        <button onClick={handleFilterModal} className="bg-red-600/10 rounded flex justify-center items-center  border border-[#DEDEDE] w-[55px] lg:hidden h-full">
+                            <Image
+                                src={filter_icon}
+                                className=" object-cover"
+                                alt="filter"
+                                width={18}
+                                height={18}
+
+                            />
+                        </button>
+                    </div>
+
+
                 </section>
 
-                {/* Additional Filters */}
-                <section className="px-5  lg:px-8 xl:px-24 mt-2 flex-wrap w-full hidden sm:flex items-center  gap-2">
 
-                    {((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial' || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential'))) && <div className=" w-[100px]  h-[50px]">
+                {/* Additional Filters */}
+                <section className="px-5  lg:px-8 xl:px-[144.75px] lg:flex gap-2  mt-2  hidden">
+
+                    {((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial' || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential'))) && <div className="h-[50px]">
 
                         <ExpandableComponentDropdown
                             isOpen={rangeCalculator}
@@ -414,11 +593,10 @@ const [filters, setFilters] = useState<FiltersState>({
 
 
 
-                    {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-projects' && filters.propertyTypeSecond === 'commercial')) && <div className={`sm:flex-[8%] w-full  h-[50px]`}>
+                    {propertyTypesCondition && <div className={clsx(`h-[50px]`, propertyTypesCondition ? 'w-[130px]' : 'flex-[8%]')}>
 
                         <SelectOption
                             clearSelection={clear}
-                            search
                             className="w-[200px]"
                             label="Property Types"
                             options={PropertyTypes}
@@ -428,7 +606,7 @@ const [filters, setFilters] = useState<FiltersState>({
 
 
 
-                    {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className="xl:flex-[18%] lg:flex-[30%] sm:flex hidden flex-1 w-full  h-[50px]">
+                    {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className="lg:flex-[30%] h-[50px]">
                         <SwitchSelector
                             onSelect={handleSelect.completionType}
                             defaultValue={filters.completionType}
@@ -437,7 +615,7 @@ const [filters, setFilters] = useState<FiltersState>({
                     </div>}
 
 
-                    {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential')) && <div className="xl:flex-[6%] lg:flex-[30%] w-full  h-[50px]">
+                    {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential')) && <div className="flex-[8%] h-[50px]">
 
                         <ExpandableComponentDropdown
                             isOpen={showYearSelector}
@@ -452,7 +630,6 @@ const [filters, setFilters] = useState<FiltersState>({
                                 initialYear={2025}
                                 initialQuarter={"Q2"}
                                 onDone={(year, quarter) => {
-                                    console.log("Selected:", year, quarter);
                                     handleSelect.handoverDate({ quarter, year })
                                 }}
                                 onClose={() => setShowYearSelector(false)}
@@ -466,7 +643,7 @@ const [filters, setFilters] = useState<FiltersState>({
 
 
 
-                    {((filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className="xl:flex-[6%] lg:flex-[30%] w-full  h-[50px]">
+                    {bedAndBathCondition && <div className={clsx("h-[50px]", bedAndBathCondition ? 'w-[180px]' : 'flex-[6%]')}>
 
                         <ExpandableComponentDropdown
                             isOpen={bedsAndBath}
@@ -498,7 +675,7 @@ const [filters, setFilters] = useState<FiltersState>({
 
 
 
-                    {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential')) && <div className="sm:flex-[10%] w-full  h-[50px]">
+                    {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential')) && <div className="flex-[10%] h-[50px]">
 
                         <SelectOption
                             clearSelection={clear}
@@ -514,12 +691,12 @@ const [filters, setFilters] = useState<FiltersState>({
 
 
 
-                    {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className="sm:flex-[6%] w-full z-40 h-[50px]">
+                    {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className="flex-[7%]  h-[50px]">
 
                         <SelectOption
                             search
                             clearSelection={clear}
-                            className="w-[200px]"
+                            className="w-[200px] "
                             label="Discount"
                             options={DiscountType}
                             onSelect={handleSelect.discount}
@@ -528,7 +705,7 @@ const [filters, setFilters] = useState<FiltersState>({
 
 
 
-                    {(!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial'))) && <div className="sm:flex-[8%] w-full  h-[50px]">
+                    {furnishTypesCondition && <div className={clsx("h-[50px]", furnishTypesCondition ? 'w-[140px]' : 'flex-[8%]')}>
 
                         <SelectOption
                             clearSelection={clear}
@@ -543,15 +720,18 @@ const [filters, setFilters] = useState<FiltersState>({
 
 
 
-                    <div onClick={() => handleClear()} className="flex max-w-[120px] h-full items-center gap-2">
+                    <div onClick={() => handleClear()} className="flex max-w-[120px] h-[50px] items-center gap-2">
                         <label className="text-[12px]">Clear Filters</label>
-                        <Image src={search_icon} alt="menu icon" width={18} />
+                        <div className="bg-black w-[14px] rounded-full h-[14px] flex justify-center items-center">
+                            <IoCloseOutline size={12} color="white" />
+                        </div>
+                        {/* <Image src={close_icon} alt="menu icon" width={11.25} height={11.25} /> */}
                     </div>
                 </section>
 
                 {/* Projects Section */}
-                <div className="px-5  lg:px-8 xl:px-24 my-4 flex gap-2">
-                    <div className="flex-1 h-full grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                <div className="px-5  lg:px-8  xl:px-[144px] my-4 flex gap-2">
+                    <div className="flex-1 h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
 
                         {projects ? projects?.data?.map((item, index) => (
                             <ProjectCard
@@ -571,12 +751,27 @@ const [filters, setFilters] = useState<FiltersState>({
                         }
                     </div>
 
-                    <div className="w-full min-1110px:block hidden ps-2 lg:max-w-[240px] xl:max-w-[320px]">
-                        <Recommendations />
+                    <div className="w-full xl:block hidden max-w-[301.5px]">
 
-                        <CustomSliderUi
-                            shuffledImages={shuffledImages}
-                        />
+                        {smallVideoAds && smallVideoAds.length > 0 &&
+                            <div className="w-full mb-[12px] relative">
+                                <VideoPreview
+                                    src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                                />
+                            </div>
+                        }
+
+                        <div className="sticky top-3 left-0">
+
+                            <CustomSliderUi
+                                shuffledImages={shuffledImages}
+                            />
+                            <Recommendations />
+                        </div>
+
+
+
+
                     </div>
                 </div>
 
@@ -601,15 +796,15 @@ const [filters, setFilters] = useState<FiltersState>({
             </div>
 
 
-<div className="py-4">
+            <div className="py-4">
 
-              <Pagination
-                                currentPage={filters.page || 1}
-                                totalPages={totalPages}
-                                onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
-                                />
-                                </div>
-            
+                <Pagination
+                    currentPage={filters.page || 1}
+                    totalPages={totalPages}
+                    onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
+                />
+            </div>
+
 
             <Footer />
 

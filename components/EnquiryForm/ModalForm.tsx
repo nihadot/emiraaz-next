@@ -8,15 +8,24 @@ import 'react-phone-input-2/lib/style.css';
 import { errorToast, successToast } from '../Toast';
 import axios from "axios";
 import { baseUrl } from '@/api';
+import { RootState } from '@/redux/store';
+import { useSelector } from 'react-redux';
+import { LOCAL_STORAGE_KEYS } from '@/api/storage';
+import { User } from '@/redux/userSlice/types';
 type Props = {
-    item:{
-        id:string;
-        status:boolean;
+    item: {
+        id: string;
+        status: boolean;
     }
-    setEnquiry: (option:any) => void;
+    setEnquiry: (option: any) => void;
 };
 
-function ModalForm({ item,setEnquiry}: Props) {
+interface UserData {
+    _id: string;
+    // Add more fields if needed
+}
+
+function ModalForm({ item, setEnquiry }: Props) {
     const [formData, setFormData] = useState({
         name: '',
         number: '',
@@ -31,6 +40,9 @@ function ModalForm({ item,setEnquiry}: Props) {
     const handlePhoneChange = (value: string) => {
         setFormData({ ...formData, number: value });
     };
+    const { isAuthentication } = useSelector((state: RootState) => state.user);
+
+    // console.log(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA),'0000')
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -45,29 +57,50 @@ function ModalForm({ item,setEnquiry}: Props) {
             return errorToast('Please enter a valid mobile number.');
         }
 
-        if(!item.id){
+        if (!item.id) {
             return errorToast('Please select a Project then submit');
         }
 
         try {
             setLoading(true);
 
-           await axios.post(`${baseUrl}/enquiry`, {
+
+            const payload: any = {
                 name: formData.name,
                 number: formData.number,
-                projectId:item.id
-              });
-            // Reset form or show success
-            console.log('Submitted:', formData);
+                projectId: item.id
+            };
+
+            const userDataString = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA);
           
-        setEnquiry((prev: any) => ({
-            ...prev,
-            count: 2,
-        }))
+
+            if (userDataString) {
+               
+                    const userData: UserData = JSON.parse(userDataString);
+                    if(userData) payload.userId = userData._id
+            }
+
+// console.log(_id ,'isAuthentication && _id')
+            // if (isAuthentication && _id) {
+            //     payload.userId = _id;
+            // }
+
+
+
+
+
+            await axios.post(`${baseUrl}/enquiry`, payload);
+            // Reset form or show success
+            // successToast('Submitted');
+
+            setEnquiry((prev: any) => ({
+                ...prev,
+                count: 2,
+            }))
             successToast('Enquiry submitted successfully!');
             setFormData({ name: '', number: '' });
-        } catch (error:any) {
-            errorToast(error?.response?.data?.message || error?.response?.message || error?.message || 'Error occurred, please try again later');
+        } catch (error: any) {
+            errorToast(error?.response?.data?.message || error?.data?.message || error?.response?.message || error?.message || 'Error occurred, please try again later');
             // console.error(err);
         } finally {
             setLoading(false);
@@ -79,44 +112,44 @@ function ModalForm({ item,setEnquiry}: Props) {
         <div className=''>
             <form className='w-[450px] flex flex-col gap-2 p-4' onSubmit={handleSubmit}>
 
-            <p className='text-center pb-2 font-semibold text-base'>Please enter your details</p>
+                <p className='text-center pb-2 font-semibold text-base'>Please enter your details</p>
 
-            <InputField
-                type='text'
-                name='name'
-                value={formData.name}
-                onChange={handleChange}
-                placeholder='Enter your name'
-            />
+                <InputField
+                    type='text'
+                    name='name'
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder='Enter your name'
+                />
 
-            <PhoneInput
-                country={'in'}
-                value={formData.number}
-                onChange={handlePhoneChange}
-                inputProps={{
-                    name: 'phone',
-                    required: true,
-                }}
-                inputStyle={{
-                    width: '100%',
-                    height: '45px',
-                    borderRadius: '6px',
-                    borderColor: '#ccc',
-                }}
-            />
+                <PhoneInput
+                    country={'in'}
+                    value={formData.number}
+                    onChange={handlePhoneChange}
+                    inputProps={{
+                        name: 'phone',
+                        required: true,
+                    }}
+                    inputStyle={{
+                        width: '100%',
+                        height: '45px',
+                        borderRadius: '6px',
+                        borderColor: '#ccc',
+                    }}
+                />
 
-            <PrimaryButton
-                loading={loading}
-                type='submit'
-                className='flex mt-1 justify-center bg-red-600 rounded-md border-none items-center gap-1'
-                
-            >
+                <PrimaryButton
+                    loading={loading}
+                    type='submit'
+                    className='flex mt-1 justify-center bg-red-600 rounded-md border-none items-center gap-1'
 
-<div className='justify-center flex items-center gap-2'>
+                >
+
+                    <div className='justify-center flex items-center gap-2'>
                         <Image src={details_icon} alt='menu icon' width={21} />
                         <label className='text-white text-sm'>Enquiry Now</label>
                     </div>
-                    </PrimaryButton>
+                </PrimaryButton>
             </form>
 
         </div>
