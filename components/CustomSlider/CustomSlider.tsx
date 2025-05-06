@@ -72,14 +72,14 @@ export default function CustomSlider({
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {images.map((img, index) => (
-          <div key={index} className="relative h-[653px] w-full">
+          <div key={index} className="relative h-[600px] w-full max-w-[300px]">
 
             <Image
               alt={''}
               fill
 
               src={img.desktopImage?.secure_url || ''}
-              className={` object-contain ${imageClassName}`}
+              className={` object-cover ${imageClassName}`}
               draggable={false}
             />
           </div>
