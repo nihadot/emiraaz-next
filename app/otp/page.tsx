@@ -12,31 +12,34 @@ const OTP_LENGTH = 6;
 export default function OtpPage() {
     const router = useRouter();
     const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(''));
+    const [resetPasswordToken, setResetPasswordToken] = useState<string | null>(null);
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+    const [verifyPasswordChange] = useVerifyPasswordChangeMutation();
 
-    // ✅ Check token presence
+    // ✅ Client-side only: Get token
     useEffect(() => {
-        const token = localStorage.getItem(LOCAL_STORAGE_KEYS.RESET_PASSWORD_TOKEN);
-        if (!token) {
-            router.push('/login'); // Redirect if token not found
+        if (typeof window !== 'undefined') {
+            const token = localStorage.getItem(LOCAL_STORAGE_KEYS.RESET_PASSWORD_TOKEN);
+            if (!token) {
+                router.push('/login');
+            } else {
+                setResetPasswordToken(token);
+            }
         }
     }, [router]);
 
-    // ✅ Handle input change
     const handleChange = (value: string, index: number) => {
-        if (!/^\d?$/.test(value)) return; // Allow only digits
+        if (!/^\d?$/.test(value)) return;
 
         const newOtp = [...otp];
         newOtp[index] = value;
         setOtp(newOtp);
 
-        // Focus next input
         if (value && index < OTP_LENGTH - 1) {
             inputRefs.current[index + 1]?.focus();
         }
     };
 
-    // ✅ Handle key press (backspace, arrow navigation)
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
         if (e.key === 'Backspace' && !otp[index] && index > 0) {
             inputRefs.current[index - 1]?.focus();
@@ -49,10 +52,10 @@ export default function OtpPage() {
         }
     };
 
-    // ✅ Handle paste
     const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
         const paste = e.clipboardData.getData('text').slice(0, OTP_LENGTH);
         if (!/^\d+$/.test(paste)) return;
+
         const newOtp = paste.split('');
         setOtp([...newOtp, ...Array(OTP_LENGTH - newOtp.length).fill('')]);
         setTimeout(() => {
@@ -60,16 +63,7 @@ export default function OtpPage() {
         }, 0);
     };
 
-    const resetPasswordToken = localStorage.getItem(LOCAL_STORAGE_KEYS.RESET_PASSWORD_TOKEN);
-
-    if (!resetPasswordToken) {
-        router.push('/login'); // Redirect if token not found
-    }
-
-
-    const [verifyPasswordChange] = useVerifyPasswordChangeMutation();
-
-    const handleSubmit =async () => {
+    const handleSubmit = async () => {
         try {
             const enteredOtp = otp.join('');
             if (enteredOtp.length !== OTP_LENGTH) {
@@ -77,28 +71,27 @@ export default function OtpPage() {
                 return;
             }
 
+            if (!resetPasswordToken) {
+                errorToast('Invalid or expired token. Please try again.');
+                router.push('/login');
+                return;
+            }
 
-
-            const payload = { token: resetPasswordToken ? resetPasswordToken : '', otp: enteredOtp };
+            const payload = { token: resetPasswordToken, otp: enteredOtp };
             await verifyPasswordChange(payload).unwrap();
 
-            console.log('Entered OTP:', enteredOtp);
             successToast('Password changed successfully');
-            // Submit logic here
+            // Optionally redirect to login or homepage
         } catch (error: any) {
             errorToast(error?.response?.data?.message || error?.data?.message || error?.response?.message || error?.message || 'Error occurred, please try again later');
-
-            console.error("Login Error:", error.message);
+            console.error("OTP Verification Error:", error.message);
         }
     };
 
     return (
         <main>
-
             <Header />
-
             <div className="min-h-screen flex items-center justify-center px-4">
-
                 <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-md text-center">
                     <h2 className="text-xl font-semibold mb-4">Enter OTP</h2>
                     <div className="flex justify-between gap-2 mb-6">
@@ -109,7 +102,7 @@ export default function OtpPage() {
                                 inputMode="numeric"
                                 maxLength={1}
                                 value={digit}
-                                ref={(el:any) => (inputRefs.current[index] = el)}
+                                ref={(el: any) => (inputRefs.current[index] = el)}
                                 onChange={(e) => handleChange(e.target.value, index)}
                                 onKeyDown={(e) => handleKeyDown(e, index)}
                                 onPaste={handlePaste}
@@ -126,10 +119,7 @@ export default function OtpPage() {
                     </button>
                 </div>
             </div>
-
-
             <Footer />
         </main>
-
     );
 }

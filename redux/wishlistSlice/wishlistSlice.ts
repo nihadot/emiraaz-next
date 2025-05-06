@@ -27,7 +27,7 @@ const wishlistSlice = createSlice({
         },
 
           // Set the entire wishlist (useful for initial loading)
-          setWishlist(state, action: PayloadAction<WishlistItem[]>) {
+          setWishlist(state, action: PayloadAction<any[]>) {
             state.items = action.payload;  // Set the wishlist globally
         },
 

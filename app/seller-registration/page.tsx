@@ -38,7 +38,7 @@ const initialFormData = {
   purchasingPrice: '12121',
 }
 
-export const PropertyTypes: { id: number; value: string; label: string }[] = [
+ const PropertyTypes: { id: number; value: string; label: string }[] = [
   { id: 1, value: "villa", label: "Villa" },
   { id: 2, value: "apartment", label: "Apartment" },
   { id: 3, value: "penthouse", label: "Penthouse" },

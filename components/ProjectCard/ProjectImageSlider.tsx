@@ -79,14 +79,18 @@ function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
                 onSwiper={(swiper) => {
                     // Delay navigation assignment until refs are defined
                     setTimeout(() => {
-                        if (swiper.params.navigation) {
-                            swiper.params.navigation.prevEl = prevRef.current;
-                            swiper.params.navigation.nextEl = nextRef.current;
-                            swiper.navigation.destroy();
-                            swiper.navigation.init();
-                            swiper.navigation.update();
+                        if (
+                          swiper.params.navigation &&
+                          typeof swiper.params.navigation !== 'boolean'
+                        ) {
+                          swiper.params.navigation.prevEl = prevRef.current;
+                          swiper.params.navigation.nextEl = nextRef.current;
+                          swiper.navigation.destroy();
+                          swiper.navigation.init();
+                          swiper.navigation.update();
                         }
-                    });
+                      });
+                      
                 }}
                 modules={[Pagination, Navigation, Keyboard]}
 
