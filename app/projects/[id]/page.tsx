@@ -1,4 +1,5 @@
 'use client'
+import { MdFullscreen } from "react-icons/md";
 
 import { useState, use, useEffect } from "react";
 import {
@@ -49,6 +50,8 @@ import { useRouter } from "next/navigation";
 import { FaImage, FaImages, FaLocationArrow, FaMap, FaPlane, FaVideo } from "react-icons/fa";
 import { ProjectType } from "@/redux/types";
 import { IoLocationOutline } from "react-icons/io5";
+import CustomSlider from "@/components/CustomSlider/CustomSlider";
+import RecommendedText from "@/components/RecomendedText/RecommendedText";
 
 const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
   const router = useRouter();
@@ -67,7 +70,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
   const images = data?.data?.mainImages ?? [];
   const layoutImages = data?.data?.layoutImages ?? [];
   // console.log(data?.data?.layoutImages, 'data?.data?.layoutImages')
-  const mainImage = images[imagesIndex]?.secure_url || no_image_placeholder;
+  const mainImage = images[imagesIndex]?.secure_url;
   const propertyType = data?.data?.propertyTypes?.[0] ?? '';
   const { currency, value } = formatCurrencyParts(data?.data?.priceInAED || 0);
   const { data: projects } = useFetchAllProjectsQuery(
@@ -94,6 +97,12 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
       label: "Map",
       value: "map",
       icon: <FaMap size={17.25} />
+
+    },
+    {
+      label: "Layout",
+      value: "layouts",
+      icon: <MdFullscreen size={17.25} />
 
     },
     {
@@ -212,7 +221,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
   return (
     <div className=" mx-auto w-full   ">
-      <Header />
+      {/* <Header /> */}
 
       <div className="">
         <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
@@ -234,7 +243,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
           backToFun={handleBackTo}
         />
 
-        <div className="flex flex-col md:flex-row gap-[6px]">
+        <div className="flex flex-col mb-14 md:flex-row gap-[6px]">
           <div className="flex-1">
 
 
@@ -254,7 +263,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
               </div> */}
 
 
-              <div className="left-[24.75px] absolute z-20 top-[24.75px]">
+              <div className="left-[14px] absolute z-20 top-[14px]">
 
                 {(data?.data?.handOverQuarter && data?.data?.handOverQuarter) && <div className="bg-white font-poppins font-medium flex text-[9.5px] items-center rounded-[2px] py-1  px-2">
                   Handover Date : {data?.data.handOverQuarter} {data?.data.handOverYear}
@@ -279,7 +288,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
                 e.stopPropagation()
                 handleGalleryModal()
                 handleGallerySelect('map')
-              }} className="absolute flex bottom-[24.75px] left-[24.75px] items-center gap-2 p-2 rounded-[3.75px] z-40 bg-black/[77%]">
+              }} className="absolute hidden sm:flex bottom-[24.75px] left-[24.75px] items-center gap-2 p-2 rounded-[3.75px] z-40 bg-black/[77%]">
                 <IoLocationOutline size={17.25} color="white" />
                 <span className="text-white font-poppins text-[12px] font-normal">Map</span>
               </div>
@@ -304,7 +313,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
               <ProjectDescription
                 descriptionInArabic={data?.data?.descriptionInArabic || ''}
-                descriptionInEnglish={'halo how are you'.repeat(700) || data?.data.description || ''}
+                descriptionInEnglish={data?.data.description || ''}
                 descriptionInRussian={data?.data.descriptionInRussian || ''}
                 title="Description"
               />
@@ -359,10 +368,12 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
             </div>
 
 
-            <div className="mt-[24.75px]" onClick={handleLayoutModal}>
+            <div className="mt-[24.75px]">
 
               <LayoutInformation
                 images={layoutImages}
+                handleGallerySelect={handleGallerySelect}
+                handleGalleryModal={handleGalleryModal}
               />
 
             </div>
@@ -428,14 +439,12 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
             </div>
 
 
-            {/* {shuffledImages && shuffledImages.length > 0 && <div className="">
-              <CustomMobileSlider
-                images={shuffledImages}
-                containerClassName="max-w-xl mx-auto shadow-lg"
-                imageClassName="h-[300px] mt-6 block sm:hidden"
-                buttonClassName="hover:bg-white"
-              />
-            </div>} */}
+            {<div className="mt-[18px] flex sm:hidden mt:mt-0">
+              <CustomSlider
+                                 images={shuffledImages}
+                                 containerClassName="h-[80px] "
+                             />
+            </div>}
 
 
             <PropertyDetailsSection
@@ -449,7 +458,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
             />
 
 
-            <div className="flex mt-[25.5px] justify-between items-center w-full">
+            <div className="flex mt-[18px] sm:mt-[25.5px] justify-between items-center w-full">
               <RegulatoryInformation
                 qrCodeUrl={data?.data?.qrCodeImage?.secure_url || no_image_placeholder}
                 icon
@@ -483,7 +492,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
             </div>
 
-            <div className="mt-4">
+            <div className="sm:mt-4">
 
               <RecommendedProjects
                 projects={projects?.data && data?.data._id && projects.data.filter(item => item._id !== data?.data?._id)|| []}
@@ -491,9 +500,11 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
             </div>
 
 
+<div className="sm:hidden rounded-[5.11px] z-50 px-[16.15px] flex bg-white left-0 fixed bottom-0 w-full justify-center items-center h-[85.2px]">
+
             <PrimaryButton
               type="button"
-              className="bg-[#FF1645] block sm:hidden h-[47px] w-full border-none text-white font-poppins rounded "
+              className="bg-[#FF1645]  h-[47px] w-full border-none text-white font-poppins rounded "
 
             >
               <div className="flex items-center gap-2">
@@ -501,6 +512,21 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
                 <label className="text-sm font-medium text-white font-poppins">Enquire Now </label>
               </div>
             </PrimaryButton>
+            </div>
+
+
+           <div className="flex sm:hidden">
+           <RecommendedText
+    title="Recommended For You"
+    items={[
+        'Studio Properties For Sale in Dubai',
+        '1 BHK Flats in Downtown',
+        'Luxury Villas in Palm Jumeirah',
+        'Affordable Apartments in JVC',
+        'Beachfront Homes in Dubai Marina',
+    ]}
+/>
+           </div>
 
           </div>
           <SidePanel
@@ -527,7 +553,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
         >
 
 
-          <div className=" flex flex-col bg-white px-[30px] py-[20px] rounded-[6px] max-w-[1200px] w-full h-screen sm:h-[85vh]">
+          <div className=" flex flex-col bg-white px-5  sm:px-[30px] py-[20px] rounded-[6px] max-w-[1200px] w-full h-screen sm:h-[85vh]">
             <div className=" flex justify-end  items-end" onClick={handleGalleryModal}>
               <Image src={close_icon} alt="save icon" width={12} height={12} />
             </div>
@@ -539,7 +565,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
               {options.map((item) => (
                 <button
                   key={item.value}
-                  className={` font-normal gap-[7.5px] font-poppins text-[14px] rounded-md px-4 py-1 h-[40px] flex items-center   justify-center transition-all w-full duration-200 ${gallerySelected === item.value
+                  className={` font-normal gap-[4px] sm:gap-[7.5px] font-poppins text-[11.9px] sm:text-[14px] rounded-md px-3 sm:px-4 py-1 h-[40px] flex items-center   justify-center transition-all w-full duration-200 ${gallerySelected === item.value
                     ? 'bg-red-600/10 text-red-600'
                     : 'bg-white text-[#767676] hover:text-red-600 hover:bg-red-100'
                     }`}
@@ -564,16 +590,20 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
             />}
 
 
+{gallerySelected === 'layouts' &&    <ImageContainer
+              images={layoutImages}
+            />}
+
             {gallerySelected === 'video' && <VideoContainer
 
               videoUrl={data?.data?.youtubeVideoLink || ''}
             />}
 
 
-            <div className="flex mt-[17.25px] gap-[7.5px] items-center sm:justify-end">
+            <div className="flex mt-[17.25px] ms-6 sm:ms-0 gap-[7.5px] items-center justify-center sm:justify-end">
               <PrimaryButton
                 type="button"
-                className="bg-[#FFE7EC] border-none text-[#FF1645] font-poppins rounded "
+                className="bg-[#FFE7EC]  border-none text-[#FF1645] font-poppins rounded "
 
               >
                 <div className="flex items-center w-[60px] h-[35.25px] justify-center gap-2">
@@ -596,10 +626,10 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
               <PrimaryButton
                 type="button"
-                className="bg-[#FFE7EC] border-none text-[#FF1645] font-poppins rounded "
+                className="bg-[#FFE7EC]  me-6 border-none text-[#FF1645] font-poppins rounded "
 
               >
-                <div className="flex items-center gap-2 w-[147.75px] h-[35.25px] justify-center">
+                <div className="flex items-center gap-2 w-[120.75px] h-[35.25px] justify-center">
                   <Image src={notes_red_edit} alt="share icon" width={21.75} height={21.75} />
                   <label className="text-[14.25px] text-[#FF1645] font-medium font-poppins">Enquire Now </label>
                 </div>
@@ -961,6 +991,9 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
 
       </NewModal>
+
+
+      
     </div>
   );
 };

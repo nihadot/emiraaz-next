@@ -4,6 +4,8 @@ import { play_icon } from "../assets";
 import { FaPause, FaPlay, FaRegPlayCircle, FaReply, FaStreetView, FaVolumeDown, FaVolumeUp } from "react-icons/fa";
 import clsx from "clsx";
 import { motion, AnimatePresence } from "framer-motion";
+import { MdOutlineReplay } from "react-icons/md";
+import { BsArrowsFullscreen } from "react-icons/bs";
 
 type VideoPreviewProps = {
   src: string;
@@ -29,8 +31,8 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   const togglePlay = () => {
     const video = videoRef.current;
     if (!video) return;
-
-    if (video.paused) {
+  
+    if (video.paused || video.ended) {
       video.play();
       setIsPlaying(true);
       setShowReplay(false);
@@ -75,25 +77,20 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
-
-    const updateTime = () => setCurrentTime(video.currentTime);
-    const setVideoDuration = () => setDuration(video.duration);
-    const handleEnded = () => {
-      setIsPlaying(false);
-      setShowReplay(true);
-    };
-
-    video.addEventListener("timeupdate", updateTime);
-    video.addEventListener("loadedmetadata", setVideoDuration);
-    video.addEventListener("ended", handleEnded);
-
-    return () => {
-      video.removeEventListener("timeupdate", updateTime);
-      video.removeEventListener("loadedmetadata", setVideoDuration);
-      video.removeEventListener("ended", handleEnded);
-    };
+    if (video) {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch((error) => {
+            console.error("Auto-play blocked or failed:", error);
+          });
+      }
+    }
   }, []);
+  
 
   return (
     <AnimatePresence>
@@ -106,16 +103,22 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
         )}
       >
         <div className="w-full relative flex h-full">
-          <video
-            ref={videoRef}
-            src={src}
-            muted={isMuted}
-            style={{
-              filter: `brightness(${1 - dimOpacity})`,
-              objectFit: "cover",
-            }}
-            className="w-fit h-full"
-          />
+        <video
+  ref={videoRef}
+  src={src}
+  muted={isMuted}
+  autoPlay // ✅ Auto play enabled
+  style={{
+    filter: `brightness(${1 - dimOpacity})`,
+    objectFit: "cover",
+  }}
+  onEnded={() => {
+    setIsPlaying(false);
+    setShowReplay(true);
+  }}
+  className="w-fit h-full"
+/>
+  
 
           {/* Center Controls */}
           <div
@@ -137,7 +140,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
                 onClick={togglePlay}
                 className=" px-3 py-1 text-xs rounded"
               >
-                <FaRegPlayCircle size={21.75} color="white" />
+                <MdOutlineReplay size={21.75} color="white" />
               </button>
             )}
           </div>
@@ -160,12 +163,12 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
               {!isMuted ? (
                 <FaVolumeUp color="white" size={14} />
               ) : (
-                <FaVolumeDown color="white" size={13} />
+                <FaVolumeDown color="white" size={14} />
               )}
             </div>
 
             {/* <div onClick={toggleFullscreen}> */}
-              <FaStreetView color="white" size={14} />
+              <BsArrowsFullscreen color="white" size={14} />
             {/* </div> */}
           </div>
 

@@ -14,7 +14,7 @@ function Card({ item }: Props) {
   const propertyType = item?.propertyTypes?.[0] ?? '';
 
   return (
-    <div className='w-full h-[246.75px]'>
+    <div className=' w-full h-[246.75px]'>
       
       {/* Image Banner */}
       <div className="relative overflow-hidden rounded-[3.75px] sm:w-full h-[142.5px]">

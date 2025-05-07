@@ -1,4 +1,4 @@
-import { logo_footer_black, youtube_icon_footer } from '@/app/assets'
+import { app_Store_Button, logo_footer_black, play_Store_Button, youtube_icon_footer } from '@/app/assets'
 import Image from 'next/image'
 import React from 'react'
 import FooterList from './FooterList'
@@ -11,7 +11,7 @@ function Footer() {
             <footer className='bg-black'>
 
 
-                <section className=' flex gap-10 max-w-[1440px] px-5 flex-col lg:flex-row lg:px-8 xl:px-24 mx-auto w-full py-10 '>
+                <section className=' flex gap-10 max-w-[1440px] px-5  lg:px-8 xl:px-[144.75px] flex-col lg:flex-row mx-auto w-full py-10 '>
                     <section className=''>
                         <div className="flex w-[180px] m-auto justify-center items-center relative h-[80px] object-cover ">
 
@@ -72,6 +72,26 @@ function Footer() {
                             />
 
                         </div>
+
+
+                        <div className="relative mt-10 bg-white w-[117.5px] h-[36px] object-cover">
+                            <Image
+                            alt='play store '
+                            src={play_Store_Button}
+                            className=''
+                            fill
+                            />
+                        </div>
+
+
+                        <div className="relative mt-2 bg-white w-[117.5px] h-[36px] object-cover">
+                            <Image
+                            alt='play store '
+                            src={app_Store_Button}
+                            className=''
+                            fill
+                            />
+                        </div>
                     </section>
 
                     <section className='grid grid-cols-2 md:grid-cols-6  xl justify-between w-full'>
@@ -103,7 +123,7 @@ function Footer() {
                     </section>
                 </section>
 
-                <p className='text-sm font-medium bg-black text-center text-white p-6'>Copyright ⓒ 2025 PropertySeller. All Rights Reserved</p>
+                <p className='text-sm font-medium bg-black text-center text-white p-6'>Copyright ⓒ 2025 PropertySeller. <span className='hidden sm:flex'>All Rights Reserved</span> </p>
             </footer>
 
 

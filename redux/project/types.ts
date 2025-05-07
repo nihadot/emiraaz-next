@@ -22,7 +22,7 @@ export type AllProjectsItems = {
   projectName: string;
   projectStatus: string;
   lastInspected: string;
-
+  createdAt:string;
   buildingName: string;
   totalFloors: string;
   retailCenters: string;

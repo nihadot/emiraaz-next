@@ -19,6 +19,7 @@ import ProjectImageSlider from './ProjectImageSlider';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import Typography from '../atom/typography/Typography';
+import { getDaysAgo } from '../atom/button/getDaysAgo';
 // import Image from '../atom/image/Image';
 
 type Props = {
@@ -41,25 +42,28 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
 
 
     return (
-        <div className="relative overflow-hidden h-[500px] lg:h-[260px] rounded lg:flex-row flex-col flex border border-[#DEDEDE]">
+        <div className="relative overflow-hidden w-full sm:w-full flex-none sm:h-[500px] lg:h-[260px] rounded lg:flex-row flex-col flex border border-[#DEDEDE]">
             <ProjectImageSlider item={item} />
 
-            <div className="flex font-poppins flex-col  p-[16.5px]">
+            <div className="flex font-poppins flex-col p-[10px] sm:p-[16.5px]">
                 <div className="relative w-fit">
                     {/* <h3 className="text-[20px] font-medium capitalize">
                         {item.projectTitle}
                     </h3> */}
                     <Typography
-                        // variant='h2'
-                        className='text-[15px] font-medium font-poppins'
-                        tag='h2'
-                        text={item.projectTitle}
-                    />
+                        className=" text-[14.4px] sm:text-[15px]  relative font-medium font-poppins flex items-center gap-[9px]"
+                        tag="h2"
+                    >
+                        {item.projectTitle}
 
-                    {item.discount && (
-                        <div className="absolute font-medium font-poppins top-0 lg:block hidden -right-28 bg-[#44B842] rounded-[2px] text-white text-[9.75px] px-2 py-0.5 capitalize w-fit">
-                            {item.discount} Discount </div>
-                    )}
+                        {item.discount && (
+                            <span className="bg-[#44B842] rounded-[2px] text-white text-[9.75px] px-2 py-0.5 capitalize w-fit hidden lg:inline-block">
+                                {item.discount} Discount
+                            </span>
+                        )}
+                    </Typography>
+
+
                 </div>
                 {/* Price */}
                 {/* <h4 className="text-[20px] font-semibold">
@@ -76,18 +80,18 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
 
                 {/* Price  */}
                 <p>
-                    <span className='text-[12.75px] mt-[4.5px] font-semibold font-poppins '>{currency}</span>
-                    <span className='font-poppins text-[24.75px] ms-1 font-semibold '>
+                    <span className='text-[11.928px] sm:text-[12.75px] mt-[4.5px] font-semibold font-poppins '>{currency}</span>
+                    <span className='font-poppins text-[24.75px] ms-2 sm:ms-1 font-semibold '>
                         {value}
                     </span>
                 </p>
 
 
-      {/* Property Type */}
+                {/* Property Type */}
 
-                <div className="flex mt-[4.5px] items-center gap-3">
+                <div className="flex mt-[2px] sm:mt-[4.5px] items-center gap-3">
                     <p className="capitalize font-semibold font-poppins text-[12px]">{propertyType}</p>
-                    <div className="h-[20px] w-[1px] bg-[#333333]" />
+                    <div className="h-[17.25px] w-[1px] bg-[#333333]" />
                     {!(item.projectType === 'land-residential' || item.projectType === 'land-commercial') && <div className="flex items-center gap-3">
                         <div className="flex items-center gap-2">
                             <Image src={bed_icon} alt="bed icon" width={20} height={20} className="object-cover" />
@@ -95,10 +99,11 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
 
                             <Typography
                                 tag='p'
-                                className='text-[12px] font-light font-poppins'
+                                className='text-[12px] line-clamp-1 text-ellipsis font-light font-poppins'
                                 text={item.numberOfBeds}
                             />
                         </div>
+
 
                         <div className="flex items-center gap-2">
                             <Image src={bath_icon} alt="bath icon" width={20} height={20} className="object-cover" />
@@ -126,7 +131,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
                     </div>
                 </div>
 
-                <div className="flex gap-2 mt-[9px] items-center">
+                <div className="sm:flex hidden gap-2 mt-[9px] items-center">
                     {/* <p className='text-xs capitalize'>{furnishing}</p> */}
                     <Typography
                         tag='p'
@@ -134,9 +139,9 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
                         className='text-[12px] capitalize'
                         text={`${furnishing}`}
                     />
-                    <div className="h-[20px] w-[1px] bg-[#333333]" />
+                    <div className="h-[17.25px] w-[1px] bg-[#333333]" />
 
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 items-center justify-center">
                         {item.facilitiesAmenitiesDetails.slice(0, 3).map((f, index, arr) => (
                             <React.Fragment key={index}>
                                 {/* <p className="text-xs px-2 capitalize">{f.name}</p> */}
@@ -147,7 +152,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
                                     text={f.name}
                                 />
                                 {index < arr.length - 1 && (
-                                    <div className="h-4 w-[1px] bg-black/50" />
+                                    <div className="h-[17.25px] w-[1px] bg-[#333333]" />
                                 )}
                             </React.Fragment>
                         ))}
@@ -157,28 +162,33 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
                 </div>
 
 
-                <div className="flex items-center mt-[10.5px] gap-2">
+                <div className="flex items-center mt-[8px] sm:mt-[10.5px] gap-2">
                     <Image src={location_icon} alt="location icon" width={15} height={15} className="object-cover" />
-                    <p className="text-xs font-light font-poppins capitalize">{item.address || 'Jumeirah Village Circle, Dubai'}</p>
+                    {/* <p className="text-xs font-light font-poppins capitalize">{item.address || 'Jumeirah Village Circle, Dubai'}</p> */}
                     <Typography
                         tag='p'
 
-                        className='text-[12px] font-light font-poppins capitalize'
-                        text={item.address}
+                        className='text-[12px] line-clamp-1 text-ellipsis font-light font-poppins capitalize'
+                        text={item.address || 'Jumeirah Village Circle, Dubai'}
                     />
                 </div>
 
-                <div className="flex mt-[9px] h-[27px] items-center rounded-[3.75px] bg-[#FFE7EC] gap-1 px-3 py-1.5 text-[12px] font-light text-[#FF1645]">
+                <div className="flex mt-[9px] h-[27px] items-center rounded-[3.75px] bg-[#FFE7EC] gap-1 px-3 py-1.5  text-[#FF1645]">
                     <Image src={christmas__icon_star} alt="authenticity icon" width={20} height={20} className="object-cover" />
-                    Property Authenticity Was Validated On May 25
+                    
+                    <p
+                    className='text-[12px] font-light text-ellipsis line-clamp-1 '
+                    >
+                    This listing was newly introduced {getDaysAgo(item.createdAt)}
+                    </p>
                 </div>
 
-                <div className="flex mt-[10.5px] bg-white h-8 items-center gap-2">
+                <div className="flex mt-[3px] sm:mt-[10.5px] bg-white h-8 items-center gap-2">
                     {/* Details Button */}
                     <PrimaryButton
                         onClick={() => handleClick(item)}
                         type="button"
-                        className="flex w-[106.5px] h-[35px] items-center gap-2 rounded border-none bg-[#FF1645]"
+                        className="flex w-full sm:w-[106.5px] h-[35px] items-center gap-2 rounded border-none bg-[#FF1645]"
                     >
                         <Image src={details_icon} alt="details icon" width={16.5} height={16.5} />
                         <span className="text-[14px] text-white">Details</span>
@@ -188,7 +198,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
                     <PrimaryButton
                         onClick={() => handleEnquiryFormClick(item)}
                         type="button"
-                        className="flex w-[140.5px] h-[35px] items-center gap-2 rounded border-none bg-[#FF1645]"
+                        className="flex w-full sm:w-[140.5px] h-[35px] items-center gap-2 rounded border-none bg-[#FF1645]"
                     >
                         <Image src={notes_icon} alt="enquiry icon" width={16.5} height={16.5} />
                         <span className="text-[14px] text-white text-nowrap">Enquiry Now</span>
@@ -201,7 +211,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
                 </div>
             </div>
 
-       
+
 
             <div className="absolute right-0 z-20">
                 <FavoriteIcon projectId={item._id} />

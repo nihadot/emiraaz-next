@@ -43,3 +43,5 @@ export { default as down_icon } from "./down 2.png";
 export { default as play_icon } from "./play-button.svg";
 export { default as notes_red_edit } from "./notes_red_edit.svg";
 export { default as floor_plan } from "./floor_plan.png";
+export { default as play_Store_Button } from "./google-store.png";
+export { default as app_Store_Button } from "./app-store.png";

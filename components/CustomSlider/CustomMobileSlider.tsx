@@ -85,25 +85,6 @@ export default function CustomMobileSlider({
           </div>
         ))}
       </div>
-
-      {/* If you want to keep manual buttons, uncomment below:
-      <button
-        onClick={() =>
-          setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
-        }
-        className={`absolute left-2 top-1/2 -translate-y-1/2 bg-white/70 px-3 py-1 rounded ${buttonClassName}`}
-      >
-        ‹
-      </button>
-      <button
-        onClick={() =>
-          setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
-        }
-        className={`absolute right-2 top-1/2 -translate-y-1/2 bg-white/70 px-3 py-1 rounded ${buttonClassName}`}
-      >
-        ›
-      </button>
-      */}
     </div>
   );
 }

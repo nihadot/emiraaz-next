@@ -66,7 +66,7 @@ function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
     };
 
     return (
-        <div className="relative group  lg:max-w-[350px] w-full rounded h-full">
+        <div className="relative group  lg:max-w-[350px] w-full rounded h-[200px] sm:h-full">
             <Swiper
                 pagination={{
                     dynamicBullets: true,
@@ -125,7 +125,7 @@ function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
 
             <button
                 ref={prevRef}
-                className="absolute left-2 top-1/2 z-10 transform -translate-y-1/2 h-[20px] w-[20px] bg-white/75 text-red-500 rounded-[4.5px] justify-center items-center p-1 hover:opacity-80 transition-opacity duration-200 hidden group-hover:flex"
+                className="absolute left-2 top-1/2 z-10 transform -translate-y-1/2 h-[20px] w-[20px] bg-white/75 text-red-500 rounded-[4.5px] justify-center items-center p-1 hover:opacity-80 transition-opacity duration-200 group-hover:flex"
             >
                 <div className="">
                     <Image
@@ -140,7 +140,7 @@ function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
 
             <button
                 ref={nextRef}
-                className="absolute right-2 top-1/2 z-10 transform -translate-y-1/2 h-[20px] justify-center items-center w-[20px] bg-white/75 text-red-500 rotate-180 p-1 rounded-[4.5px] hover:opacity-80 transition-opacity duration-200 hidden group-hover:flex"
+                className="absolute right-2 top-1/2 z-10 transform -translate-y-1/2 h-[20px] justify-center items-center w-[20px] bg-white/75 text-red-500 rotate-180 p-1 rounded-[4.5px] hover:opacity-80 transition-opacity duration-200 group-hover:flex"
             >
                 <div className="">
                     <Image

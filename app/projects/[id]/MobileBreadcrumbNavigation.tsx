@@ -5,12 +5,12 @@ import React from 'react'
 
 function MobileBreadcrumbNavigation() {
   return (
-    <div className="flex px-5 sm:hidden py-3 lg:px-8 xl:px-24 max-w-[1440px] w-full justify-between">
-                <div className=" bg-red-600/10 p-3 w-fit rounded relative">
+    <div className="flex px-5  sm:hidden py-3 h-[64px] w-full items-center justify-between">
+                <div className=" w-fit rounded relative">
                     <Image
                     src={back_to_black_icon}
-                    width={20}
-                    height={20}
+                    width={17}
+                    height={17}
                     className="object-contain"
                     alt="back to"
                     />
@@ -19,7 +19,7 @@ function MobileBreadcrumbNavigation() {
                 <div className="flex gap-1 items-center">
 
 
-                <div className=" bg-red-600/10 p-3 w-fit rounded relative">
+                <div className="px-[12px] w-fit rounded relative">
                     <Image
                     src={wishlist_black_icon}
                     width={20}
@@ -29,7 +29,7 @@ function MobileBreadcrumbNavigation() {
                     />
                 </div>
 
-                <div className=" bg-red-600/10 p-3 w-fit rounded relative">
+                <div className=" w-fit rounded relative">
                     <Image
                     src={share_black_icon}
                     width={20}

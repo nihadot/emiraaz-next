@@ -15,7 +15,7 @@ import { useFetchAllCityNamesQuery } from "@/redux/cities/citiesApi";
 import { useFetchAllEmirateNamesQuery } from "@/redux/emirates/emiratesApi";
 import { useFetchAllProjectsQuery } from "@/redux/project/projectApi";
 import { IoCloseOutline } from "react-icons/io5";
-
+import MobileFooterBanner from "./MobileFooterBanner"
 import { AllProjectsItems } from "@/redux/project/types";
 import {
     CompletionTypes,
@@ -51,6 +51,8 @@ import clsx from "clsx";
 import VideoPreview from "./VideoPreview";
 import { useViewAllSmallVideosQuery } from "@/redux/smallVideo/smallViewApi";
 import { AllSmallVideoItems } from "@/redux/smallVideo/types";
+import BottomBanner from "./BottomBanner";
+import RecommendedText from "@/components/RecomendedText/RecommendedText";
 
 type FiltersState = {
     developers?: string[];
@@ -449,7 +451,7 @@ export default function HomePage() {
 
 
                     {/* Desktop and Laptop */}
-                    <div className="hidden lg:flex h-[50px]">
+                    <div className="hidden lg:flex h-[48px]">
                         <SelectOption
                             className="w-[200px]"
                             search
@@ -463,7 +465,7 @@ export default function HomePage() {
 
 
 
-                    <div className="hidden lg:flex h-[50px]">
+                    <div className="hidden lg:flex h-[38.34px]">
                         <SelectOption
                             search
                             clearSelection={clear}
@@ -485,7 +487,7 @@ export default function HomePage() {
                     {/* Mobile */}
                     <div className="flex lg:hidden w-full gap-2">
 
-                        <div className=" h-[50px] w-full">
+                        <div className=" h-[40px] w-full">
                             <SelectOption
                                 className="w-[200px]"
                                 search
@@ -497,7 +499,7 @@ export default function HomePage() {
                         </div>
 
 
-                        <div className=" h-[50px] w-full">
+                        <div className=" h-[40px] w-full">
                             <SelectOption
                                 search
                                 clearSelection={clear}
@@ -729,8 +731,12 @@ export default function HomePage() {
                     </div>
                 </section>
 
+                <div className="mt-[10.5px] mb-[12px]">
+                    <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
+                </div>
+
                 {/* Projects Section */}
-                <div className="px-5  lg:px-8  xl:px-[144px] my-4 flex gap-2">
+                <div className="px-5  lg:px-8  xl:px-[144px] mb-4 flex gap-2">
                     <div className="flex-1 h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
 
                         {projects ? projects?.data?.map((item, index) => (
@@ -791,22 +797,62 @@ export default function HomePage() {
             </div>
 
 
-            <div className="sm:hidden block">
+            {/* <div className="sm:hidden block">
                 <BottomNavigation />
-            </div>
+            </div> */}
 
 
-            <div className="py-4">
+            <div className="mt-[23.25px]">
 
                 <Pagination
                     currentPage={filters.page || 1}
                     totalPages={totalPages}
                     onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
                 />
+
+                <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">1 To 24 of 23,567 Listings</div>
             </div>
 
 
-            <Footer />
+         
+
+            <div className=" mt-[45.75px]">
+                <div className="h-[1px] hidden sm:block w-full bg-[#DEDEDE]"></div>
+            </div>
+
+
+            <BottomBanner />
+
+            {smallVideoAds && smallVideoAds.length > 0 &&
+                            <div className="w-full mb-[35px] relative px-5  lg:px-8 flex sm:hidden">
+                                <VideoPreview
+                                    src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                                />
+                            </div>
+                        }
+
+
+            {/* Mobile Footer Banner */}
+            <MobileFooterBanner />
+
+
+            <div className="px-5 flex sm:hidden lg:px-8 mt-[16px]">
+
+<RecommendedText
+    title="Recommended For You"
+    items={[
+        'Studio Properties For Sale in Dubai',
+        '1 BHK Flats in Downtown',
+        'Luxury Villas in Palm Jumeirah',
+        'Affordable Apartments in JVC',
+        'Beachfront Homes in Dubai Marina',
+    ]}
+/>
+</div>
+
+
+
+            <Footer />  
 
         </main>
 

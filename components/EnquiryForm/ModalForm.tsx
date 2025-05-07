@@ -80,19 +80,10 @@ function ModalForm({ item, setEnquiry }: Props) {
                     if(userData) payload.userId = userData._id
             }
 
-// console.log(_id ,'isAuthentication && _id')
-            // if (isAuthentication && _id) {
-            //     payload.userId = _id;
-            // }
-
-
-
 
 
             await axios.post(`${baseUrl}/enquiry`, payload);
-            // Reset form or show success
-            // successToast('Submitted');
-
+         
             setEnquiry((prev: any) => ({
                 ...prev,
                 count: 2,
@@ -110,9 +101,9 @@ function ModalForm({ item, setEnquiry }: Props) {
 
     return (
         <div className=''>
-            <form className='w-[450px] flex flex-col gap-2 p-4' onSubmit={handleSubmit}>
+            <form className='w-[436px] h-[230px] flex flex-col gap-2 px-[27px] py-[20px]' onSubmit={handleSubmit}>
 
-                <p className='text-center pb-2 font-semibold text-base'>Please enter your details</p>
+                <p className='text-center pb-2  text-[17.25px] font-poppins font-medium'>Please enter your details</p>
 
                 <InputField
                     type='text'
@@ -133,7 +124,7 @@ function ModalForm({ item, setEnquiry }: Props) {
                     inputStyle={{
                         width: '100%',
                         height: '45px',
-                        borderRadius: '6px',
+                        borderRadius: '3.5px',
                         borderColor: '#ccc',
                     }}
                 />
@@ -141,13 +132,12 @@ function ModalForm({ item, setEnquiry }: Props) {
                 <PrimaryButton
                     loading={loading}
                     type='submit'
-                    className='flex mt-1 justify-center bg-red-600 rounded-md border-none items-center gap-1'
+                    className='flex mt-1 justify-center bg-[#FF1645] rounded-[3.75px] border-none items-center gap-1'
 
                 >
 
                     <div className='justify-center flex items-center gap-2'>
-                        <Image src={details_icon} alt='menu icon' width={21} />
-                        <label className='text-white text-sm'>Enquiry Now</label>
+                        <label className='text-white text-[14.25px] font-poppins font-medium'>Submit</label>
                     </div>
                 </PrimaryButton>
             </form>

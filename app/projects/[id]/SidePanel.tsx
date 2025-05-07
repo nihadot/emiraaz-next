@@ -64,7 +64,7 @@ const SidePanel = ({
             </div>
 
             {/* Project Ads Card */}
-            <div className="mt-[42.75px]">
+            <div className="mt-[26.75px]">
                 {<Slider containerClassName="hidden sm:block" items={filteredProjectAdsCard}>
                     {(item, i) => (
                         <AdsCard item={item} key={i} />
@@ -74,14 +74,28 @@ const SidePanel = ({
 
 
 
-            {shuffledImages && shuffledImages.length > 0 && <div className="mt-[15px]">
+
+            <div className="mt-[15px] sticky top-[85px] left-0">
+            {shuffledImages && shuffledImages.length > 0 &&
                 <CustomSlider
                     images={shuffledImages}
                     containerClassName="max-w-xl hidden sm:block mx-auto shadow-lg"
                     imageClassName="h-[600px]"
-                    buttonClassName="hover:bg-white"
+                    // buttonClassName="hover:bg-white"
                 />
-            </div>}
+          }
+
+
+
+            <div className="hidden sm:block">
+
+{RECOMMENDED_LISTS.map((block, idx) => (
+    <RecommendedText key={idx} title={block.title} items={block.items} />
+))}
+</div>
+</div>
+
+
         </div>
     );
 }

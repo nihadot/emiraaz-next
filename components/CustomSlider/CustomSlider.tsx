@@ -1,20 +1,22 @@
+'use client';
+
 import { PortraitBanner } from '@/redux/portraitBannerAd/types';
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface CustomSliderProps {
   images: PortraitBanner[];
   containerClassName?: string;
   imageClassName?: string;
-  buttonClassName?: string;
-  autoSlideInterval?: number; // optional: auto slide every x ms
+  autoSlideInterval?: number;
 }
 
 export default function CustomSlider({
   images,
   containerClassName = '',
   imageClassName = '',
-  autoSlideInterval = 30000, // 3 seconds by default
+  autoSlideInterval = 15000,
 }: CustomSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
@@ -24,7 +26,7 @@ export default function CustomSlider({
     if (images.length === 0) return;
 
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+      setCurrentIndex((prev) => (prev + 1) % images.length);
     }, autoSlideInterval);
 
     return () => clearInterval(interval);
@@ -45,15 +47,12 @@ export default function CustomSlider({
       Math.abs(touchStartX.current - touchEndX.current) > 50
     ) {
       if (touchStartX.current > touchEndX.current) {
-        // swipe left → next
-        setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+        setCurrentIndex((prev) => (prev + 1) % images.length);
       } else {
-        // swipe right → previous
-        setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+        setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
       }
     }
 
-    // reset
     touchStartX.current = null;
     touchEndX.current = null;
   };
@@ -67,43 +66,29 @@ export default function CustomSlider({
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      <div
-        className="flex transition-transform duration-500 ease-in-out"
-        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-      >
-        {images.map((img, index) => (
-          <div key={index} className="relative h-[600px] w-full max-w-[300px]">
-
+      <div className="relative h-[600px] w-full">
+        <AnimatePresence>
+          <motion.div
+            key={currentIndex}
+            initial={{ opacity: 0.3 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0.3 }}
+            transition={{
+              duration: 0.6,
+              ease: 'easeInOut',
+            }}
+            className="absolute top-0 left-0 h-full w-full"
+          >
             <Image
-              alt={''}
+              alt=""
               fill
-
-              src={img.desktopImage?.secure_url || ''}
-              className={` object-cover ${imageClassName}`}
+              src={images[currentIndex]?.desktopImage?.secure_url || ''}
+              className={`object-cover ${imageClassName}`}
               draggable={false}
             />
-          </div>
-        ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
-
-      {/* If you want to keep manual buttons, uncomment below:
-      <button
-        onClick={() =>
-          setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
-        }
-        className={`absolute left-2 top-1/2 -translate-y-1/2 bg-white/70 px-3 py-1 rounded ${buttonClassName}`}
-      >
-        ‹
-      </button>
-      <button
-        onClick={() =>
-          setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
-        }
-        className={`absolute right-2 top-1/2 -translate-y-1/2 bg-white/70 px-3 py-1 rounded ${buttonClassName}`}
-      >
-        ›
-      </button>
-      */}
     </div>
   );
 }

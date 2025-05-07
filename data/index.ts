@@ -123,18 +123,27 @@ export const propertyTypeSecond = [
 
 
 export const RECOMMENDED_LISTS = [
+   
     {
-      title: "Recommended Searches",
+      title: "Near Dubai",
       items: [
-        "Studio Properties For Sale in Dubai",
-        "1 Bedroom Properties For Sale in Dubai",
-        "2 Bedroom Properties For Sale in Dubai",
-        "3 Bedroom Properties For Sale in Dubai",
-        "4 Bedroom Properties For Sale in Dubai",
-        "5 Bedroom Properties For Sale in Dubai",
-        "6 Bedroom Properties For Sale in Dubai",
+        "Ajman Properties",
+        "Sharjah Properties",
+        "Al Ain Properties",
       ],
     },
+
+
+   
+  ];
+
+
+
+
+
+
+export const RECOMMENDED_LISTS_SECOND = [
+   
     {
       title: "Near Dubai",
       items: [

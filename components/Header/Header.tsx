@@ -77,18 +77,17 @@ function Header() {
         <Image src={logo} alt='logo' fill className='bg-cover' />
 
       </div>
-      <div className="min-laptop:hidden block">
-        <PrimaryButton
-          type='button'
-          className='flex !px-3 items-center gap-1'
+      <PrimaryButton
+              type='button'
+              className='flex !rounded-[2.5px] md:hidden w-[66.75px] items-center gap-1'
+            >
+              <>
+                <label htmlFor="" className='text-[11px] font-normal  font-poppins'>AED</label>
+                <Image src={drop_down_icon} alt='menu icon' width={9} height={9} />
+              </>
 
-        >
-          <>
-            <Image src={user_icon} alt='menu icon' width={20} />
-            <label htmlFor="" className='text-xs'>Login</label>
-          </>
-        </PrimaryButton>
-      </div>
+
+            </PrimaryButton>
 
 
       <div className="min-laptop:flex hidden items-center gap-4">

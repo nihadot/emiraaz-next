@@ -58,7 +58,7 @@ const ProjectDescription: React.FC<ProjectDescriptionProps> = ({
         <div className="space-y-2 ">
             <ProjectHeader contentClassName='font-medium font-poppins text-[16.5px]' title={title} />
 
-            <p className="text-[12px] text-[#333333] font-poppins font-light">{shortDescription}</p>
+            <p className="text-[12px] break-all sm:break-normal text-[#333333] font-poppins font-light">{shortDescription}</p>
 
             {isTruncated && (
                 <button

@@ -44,12 +44,12 @@ function RegulatoryInformation({ qrCodeUrl, icon, data, headerTitle, reportedPro
 
       </div>
 
-      <div className="mt-[24.75px]">
+      <div className="mt-[24.75px] hidden md:block">
 
         <PrimaryButton
         onClick={reportedProjectHandler}
           type="button"
-          className=" bg-[#FFE7EC] w-full max-w-[322px] items-center border-none text-[#FF1645] font-poppins rounded "
+          className=" bg-[#FFE7EC] max-w-[280px] w-full border-none "
       >
 <div className="flex justify-center items-center gap-2">
               <Image src={report_icon} alt="save icon" width={21} height={21} className='object-cover' />

@@ -7,7 +7,7 @@ type Props = {
 
 function RecommendedText({ title, items }: Props) {
   return (
-    <div className="">
+    <div className="w-full">
       <p className="rounded-[3.5px] p-2 my-2 text-[12px] border font-semibold border-[#DEDEDE] bg-[#F5F5F5] font-poppins">{title}</p>
       {items.map((item, index) => (
         <p

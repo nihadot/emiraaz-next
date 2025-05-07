@@ -2,10 +2,10 @@ import Image from 'next/image'
 import React from 'react'
 import ProjectHeader from './ProjectHeader'
 
-type Props = { images: { secure_url: string }[], }
+type Props = { images: { secure_url: string }[],handleGallerySelect:(value:string)=> void,handleGalleryModal:()=> void }
 
 function LayoutInformation({
-  images
+  images,handleGalleryModal,handleGallerySelect
 }: Props) {
   return (
     <div className=''>
@@ -15,7 +15,7 @@ function LayoutInformation({
       />
       <div className="flex gap-[8.25px] mt-2 flex-wrap">
         {images.slice(0, 2).map((item, index) => (
-         <div key={index} className="relative border-[#DEDEDE] border object-cover rounded-[3.5px] w-[271px] h-[174.75px]">
+         <div key={index} className="relative border-[#DEDEDE] border object-cover rounded-[3.5px] w-full sm:w-[271px] h-[198px] sm:h-[174.75px]">
            <Image
             key={index}
            fill
@@ -26,7 +26,10 @@ function LayoutInformation({
          </div>
         ))}
 
-        <div className="border-[#DEDEDE] text-[15px] font-medium font-poppins gap-2 text-[#FF1645] flex rounded-[3.5px] justify-center items-center border w-[174.75px] h-[174.75px]">
+        <div onClick={()=>{
+          handleGalleryModal()
+          handleGallerySelect('layouts')
+        }} className="border-[#DEDEDE] sm:text-[15px] text-[13px] font-medium font-poppins gap-2 text-[#FF1645] flex rounded-[3.5px] justify-center items-center border w-full sm:w-[174.75px] h-[58px] sm:h-[174.75px]">
           +{images && images.length > 2 && images.length - 2 || 0} More
         </div>
       </div>

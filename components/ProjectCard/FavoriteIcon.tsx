@@ -4,12 +4,16 @@ import { useToggleWishlistItemMutation } from "@/redux/wishlist/wishlistApi";
 import { LOCAL_STORAGE_KEYS } from "@/api/storage";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { GoHeart, GoHeartFill } from "react-icons/go";
+import { error } from "console";
+import { errorToast } from "../Toast";
 
 interface UserData {
   _id: string;
 }
 
 const FavoriteIcon = ({ projectId }: { projectId: string }) => {
+  // console.log('first',projectId)
   const [isFavorite, setIsFavorite] = useState(false);
 
   const wishlistItems = useSelector((state: RootState) => state.wishlist.items);
@@ -27,8 +31,12 @@ const FavoriteIcon = ({ projectId }: { projectId: string }) => {
 
   const isWishlist = wishlistItems?.find(item => item?.propertyDetails?._id === projectId);
 
+  
   const toggleWishlistItem = async () => {
-    if (!userId) return;
+    if (!userId) {
+      errorToast("Please login to favorite this project");  
+      return;
+    };
 
     const data = {
       projectId: projectId,
@@ -43,15 +51,19 @@ const FavoriteIcon = ({ projectId }: { projectId: string }) => {
     }
   };
 
-  if (!userId) return null; // or a loading spinner
+  
+  // if (!userId) return null; // or a loading spinner
+
+  // console.log('first')
 
   return (
-    <div className="absolute right-4 top-4" style={{ cursor: 'pointer' }}>
+    <div className="absolute right-[15.5px] top-[15.5px]" style={{ cursor: 'pointer' }}>
       {isWishlist ? (
-        <FaHeart onClick={toggleWishlistItem} color="red" size={20} />
+        <GoHeartFill onClick={toggleWishlistItem} color="red" size={25} />
       ) : (
-        <FaRegHeart onClick={toggleWishlistItem} color="gray" size={20} />
+        <GoHeart onClick={toggleWishlistItem} color="gray" size={25} />
       )}
+      {/* Lorem ipsum dolor sit amet consectetur adipisicing elit. In recusandae aperiam consequatur nam sunt nemo voluptate cumque omnis mollitia, minima deleniti! Suscipit a, odio accusantium ut consequatur tempora reiciendis ab? */}
     </div>
   );
 };
