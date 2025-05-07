@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { RootState } from '@/redux/store'
 import Header from '@/components/Header'
 import { Footer } from '@/components/Footer'
-import Typography from '@/components/atom/typography/Typography'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import * as Yup from "yup"
 import { errorToast, successToast } from '@/components/Toast'
@@ -70,7 +69,7 @@ const ProfilePage = () => {
 
   return (
     <main>
-      <div className="max-w-[1440px] mx-auto">
+      <div className="max-w-[1200px] mx-auto">
         <Header />
         <div className="px-5 lg:px-8 xl:px-[144px] py-8">
           <Formik

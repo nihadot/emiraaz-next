@@ -52,6 +52,7 @@ import { ProjectType } from "@/redux/types";
 import { IoLocationOutline } from "react-icons/io5";
 import CustomSlider from "@/components/CustomSlider/CustomSlider";
 import RecommendedText from "@/components/RecomendedText/RecommendedText";
+import Container from "@/components/atom/Container/Container";
 
 const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
   const router = useRouter();
@@ -221,7 +222,9 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
   return (
     <div className=" mx-auto w-full   ">
-      {/* <Header /> */}
+      <div className="hidden sm:flex">
+      <Header />
+      </div>
 
       <div className="">
         <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
@@ -238,7 +241,9 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
 
 
-      <div className="px-5  lg:px-8 xl:px-[144.75px] m-auto max-w-[1440px]">
+      <div className="">
+        <Container>
+
         <BreadcrumbNavigation
           backToFun={handleBackTo}
         />
@@ -542,6 +547,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
 
         </div>
+        </Container>
 
 
 
@@ -553,10 +559,10 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
         >
 
 
-          <div className=" flex flex-col bg-white px-5  sm:px-[30px] py-[20px] rounded-[6px] max-w-[1200px] w-full h-screen sm:h-[85vh]">
-            <div className=" flex justify-end  items-end" onClick={handleGalleryModal}>
+          <div className=" flex flex-col bg-white px-3  sm:px-[30px] py-[20px] rounded-[6px] max-w-[1200px] w-full h-screen sm:h-[85vh]">
+            {/* <div className=" flex justify-end  items-end" onClick={handleGalleryModal}>
               <Image src={close_icon} alt="save icon" width={12} height={12} />
-            </div>
+            </div> */}
 
 
 
@@ -565,7 +571,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
               {options.map((item) => (
                 <button
                   key={item.value}
-                  className={` font-normal gap-[4px] sm:gap-[7.5px] font-poppins text-[11.9px] sm:text-[14px] rounded-md px-3 sm:px-4 py-1 h-[40px] flex items-center   justify-center transition-all w-full duration-200 ${gallerySelected === item.value
+                  className={` font-normal gap-[4px] sm:gap-[7.5px] font-poppins sm:text-[14px] rounded-md px-2 sm:px-4 py-0 sm:py-1 h-[40px] flex items-center   justify-center transition-all w-full duration-200 ${gallerySelected === item.value
                     ? 'bg-red-600/10 text-red-600'
                     : 'bg-white text-[#767676] hover:text-red-600 hover:bg-red-100'
                     }`}
@@ -575,7 +581,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
                   {/* <Image src={item.icon} alt='menu icon' width={20} /> */}
 
-                  <span className="font-poppins font-medium text-[12px]">{item.label}</span>
+                  <span className="font-poppins font-medium text-[10px] sm:text-[12px]">{item.label}</span>
                 </button>
               ))}
             </div>
@@ -603,7 +609,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
             <div className="flex mt-[17.25px] ms-6 sm:ms-0 gap-[7.5px] items-center justify-center sm:justify-end">
               <PrimaryButton
                 type="button"
-                className="bg-[#FFE7EC]  border-none text-[#FF1645] font-poppins rounded "
+                className="bg-[#FFE7EC] border-none text-[#FF1645] font-poppins rounded "
 
               >
                 <div className="flex items-center w-[60px] h-[35.25px] justify-center gap-2">
@@ -626,7 +632,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
               <PrimaryButton
                 type="button"
-                className="bg-[#FFE7EC]  me-6 border-none text-[#FF1645] font-poppins rounded "
+                className="bg-[#FFE7EC] me-6 border-none text-[#FF1645] font-poppins rounded "
 
               >
                 <div className="flex items-center gap-2 w-[120.75px] h-[35.25px] justify-center">

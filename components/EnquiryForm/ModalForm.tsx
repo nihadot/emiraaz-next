@@ -12,6 +12,7 @@ import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
 import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import { User } from '@/redux/userSlice/types';
+import Container from '../atom/Container/Container';
 type Props = {
     item: {
         id: string;
@@ -100,8 +101,10 @@ function ModalForm({ item, setEnquiry }: Props) {
 
 
     return (
-        <div className=''>
-            <form className='w-[436px] h-[230px] flex flex-col gap-2 px-[27px] py-[20px]' onSubmit={handleSubmit}>
+        <Container
+        
+        >
+            <form className='sm:w-[436px] h-fit sm:h-[230px] flex flex-col gap-2 py-[20px]' onSubmit={handleSubmit}>
 
                 <p className='text-center pb-2  text-[17.25px] font-poppins font-medium'>Please enter your details</p>
 
@@ -142,7 +145,7 @@ function ModalForm({ item, setEnquiry }: Props) {
                 </PrimaryButton>
             </form>
 
-        </div>
+        </Container>
     );
 }
 

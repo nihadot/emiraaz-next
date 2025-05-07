@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 import { errorToast } from '../Toast';
 import Container from '../atom/Container/Container';
 
-function Header() {
+function HeaderSecondary() {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
@@ -200,4 +200,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default HeaderSecondary;

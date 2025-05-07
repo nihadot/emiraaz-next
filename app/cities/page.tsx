@@ -88,7 +88,7 @@ function Cities() {
 
         <main>
 
-            <div className=" max-w-[1440px] mx-auto w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
+            <div className=" max-w-[1200px] mx-auto w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
                 <Header />
 
 

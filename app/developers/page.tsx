@@ -11,6 +11,7 @@ import { AllDevelopersItems } from '@/redux/developers/types'
 import Image from 'next/image'
 import { top_arrow_icon } from '../assets'
 import Pagination from '@/components/Pagination/Pagination'
+import Container from '@/components/atom/Container/Container'
 
 
 function Developers() {
@@ -90,12 +91,13 @@ function Developers() {
 
         <main>
 
-            <div className=" max-w-[1440px] mx-auto w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
+            <div className=" w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
                 <Header />
 
 
 
-                <section className="px-5 lg:px-8 xl:px-24 flex-wrap w-full flex items-center  gap-2">
+        <Container>
+        <section className=" flex-wrap w-full flex items-center  gap-2">
                     <div className="sm:flex-[18%] w-full  h-[50px]">
                         <SearchInput
                             value={filters.search}
@@ -136,23 +138,26 @@ function Developers() {
 
 
                 </section>
+        </Container>
 
                 <div className="w-full h-[1px] bg-gray-200 my-4"></div>
 
+<Container>
 
-                <section className='h-full pb-20 grid-cols-1 w-full px-5 md:px-8 xl:px-24 gap-3 grid lg:grid-cols-3' >
+<section className='h-full pb-20 grid-cols-1 w-full  gap-3 grid lg:grid-cols-3' >
 
-                    {
-                        allDevelopers && allDevelopers.data && allDevelopers.data.map((item, index) => {
-                            return (
-                                <Card
-                                    key={index}
-                                    item={item}
-                                />
-                            )
-                        })
-                    }
-                </section>
+{
+    allDevelopers && allDevelopers.data && allDevelopers.data.map((item, index) => {
+        return (
+            <Card
+                key={index}
+                item={item}
+            />
+        )
+    })
+}
+</section>
+</Container>
 
 
 

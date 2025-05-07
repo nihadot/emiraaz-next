@@ -1,7 +1,8 @@
-import { app_Store_Button, logo_footer_black, play_Store_Button, youtube_icon_footer } from '@/app/assets'
+import { app_Store_Button, logo_footer_black, play_store_footer_icon, youtube_icon_footer } from '@/app/assets'
 import Image from 'next/image'
 import React from 'react'
 import FooterList from './FooterList'
+import Container from '../atom/Container/Container'
 
 
 function Footer() {
@@ -11,119 +12,131 @@ function Footer() {
             <footer className='bg-black'>
 
 
-                <section className=' flex gap-10 max-w-[1440px] px-5  lg:px-8 xl:px-[144.75px] flex-col lg:flex-row mx-auto w-full py-10 '>
-                    <section className=''>
-                        <div className="flex w-[180px] m-auto justify-center items-center relative h-[80px] object-cover ">
+                <Container>
 
-                            <Image
-                                className=''
-                                fill
-                                src={logo_footer_black}
-                                // fill
+                    <section className=' flex gap-10  flex-col lg:flex-row w-full py-10 '>
+                        <section className=''>
+                            <div className="flex w-[180px] m-auto justify-center items-center relative h-[80px] object-cover ">
 
-                                alt='logo'
+                                <Image
+                                    className=''
+                                    fill
+                                    src={logo_footer_black}
+                                    // fill
+
+                                    alt='logo'
+                                />
+                            </div>
+
+
+                            <div className="flex  justify-start mt- 0 items-start gap-3">
+
+                                <Image
+                                    className='object-cover'
+                                    width={20}
+                                    height={20}
+
+                                    src={youtube_icon_footer}
+                                    alt='logo'
+                                />
+
+
+                                <Image
+                                    className=''
+                                    width={20}
+                                    height={20}
+                                    src={youtube_icon_footer}
+                                    alt='logo'
+                                />
+
+
+                                <Image
+                                    className=''
+                                    width={20}
+                                    height={20}
+                                    src={youtube_icon_footer}
+                                    alt='logo'
+                                />
+
+
+                                <Image
+                                    className=''
+                                    width={20}
+                                    height={20}
+                                    src={youtube_icon_footer}
+                                    alt='logo'
+                                />
+                                <Image
+                                    className=''
+                                    width={20}
+                                    height={20}
+                                    src={youtube_icon_footer}
+                                    alt='logo'
+                                />
+
+                            </div>
+
+
+                            <div className="relative mt-10 bg-white w-[117.5px] h-[36px] object-cover">
+                                <Image
+                                    fill
+                                    priority
+                                    alt='play store icon here'
+                                    src={play_store_footer_icon}
+                                    className='object-contain w-[200px] h-[100px]'
+                                    unoptimized
+                                />
+                            </div>
+
+
+                            <div className="relative mt-2 bg-white w-[117.5px] h-[36px] object-cover">
+                                <Image
+                                    alt='play store '
+                                    src={app_Store_Button}
+                                    className=''
+                                    fill
+                                />
+                            </div>
+                        </section>
+
+                        <section className='grid grid-cols-2 md:grid-cols-6  xl justify-between w-full'>
+
+                            <FooterList
+                                title="Explore"
+                                items={["Home", "About", "Blog", "News", "Property Talks", "Rental Income", "Developers", "Emirates", "Cities"]}
                             />
-                        </div>
-
-
-                        <div className="flex  justify-start mt- 0 items-start gap-3">
-
-                            <Image
-                                className='object-cover'
-                                width={20}
-                                height={20}
-
-                                src={youtube_icon_footer}
-                                alt='logo'
+                            <FooterList
+                                title="Residential"
+                                items={["Offplan Projects", "Offplan Resale", "Secondary", "Land"]}
                             />
-
-
-                            <Image
-                                className=''
-                                width={20}
-                                height={20}
-                                src={youtube_icon_footer}
-                                alt='logo'
+                            <FooterList
+                                title="Commercial"
+                                items={["Offplan Projects", "Offplan Resale", "Secondary", "Land"]}
                             />
-
-
-                            <Image
-                                className=''
-                                width={20}
-                                height={20}
-                                src={youtube_icon_footer}
-                                alt='logo'
+                            <FooterList
+                                title="Emirates"
+                                items={["Abu Dhabi", "Sharjah", "Ajman", "Umm Al-Quwain", "Ras Al Khaimah", "Fujairah"]}
                             />
-
-
-                            <Image
-                                className=''
-                                width={20}
-                                height={20}
-                                src={youtube_icon_footer}
-                                alt='logo'
+                            <FooterList
+                                title="My Account"
+                                items={["Login / Register", "My Profile", "Saved Properties", "Enquired Properties", "Purchase History"]}
                             />
-                            <Image
-                                className=''
-                                width={20}
-                                height={20}
-                                src={youtube_icon_footer}
-                                alt='logo'
+                            <FooterList
+                                title="Quick Links"
+                                items={["Terms & Conditions", "Privacy Policy", "Banned Agents"]}
                             />
-
-                        </div>
-
-
-                        <div className="relative mt-10 bg-white w-[117.5px] h-[36px] object-cover">
-                            <Image
-                            alt='play store '
-                            src={play_Store_Button}
-                            className=''
-                            fill
-                            />
-                        </div>
-
-
-                        <div className="relative mt-2 bg-white w-[117.5px] h-[36px] object-cover">
-                            <Image
-                            alt='play store '
-                            src={app_Store_Button}
-                            className=''
-                            fill
-                            />
-                        </div>
+                        </section>
                     </section>
+                </Container>
 
-                    <section className='grid grid-cols-2 md:grid-cols-6  xl justify-between w-full'>
+                <Container>
 
-                        <FooterList
-                            title="Explore"
-                            items={["Home", "About", "Blog", "News", "Property Talks", "Rental Income", "Developers", "Emirates", "Cities"]}
-                        />
-                        <FooterList
-                            title="Residential"
-                            items={["Offplan Projects", "Offplan Resale", "Secondary", "Land"]}
-                        />
-                        <FooterList
-                            title="Commercial"
-                            items={["Offplan Projects", "Offplan Resale", "Secondary", "Land"]}
-                        />
-                        <FooterList
-                            title="Emirates"
-                            items={["Abu Dhabi", "Sharjah", "Ajman", "Umm Al-Quwain", "Ras Al Khaimah", "Fujairah"]}
-                        />
-                        <FooterList
-                            title="My Account"
-                            items={["Login / Register", "My Profile", "Saved Properties", "Enquired Properties", "Purchase History"]}
-                        />
-                        <FooterList
-                            title="Quick Links"
-                            items={["Terms & Conditions", "Privacy Policy", "Banned Agents"]}
-                        />
-                    </section>
-                </section>
+                    <p className='flex gap-1 justify-center py-5 items-center'>
 
-                <p className='text-sm font-medium bg-black text-center text-white p-6'>Copyright ⓒ 2025 PropertySeller. <span className='hidden sm:flex'>All Rights Reserved</span> </p>
+                        <span className="text-sm font-medium bg-black text-center text-white">Copyright ⓒ 2025 PropertySeller</span>
+                        <span className='hidden sm:flex text-sm font-medium bg-black text-center text-white'>. All Rights Reserved</span> </p>
+                </Container>
+
             </footer>
 
 

@@ -54,6 +54,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
                         className=" text-[14.4px] sm:text-[15px]  relative font-medium font-poppins flex items-center gap-[9px]"
                         tag="h2"
                     >
+
                         {item.projectTitle}
 
                         {item.discount && (
@@ -79,12 +80,27 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
                 </Typography> */}
 
                 {/* Price  */}
-                <p>
-                    <span className='text-[11.928px] sm:text-[12.75px] mt-[4.5px] font-semibold font-poppins '>{currency}</span>
+                { (item.projectType === 'commercial-residential' || item.projectTitle === 'project-residential' || item.projectTitle === 'project-commercial') ? <p>
+                    <span className='text-[17px] font-semibold'>Starting From</span>
                     <span className='font-poppins text-[24.75px] ms-2 sm:ms-1 font-semibold '>
                         {value}
                     </span>
-                </p>
+                    <span className='text-[11.928px] sm:text-[12.75px] font-semibold mt-[4.5px] font-poppins '>{currency}</span>
+
+                </p> :
+                
+                <p>
+                {/* <span className='text-[18px] font-semibold'>Starting From</span> */}
+                <span className='text-[11.928px] sm:text-[12.75px] font-semibold mt-[4.5px] font-poppins '>{currency}</span>
+                <span className='font-poppins font-semibold text-[24.75px] ms-2 sm:ms-1 '>
+                    {value}
+                </span>
+            </p>
+            }
+
+
+
+                
 
 
                 {/* Property Type */}
@@ -136,19 +152,19 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
                     <Typography
                         tag='p'
 
-                        className='text-[12px] capitalize'
+                        className='text-[12px] line-clamp-1 text-ellipsis capitalize'
                         text={`${furnishing}`}
                     />
                     <div className="h-[17.25px] w-[1px] bg-[#333333]" />
 
                     <div className="flex gap-1 items-center justify-center">
-                        {item.facilitiesAmenitiesDetails.slice(0, 3).map((f, index, arr) => (
+                        {item.facilitiesAmenitiesDetails.slice(0, 2).map((f, index, arr) => (
                             <React.Fragment key={index}>
                                 {/* <p className="text-xs px-2 capitalize">{f.name}</p> */}
                                 <Typography
                                     tag='p'
 
-                                    className='text-[12px] px-2 capitalize'
+                                    className='text-[12px] line-clamp-1 px-2 capitalize'
                                     text={f.name}
                                 />
                                 {index < arr.length - 1 && (
@@ -175,11 +191,11 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
 
                 <div className="flex mt-[9px] h-[27px] items-center rounded-[3.75px] bg-[#FFE7EC] gap-1 px-3 py-1.5  text-[#FF1645]">
                     <Image src={christmas__icon_star} alt="authenticity icon" width={20} height={20} className="object-cover" />
-                    
+
                     <p
-                    className='text-[12px] font-light text-ellipsis line-clamp-1 '
+                        className='text-[12px] font-light text-ellipsis line-clamp-1 '
                     >
-                    This listing was newly introduced {getDaysAgo(item.createdAt)}
+                        This listing was newly introduced {getDaysAgo(item.createdAt)}
                     </p>
                 </div>
 

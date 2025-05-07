@@ -13,6 +13,7 @@ import Recommendations from '../home/Recommendations'
 import CustomSliderUi from '../home/CustomSliderUi'
 import { shuffle } from '@/utils/shuffle'
 import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi'
+import Container from '@/components/atom/Container/Container'
 
 
 function RentalHome() {
@@ -114,9 +115,11 @@ function RentalHome() {
 
         <main>
 
-            <div className=" max-w-[1440px] mx-auto w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
+            <div className=" w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
                 <Header />
-                <section className="px-5  lg:px-8 xl:px-24 flex-wrap w-full flex items-center  gap-2">
+
+                <Container>
+                <section className="flex-wrap w-full flex items-center  gap-2">
                     <div className="sm:flex-[18%] w-full  h-[50px]">
                         <SearchInput
                             value={filters.search}
@@ -164,40 +167,43 @@ function RentalHome() {
                         />
                     </div>
                 </section>
+                </Container>
 
                 <div className="w-full h-[1px] bg-gray-200 my-4"></div>
+<Container>
 
-                <div className="flex px-5 gap-4 grid-cols-1 lg:px-8 xl:px-24">
+<div className="flex gap-4 grid-cols-1">
 
-                    <section className='h-full w-full gap-3 grid grid-cols-1' >
+<section className='h-full w-full gap-3 grid grid-cols-1' >
 
-                        {
-                            allRentalIncome && allRentalIncome.data && allRentalIncome.data.map((item,index) => {
-                                return (
-                                    <div key={index} className='w-full grid grid-cols-1 md:grid-cols-3 h-full gap-3'>
-
-
-                                        <Card item={item} title={'Town Houses'} name={'townhouse'} />
-                                        <Card item={item} title={'Villa'} name={'villa'} />
-                                        <Card item={item} title='Apartment' name={'apartment'} />
+    {
+        allRentalIncome && allRentalIncome.data && allRentalIncome.data.map((item,index) => {
+            return (
+                <div key={index} className='w-full grid grid-cols-1 md:grid-cols-3 h-full gap-3'>
 
 
-
-                                    </div>
-                                )
-                            })
-                        }
-                    </section>
+                    <Card item={item} title={'Town Houses'} name={'townhouse'} />
+                    <Card item={item} title={'Villa'} name={'villa'} />
+                    <Card item={item} title='Apartment' name={'apartment'} />
 
 
-                    <div className="w-full min-1110px:block hidden ps-2 max-w-[300px]">
-                        <Recommendations />
 
-                        <CustomSliderUi
-                            shuffledImages={shuffledImages}
-                        />
-                    </div>
                 </div>
+            )
+        })
+    }
+</section>
+
+
+<div className="w-full min-1110px:block hidden ps-2 max-w-[300px]">
+    <Recommendations />
+
+    <CustomSliderUi
+        shuffledImages={shuffledImages}
+    />
+</div>
+</div>
+</Container>
 
             </div>
 

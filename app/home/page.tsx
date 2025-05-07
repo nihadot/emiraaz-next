@@ -53,6 +53,8 @@ import { useViewAllSmallVideosQuery } from "@/redux/smallVideo/smallViewApi";
 import { AllSmallVideoItems } from "@/redux/smallVideo/types";
 import BottomBanner from "./BottomBanner";
 import RecommendedText from "@/components/RecomendedText/RecommendedText";
+import Container from "@/components/atom/Container/Container";
+import SectionDivider from "@/components/atom/SectionDivider/SectionDivider";
 
 type FiltersState = {
     developers?: string[];
@@ -342,7 +344,7 @@ export default function HomePage() {
 
         <main>
 
-            <div className=" min-h-screen max-w-[1440px] mx-auto w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
+            <div className=" min-h-screen  w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
                 <Header />
 
                 {/* <section className="px-5  lg:px-8 xl:px-[144px] flex-wrap w-full flex items-center  gap-2">
@@ -439,55 +441,23 @@ export default function HomePage() {
 
                     </Modal>
                 </section> */}
-                <section className="px-5  lg:px-8 xl:px-[144.75px]  grid grid-cols-1  lg:grid-cols-[19.8%_9.8%_9.8%_39%_19%] gap-2">
-
-                    <div className="h-[50px]">
-                        <SearchInput
-                            value={filters?.search || ''}
-                            onChange={handleChangeSearch}
-                            placeholder="Search..."
-                        />
-                    </div>
 
 
-                    {/* Desktop and Laptop */}
-                    <div className="hidden lg:flex h-[48px]">
-                        <SelectOption
-                            className="w-[200px]"
-                            search
-                            clearSelection={clear}
-                            label="Emirates"
-                            options={emirateOptions}
-                            onSelect={handleSelect.emirate}
-                        />
-                    </div>
+                <Container>
+
+                    <section className="  grid grid-cols-1 w-full  lg:grid-cols-[19.8%_9.8%_9.8%_39%_19%] gap-2">
+
+                        <div className="h-[50px]">
+                            <SearchInput
+                                value={filters?.search || ''}
+                                onChange={handleChangeSearch}
+                                placeholder="Search..."
+                            />
+                        </div>
 
 
-
-
-                    <div className="hidden lg:flex h-[38.34px]">
-                        <SelectOption
-                            search
-                            clearSelection={clear}
-                            className="w-[220px]"
-                            label="Cities"
-                            options={cityOptions}
-                            onSelect={handleChangeCities}
-                        />
-                    </div>
-
-
-
-
-
-
-
-
-
-                    {/* Mobile */}
-                    <div className="flex lg:hidden w-full gap-2">
-
-                        <div className=" h-[40px] w-full">
+                        {/* Desktop and Laptop */}
+                        <div className="hidden lg:flex h-[48px]">
                             <SelectOption
                                 className="w-[200px]"
                                 search
@@ -499,287 +469,333 @@ export default function HomePage() {
                         </div>
 
 
-                        <div className=" h-[40px] w-full">
+
+
+                        <div className="hidden lg:flex h-[48px]">
                             <SelectOption
                                 search
                                 clearSelection={clear}
-                                className="w-[220px]  sm:!left-0 !-left-14 "
+                                className="w-[220px]"
                                 label="Cities"
                                 options={cityOptions}
                                 onSelect={handleChangeCities}
                             />
                         </div>
 
-                    </div>
 
 
-                    <div className="h-[50px]">
-                        <SwitchSelector
-                            onSelect={handleSelect.projectType}
-                            defaultValue=""
-                            options={propertyTypeFirst}
-                        />
-                    </div>
 
 
-                    <div className="flex gap-2 h-[50px]">
-                        <SwitchSelector
-                            onSelect={handleSelect.propertyTypeSecond}
-                            defaultValue=""
-                            options={propertyTypeSecond}
-                        />
-                        <button onClick={handleFilterModal} className="bg-red-600/10 rounded flex justify-center items-center  border border-[#DEDEDE] w-[55px] lg:hidden h-full">
-                            <Image
-                                src={filter_icon}
-                                className=" object-cover"
-                                alt="filter"
-                                width={18}
-                                height={18}
 
+
+
+
+                        {/* Mobile */}
+                        <div className="flex lg:hidden w-full gap-2">
+
+                            <div className=" h-[40px] w-full">
+                                <SelectOption
+                                    className="w-[200px]"
+                                    search
+                                    clearSelection={clear}
+                                    label="Emirates"
+                                    options={emirateOptions}
+                                    onSelect={handleSelect.emirate}
+                                />
+                            </div>
+
+
+                            <div className=" h-[40px] w-full">
+                                <SelectOption
+                                    search
+                                    clearSelection={clear}
+                                    className="w-[220px]  sm:!left-0 !-left-14 "
+                                    label="Cities"
+                                    options={cityOptions}
+                                    onSelect={handleChangeCities}
+                                />
+                            </div>
+
+                        </div>
+
+
+                        <div className="h-[50px]">
+                            <SwitchSelector
+                                onSelect={handleSelect.projectType}
+                                defaultValue=""
+                                options={propertyTypeFirst}
                             />
-                        </button>
-                    </div>
+                        </div>
 
 
-                </section>
+                        <div className="flex gap-2 h-[50px]">
+                            <SwitchSelector
+                                onSelect={handleSelect.propertyTypeSecond}
+                                defaultValue=""
+                                options={propertyTypeSecond}
+                            />
+                            <button onClick={handleFilterModal} className="bg-red-600/10 rounded flex justify-center items-center  border border-[#DEDEDE] w-[55px] lg:hidden h-full">
+                                <Image
+                                    src={filter_icon}
+                                    className=" object-cover"
+                                    alt="filter"
+                                    width={18}
+                                    height={18}
+
+                                />
+                            </button>
+                        </div>
+
+
+                    </section>
+                </Container>
+
 
 
                 {/* Additional Filters */}
-                <section className="px-5  lg:px-8 xl:px-[144.75px] lg:flex gap-2  mt-2  hidden">
+                <Container>
+                    <section className=" lg:flex gap-2  mt-2  hidden">
 
-                    {((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial' || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential'))) && <div className="h-[50px]">
+                        {((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial' || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential'))) && <div className="h-[50px]">
 
-                        <ExpandableComponentDropdown
-                            isOpen={rangeCalculator}
-                            onToggle={() => setRangeCalculator(prev => !prev)}
-                            label="Price"
-                            isSelected={false}
-                            customCloseControl={<button className="text-xs text-red-600">X</button>}
-                        >
-                            <RangeCalculator
-                                onDone={(minValue, maxValue) => {
-                                    handleSelect.maxPrice(maxValue);
-                                    handleSelect.minPrice(minValue);
-                                    console.log(minValue, maxValue, '---')
-                                }}
-                                onClose={() => setRangeCalculator(prev => !prev)}
+                            <ExpandableComponentDropdown
+                                isOpen={rangeCalculator}
+                                onToggle={() => setRangeCalculator(prev => !prev)}
+                                label="Price"
+                                isSelected={false}
+                                customCloseControl={<button className="text-xs text-red-600">X</button>}
+                            >
+                                <RangeCalculator
+                                    onDone={(minValue, maxValue) => {
+                                        handleSelect.maxPrice(maxValue);
+                                        handleSelect.minPrice(minValue);
+                                        console.log(minValue, maxValue, '---')
+                                    }}
+                                    onClose={() => setRangeCalculator(prev => !prev)}
 
+                                />
+                            </ExpandableComponentDropdown>
+
+                        </div>}
+
+                        {((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className=" w-[100px]  h-[50px]">
+
+                            <ExpandableComponentDropdown
+                                isOpen={areaRange}
+                                onToggle={() => setShowAreaRange(prev => !prev)}
+                                label="Sqft"
+                                isSelected={false}
+
+                                onClear={() => console.log("Cleared")}
+                                customCloseControl={<button className="text-xs text-red-600">X</button>}
+                            >
+                                <AreaRangeInput
+                                    onClose={() => setShowAreaRange(prev => !prev)}
+                                    onDone={(minValue, maxValue) => {
+                                        handleSelect.minSqft(minValue)
+                                        handleSelect.maxSqft(maxValue)
+                                    }}
+
+                                />
+
+                            </ExpandableComponentDropdown>
+
+                        </div>}
+
+
+
+                        {propertyTypesCondition && <div className={clsx(`h-[50px]`, propertyTypesCondition ? 'w-[130px]' : 'flex-[8%]')}>
+
+                            <SelectOption
+                                clearSelection={clear}
+                                className="w-[200px]"
+                                label="Property Types"
+                                options={PropertyTypes}
+                                onSelect={handleSelect.propertyType}
                             />
-                        </ExpandableComponentDropdown>
+                        </div>}
 
-                    </div>}
 
-                    {((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className=" w-[100px]  h-[50px]">
 
-                        <ExpandableComponentDropdown
-                            isOpen={areaRange}
-                            onToggle={() => setShowAreaRange(prev => !prev)}
-                            label="Sqft"
-                            isSelected={false}
-
-                            onClear={() => console.log("Cleared")}
-                            customCloseControl={<button className="text-xs text-red-600">X</button>}
-                        >
-                            <AreaRangeInput
-                                onClose={() => setShowAreaRange(prev => !prev)}
-                                onDone={(minValue, maxValue) => {
-                                    handleSelect.minSqft(minValue)
-                                    handleSelect.maxSqft(maxValue)
-                                }}
-
+                        {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className="lg:flex-[30%] h-[50px]">
+                            <SwitchSelector
+                                onSelect={handleSelect.completionType}
+                                defaultValue={filters.completionType}
+                                options={CompletionTypes}
                             />
-
-                        </ExpandableComponentDropdown>
-
-                    </div>}
+                        </div>}
 
 
+                        {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential')) && <div className="flex-[8%] h-[50px]">
 
-                    {propertyTypesCondition && <div className={clsx(`h-[50px]`, propertyTypesCondition ? 'w-[130px]' : 'flex-[8%]')}>
+                            <ExpandableComponentDropdown
+                                isOpen={showYearSelector}
+                                onToggle={() => setShowYearSelector(prev => !prev)}
+                                label="Handover"
+                                isSelected={false}
 
-                        <SelectOption
-                            clearSelection={clear}
-                            className="w-[200px]"
-                            label="Property Types"
-                            options={PropertyTypes}
-                            onSelect={handleSelect.propertyType}
-                        />
-                    </div>}
+                                onClear={() => console.log("Cleared")}
+                                customCloseControl={<button className="text-xs text-red-600">X</button>}
+                            >
+                                <SelectHandoverDate
+                                    initialYear={2025}
+                                    initialQuarter={"Q2"}
+                                    onDone={(year, quarter) => {
+                                        handleSelect.handoverDate({ quarter, year })
+                                    }}
+                                    onClose={() => setShowYearSelector(false)}
+                                    reset={() => console.log("Reset triggered")}
+                                    onChange={(year, quarter) => console.log("Live change", year, quarter)}
+                                />
+                            </ExpandableComponentDropdown>
+
+                        </div>}
 
 
 
-                    {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className="lg:flex-[30%] h-[50px]">
-                        <SwitchSelector
-                            onSelect={handleSelect.completionType}
-                            defaultValue={filters.completionType}
-                            options={CompletionTypes}
-                        />
-                    </div>}
+
+                        {bedAndBathCondition && <div className={clsx("h-[50px]", bedAndBathCondition ? 'w-[180px]' : 'flex-[6%]')}>
+
+                            <ExpandableComponentDropdown
+                                isOpen={bedsAndBath}
+                                onToggle={() => setBedsAndBath(prev => !prev)}
+                                label="Beds & Baths"
+                                isSelected={false}
+
+                                onClear={() => console.log("Cleared")}
+                                customCloseControl={<button className="text-xs text-red-600">X</button>}
+                            >
 
 
-                    {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential')) && <div className="flex-[8%] h-[50px]">
+                                <BedBathSelector
+                                    onDone={(beds, baths) => {
 
-                        <ExpandableComponentDropdown
-                            isOpen={showYearSelector}
-                            onToggle={() => setShowYearSelector(prev => !prev)}
-                            label="Handover"
-                            isSelected={false}
+                                        handleSelect.bath(baths);
+                                        handleSelect.beds(beds);
 
-                            onClear={() => console.log("Cleared")}
-                            customCloseControl={<button className="text-xs text-red-600">X</button>}
-                        >
-                            <SelectHandoverDate
-                                initialYear={2025}
-                                initialQuarter={"Q2"}
-                                onDone={(year, quarter) => {
-                                    handleSelect.handoverDate({ quarter, year })
-                                }}
-                                onClose={() => setShowYearSelector(false)}
-                                reset={() => console.log("Reset triggered")}
-                                onChange={(year, quarter) => console.log("Live change", year, quarter)}
+                                    }}
+                                    onClose={() => setShowBedBath(false)}
+                                />
+
+                            </ExpandableComponentDropdown>
+
+                        </div>}
+
+
+
+
+
+
+                        {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential')) && <div className="flex-[10%] h-[50px]">
+
+                            <SelectOption
+                                clearSelection={clear}
+                                search
+                                className="w-[200px]"
+                                label="Payment Plan"
+                                options={PaymentPlan}
+                                onSelect={handleSelect.paymentPlan}
                             />
-                        </ExpandableComponentDropdown>
-
-                    </div>}
+                        </div>}
 
 
 
 
-                    {bedAndBathCondition && <div className={clsx("h-[50px]", bedAndBathCondition ? 'w-[180px]' : 'flex-[6%]')}>
 
-                        <ExpandableComponentDropdown
-                            isOpen={bedsAndBath}
-                            onToggle={() => setBedsAndBath(prev => !prev)}
-                            label="Beds & Baths"
-                            isSelected={false}
+                        {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className="flex-[7%]  h-[50px]">
 
-                            onClear={() => console.log("Cleared")}
-                            customCloseControl={<button className="text-xs text-red-600">X</button>}
-                        >
-
-
-                            <BedBathSelector
-                                onDone={(beds, baths) => {
-
-                                    handleSelect.bath(baths);
-                                    handleSelect.beds(beds);
-
-                                }}
-                                onClose={() => setShowBedBath(false)}
+                            <SelectOption
+                                search
+                                clearSelection={clear}
+                                className="w-[200px] "
+                                label="Discount"
+                                options={DiscountType}
+                                onSelect={handleSelect.discount}
                             />
-
-                        </ExpandableComponentDropdown>
-
-                    </div>}
+                        </div>}
 
 
 
+                        {furnishTypesCondition && <div className={clsx("h-[50px]", furnishTypesCondition ? 'w-[140px]' : 'flex-[8%]')}>
 
-
-
-                    {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential')) && <div className="flex-[10%] h-[50px]">
-
-                        <SelectOption
-                            clearSelection={clear}
-                            search
-                            className="w-[200px]"
-                            label="Payment Plan"
-                            options={PaymentPlan}
-                            onSelect={handleSelect.paymentPlan}
-                        />
-                    </div>}
+                            <SelectOption
+                                clearSelection={clear}
+                                search
+                                className="w-[200px]"
+                                label="Furnish Type"
+                                options={FurnishTypes}
+                                onSelect={handleSelect.furnishType}
+                            />
+                        </div>}
 
 
 
 
-
-                    {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className="flex-[7%]  h-[50px]">
-
-                        <SelectOption
-                            search
-                            clearSelection={clear}
-                            className="w-[200px] "
-                            label="Discount"
-                            options={DiscountType}
-                            onSelect={handleSelect.discount}
-                        />
-                    </div>}
-
-
-
-                    {furnishTypesCondition && <div className={clsx("h-[50px]", furnishTypesCondition ? 'w-[140px]' : 'flex-[8%]')}>
-
-                        <SelectOption
-                            clearSelection={clear}
-                            search
-                            className="w-[200px]"
-                            label="Furnish Type"
-                            options={FurnishTypes}
-                            onSelect={handleSelect.furnishType}
-                        />
-                    </div>}
-
-
-
-
-                    <div onClick={() => handleClear()} className="flex max-w-[120px] h-[50px] items-center gap-2">
-                        <label className="text-[12px]">Clear Filters</label>
-                        <div className="bg-black w-[14px] rounded-full h-[14px] flex justify-center items-center">
-                            <IoCloseOutline size={12} color="white" />
+                        <div onClick={() => handleClear()} className="flex max-w-[120px] h-[50px] items-center gap-2">
+                            <label className="text-[12px]">Clear Filters</label>
+                            <div className="bg-black w-[14px] rounded-full h-[14px] flex justify-center items-center">
+                                <IoCloseOutline size={12} color="white" />
+                            </div>
+                            {/* <Image src={close_icon} alt="menu icon" width={11.25} height={11.25} /> */}
                         </div>
-                        {/* <Image src={close_icon} alt="menu icon" width={11.25} height={11.25} /> */}
-                    </div>
-                </section>
+                    </section>
+                </Container>
 
-                <div className="mt-[10.5px] mb-[12px]">
-                    <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
-                </div>
+                <SectionDivider
+                containerClassName="mt-[10.5px] mb-[12px]"
+                lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+            />
+
 
                 {/* Projects Section */}
-                <div className="px-5  lg:px-8  xl:px-[144px] mb-4 flex gap-2">
-                    <div className="flex-1 h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                <Container>
 
-                        {projects ? projects?.data?.map((item, index) => (
-                            <ProjectCard
-                                key={index}
-                                item={item}
-                                handleClick={handleClick}
-                                handleEnquiryFormClick={handleEnquiryFormClick}
-                            />
-                        )) :
+                    <div className="mb-4 flex gap-2">
+                        <div className="flex-1 h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
 
-                            <>
-                                {Array.from({ length: 10 }).map((item, index) => {
-                                    return <ProjectCardSkelton key={index} />
-                                })}
-                            </>
-
-                        }
-                    </div>
-
-                    <div className="w-full xl:block hidden max-w-[301.5px]">
-
-                        {smallVideoAds && smallVideoAds.length > 0 &&
-                            <div className="w-full mb-[12px] relative">
-                                <VideoPreview
-                                    src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                            {projects ? projects?.data?.map((item, index) => (
+                                <ProjectCard
+                                    key={index}
+                                    item={item}
+                                    handleClick={handleClick}
+                                    handleEnquiryFormClick={handleEnquiryFormClick}
                                 />
-                            </div>
-                        }
+                            )) :
 
-                        <div className="sticky top-3 left-0">
+                                <>
+                                    {Array.from({ length: 10 }).map((item, index) => {
+                                        return <ProjectCardSkelton key={index} />
+                                    })}
+                                </>
 
-                            <CustomSliderUi
-                                shuffledImages={shuffledImages}
-                            />
-                            <Recommendations />
+                            }
                         </div>
 
+                        <div className="w-full xl:block hidden max-w-[301.5px]">
+
+                            {smallVideoAds && smallVideoAds.length > 0 &&
+                                <div className="w-full mb-[12px] relative">
+                                    <VideoPreview
+                                        src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                                    />
+                                </div>
+                            }
+
+                            <div className="sticky top-3 left-0">
+
+                                <CustomSliderUi
+                                    shuffledImages={shuffledImages}
+                                />
+                                <Recommendations />
+                            </div>
 
 
 
+
+                        </div>
                     </div>
-                </div>
+                </Container>
+
 
 
 
@@ -802,34 +818,41 @@ export default function HomePage() {
             </div> */}
 
 
-            <div className="mt-[23.25px]">
 
-                <Pagination
-                    currentPage={filters.page || 1}
-                    totalPages={totalPages}
-                    onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
-                />
+            {/* Pagination code */}
 
-                <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">1 To 24 of 23,567 Listings</div>
-            </div>
+            <Container>
+
+                <div className="mt-[23.25px]">
+
+                    <Pagination
+                        currentPage={filters.page || 1}
+                        totalPages={totalPages}
+                        onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
+                    />
+
+                    <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">1 To 24 of 23,567 Listings</div>
+                </div>
+            </Container>
 
 
-         
-
-            <div className=" mt-[45.75px]">
-                <div className="h-[1px] hidden sm:block w-full bg-[#DEDEDE]"></div>
-            </div>
+            <SectionDivider
+                containerClassName="mt-[45.75px]"
+                lineClassName="h-[1px] hidden sm:block w-full bg-[#DEDEDE]"
+            />
 
 
             <BottomBanner />
 
             {smallVideoAds && smallVideoAds.length > 0 &&
-                            <div className="w-full mb-[35px] relative px-5  lg:px-8 flex sm:hidden">
-                                <VideoPreview
-                                    src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
-                                />
-                            </div>
-                        }
+                <Container>
+                    <div className="w-full mb-[35px] relative flex sm:hidden">
+                        <VideoPreview
+                            src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                        />
+                    </div>
+                </Container>
+            }
 
 
             {/* Mobile Footer Banner */}
@@ -838,21 +861,21 @@ export default function HomePage() {
 
             <div className="px-5 flex sm:hidden lg:px-8 mt-[16px]">
 
-<RecommendedText
-    title="Recommended For You"
-    items={[
-        'Studio Properties For Sale in Dubai',
-        '1 BHK Flats in Downtown',
-        'Luxury Villas in Palm Jumeirah',
-        'Affordable Apartments in JVC',
-        'Beachfront Homes in Dubai Marina',
-    ]}
-/>
-</div>
+                <RecommendedText
+                    title="Recommended For You"
+                    items={[
+                        'Studio Properties For Sale in Dubai',
+                        '1 BHK Flats in Downtown',
+                        'Luxury Villas in Palm Jumeirah',
+                        'Affordable Apartments in JVC',
+                        'Beachfront Homes in Dubai Marina',
+                    ]}
+                />
+            </div>
 
 
 
-            <Footer />  
+            <Footer />
 
         </main>
 

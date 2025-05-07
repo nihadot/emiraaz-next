@@ -79,7 +79,7 @@ const FreelancerRegisterPage = () => {
 
   return (
     <main>
-      <div className="max-w-[1440px] mx-auto">
+      <div className="max-w-[1200px] mx-auto">
         <Header />
         <div className="px-5 lg:px-8 xl:px-[144px] py-8">
           <Formik

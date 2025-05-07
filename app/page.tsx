@@ -19,7 +19,7 @@ function Page() {
       }, 2000)
       return () => clearTimeout(timer)
     }
-  }, [])
+  }, []);
 
   if (loading) {
     return (

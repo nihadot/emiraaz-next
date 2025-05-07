@@ -1,6 +1,7 @@
 import { baseUrl } from "@/api";
 import { LOCAL_STORAGE_KEYS } from "@/api/storage";
 import { notes_icon, save_icon, share_button_icon } from "@/app/assets";
+import Container from "@/components/atom/Container/Container";
 import PrimaryButton from "@/components/Buttons";
 import ModalForm from "@/components/EnquiryForm/ModalForm";
 import RegistrationSuccess from "@/components/EnquiryForm/RegistrationSuccess";
@@ -129,8 +130,9 @@ const StickyScrollHeader = ({ value, currency, title, projectId }: Props) => {
     return (
         <>
             {showHeader && (
-                <div className="='px-5  lg:px-8 xl:px-[144.75px] fixed hidden md:block top-0 left-0 w-full bg-white shadow-md z-50 transition-all duration-300">
-                    <div className="flex items-center font-poppins justify-between text-black font-semibold text-center">
+                <div className="bg-white shadow-md z-40 w-full top-0 left-0 fixed hidden md:block">
+                    <Container>
+                   <div className="flex items-center font-poppins justify-between text-black font-semibold text-center">
                         <div className="flex flex-col items-start justify-start py-3">
                             <h3 className="text-[18px] font-medium font-poppins ">{title}</h3>
                             <h4 className='text-[18px] font-poppins  font-semibold'>
@@ -186,6 +188,7 @@ const StickyScrollHeader = ({ value, currency, title, projectId }: Props) => {
 
                 </Modal>
                     </div>
+                   </Container>
                 </div>
             )}
         </>

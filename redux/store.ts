@@ -11,6 +11,8 @@ import userSlice from "./userSlice/userSlice"
 import { wishlistApi } from './wishlist/wishlistApi';
 import wishlistSlice from './wishlistSlice/wishlistSlice';
 import { smallVideoAdsApi } from './smallVideo/smallViewApi';
+import { newsApi } from './news/newsApi';
+import { blogApi } from './blogs/blogsApi';
 
 
 export const store = configureStore({
@@ -25,6 +27,8 @@ export const store = configureStore({
     [smallVideoAdsApi.reducerPath]: smallVideoAdsApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [wishlistApi.reducerPath]: wishlistApi.reducer,
+    [newsApi.reducerPath]: newsApi.reducer,
+    [blogApi.reducerPath]: blogApi.reducer,
     user: userSlice,
     wishlist: wishlistSlice,
 
@@ -41,6 +45,8 @@ export const store = configureStore({
       authApi.middleware,
       wishlistApi.middleware,
       smallVideoAdsApi.middleware,
+      newsApi.middleware,
+      blogApi.middleware,
     ),
 });
 

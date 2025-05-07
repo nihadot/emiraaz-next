@@ -1,9 +1,12 @@
+import Container from '@/components/atom/Container/Container'
 import React from 'react'
 
 
 function BottomBanner({}) {
   return (
-    <div className='my-[111px] md:flex hidden  items-center px-5 justify-between  lg:px-8 xl:px-[144.75px]'>
+    <Container>
+
+    <div className='my-[111px] gap-1 md:flex hidden items-center justify-between'>
         <div className="flex flex-col">
             <h4 className='text-[27.75px] pb-[5.25px] font-semibold font-poppins'>Join Our Network of Freelance Agents</h4>
             <p className='text-[12px] pb-[5.25px] font-normal font-poppins '>Empower your real estate career with PropertySeller. Register now for an 80/20 commission split, work on your own terms, and confidently close deals on our platform!</p>
@@ -17,6 +20,8 @@ function BottomBanner({}) {
             <button className='w-fit mt-1 text-[14.25px] font-poppins px-[13px] rounded-[3.5px] text-white bg-black font-medium h-[35.25px] flex justify-center items-center'>List Your Property Now!</button>
         </div>
     </div>
+    </Container>
+
   )
 }
 
