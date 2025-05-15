@@ -162,6 +162,7 @@ function Header() {
               </PrimaryButton>
 
               <PrimaryButton
+              onClick={()=> router.push('/login') }
                 type='button'
                 className='flex w-[77.25px] h-[33px] items-center gap-1'
               >

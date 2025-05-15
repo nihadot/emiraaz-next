@@ -263,9 +263,6 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
                         </div>
 
 
-{JSON.stringify(filters)}
-
-
                         <Container>
                             <div className="flex mt-[12px] flex-col w-full gap-[9px]">
 
