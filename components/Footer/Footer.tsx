@@ -1,10 +1,15 @@
-import { app_Store_Button, logo_footer_black, play_store_footer_icon, youtube_icon_footer } from '@/app/assets'
+import { app_store_icon, logo_footer_black, play_store_footer_icon, property_seller_black_new_logo_icon } from '@/app/assets'
 import Image from 'next/image'
 import React from 'react'
 import FooterList from './FooterList'
 import Container from '../atom/Container/Container'
+import { PiInstagramLogoLight } from "react-icons/pi";
+import { SlSocialLinkedin } from "react-icons/sl";
+import { RiTwitterXLine } from "react-icons/ri";
+import { FaThreads } from "react-icons/fa6";
+import { PiYoutubeLogoThin } from "react-icons/pi";
 
-
+/* eslint-disable @next/next/no-img-element */
 function Footer() {
     return (
         <>
@@ -21,7 +26,7 @@ function Footer() {
                                 <Image
                                     className=''
                                     fill
-                                    src={logo_footer_black}
+                                    src={property_seller_black_new_logo_icon}
                                     // fill
 
                                     alt='logo'
@@ -30,71 +35,70 @@ function Footer() {
 
 
                             <div className="flex  justify-start mt- 0 items-start gap-3">
+                                <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                                    <PiInstagramLogoLight
+                                        className='w-full h-full' color='black'
+                                    />
+                                </div>
 
-                                <Image
-                                    className='object-cover'
-                                    width={20}
-                                    height={20}
-
-                                    src={youtube_icon_footer}
-                                    alt='logo'
-                                />
-
-
-                                <Image
-                                    className=''
-                                    width={20}
-                                    height={20}
-                                    src={youtube_icon_footer}
-                                    alt='logo'
-                                />
+                                <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                                    <SlSocialLinkedin
+                                        className='w-full h-full' color='black'
+                                    />
+                                </div>
 
 
-                                <Image
-                                    className=''
-                                    width={20}
-                                    height={20}
-                                    src={youtube_icon_footer}
-                                    alt='logo'
-                                />
+                                <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                                    <RiTwitterXLine
+                                        className='w-full h-full' color='black'
+                                    />
+                                </div>
 
 
-                                <Image
-                                    className=''
-                                    width={20}
-                                    height={20}
-                                    src={youtube_icon_footer}
-                                    alt='logo'
-                                />
-                                <Image
-                                    className=''
-                                    width={20}
-                                    height={20}
-                                    src={youtube_icon_footer}
-                                    alt='logo'
-                                />
+  <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                                    <FaThreads
+                                        className='w-full h-full' color='black'
+                                    />
+                                </div>
+
+
+  <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                                    <PiYoutubeLogoThin
+                                        className='w-full h-full' color='black'
+                                    />
+                                </div>
+
+
+
 
                             </div>
 
 
                             <div className="relative mt-10 bg-white w-[117.5px] h-[36px] object-cover">
-                                <Image
+                                {/* <Image
                                     fill
                                     priority
                                     alt='play store icon here'
                                     src={play_store_footer_icon}
                                     className='object-contain w-[200px] h-[100px]'
                                     unoptimized
+                                /> */}
+                                {/* <Image */}
+                                <img
+                                                                   src={play_store_footer_icon.src}
+                                                                   alt='play store icon here'
+                                                                   className='object-cover w-full h-full'
+                                                                   
                                 />
                             </div>
 
 
                             <div className="relative mt-2 bg-white w-[117.5px] h-[36px] object-cover">
-                                <Image
-                                    alt='play store '
-                                    src={app_Store_Button}
-                                    className=''
-                                    fill
+                                  <img
+                                                                   src={app_store_icon.src}
+                                                                   alt='play store icon here'
+                                                                   className='object-cover w-full h-full'
+                                                                   
                                 />
                             </div>
                         </section>
@@ -133,8 +137,8 @@ function Footer() {
 
                     <p className='flex gap-1 justify-center py-5 items-center'>
 
-                        <span className="text-sm font-medium bg-black text-center text-white">Copyright ⓒ 2025 PropertySeller</span>
-                        <span className='hidden sm:flex text-sm font-medium bg-black text-center text-white'>. All Rights Reserved</span> </p>
+                        <span className="text-[10.5px] font-poppins font-medium bg-black text-center text-white">Copyright ⓒ 2025 PropertySeller</span>
+                        <span className='hidden sm:flex text-[10.5px] font-poppins font-medium bg-black text-center text-white'>. All Rights Reserved</span> </p>
                 </Container>
 
             </footer>

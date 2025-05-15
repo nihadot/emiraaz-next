@@ -62,54 +62,53 @@ const AreaRangeInput = ({
   };
 
   return (
-    <div className="flex items-center gap-2 py-4 rounded-[12px] border bg-white border-gray-200 flex-col w-[300px]">
-      <p className="pb-2">Select Area Range ({unit})</p>
-      
-      <div className="w-full px-4 space-y-4">
-        <div className="flex flex-col">
-          <label className="text-sm text-gray-500 mb-1">Minimum Area</label>
-          <div className="flex items-center gap-2">
+    <div className="flex items-center rounded-[5px] p-[11px] border bg-white border-gray-200 flex-col w-[223px]">
+      <p className="pb-2 font-poppins font-normal text-[12px] text-start">Area({unit})</p>
+
+      <div className="w-full flex gap-[4px]">
+        <div className="flex flex-col   ">
+          <label className="text-[10.5px]  text-gray-500 mb-1">Min</label>
+          <div className="flex items-start justify-center gap-2">
             <input
               type="text"
               value={formatValue(minValue)}
               onChange={handleMinChange}
-              className="text-black placeholder:text-sm text-xl w-full border-b border-gray-300 focus:outline-none focus:border-[#FF1645]"
+              className=" text-black text-[12px] h-[29px] text-center px-3 border-[#DEDEDE] rounded-[5px] flex-1 placeholder:text-[12px] text-xl w-full border flex justify-center items-center focus:outline-none"
               placeholder="0"
             />
-            <span className="text-gray-500 text-sm">{unit}</span>
           </div>
         </div>
 
-        <div className="flex flex-col">
-          <label className="text-sm text-gray-500 mb-1">Maximum Area</label>
+        <div className="flex flex-col ">
+          <label className="text-[10.5px] text-gray-500 mb-1">Max</label>
           <div className="flex items-center gap-2">
             <input
               type="text"
               value={formatValue(maxValue)}
               onChange={handleMaxChange}
-              className="text-black placeholder:text-sm text-xl w-full border-b border-gray-300 focus:outline-none focus:border-[#FF1645]"
+              className="text-black h-[29px] text-[12px] text-center px-3 border-[#DEDEDE] rounded-[5px] placeholder:text-[12px] text-xl w-full border flex justify-center items-center focus:outline-none"
               placeholder="Any"
             />
-            <span className="text-gray-500 text-sm">{unit}</span>
           </div>
         </div>
       </div>
 
-      <div className="flex w-full h-10 px-3 gap-3 mt-4">
+      <div className="flex mt-[7.5px] w-full h-[29.25px] gap-[4px]">
         <button
           type="button"
-          className="border w-full rounded-[5px] text-[#FF1645] border-[#FF1645]"
+          className="border w-full font-normal font-poppins text-[10.5px] rounded-[5px] text-[#FF1645] border-[#FF1645]"
           onClick={handleReset}
         >
-          Clear
+          Reset
         </button>
         <button
-          className="border w-full rounded-[5px] bg-[#FF1645] text-white border-[#FF1645]"
+          className="border w-full font-normal font-poppins text-[10.5px] rounded-[5px] bg-[#FF1645] text-white border-[#FF1645]"
           onClick={handleDone}
         >
           Done
         </button>
       </div>
+
     </div>
   );
 };

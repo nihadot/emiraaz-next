@@ -1,3 +1,4 @@
+'use client'
 import EnquiryForm from "@/components/EnquiryForm/EnquiryForm";
 import ImageBlock from "@/components/ImageBlock/ImageBlock";
 import RecommendedText from "@/components/RecomendedText/RecommendedText";
@@ -7,9 +8,15 @@ import AdsCard from "@/components/AdsCard/AdsCard";
 import Slider from "@/components/Slider/Slider";
 import { AllProjectAdsCards } from "@/redux/projectAdsCard/types";
 import CustomSlider from "@/components/CustomSlider/CustomSlider";
+import { useState } from "react";
+import RegistrationSuccess from "@/components/EnquiryForm/RegistrationSuccess";
+import Container from "@/components/atom/Container/Container";
+import Modal from "@/components/Modal/Modal";
+import AlreadyEnquired from "@/components/EnquiryForm/AlreadyEnquired";
 
 const SidePanel = ({
-    images, videoLink, handleGalleryModal, handleGallerySelect,filteredProjectAdsCard, shuffledImages
+    projectId,
+    images, videoLink, handleGalleryModal, handleGallerySelect, filteredProjectAdsCard, shuffledImages
 }: {
     mainImage: string,
     images: { secure_url: string }[],
@@ -18,9 +25,11 @@ const SidePanel = ({
     filteredProjectAdsCard: AllProjectAdsCards[];
     handleGalleryModal: () => void;
     shuffledImages: any[];
-    handleGallerySelect:(value:string)=> void;
+    handleGallerySelect: (value: string) => void;
+    projectId: string;
 }) => {
 
+    const [EnquiryFormState, setEnquiryFormState] = useState({ status: false, count: 0 });
 
 
 
@@ -29,14 +38,25 @@ const SidePanel = ({
         <div className="flex flex-col gap-[6px]  w-full max-w-[301.5px]">
 
             <div className="gap-[6px] md:flex hidden flex-col">
-                <ImageBlock wrapperClassName="h-[177.5px]" onClick={() => {
+               
+               {
+                images?.[1]?.secure_url ?  <ImageBlock wrapperClassName="h-[177.5px]" onClick={() => {
                     handleGalleryModal()
                     handleGallerySelect('images')
-                }} src={images?.[1]?.secure_url} alt="Next image" />
-                <ImageBlock imageCount={images.length} wrapperClassName="h-[136.5px]" onClick={() => {
+                }} src={images?.[1]?.secure_url} alt="Next image" /> : <div className="h-[177.5px] w-full bg-gray-50"></div>
+               }
+                {/* <ImageBlock wrapperClassName="h-[177.5px]" onClick={() => {
+                    handleGalleryModal()
+                    handleGallerySelect('images')
+                }} src={images?.[1]?.secure_url} alt="Next image" /> */}
+               { images?.[2]?.secure_url ?  <ImageBlock imageCount={images.length} wrapperClassName="h-[136.5px]" onClick={() => {
                     handleGalleryModal()
                     handleGallerySelect('images')
                 }} src={images?.[2]?.secure_url} alt="With Overlay" showOverlay />
+            
+            :  <div className="h-[136.5px] w-full bg-gray-50"></div>
+            
+            }
 
 
                 <div onClick={() => {
@@ -44,16 +64,22 @@ const SidePanel = ({
                     handleGallerySelect('video')
                 }} className="rounded-md h-[163.5px]  overflow-hidden">
 
-                    <VideoContainer
+                   { videoLink ?  <VideoContainer
                         clickDisable
                         videoUrl={videoLink || ''}
-                    />
+                    /> :
+                     <div className="h-[177.5px] w-full bg-gray-50"></div>
+                    
+                    }
                 </div>
             </div>
 
 
             <div className="hidden w-full sm:block">
-                <EnquiryForm />
+                <EnquiryForm
+                    setEnquiry={setEnquiryFormState}
+                    projectId={projectId}
+                />
             </div>
 
             <div className="hidden sm:block">
@@ -76,25 +102,58 @@ const SidePanel = ({
 
 
             <div className="mt-[15px] sticky top-[85px] left-0">
-            {shuffledImages && shuffledImages.length > 0 &&
-                <CustomSlider
-                    images={shuffledImages}
-                    containerClassName="max-w-xl hidden sm:block mx-auto shadow-lg"
-                    imageClassName="h-[600px]"
+                {shuffledImages && shuffledImages.length > 0 &&
+                    <CustomSlider
+                        images={shuffledImages}
+                        containerClassName="max-w-xl hidden sm:block mx-auto shadow-lg"
+                        imageClassName="h-[600px]"
                     // buttonClassName="hover:bg-white"
-                />
-          }
+                    />
+                }
 
 
 
-            <div className="hidden sm:block">
+                <div className="hidden sm:block">
 
-{RECOMMENDED_LISTS.map((block, idx) => (
-    <RecommendedText key={idx} title={block.title} items={block.items} />
-))}
-</div>
-</div>
+                    {RECOMMENDED_LISTS.map((block, idx) => (
+                        <RecommendedText key={idx} title={block.title} items={block.items} />
+                    ))}
+                </div>
+            </div>
 
+
+
+
+
+            <Modal
+                isOpen={EnquiryFormState.status}
+                // isOpen={true}
+                onClose={() => setEnquiryFormState({ status: false, count: 0 })}
+            >
+
+
+
+                <Container>
+                    <div className="relative w-full h-[200px] rounded-[5px]">
+
+
+                        {
+                            EnquiryFormState.count === 1 && <RegistrationSuccess
+                                onClose={() => setEnquiryFormState({ status: false, count: 0 })}
+
+                            />
+                        }
+
+
+
+                        {EnquiryFormState.count === 2 && <AlreadyEnquired
+                            onClose={() => setEnquiryFormState({ status: false, count: 0 })}
+
+                        />}
+                    </div>
+                </Container>
+
+            </Modal>
 
         </div>
     );

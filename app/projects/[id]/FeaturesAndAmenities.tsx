@@ -1,6 +1,7 @@
 import React from 'react'
 import ProjectHeader from './ProjectHeader';
 import Image from 'next/image';
+import { useDeviceType } from '@/utils/useDeviceType';
 
 type Props = {
     headerTitle: string;
@@ -14,6 +15,11 @@ function FeaturesAndAmenities({ headerTitle, data,handleModal }: Props) {
     const visibleData = data.slice(0, 6);
     const remainingCount = data.length > 6 ? data.length - 6 : 0;
     
+  const deviceType = useDeviceType();
+
+    const limit = deviceType === 'mobile' ? 2 : 6;
+
+    if(!limit) return null;
 
     return (
         <div className='mt-10'>
@@ -23,7 +29,7 @@ function FeaturesAndAmenities({ headerTitle, data,handleModal }: Props) {
             title={headerTitle} />
             <div className="flex gap-2 mt-[15px] flex-wrap">
                 {
-                    visibleData.map((item, index) => (
+                    visibleData.slice(0,limit).map((item, index) => (
                         <div key={index} className="rounded-[3px] gap-[8.25px] flex items-center justify-center flex-col w-[99px] h-[99px] p-4 bg-[#F5F5F5] border-[#DEDEDE]">
                             <Image
                                 height={25.5}

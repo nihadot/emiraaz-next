@@ -13,6 +13,9 @@ import wishlistSlice from './wishlistSlice/wishlistSlice';
 import { smallVideoAdsApi } from './smallVideo/smallViewApi';
 import { newsApi } from './news/newsApi';
 import { blogApi } from './blogs/blogsApi';
+import { carriersApi } from './carriers/carriersApi';
+import { openHouseApi } from './openhouse/openhouseApi';
+import { videosApi } from './talks/talksApi';
 
 
 export const store = configureStore({
@@ -29,6 +32,9 @@ export const store = configureStore({
     [wishlistApi.reducerPath]: wishlistApi.reducer,
     [newsApi.reducerPath]: newsApi.reducer,
     [blogApi.reducerPath]: blogApi.reducer,
+    [carriersApi.reducerPath]: carriersApi.reducer,
+    [openHouseApi.reducerPath]: openHouseApi.reducer,
+    [videosApi.reducerPath]: videosApi.reducer,
     user: userSlice,
     wishlist: wishlistSlice,
 
@@ -47,6 +53,9 @@ export const store = configureStore({
       smallVideoAdsApi.middleware,
       newsApi.middleware,
       blogApi.middleware,
+      carriersApi.middleware,
+      openHouseApi.middleware,
+      videosApi.middleware,
     ),
 });
 

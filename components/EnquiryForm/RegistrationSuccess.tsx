@@ -1,17 +1,37 @@
 import { registration_success } from '@/app/assets'
 import Image from 'next/image'
 import React from 'react'
+import { IoMdClose } from 'react-icons/io'
+import Container from '../atom/Container/Container'
 
-function RegistrationSuccess() {
+function RegistrationSuccess({ onClose,
+
+  headline = "Your Registration Success",
+  content = "Our team will contact you Shortly"
+ }: { onClose: () => void, headline?: string, content?: string }) {
   return (
-    <div className='w-[450px] flex justify-center flex-col items-center gap-2  py-10'>
-        <p className='text-[18px] font-medium font-poppins'>Your Registration Success</p>
-        <p className='text-[12px] font-poppins font-light'>Our team will contact you Shortly</p>
+    <Container>
 
-    <Image src={registration_success} alt="location icon" width={120} height={120} className="object-cover" />
-        
-        
-    </div>
+      <div className=" sm:w-[436px] w-full m-auto  relative">
+        <button
+          type='button'
+          className="absolute top-2 right-2 text-gray-600 dark:text-gray-300 "
+          onClick={onClose}
+        >
+          <IoMdClose size={18} color='#333333' />
+
+        </button>
+        <div className='rounded-[5px] flex justify-center flex-col px-4 items-center bg-white gap-2  py-10'>
+          <p className='text-[18px] font-medium font-poppins'>{headline}</p>
+          <p className='text-[12px] font-poppins font-light'>{content}</p>
+
+          <Image src={registration_success} alt="location icon" width={120} height={120} className="object-cover" />
+
+
+        </div>
+      </div>
+    </Container>
+
   )
 }
 

@@ -14,6 +14,7 @@ import CustomSliderUi from '../home/CustomSliderUi'
 import { shuffle } from '@/utils/shuffle'
 import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi'
 import Container from '@/components/atom/Container/Container'
+import RecommendedText from '@/components/RecomendedText/RecommendedText'
 
 
 function RentalHome() {
@@ -115,7 +116,7 @@ function RentalHome() {
 
         <main>
 
-            <div className=" w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
+            <div className=" pb-10 w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
                 <Header />
 
                 <Container>
@@ -195,21 +196,32 @@ function RentalHome() {
 </section>
 
 
-<div className="w-full min-1110px:block hidden ps-2 max-w-[300px]">
-    <Recommendations />
+<div className="w-full min-1110px:block hidden ps-2 max-w-[301.5px]">
+   <RecommendedText
+    title="Recommended For You"
+    items={[
+        'Studio Properties For Sale in Dubai',
+        '1 BHK Flats in Downtown',
+        'Luxury Villas in Palm Jumeirah',
+        'Affordable Apartments in JVC',
+        'Beachfront Homes in Dubai Marina',
+    ]}
+/>
 
-    <CustomSliderUi
-        shuffledImages={shuffledImages}
-    />
+      <div className="sticky top-3 left-0">
+
+                                    <CustomSliderUi
+                                        shuffledImages={shuffledImages}
+                                    />
+                                </div>
+
 </div>
 </div>
 </Container>
 
             </div>
 
-            <div className="sm:hidden block">
-                <BottomNavigation />
-            </div>
+        
 
             <Footer />
         </main>
@@ -227,22 +239,22 @@ type CardProps = {
 
 function Card({ item, title, name }: CardProps) {
     return (
-        <div className='border flex-1 font-poppins h-[200px] w-full  rounded-md border-black/20 p-4'>
+        <div className='border flex-1 font-poppins h-[180px] w-full  rounded-md border-[#DEDEDE] p-[17px]'>
             <div className="flex w-full items-center">
-                <p className='text-[20px] font-medium font-poppins'>{title}</p>
+                <p className='text-[17px] font-medium font-poppins'>{title}</p>
                 <div className="border  flex justify-center ms-2 text-black/40 h-[20px] items-center text-[11px] gap-1 p-1 px-2 border-black/20 rounded-md">
                     <p className='capitalize'>{item.cityDetails.name}</p>
                     <div className="w-[1px] h-[12px] bg-black/40"></div>
                     <p className='capitalize'>{item.emirateDetails.name}</p>
                 </div>
             </div>
-            {name === 'townhouse' && <div className="text-[16px] font-poppins font-medium pt-4 gap-1 flex flex-col">
+            {name === 'townhouse' && <div className="text-[13.5px] font-poppins font-medium pt-[5px] gap-1 flex flex-col">
                 <p>3 bedroom {item.townHouseFiveBedroom} AED/yearly</p>
                 <p>4 bedroom {item.townHouseFourBedroom} AED/yearly</p>
                 <p>5 bedroom {item.townHouseThreeBedroom} AED/yearly</p>
             </div>}
 
-            {name === 'villa' && <div className="text-[16px] font-poppins font-medium pt-4 gap-1 flex flex-col">
+            {name === 'villa' && <div className="text-[13.5px] font-poppins font-medium  pt-[5px] gap-1 flex flex-col">
                 <p>4 bedroom {item.villaFourBedroom} AED/yearly</p>
                 <p>5 bedroom {item.villaFiveBedroom} AED/yearly</p>
                 <p>6 bedroom {item.villaSixBedroom} AED/yearly</p>
@@ -250,7 +262,7 @@ function Card({ item, title, name }: CardProps) {
             </div>}
 
 
-            {name === 'apartment' && <div className="text-[16px] font-poppins font-medium pt-4 gap-1 flex flex-col">
+            {name === 'apartment' && <div className="text-[13.5px] font-poppins font-medium pt-[5px] gap-1 flex flex-col">
                 <p>2 bedroom {item.apartment2Bedroom} AED/yearly</p>
                 <p>3 bedroom {item.apartment3Bedroom} AED/yearly</p>
                 <p>4 bedroom {item.apartment4Bedroom} AED/yearly</p>

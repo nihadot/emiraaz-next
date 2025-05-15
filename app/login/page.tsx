@@ -12,6 +12,7 @@ import { LOCAL_STORAGE_KEYS } from "@/api/storage";
 import { useDispatch } from "react-redux";
 import { loginFailure, loginLoading, loginSuccess } from "@/redux/userSlice/userSlice";
 import { errorToast, successToast } from "@/components/Toast";
+import SectionDivider from "@/components/atom/SectionDivider/SectionDivider";
 
 const LoginSchema = Yup.object().shape({
     email: Yup.string()
@@ -40,8 +41,8 @@ const AdminLogin = () => {
     ) => {
         try {
 
-            dispatch(loginLoading())
             setIsSubmitting(true);
+            dispatch(loginLoading())
             const response = await login(values).unwrap();
             if (response.success) {
                 localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, response.accessToken);
@@ -67,26 +68,59 @@ const AdminLogin = () => {
     return (
         <>
             <Header />
-            <section className="flex flex-col p-6 items-center justify-center h-screen bg-white">
-                <p className="font-medium text-3xl mb-4">Admin Login</p>
+            <SectionDivider
+                containerClassName="mt-[10.5px] mb-[12px]"
+                lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+            />
+
+
+            <section className="flex w-full max-w-[440px] justify-center flex-col p-6 items-center m-auto my-32 bg-white">
+                <p className=" text-[19.5px] sm:text-[27px] font-poppins text-center font-medium mb-4">Welcome Back to PropertySeller!</p>
 
                 <Formik
-                    initialValues={{ email: "macbook@gmail.com", password: "Macbook@123#" }}
+                    initialValues={{ email: "", password: "" }}
                     validationSchema={LoginSchema}
                     onSubmit={handleSubmit}
                 >
                     {({ isSubmitting }) => (
-                        <Form className="w-full max-w-[440px] bg-white">
-                            <div className="mb-4">
-                                <label htmlFor="email" className="block font-normal text-black">Email</label>
-                                <Field type="email" id="email" name="email" placeholder="Enter your email" className="mt-1.5 p-2 px-4 rounded border-slate-200 placeholder:text-xs border w-full bg-[#F7F7F7] focus:ring-[#FF1645] focus:border-[#FF1645]" disabled={isSubmitting} />
+                        <Form className="w-full bg-white">
+
+
+                            <div className="mb-2">
+                                <LabelFields
+                                    title='Email'
+                                    htmlFor='email'
+                                />
+                                <InputField
+                                    type="text"
+                                    id="email"
+                                    name="email"
+                                    placeholder="Enter your Email"
+                                    loading={isSubmitting}
+                                />
+                                {/* <label htmlFor="email" className="block font-normal text-black">Email</label> */}
+                                {/* <Field type="email" id="email" name="email" placeholder="Enter your email" className="mt-1.5 p-2 px-4 rounded border-slate-200 placeholder:text-xs border w-full bg-[#F7F7F7] focus:ring-[#FF1645] focus:border-[#FF1645]" disabled={isSubmitting} /> */}
                                 <ErrorMessage name="email" component="div" className="text-red-500 mt-1" />
-                            </div>
+                                </div>
 
                             <div className="mb-6 relative">
-                                <label htmlFor="password" className="block font-normal text-black">Password</label>
-                                <Field type={togglePassword} id="password" name="password" placeholder="Enter your password" className="mt-1.5 p-2 px-4 rounded border-slate-200 placeholder:text-xs border w-full bg-[#F7F7F7] focus:ring-[#FF1645] focus:border-[#FF1645]" disabled={isSubmitting} />
-                                <ErrorMessage name="password" component="div" className="text-red-500 mt-1" />
+                                <LabelFields
+                                    title='Password'
+                                    htmlFor='password'
+                                />
+
+                                <InputField
+                                    type="text"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Password"
+                                    loading={isSubmitting}
+                                />
+                                {/* <label htmlFor="password" className="block font-normal text-black">Password</label> */}
+                                {/* <Field type={togglePassword} id="password" name="password" placeholder="Enter your password" className="mt-1.5 p-2 px-4 rounded border-slate-200 placeholder:text-xs border w-full bg-[#F7F7F7] focus:ring-[#FF1645] focus:border-[#FF1645]" disabled={isSubmitting} /> */}
+                                {/* <ErrorMessage name="password" component="div" className="text-red-500 mt-1" /> */}
+                    <ErrorMessage name="password" component="div" className="text-red-500 mt-1" />
+
                                 <div className="absolute top-10 right-4">
                                     {togglePassword === 'password' ? (
                                         <FaEye onClick={() => setTogglePassword('text')} size={20} className={isSubmitting ? "cursor-not-allowed opacity-50" : "cursor-pointer"} />
@@ -115,3 +149,45 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
+
+
+
+
+
+
+
+
+function LabelFields({ title, htmlFor }: { title: string, htmlFor: string }) {
+    return (
+        <label htmlFor={htmlFor} className='block mb-2 text-[10.5px] font-poppins sm:text-[13.5px]  font-medium'>{title}</label>
+    )
+}
+
+
+
+function InputField({
+    loading,
+    type,
+    id,
+    name,
+    placeholder,
+    className,
+}: {
+    loading: boolean,
+    type: string,
+    id: string,
+    name: string,
+    placeholder: string,
+    className?: string
+}) {
+    return (
+        <Field
+            type={type}
+            id={id}
+            name={name}
+            placeholder={placeholder}
+            className="border w-full outline-none border-[#DEDEDE] rounded px-4 font-poppins text-[11px] sm:text-[13.5px] font-medium py-2"
+            disabled={loading}
+        />
+    )
+}

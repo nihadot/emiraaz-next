@@ -1,6 +1,6 @@
 "use client";
 
-import { drop_down_icon, logo, menu_icon, user_icon } from '@/app/assets';
+import { drop_down_icon, logo, logo_footer_black, menu_icon, propertySellerWhiteLogo, user_icon } from '@/app/assets';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import NavMenu from './NavMenu';
@@ -9,11 +9,12 @@ import { clsx } from 'clsx';
 import PrimaryButton from '../Buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { loginFailure, logoutFailure, logoutStart, logoutSuccess } from '@/redux/userSlice/userSlice';
+import {  logoutFailure, logoutStart, logoutSuccess } from '@/redux/userSlice/userSlice';
 import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import { useRouter } from 'next/navigation';
 import { errorToast } from '../Toast';
 import Container from '../atom/Container/Container';
+import { PiUserCircleThin } from "react-icons/pi";
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -76,7 +77,7 @@ function Header() {
 
         {/* Logo */}
         <div onClick={() => router.push("/")} className="w-[140px] cursor-pointer sm:w-[138.75px] ms-8 sm:ms-0 h-[50px] sm:h-[32.25px] relative ">
-          <Image src={logo} alt='logo' fill className='bg-cover' />
+          <Image src={logo_footer_black} alt='logo' fill className='bg-cover' />
 
         </div>
         <PrimaryButton
@@ -165,7 +166,9 @@ function Header() {
                 className='flex w-[77.25px] h-[33px] items-center gap-1'
               >
                 <>
-                  <Image src={user_icon} alt='menu icon' width={15} height={15} />
+
+<PiUserCircleThin className='w-[15px] h-[15px]' color='black'/>
+                  {/* <Image src={user_icon} alt='menu icon' width={15} height={15} /> */}
                   <label htmlFor="" className='text-[12px] font-medium  font-poppins'>Login</label>
                 </>
 

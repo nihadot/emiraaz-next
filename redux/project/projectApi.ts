@@ -32,13 +32,15 @@ export const projectApi = createApi({
       completionType?: string,
       furnishing?: string,
       cities?: string[],
-      projectTypeLast?:string
+      projectTypeLast?: string
       year?: number | '',
       qtr?: string,
-      paymentPlan?:string,
-      discount?:string,
-      maxPrice?:string,
-      minPrice?:string,
+      paymentPlan?: string,
+      discount?: string,
+      maxPrice?: string,
+      minPrice?: string,
+      productTypeOptionFirst?: string,
+      productTypeOptionLast?: string
     }>({
       query: (params) => {
         const {

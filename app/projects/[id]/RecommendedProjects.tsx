@@ -7,8 +7,28 @@ import { useRouter } from 'next/navigation'
 import Modal from '@/components/Modal/Modal'
 import ModalForm from '@/components/EnquiryForm/ModalForm'
 import RegistrationSuccess from '@/components/EnquiryForm/RegistrationSuccess'
+import AlreadyEnquired from '@/components/EnquiryForm/AlreadyEnquired'
+import Container from '@/components/atom/Container/Container'
 
 type Props = { projects: AllProjectsItems[] }
+
+const containerVariants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 100, damping: 12 },
+  },
+};
 
 function RecommendedProjects({ projects }: Props) {
 
@@ -54,6 +74,7 @@ function RecommendedProjects({ projects }: Props) {
                     return (
                      
                     <ProjectCard
+                    navigateDetailsButton={true}
                     key={index}
                     item={item}
                     handleClick={handleClick}
@@ -64,17 +85,33 @@ function RecommendedProjects({ projects }: Props) {
             </div>
 
 
-              <Modal
-                                isOpen={EnquiryForm.status}
-                                onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
-                            >
-                                {EnquiryForm.count === 1 && <ModalForm
-                                    item={EnquiryForm}
-                                    setEnquiry={setEnquiryForm}
-                                />}
-                                {EnquiryForm.count === 2 && <RegistrationSuccess />}
-            
-                            </Modal>
+               <Modal
+        isOpen={EnquiryForm.status}
+        onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
+      >
+        <Container>
+          <div className="relative w-full h-[200px] rounded-[5px]">
+
+
+            {EnquiryForm.count === 1 && <ModalForm
+              onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
+              item={EnquiryForm}
+              setEnquiry={setEnquiryForm}
+            />}
+
+            {EnquiryForm.count === 2 && <RegistrationSuccess
+              onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
+
+            />}
+
+            {EnquiryForm.count === 3 && <AlreadyEnquired
+              onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
+
+            />}
+
+          </div>
+        </Container>
+      </Modal>
         </div>
     )
 }

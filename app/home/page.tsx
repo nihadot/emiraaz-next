@@ -23,6 +23,7 @@ import {
     FurnishTypes,
     PaymentPlan,
     PropertyTypes,
+    productTypeOptionFirstItems,
     propertyTypeFirst,
     propertyTypeSecond,
 } from "@/data";
@@ -40,8 +41,6 @@ import AreaRangeInput from "./RangeArea";
 import BedBathSelector from "./BedBathSelector";
 import Recommendations from "./Recommendations";
 import CustomSliderUi from "./CustomSliderUi";
-import BottomNavigation from "@/components/BottomNavigation/BottomNavigation";
-import Pagination from "@/components/Pagination/Pagination";
 import { useViewAllWishlistsQuery } from "@/redux/wishlist/wishlistApi";
 import { LOCAL_STORAGE_KEYS } from "@/api/storage";
 import { AllWishlistItems } from "@/redux/wishlist/types";
@@ -55,11 +54,21 @@ import BottomBanner from "./BottomBanner";
 import RecommendedText from "@/components/RecomendedText/RecommendedText";
 import Container from "@/components/atom/Container/Container";
 import SectionDivider from "@/components/atom/SectionDivider/SectionDivider";
+import SearchNew from "@/components/SearchField/SearchNew";
+import SelectNew from "@/components/SelectOption/SelectNew";
+import SelectNewMultiple from "@/components/SelectOption/SelectNewMultiple";
+import MobileFilterOption from "./MobileFilterOption";
+import { useDeviceType } from "@/utils/useDeviceType";
+import { usePagination } from "@/utils/usePagination";
+import PaginationNew from "@/components/PaginationNew/PaginationNew";
+import AlreadyEnquired from "@/components/EnquiryForm/AlreadyEnquired";
 
 type FiltersState = {
     developers?: string[];
     facilities?: string[];
     propertyTypeSecond?: string;
+    productTypeOptionFirst?: string;
+    productTypeOptionLast?: string;
     emirate?: string;
     handoverDate?: HandoverDate;
     projectType?: string;
@@ -75,6 +84,7 @@ type FiltersState = {
     limit?: number,
     search?: string,
     propertyType?: string[],
+    propertyTypes?: string,
     completionType?: string,
     furnishing?: string,
     cities?: string[],
@@ -105,6 +115,7 @@ interface UserData {
 
 // Home Component
 export default function HomePage() {
+    const deviceType = useDeviceType();
 
     const router = useRouter();
 
@@ -160,12 +171,13 @@ export default function HomePage() {
         cities: [],
         developers: [],
         facilities: [],
-        propertyType: [],
-        propertyTypeSecond: undefined,
+        // propertyType: [],
+        // propertyTypes: 'all',
+        // propertyTypeSecond: "all",
         emirate: "",
         completionType: "",
         handoverDate: undefined,
-        projectType: "",
+        // projectType: "off-plan-projects",
         paymentPlan: undefined,
         furnishType: "",
         discount: "",
@@ -174,6 +186,7 @@ export default function HomePage() {
         maxPrice: '',
         minSqft: "",
         maxSqft: "",
+        productTypeOptionFirst: "off-plan-projects",
         beds: "",
         bath: "",
     });
@@ -221,7 +234,10 @@ export default function HomePage() {
         maxSqft: filters.maxSqft,
         beds: filters.beds,
         bath: filters.bath,
+        productTypeOptionFirst: filters.productTypeOptionFirst,
+        productTypeOptionLast: filters.productTypeOptionLast,
     }), [filters, debouncedSearch]);
+
 
     const { data: emiratesData } = useFetchAllEmirateNamesQuery();
     const { data: portraitBannerData } = useFetchAllPortraitBannersQuery({});
@@ -263,8 +279,12 @@ export default function HomePage() {
         setFilters(prev => ({ ...prev, search: event.target.value }));
     }, []);
 
-    const handleChangeCities = useCallback((option: any) => {
-        setFilters(prev => ({ ...prev, cities: [option?.value || ''] }));
+    const handleChangeCities = useCallback((option: any[]) => {
+        if (option.length === 0) {
+            setFilters(prev => ({ ...prev, cities: [] }));
+            return;
+        }
+        setFilters(prev => ({ ...prev, cities: option.map((item) => item.value) }));
     }, []);
 
     const handleSelect = useMemo(() => ({
@@ -272,9 +292,11 @@ export default function HomePage() {
         propertyType: (option: any) => setFilters(prev => ({ ...prev, propertyType: option?.value || '' })),
         propertyTypeSecond: (option: any) => setFilters(prev => ({ ...prev, propertyTypeSecond: option })),
         completionType: (option: any) => setFilters(prev => ({ ...prev, completionType: option })),
+        productTypeOptionFirst: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionFirst: option })),
+        productTypeOptionLast: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionLast: option })),
         handoverDate: (data: any) => setFilters(prev => ({ ...prev, handoverDate: data })),
         projectType: (option: any) => setFilters(prev => ({ ...prev, projectType: option })),
-        paymentPlan: (option: any) => setFilters(prev => ({ ...prev, paymentPlan: option })),
+        paymentPlan: (option: any) => setFilters(prev => ({ ...prev, paymentPlan: option?.value || '' })),
         furnishType: (option: any) => setFilters(prev => ({ ...prev, furnishType: option?.value || '' })),
         discount: (option: any) => setFilters(prev => ({ ...prev, discount: option?.value || '' })),
         bedAndBath: (option: any) => setFilters(prev => ({ ...prev, bedAndBath: option?.value || '' })),
@@ -285,6 +307,7 @@ export default function HomePage() {
         beds: (option: any) => setFilters(prev => ({ ...prev, beds: option || '' })),
         bath: (option: any) => setFilters(prev => ({ ...prev, bath: option || '' })),
     }), []);
+
 
     const [showBedBath, setShowBedBath] = useState(false);
     const totalPages = projects?.pagination?.totalPages || 1;
@@ -308,193 +331,101 @@ export default function HomePage() {
 
 
     const handleClear = useCallback(() => {
+        // alert('aler')
         setFilters({
             page: 1,
             search: "",
             cities: [],
-            developers: [],
-            facilities: [],
+            productTypeOptionFirst: '',
+            // productTypeOptionLast: 'all',
+            // developers: [],
+            // facilities: [],
             propertyType: [],
-            propertyTypeSecond: undefined,
+            // propertyTypeSecond: "all",
             emirate: "",
-            completionType: "",
-            handoverDate: undefined,
-            projectType: '',
-            paymentPlan: undefined,
-            furnishType: "",
-            discount: "",
-            bedAndBath: '',
-            maxPrice: '',
-            minPrice: '',
-            maxSqft: '',
-            minSqft: '',
-            bath: '',
-            beds: ''
-            ,
+            // completionType: "",
+            // handoverDate: undefined,
+            // projectType: 'off-plan-projects',
+            // paymentPlan: undefined,
+            // furnishType: "",
+            // discount: "",
+            // bedAndBath: '',
+            // maxPrice: '',
+            // minPrice: '',
+            // maxSqft: '',
+            // minSqft: '',
+            // bath: '',
+            // beds: ''
+            // ,
         });
         setClear(true);
         setTimeout(() => setClear(false), 100);
     }, []);
 
-
+    const [allProjects, setAllProjects] = useState<AllProjectsItems[]>();
     const propertyTypesCondition = !((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-projects' && filters.propertyTypeSecond === 'commercial'));
     const bedAndBathCondition = ((filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential'))
     const furnishTypesCondition = (!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial')))
+
+    const handleFilterChanges = (item: AllProjectsItems[]) => {
+        setAllProjects(item);
+    }
+
+    useEffect(() => {
+        if (projects?.data) {
+            setAllProjects(projects?.data);
+        }
+    }, [projects]);
+
+
+
+
+    const [currentPage, setCurrentPage] = useState(1); // Let's say 2 is active
+    // const totalItems = 100;
+    // const itemsPerPage = 10;
+    // const maxVisiblePages = 4;
+
+    // const { pages, totalPages } = usePagination({
+    //     totalItems,
+    //     itemsPerPage,
+    //     currentPage,
+    //     maxVisiblePages,
+    //   });
     return (
+        <>
 
-        <main>
+            <main>
 
-            <div className=" min-h-screen  w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
-                <Header />
+                <div className=" min-h-screen  w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
+                    <Header />
 
-                {/* <section className="px-5  lg:px-8 xl:px-[144px] flex-wrap w-full flex items-center  gap-2">
-                    <div className="sm:flex-[18%] w-full  h-[50px]">
-                        <SearchInput
-                            value={filters?.search || ''}
-                            onChange={handleChangeSearch}
-                            placeholder="Search..."
-                        />
-                    </div>
-
-                    <div className="sm:flex-[10%] sm:block hidden w-full h-[50px]">
-                        <SelectOption
-                            search
-                            clearSelection={clear}
-                            className="w-[200px]"
-                            label="Emirates"
-                            options={emirateOptions}
-                            onSelect={handleSelect.emirate}
-                        />
-                    </div>
-
-                    <div className="w-full h-full flex sm:hidden gap-2">
-                        <SelectOption
-                            search
-                            clearSelection={clear}
-                            className="w-[200px]"
-                            label="Emirates"
-                            options={emirateOptions}
-                            onSelect={handleSelect.emirate}
-                        />
-                        <SelectOption
-                            search
-                            clearSelection={clear}
-                            className="w-[220px]"
-                            label="Cities"
-                            options={cityOptions}
-                            onSelect={handleChangeCities}
-                        />
-                    </div>
-
-                    <div className="sm:flex-[10%]  w-full h-[50px]">
-                        <SelectOption
-                            search
-                            clearSelection={clear}
-                            className="w-[220px]"
-                            label="Cities"
-                            options={cityOptions}
-                            onSelect={handleChangeCities}
-                        />
-                    </div>
-
-                    <div className="sm:flex-[28%]  w-full  h-[50px]">
-                        <SwitchSelector
-                            onSelect={handleSelect.projectType}
-                            defaultValue=""
-                            options={propertyTypeFirst}
-                        />
-                    </div>
-
-                    <div className="sm:flex-[18%] sm:flex hidden flex-1 w-full  h-[50px]">
-                        <SwitchSelector
-                            onSelect={handleSelect.propertyTypeSecond}
-                            defaultValue=""
-                            options={propertyTypeSecond}
-                        />
-                    </div>
-
-                    <div className="w-full gap-2 sm:hidden flex h-[50px]">
-                        <SwitchSelector
-                            onSelect={handleSelect.propertyTypeSecond}
-                            defaultValue=""
-                            options={propertyTypeSecond}
-                        />
-                        <button onClick={handleFilterModal} className="bg-red-600/10 rounded flex justify-center items-center  border border-[#DEDEDE] w-[55px] h-full">
-                            <Image
-                                src={filter_icon}
-                                className=" object-cover"
-                                alt="filter"
-                                width={18}
-                                height={18}
-
-                            />
-                        </button>
-                    </div>
-
-                    <Modal
-                        isOpen={filterModel}
-                        onClose={() => setFilterModel(false)}
-                    >
-                        <div className="w-full h-[400px] rounded-md">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias quaerat quidem corrupti, saepe animi sint. Earum dolore, at adipisci deserunt doloribus tenetur, eaque assumenda deleniti ipsum expedita a alias laborum?
-                        </div>
-
-                    </Modal>
-                </section> */}
+                    <Container>
 
 
-                <Container>
+                        <section className="  grid grid-cols-1 w-full  lg:grid-cols-[19.8%_9.5%_9.5%_36.5%_22%] gap-2">
 
-                    <section className="  grid grid-cols-1 w-full  lg:grid-cols-[19.8%_9.8%_9.8%_39%_19%] gap-2">
-
-                        <div className="h-[50px]">
+                            {/* <div className="h-[50px]">
                             <SearchInput
                                 value={filters?.search || ''}
                                 onChange={handleChangeSearch}
                                 placeholder="Search..."
                             />
-                        </div>
+                        </div> */}
 
 
-                        {/* Desktop and Laptop */}
-                        <div className="hidden lg:flex h-[48px]">
-                            <SelectOption
-                                className="w-[200px]"
-                                search
-                                clearSelection={clear}
-                                label="Emirates"
-                                options={emirateOptions}
-                                onSelect={handleSelect.emirate}
-                            />
-                        </div>
+                            <div className="h-[50px]">
+                                <SearchNew
+                                    value={filters?.search || ''}
+                                    onChange={handleChangeSearch}
+                                    placeholder="Search..."
+                                />
+                            </div>
 
 
-
-
-                        <div className="hidden lg:flex h-[48px]">
-                            <SelectOption
-                                search
-                                clearSelection={clear}
-                                className="w-[220px]"
-                                label="Cities"
-                                options={cityOptions}
-                                onSelect={handleChangeCities}
-                            />
-                        </div>
-
-
-
-
-
-
-
-
-
-                        {/* Mobile */}
-                        <div className="flex lg:hidden w-full gap-2">
-
-                            <div className=" h-[40px] w-full">
-                                <SelectOption
+                            {/* Done */}
+                            {/* Desktop and Laptop */}
+                            <div className="hidden lg:flex h-[48px]">
+                                <SelectNew
                                     className="w-[200px]"
                                     search
                                     clearSelection={clear}
@@ -505,379 +436,466 @@ export default function HomePage() {
                             </div>
 
 
-                            <div className=" h-[40px] w-full">
-                                <SelectOption
+
+                            {/* Done */}
+                            <div className="hidden lg:flex h-[48px]">
+                                <SelectNewMultiple
                                     search
                                     clearSelection={clear}
-                                    className="w-[220px]  sm:!left-0 !-left-14 "
+                                    className="w-[220px]"
                                     label="Cities"
                                     options={cityOptions}
                                     onSelect={handleChangeCities}
                                 />
                             </div>
 
-                        </div>
 
 
-                        <div className="h-[50px]">
-                            <SwitchSelector
-                                onSelect={handleSelect.projectType}
-                                defaultValue=""
-                                options={propertyTypeFirst}
-                            />
-                        </div>
 
 
-                        <div className="flex gap-2 h-[50px]">
-                            <SwitchSelector
-                                onSelect={handleSelect.propertyTypeSecond}
-                                defaultValue=""
-                                options={propertyTypeSecond}
-                            />
-                            <button onClick={handleFilterModal} className="bg-red-600/10 rounded flex justify-center items-center  border border-[#DEDEDE] w-[55px] lg:hidden h-full">
-                                <Image
-                                    src={filter_icon}
-                                    className=" object-cover"
-                                    alt="filter"
-                                    width={18}
-                                    height={18}
 
-                                />
-                            </button>
-                        </div>
 
 
-                    </section>
-                </Container>
 
+                            {/* Mobile */}
+                            <div className="flex lg:hidden w-full gap-2">
 
+                                <div className=" h-[40px] w-full">
+                                    <SelectNew
+                                        className="w-[200px]"
+                                        search
 
-                {/* Additional Filters */}
-                <Container>
-                    <section className=" lg:flex gap-2  mt-2  hidden">
-
-                        {((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial' || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential'))) && <div className="h-[50px]">
-
-                            <ExpandableComponentDropdown
-                                isOpen={rangeCalculator}
-                                onToggle={() => setRangeCalculator(prev => !prev)}
-                                label="Price"
-                                isSelected={false}
-                                customCloseControl={<button className="text-xs text-red-600">X</button>}
-                            >
-                                <RangeCalculator
-                                    onDone={(minValue, maxValue) => {
-                                        handleSelect.maxPrice(maxValue);
-                                        handleSelect.minPrice(minValue);
-                                        console.log(minValue, maxValue, '---')
-                                    }}
-                                    onClose={() => setRangeCalculator(prev => !prev)}
-
-                                />
-                            </ExpandableComponentDropdown>
-
-                        </div>}
-
-                        {((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className=" w-[100px]  h-[50px]">
-
-                            <ExpandableComponentDropdown
-                                isOpen={areaRange}
-                                onToggle={() => setShowAreaRange(prev => !prev)}
-                                label="Sqft"
-                                isSelected={false}
-
-                                onClear={() => console.log("Cleared")}
-                                customCloseControl={<button className="text-xs text-red-600">X</button>}
-                            >
-                                <AreaRangeInput
-                                    onClose={() => setShowAreaRange(prev => !prev)}
-                                    onDone={(minValue, maxValue) => {
-                                        handleSelect.minSqft(minValue)
-                                        handleSelect.maxSqft(maxValue)
-                                    }}
-
-                                />
-
-                            </ExpandableComponentDropdown>
-
-                        </div>}
-
-
-
-                        {propertyTypesCondition && <div className={clsx(`h-[50px]`, propertyTypesCondition ? 'w-[130px]' : 'flex-[8%]')}>
-
-                            <SelectOption
-                                clearSelection={clear}
-                                className="w-[200px]"
-                                label="Property Types"
-                                options={PropertyTypes}
-                                onSelect={handleSelect.propertyType}
-                            />
-                        </div>}
-
-
-
-                        {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className="lg:flex-[30%] h-[50px]">
-                            <SwitchSelector
-                                onSelect={handleSelect.completionType}
-                                defaultValue={filters.completionType}
-                                options={CompletionTypes}
-                            />
-                        </div>}
-
-
-                        {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential')) && <div className="flex-[8%] h-[50px]">
-
-                            <ExpandableComponentDropdown
-                                isOpen={showYearSelector}
-                                onToggle={() => setShowYearSelector(prev => !prev)}
-                                label="Handover"
-                                isSelected={false}
-
-                                onClear={() => console.log("Cleared")}
-                                customCloseControl={<button className="text-xs text-red-600">X</button>}
-                            >
-                                <SelectHandoverDate
-                                    initialYear={2025}
-                                    initialQuarter={"Q2"}
-                                    onDone={(year, quarter) => {
-                                        handleSelect.handoverDate({ quarter, year })
-                                    }}
-                                    onClose={() => setShowYearSelector(false)}
-                                    reset={() => console.log("Reset triggered")}
-                                    onChange={(year, quarter) => console.log("Live change", year, quarter)}
-                                />
-                            </ExpandableComponentDropdown>
-
-                        </div>}
-
-
-
-
-                        {bedAndBathCondition && <div className={clsx("h-[50px]", bedAndBathCondition ? 'w-[180px]' : 'flex-[6%]')}>
-
-                            <ExpandableComponentDropdown
-                                isOpen={bedsAndBath}
-                                onToggle={() => setBedsAndBath(prev => !prev)}
-                                label="Beds & Baths"
-                                isSelected={false}
-
-                                onClear={() => console.log("Cleared")}
-                                customCloseControl={<button className="text-xs text-red-600">X</button>}
-                            >
-
-
-                                <BedBathSelector
-                                    onDone={(beds, baths) => {
-
-                                        handleSelect.bath(baths);
-                                        handleSelect.beds(beds);
-
-                                    }}
-                                    onClose={() => setShowBedBath(false)}
-                                />
-
-                            </ExpandableComponentDropdown>
-
-                        </div>}
-
-
-
-
-
-
-                        {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential')) && <div className="flex-[10%] h-[50px]">
-
-                            <SelectOption
-                                clearSelection={clear}
-                                search
-                                className="w-[200px]"
-                                label="Payment Plan"
-                                options={PaymentPlan}
-                                onSelect={handleSelect.paymentPlan}
-                            />
-                        </div>}
-
-
-
-
-
-                        {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className="flex-[7%]  h-[50px]">
-
-                            <SelectOption
-                                search
-                                clearSelection={clear}
-                                className="w-[200px] "
-                                label="Discount"
-                                options={DiscountType}
-                                onSelect={handleSelect.discount}
-                            />
-                        </div>}
-
-
-
-                        {furnishTypesCondition && <div className={clsx("h-[50px]", furnishTypesCondition ? 'w-[140px]' : 'flex-[8%]')}>
-
-                            <SelectOption
-                                clearSelection={clear}
-                                search
-                                className="w-[200px]"
-                                label="Furnish Type"
-                                options={FurnishTypes}
-                                onSelect={handleSelect.furnishType}
-                            />
-                        </div>}
-
-
-
-
-                        <div onClick={() => handleClear()} className="flex max-w-[120px] h-[50px] items-center gap-2">
-                            <label className="text-[12px]">Clear Filters</label>
-                            <div className="bg-black w-[14px] rounded-full h-[14px] flex justify-center items-center">
-                                <IoCloseOutline size={12} color="white" />
-                            </div>
-                            {/* <Image src={close_icon} alt="menu icon" width={11.25} height={11.25} /> */}
-                        </div>
-                    </section>
-                </Container>
-
-                <SectionDivider
-                containerClassName="mt-[10.5px] mb-[12px]"
-                lineClassName="h-[1px] w-full bg-[#DEDEDE]"
-            />
-
-
-                {/* Projects Section */}
-                <Container>
-
-                    <div className="mb-4 flex gap-2">
-                        <div className="flex-1 h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-
-                            {projects ? projects?.data?.map((item, index) => (
-                                <ProjectCard
-                                    key={index}
-                                    item={item}
-                                    handleClick={handleClick}
-                                    handleEnquiryFormClick={handleEnquiryFormClick}
-                                />
-                            )) :
-
-                                <>
-                                    {Array.from({ length: 10 }).map((item, index) => {
-                                        return <ProjectCardSkelton key={index} />
-                                    })}
-                                </>
-
-                            }
-                        </div>
-
-                        <div className="w-full xl:block hidden max-w-[301.5px]">
-
-                            {smallVideoAds && smallVideoAds.length > 0 &&
-                                <div className="w-full mb-[12px] relative">
-                                    <VideoPreview
-                                        src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                                        // clearSelection={clear}
+                                        label="Emirates"
+                                        options={emirateOptions}
+                                        onSelect={handleSelect.emirate}
                                     />
                                 </div>
-                            }
 
-                            <div className="sticky top-3 left-0">
 
-                                <CustomSliderUi
-                                    shuffledImages={shuffledImages}
-                                />
-                                <Recommendations />
+                                <div className=" h-[40px] w-full">
+                                    <SelectNewMultiple
+                                        search
+                                        // clearSelection={clear}
+                                        className="w-[220px]  sm:!left-0 !-left-14 "
+                                        label="Cities"
+                                        options={cityOptions}
+                                        onSelect={handleChangeCities}
+                                    />
+                                </div>
+
                             </div>
 
 
+                            {/* Done */}
+                            {productTypeOptionFirstItems.length > 0 ? <div className="h-[50px]">
+                                <SwitchSelector
+                                    onSelect={handleSelect.productTypeOptionFirst}
+                                    defaultValue={filters.productTypeOptionFirst}
+                                    options={productTypeOptionFirstItems}
+
+                                />
+                            </div> : <div className="w-full h-full bg-gray-50"></div>}
 
 
+
+                            <div className="flex gap-2 h-[50px]">
+                                <SwitchSelector
+                                    onSelect={handleSelect.propertyTypeSecond}
+                                    defaultValue={filters.propertyTypeSecond}
+                                    options={propertyTypeSecond}
+                                />
+                                <button onClick={handleFilterModal} className="bg-red-600/10 rounded flex justify-center items-center  border border-[#DEDEDE] w-[55px] lg:hidden h-full">
+                                    <Image
+                                        src={filter_icon}
+                                        className=" object-cover"
+                                        alt="filter"
+                                        width={18}
+                                        height={18}
+
+                                    />
+                                </button>
+                            </div>
+
+
+                        </section>
+                    </Container>
+
+
+
+                    {/* Additional Filters */}
+                    <Container>
+                        <section className=" lg:flex gap-2  mt-2  hidden">
+
+                            {((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial' || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential'))) && <div className="h-[50px]">
+
+                                <ExpandableComponentDropdown
+                                    // isOpen={true}
+                                    isOpen={rangeCalculator}
+                                    onToggle={() => setRangeCalculator(prev => !prev)}
+                                    label="Price"
+                                    isSelected={false}
+                                    customCloseControl={<button className="text-xs text-red-600">X</button>}
+                                >
+                                    <RangeCalculator
+                                        wrapperClassName=""
+                                        onDone={(minValue, maxValue) => {
+                                            handleSelect.maxPrice(maxValue);
+                                            handleSelect.minPrice(minValue);
+                                        }}
+                                        onClose={() => setRangeCalculator(prev => !prev)}
+
+                                    />
+                                </ExpandableComponentDropdown>
+
+                            </div>}
+
+                            {((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className=" w-[100px]  h-[50px]">
+
+                                <ExpandableComponentDropdown
+                                    isOpen={areaRange}
+                                    onToggle={() => setShowAreaRange(prev => !prev)}
+                                    label="Sqft"
+                                    isSelected={false}
+
+                                    onClear={() => console.log("Cleared")}
+                                    customCloseControl={<button className="text-xs text-red-600">X</button>}
+                                >
+                                    <AreaRangeInput
+                                        onClose={() => setShowAreaRange(prev => !prev)}
+                                        onDone={(minValue, maxValue) => {
+                                            handleSelect.minSqft(minValue)
+                                            handleSelect.maxSqft(maxValue)
+                                        }}
+
+                                    />
+
+                                </ExpandableComponentDropdown>
+
+                            </div>}
+
+
+
+                            {/* Done */}
+                            {propertyTypesCondition && <div className={clsx(`h-[50px]`, propertyTypesCondition ? 'w-[130px]' : 'flex-[8%]')}>
+
+                                <SelectNew
+                                    // clearSelection={clear}
+                                    className="w-[200px]"
+                                    label="Property Types"
+                                    options={PropertyTypes}
+                                    onSelect={handleSelect.propertyType}
+                                />
+                            </div>}
+
+
+
+
+                            {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className="lg:flex-[30%] h-[50px]">
+                                <SwitchSelector
+                                    defaultValue={CompletionTypes[0].value}
+                                    onSelect={handleSelect.completionType}
+                                    options={CompletionTypes}
+                                />
+                            </div>}
+
+
+                            {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential')) && <div className="flex-[8%] h-[50px]">
+
+                                <ExpandableComponentDropdown
+                                    isOpen={showYearSelector}
+                                    onToggle={() => setShowYearSelector(prev => !prev)}
+                                    label={(filters.handoverDate?.year || filters.handoverDate?.quarter) ? (`${filters.handoverDate?.year}-${filters.handoverDate?.quarter}`) : "Handover"}
+                                    isSelected={false}
+
+                                    onClear={() => console.log("Cleared")}
+                                    customCloseControl={<button className="text-xs text-red-600">X</button>}
+                                >
+                                    <SelectHandoverDate
+                                        initialYear={filters.handoverDate?.year ? filters.handoverDate?.year : 2025}
+                                        initialQuarter={filters.handoverDate?.quarter ? filters.handoverDate?.quarter : "Q2"}
+
+                                        onDone={(year, quarter) => {
+                                            handleSelect.handoverDate({ quarter, year })
+                                        }}
+                                        onClose={() => setShowYearSelector(false)}
+                                        reset={() => console.log("Reset triggered")}
+                                        onChange={(year, quarter) => console.log("Live change", year, quarter)}
+                                    />
+                                </ExpandableComponentDropdown>
+
+                            </div>}
+
+
+
+
+                            {bedAndBathCondition && <div className={clsx("h-[50px]", bedAndBathCondition ? 'w-[180px]' : 'flex-[6%]')}>
+
+                                <ExpandableComponentDropdown
+                                    isOpen={bedsAndBath}
+                                    onToggle={() => setBedsAndBath(prev => !prev)}
+                                    label="Beds & Baths"
+                                    isSelected={false}
+
+                                    onClear={() => console.log("Cleared")}
+                                    customCloseControl={<button className="text-xs text-red-600">X</button>}
+                                >
+
+
+                                    <BedBathSelector
+                                        onDone={(beds, baths) => {
+
+                                            handleSelect.bath(baths);
+                                            handleSelect.beds(beds);
+
+                                        }}
+                                        onClose={() => setShowBedBath(false)}
+                                    />
+
+                                </ExpandableComponentDropdown>
+
+                            </div>}
+
+
+
+
+
+
+                            {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential')) && <div className="flex-[10%] h-[50px]">
+
+                                <SelectNew
+                                    // clearSelection={clear}
+                                    className="w-[200px]"
+                                    label="Payment Plan"
+                                    options={PaymentPlan}
+                                    onSelect={handleSelect.paymentPlan}
+                                />
+                            </div>}
+
+
+
+
+
+                            {!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential')) && <div className="flex-[7%]  h-[50px]">
+
+                                <SelectNew
+                                    // clearSelection={clear}
+                                    className="w-[200px] "
+                                    label="Discount"
+                                    options={DiscountType}
+                                    onSelect={handleSelect.discount}
+                                />
+                            </div>}
+
+
+
+                            {furnishTypesCondition && <div className={clsx("h-[50px]", furnishTypesCondition ? 'w-[140px]' : 'flex-[8%]')}>
+
+                                <SelectNew
+                                    // clearSelection={clear}
+                                    className="w-[200px]"
+                                    label="Furnish Type"
+                                    options={FurnishTypes}
+                                    onSelect={handleSelect.furnishType}
+                                />
+                            </div>}
+
+
+
+
+                            <div onClick={() => handleClear()} className="flex max-w-[120px] h-[50px] items-center gap-2">
+                                <label className="text-[12px]">Clear Filters</label>
+                                <div className="bg-black w-[14px] rounded-full h-[14px] flex justify-center items-center">
+                                    <IoCloseOutline size={12} color="white" />
+                                </div>
+                                {/* <Image src={close_icon} alt="menu icon" width={11.25} height={11.25} /> */}
+                            </div>
+                        </section>
+                    </Container>
+
+                    <SectionDivider
+                        containerClassName="mt-[10.5px] mb-[12px]"
+                        lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+                    />
+
+
+                    {/* Projects Section */}
+                    <Container>
+
+                        <div className="mb-4 flex gap-2">
+                            <div className="flex-1 h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+
+                                {projects ? projects?.data?.map((item, index) => (
+                                    <ProjectCard
+                                        navigateDetailsButton={true}
+                                        key={index}
+                                        item={item}
+                                        handleClick={handleClick}
+                                        handleEnquiryFormClick={handleEnquiryFormClick}
+                                    />
+                                )) :
+
+                                    <>
+                                        {Array.from({ length: 10 }).map((item, index) => {
+                                            return <ProjectCardSkelton key={index} />
+                                        })}
+                                    </>
+
+                                }
+                            </div>
+
+                            <div className="w-full xl:block hidden max-w-[301.5px]">
+
+                                {smallVideoAds && smallVideoAds.length > 0 &&
+                                    <div className="w-full mb-[12px] relative">
+                                        <VideoPreview
+                                            src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                                        />
+                                    </div>
+                                }
+
+                                <div className="sticky top-3 left-0">
+
+                                    <CustomSliderUi
+                                        shuffledImages={shuffledImages}
+                                    />
+                                    <Recommendations />
+                                </div>
+
+
+
+
+                            </div>
                         </div>
-                    </div>
-                </Container>
+                    </Container>
 
 
 
 
-                <Modal
-                    isOpen={EnquiryForm.status}
-                    onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
-                >
-                    {EnquiryForm.count === 1 && <ModalForm
-                        item={EnquiryForm}
-                        setEnquiry={setEnquiryForm}
-                    />}
-                    {EnquiryForm.count === 2 && <RegistrationSuccess />}
 
-                </Modal>
-            </div>
+                </div>
 
 
-            {/* <div className="sm:hidden block">
+                {/* <div className="sm:hidden block">
                 <BottomNavigation />
             </div> */}
 
 
 
-            {/* Pagination code */}
+                {/* Pagination code */}
 
-            <Container>
-
-                <div className="mt-[23.25px]">
-
-                    <Pagination
-                        currentPage={filters.page || 1}
-                        totalPages={totalPages}
-                        onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
-                    />
-
-                    <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">1 To 24 of 23,567 Listings</div>
-                </div>
-            </Container>
-
-
-            <SectionDivider
-                containerClassName="mt-[45.75px]"
-                lineClassName="h-[1px] hidden sm:block w-full bg-[#DEDEDE]"
-            />
-
-
-            <BottomBanner />
-
-            {smallVideoAds && smallVideoAds.length > 0 &&
                 <Container>
-                    <div className="w-full mb-[35px] relative flex sm:hidden">
-                        <VideoPreview
-                            src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
-                        />
+
+                    <div className="mt-[23.25px]">
+                        {/* 
+                        <Pagination
+                            currentPage={filters.page || 1}
+                            totalPages={totalPages}
+                            onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
+                        /> */}
+                        <PaginationNew
+                            currentPage={filters.page || 1}
+                            totalPages={totalPages}
+                            onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
+                            maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />
+
+
+
+                        <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">1 To 24 of 23,567 Listings</div>
                     </div>
                 </Container>
-            }
 
 
-            {/* Mobile Footer Banner */}
-            <MobileFooterBanner />
 
 
-            <div className="px-5 flex sm:hidden lg:px-8 mt-[16px]">
-
-                <RecommendedText
-                    title="Recommended For You"
-                    items={[
-                        'Studio Properties For Sale in Dubai',
-                        '1 BHK Flats in Downtown',
-                        'Luxury Villas in Palm Jumeirah',
-                        'Affordable Apartments in JVC',
-                        'Beachfront Homes in Dubai Marina',
-                    ]}
+                <SectionDivider
+                    containerClassName="mt-[45.75px]"
+                    lineClassName="h-[1px] hidden sm:block w-full bg-[#DEDEDE]"
                 />
-            </div>
+
+
+                {/* <BottomBanner /> */}
+
+                {smallVideoAds && smallVideoAds.length > 0 &&
+                    <Container>
+                        <div className="w-full mb-[35px] relative flex sm:hidden">
+                            <VideoPreview
+                                src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                            />
+                        </div>
+                    </Container>
+                }
+
+
+                {/* Mobile Footer Banner */}
+                <MobileFooterBanner />
+
+
+                <div className="px-5 flex sm:hidden lg:px-8 mt-[16px]">
+
+                    <RecommendedText
+                        title="Recommended For You"
+                        items={[
+                            'Studio Properties For Sale in Dubai',
+                            '1 BHK Flats in Downtown',
+                            'Luxury Villas in Palm Jumeirah',
+                            'Affordable Apartments in JVC',
+                            'Beachfront Homes in Dubai Marina',
+                        ]}
+                    />
+                </div>
+
+
+                <MobileFilterOption
+                    setFiltersHandler={setFilters}
+                    onClose={() => setFilterModel(false)}
+                    show={filterModel}
+                />
+
+
+                <Footer />
 
 
 
-            <Footer />
 
-        </main>
+                {/* <MobileFilterOption
+                handleFilterChanges={handleFilterChanges}
+                    onClose={() => setFilterModel(false)}
+                    show={filterModel}
+                /> */}
 
+
+
+            </main>
+
+            <Modal
+                isOpen={EnquiryForm.status}
+                onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
+            >
+                <Container>
+                    <div className="relative w-full h-[200px] rounded-[5px]">
+
+
+                        {EnquiryForm.count === 1 && <ModalForm
+                            onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
+                            item={EnquiryForm}
+                            setEnquiry={setEnquiryForm}
+                        />}
+
+                        {EnquiryForm.count === 2 && <RegistrationSuccess
+                            onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
+
+                        />}
+
+                        {EnquiryForm.count === 3 && <AlreadyEnquired
+                            onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
+
+                        />}
+
+                    </div>
+                </Container>
+            </Modal>
+
+        </>
     );
 }

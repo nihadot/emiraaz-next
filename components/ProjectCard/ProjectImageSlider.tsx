@@ -8,6 +8,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import { black_down_icon, black_right_down_icon, down_icon } from '@/app/assets';
 import { AllProjectsItems } from '@/redux/project/types';
+import { GrFormNext, GrNext } from 'react-icons/gr';
 function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
     const prevRef = useRef(null);
     const swiperRef = useRef<any>(null);
@@ -125,31 +126,27 @@ function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
 
             <button
                 ref={prevRef}
-                className="absolute left-2 top-1/2 z-10 transform -translate-y-1/2 h-[20px] w-[20px] bg-white/75 text-red-500 rounded-[4.5px] justify-center items-center p-1 hover:opacity-80 transition-opacity duration-200 group-hover:flex"
+                className="absolute left-2 top-1/2 z-10 transform -translate-y-1/2 h-[20px] w-[20px] bg-white/75 text-red-500 rounded-[4.5px] justify-center items-center hover:opacity-80 transition-opacity duration-200 group-hover:flex"
             >
-                <div className="">
-                    <Image
+                <div className="flex justify-center items-center w-full h-full">
+                    {/* <Image
                         src={down_icon}
                         className="object-cover relative "
                         width={6}
                         height={3}
                         alt="next icon"
-                    />
+                    /> */}
+                    <GrFormNext  color="black" className=' w-[15px] h-[15px] -rotate-180' />
                 </div>
             </button>
 
             <button
                 ref={nextRef}
-                className="absolute right-2 top-1/2 z-10 transform -translate-y-1/2 h-[20px] justify-center items-center w-[20px] bg-white/75 text-red-500 rotate-180 p-1 rounded-[4.5px] hover:opacity-80 transition-opacity duration-200 group-hover:flex"
+                className="absolute right-2 top-1/2 z-10 transform -translate-y-1/2 h-[20px] justify-center items-center w-[20px] bg-white/75 text-red-500 rotate-180 rounded-[4.5px] hover:opacity-80 transition-opacity duration-200 group-hover:flex"
             >
-                <div className="">
-                    <Image
-                        src={down_icon}
-                        className="object-cover relative "
-                        width={6}
-                        height={3}
-                        alt="next icon"
-                    />
+                <div className="flex justify-center items-center w-full h-full">
+                <GrFormNext  color="black" className=' w-[15px] h-[15px] -rotate-180' />
+
                 </div>
             </button>
         </div>

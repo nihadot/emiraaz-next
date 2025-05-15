@@ -21,9 +21,9 @@ function RegulatoryInformation({ qrCodeUrl, icon, data, headerTitle, reportedPro
     <div className='mt-0 w-full'>
       <div className="flex py-2 gap-[9.75px] items-center ">
         <ProjectHeader
-        contentClassName='font-medium text-[18.75px]' 
-        
-        title={headerTitle}  />
+          contentClassName='font-medium text-[18.75px]'
+
+          title={headerTitle} />
         {icon && <Image src={tick_green_icon} alt="location" width={20} />}
       </div>
       <div className="flex flex-col sm:flex-row items-center justify-between w-full ">
@@ -47,15 +47,15 @@ function RegulatoryInformation({ qrCodeUrl, icon, data, headerTitle, reportedPro
       <div className="mt-[24.75px] hidden md:block">
 
         <PrimaryButton
-        onClick={reportedProjectHandler}
+          onClick={reportedProjectHandler}
           type="button"
           className=" bg-[#FFE7EC] max-w-[280px] w-full border-none "
-      >
-<div className="flex justify-center items-center gap-2">
-              <Image src={report_icon} alt="save icon" width={21} height={21} className='object-cover' />
-              <label className="text-sm font-medium text-[#FF1645] text-[14.25px] font-poppins">Report Property</label>
-            </div>
-            </PrimaryButton>
+        >
+          <div className="flex justify-center items-center gap-2">
+            <Image src={report_icon} alt="save icon" width={21} height={21} className='object-cover' />
+            <label className="text-sm font-medium text-[#FF1645] text-[14.25px] font-poppins">Report Property</label>
+          </div>
+        </PrimaryButton>
       </div>
     </div>
   )

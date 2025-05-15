@@ -3,6 +3,7 @@ import { LOCAL_STORAGE_KEYS } from "@/api/storage";
 import { notes_icon, save_icon, share_button_icon } from "@/app/assets";
 import Container from "@/components/atom/Container/Container";
 import PrimaryButton from "@/components/Buttons";
+import AlreadyEnquired from "@/components/EnquiryForm/AlreadyEnquired";
 import ModalForm from "@/components/EnquiryForm/ModalForm";
 import RegistrationSuccess from "@/components/EnquiryForm/RegistrationSuccess";
 import Modal from "@/components/Modal/Modal";
@@ -97,20 +98,10 @@ const StickyScrollHeader = ({ value, currency, title, projectId }: Props) => {
                         const userData: UserData = JSON.parse(userDataString);
                         if(userData) payload.userId = userData._id
                 }
-    
-    // console.log(_id ,'isAuthentication && _id')
-                // if (isAuthentication && _id) {
-                //     payload.userId = _id;
-                // }
-    
-    
-    
-    
+
     
                 await axios.post(`${baseUrl}/enquiry`, payload);
-                // Reset form or show success
-                // successToast('Submitted');
-    
+           
                 setEnquiryForm((prev: any) => ({
                     ...prev,
                     count: 2,
@@ -181,11 +172,19 @@ const StickyScrollHeader = ({ value, currency, title, projectId }: Props) => {
                     onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
                 >
                     {EnquiryForm.count === 1 && <ModalForm
+                    onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
                         item={EnquiryForm}
                         setEnquiry={setEnquiryForm}
                     />}
-                    {EnquiryForm.count === 2 && <RegistrationSuccess />}
+                    {EnquiryForm.count === 2 && <RegistrationSuccess
+                    onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
+                    />}
 
+
+ {EnquiryForm.count === 3 && <AlreadyEnquired
+                            onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
+
+                        />}
                 </Modal>
                     </div>
                    </Container>

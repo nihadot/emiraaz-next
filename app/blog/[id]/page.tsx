@@ -10,6 +10,7 @@ import CustomSliderUi from '../../home/CustomSliderUi';
 import { shuffle } from '@/utils/shuffle';
 import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi';
 import { useViewAllBlogsQuery, useViewBlogByIdQuery } from '@/redux/blogs/blogsApi';
+import Container from '@/components/atom/Container/Container';
 
 
 const Blog = ({ params }: { params: Promise<{ id: string }> }) => {
@@ -33,7 +34,9 @@ const Blog = ({ params }: { params: Promise<{ id: string }> }) => {
                 <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
             </div>
 
-            <section className='px-5 max-w-[1200px] m-auto gap-[30px] pb-20 lg:px-8 xl:px-[144.75px] '>
+<Container>
+
+            <section className='m-auto gap-[30px] pb-20 '>
                 <div className="w-full relative object-cover h-[236px] sm:h-[523.5px]">
                     <div className="px-4 py-2 absolute z-30 left-[15px] top-[15px] text-[#FF1645] bg-[#FFE7EC] ">Area Spotlight</div>
                     <Image
@@ -76,7 +79,7 @@ const Blog = ({ params }: { params: Promise<{ id: string }> }) => {
 
 
                         </div>
-                        <div className="max-w-[245.25px] sm:block hidden w-full h-full">
+                        <div className="max-w-[301.5px] sm:block hidden w-full h-full">
                             <RecommendedText
                                 title="Recommended For You"
                                 items={[
@@ -162,6 +165,7 @@ const Blog = ({ params }: { params: Promise<{ id: string }> }) => {
 
             </section>
 
+</Container>
 
 
 

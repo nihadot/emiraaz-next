@@ -8,6 +8,7 @@ import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portra
 import Pagination from '@/components/Pagination/Pagination';
 import { useRouter } from 'next/navigation';
 import { useViewAllBlogsQuery } from '@/redux/blogs/blogsApi';
+import Container from '@/components/atom/Container/Container';
 
 
 
@@ -53,9 +54,11 @@ function Blogs() {
                 <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
             </div>
 
+<Container>
+
             <h3 className='text-[37.5px] text-center py-[33px] hidden md:block font-medium font-poppins text-[#FF1645]'>Learn, Discover, Invest.</h3>
 
-            <section className='px-5 max-w-[1200px] m-auto gap-[30px] pb-20 lg:px-8 xl:px-[144.75px] flex items-start '>
+            <section className='m-auto gap-[30px] pb-20 flex items-start '>
                 <div className="w-full">
                     <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[12px] sm:gap-[37.5px]">
 
@@ -105,6 +108,7 @@ function Blogs() {
 
             </section>
 
+</Container>
 
 
 

@@ -1,5 +1,4 @@
 'use client'
-import BottomNavigation from '@/components/BottomNavigation/BottomNavigation'
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import SearchInput from '@/components/SearchField/Search'
@@ -10,12 +9,15 @@ import { useViewAllDevelopersQuery } from '@/redux/developers/developersApi'
 import { AllDevelopersItems } from '@/redux/developers/types'
 import Image from 'next/image'
 import { top_arrow_icon } from '../assets'
-import Pagination from '@/components/Pagination/Pagination'
 import Container from '@/components/atom/Container/Container'
+import PaginationNew from "@/components/PaginationNew/PaginationNew";
+import { useDeviceType } from '@/utils/useDeviceType'
+import SpaceWrapper from '@/components/atom/SpaceWrapper/SpaceWrapper'
 
 
 function Developers() {
 
+    const deviceType = useDeviceType();
 
     // Debounce search input
 
@@ -159,19 +161,27 @@ function Developers() {
 </section>
 </Container>
 
-
+{/* 
 
                 <Pagination
                     currentPage={filters.page}
                     totalPages={totalPages}
                     onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
-                />
+                /> */}
 
+<SpaceWrapper className='mb-10'>
+
+     <PaginationNew
+                            currentPage={filters.page || 1}
+                            totalPages={totalPages}
+                            onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
+                            maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />
+
+</SpaceWrapper>
+         
             </div>
 
-            <div className="sm:hidden block">
-                <BottomNavigation />
-            </div>
+        
 
             <Footer />
         </main>

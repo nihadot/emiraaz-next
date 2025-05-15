@@ -116,7 +116,21 @@ export const propertyTypeFirst = [
     { label: "Land ", value: "off-plan-land" },
 ]
 
+export const productTypeOptionFirstItems = [
+    { label: "Off-Plan projects", value: "off-plan-projects" },
+    { label: "Off-Plan Resale", value: "off-plan-resale" },
+    { label: "Secondary ", value: "off-plan-secondary" },
+    { label: "Land ", value: "off-plan-land" },
+]
+
 export const propertyTypeSecond = [
+    { label: "All", value: "all" },
+    { label: "Residential", value: "residential" },
+    { label: "Commercial", value: "commercial" },
+]
+
+export const productTypeOptionLastItems = [
+    { label: "All", value: "all" },
     { label: "Residential", value: "residential" },
     { label: "Commercial", value: "commercial" },
 ]

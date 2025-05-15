@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import Header from "@/components/Header";
 import { useLoginMutation, useSignUpMutation } from "@/redux/auth/authApi";
 import { errorToast } from "@/components/Toast";
+import SectionDivider from "@/components/atom/SectionDivider/SectionDivider";
 
 const LoginSchema = Yup.object().shape({
     name: Yup.string()
@@ -62,11 +63,15 @@ const AdminLogin = () => {
     return (
         <>
             <Header />
-            <section className="flex flex-col p-6 items-center justify-center h-screen bg-white">
+                 <SectionDivider
+                      containerClassName="mt-[10.5px] mb-[12px]"
+                      lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+                    />
+            <section className="flex flex-col max-w-[440px] m-auto p-6 items-center justify-center h-screen bg-white">
                 <h1 className="text-start sm:text-center font-normal text-gray-900">
                     {/* Welcome Back <span className="text-[#FF1645]">Admin</span> */}
                 </h1>
-                <p className="font-medium text-3xl">Start Your Property Journey with Us!</p>
+                <p className='font-poppins  font-medium text-[19.5px]  sm:text-[24px]'>Sell Your Property Effortlessly with PropertySeller!</p>
 
                 <Formik
                     initialValues={{ name: "mac book", email: "macbook@gmail.com", number: "1212121212", password: "Macbook@123#", confirmPassword: "Macbook@123#" }}
@@ -74,28 +79,44 @@ const AdminLogin = () => {
                     onSubmit={handleSubmit}
                 >
                     {({ isSubmitting }) => (
-                        <Form className="w-full max-w-[440px] mt-6 bg-white">
+                        <Form className="w-full  mt-6 bg-white">
                             <div className="mb-4">
-                                <label htmlFor="name" className="block font-normal text-black">Name</label>
-                                <Field type="text" id="name" name="name" placeholder="Enter your Name" className="mt-1.5 p-2 px-4 rounded border-slate-200 placeholder:text-xs border w-full bg-[#F7F7F7] focus:ring-[#FF1645] focus:border-[#FF1645]" disabled={isSubmitting} />
+                            <LabelFields
+                      title='Name'
+                      htmlFor='name'
+                    />
+                                {/* <label htmlFor="name" className="block font-normal text-black">Name</label> */}
+                                <InputField type="text" id="name" name="name" placeholder="Enter your Name"  loading={isSubmitting} />
                                 <ErrorMessage name="name" component="div" className="text-red-500 mt-1" />
                             </div>
 
                             <div className="mb-4">
-                                <label htmlFor="email" className="block font-normal text-black">Email</label>
-                                <Field type="email" id="email" name="email" placeholder="Enter your email" className="mt-1.5 p-2 px-4 rounded border-slate-200 placeholder:text-xs border w-full bg-[#F7F7F7] focus:ring-[#FF1645] focus:border-[#FF1645]" disabled={isSubmitting} />
+                            <LabelFields
+                      title='Email'
+                      htmlFor='email'
+                    />
+                                {/* <label htmlFor="email" className="block font-normal text-black">Email</label> */}
+                                <InputField type="email" id="email" name="email" placeholder="Enter your email" loading={isSubmitting} />
                                 <ErrorMessage name="email" component="div" className="text-red-500 mt-1" />
                             </div>
 
                             <div className="mb-4">
-                                <label htmlFor="number" className="block font-normal text-black">number Number</label>
-                                <Field type="text" id="number" name="number" placeholder="Enter your number number" className="mt-1.5 p-2 px-4 rounded border-slate-200 placeholder:text-xs border w-full bg-[#F7F7F7] focus:ring-[#FF1645] focus:border-[#FF1645]" disabled={isSubmitting} />
+                            <LabelFields
+                      title='Number'
+                      htmlFor='number'
+                    />
+                                {/* <label htmlFor="number" className="block font-normal text-black">number Number</label> */}
+                                <InputField type="text" id="number" name="number" placeholder="Enter your number number" loading={isSubmitting} />
                                 <ErrorMessage name="number" component="div" className="text-red-500 mt-1" />
                             </div>
 
                             <div className="mb-4 relative">
-                                <label htmlFor="password" className="block font-normal text-black">Password</label>
-                                <Field type={togglePassword} id="password" name="password" placeholder="Enter your password" className="mt-1.5 p-2 px-4 rounded border-slate-200 placeholder:text-xs border w-full bg-[#F7F7F7] focus:ring-[#FF1645] focus:border-[#FF1645]" disabled={isSubmitting} />
+                            <LabelFields
+                      title='Password'
+                      htmlFor='password'
+                    />
+                                {/* <label htmlFor="password" className="block font-normal text-black">Password</label> */}
+                                <InputField type={togglePassword} id="password" name="password" placeholder="Enter your password" loading={isSubmitting} />
                                 <ErrorMessage name="password" component="div" className="text-red-500 mt-1" />
                                 <div className="absolute top-10 right-4">
                                     {togglePassword === 'password' ? (
@@ -107,8 +128,11 @@ const AdminLogin = () => {
                             </div>
 
                             <div className="mb-4 relative">
-                                <label htmlFor="confirmPassword" className="block font-normal text-black">Confirm Password</label>
-                                <Field type={toggleConfirmPassword} id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" className="mt-1.5 p-2 px-4 rounded border-slate-200 placeholder:text-xs border w-full bg-[#F7F7F7] focus:ring-[#FF1645] focus:border-[#FF1645]" disabled={isSubmitting} />
+                                <LabelFields
+                                title="Confirm Password"
+
+                                htmlFor="confirmPassword"/>
+                                <InputField type={toggleConfirmPassword} id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" loading={isSubmitting} />
                                 <ErrorMessage name="confirmPassword" component="div" className="text-red-500 mt-1" />
                                 <div className="absolute top-10 right-4">
                                     {toggleConfirmPassword === 'password' ? (
@@ -140,3 +164,42 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
+
+
+
+
+
+function LabelFields({ title, htmlFor }: { title: string, htmlFor: string }) {
+  return (
+    <label htmlFor={htmlFor} className='block mb-2 text-[10.5px] font-poppins sm:text-[13.5px]  font-medium'>{title}</label>
+  )
+}
+
+
+
+function InputField({
+  loading,
+  type,
+  id,
+  name,
+  placeholder,
+  className,
+}: {
+  loading: boolean,
+  type: string,
+  id: string,
+  name: string,
+  placeholder: string,
+  className?: string
+}) {
+  return (
+    <Field
+      type={type}
+      id={id}
+      name={name}
+      placeholder={placeholder}
+      className="border w-full outline-none border-[#DEDEDE] rounded px-4 font-poppins text-[11px] sm:text-[13.5px] font-medium py-2"
+      disabled={loading}
+    />
+  )
+}

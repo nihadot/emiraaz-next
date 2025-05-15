@@ -1,4 +1,5 @@
 import { errorToast } from "@/components/Toast";
+import clsx from "clsx";
 import { useState } from "react";
 
 interface PriceRangeInputProps {
@@ -7,7 +8,10 @@ interface PriceRangeInputProps {
   onDone: (min: number | '', max: number | '') => void;
   onClose: () => void;
   reset?: () => void;
+  doneButton?:boolean;
+  clearButton?:boolean;
   onChange?: (min: number, max: number) => void;
+  wrapperClassName?:string;
 }
 
 const PriceRangeInput = ({
@@ -17,6 +21,9 @@ const PriceRangeInput = ({
   onClose,
   reset,
   onChange,
+  wrapperClassName,
+  clearButton = true,
+  doneButton = true
 }: PriceRangeInputProps) => {
   const [minValue, setMinValue] = useState<number | ''>(initialMin || '');
   const [maxValue, setMaxValue] = useState<number | ''>(initialMax || '');
@@ -61,52 +68,52 @@ const PriceRangeInput = ({
   };
 
   return (
-    <div className="flex items-center gap-2 py-4 rounded-[12px] border bg-white border-gray-200 flex-col w-[300px]">
-      <p className="pb-2">Enter Price Range</p>
+    <div className={clsx("flex rounded-[5px] sm:p-[11px] border bg-white border-gray-200 flex-col w-[223px]",wrapperClassName)}>
+      <p className="pb-2 font-poppins justify-start md:text-center font-medium sm:font-normal text-[14px] mt-3 sm:mt-0 sm:text-[12px]">Price(AED)</p>
       
-      <div className="w-full px-4 space-y-4">
-        <div className="flex flex-col">
-          <label className="text-sm text-gray-500 mb-1">Minimum Price</label>
-          <div className="flex items-center gap-2">
+      <div className="w-full flex gap-[4px]">
+        <div className="flex flex-col   ">
+          <label className="text-[10.5px]  text-gray-500 mb-1">Min</label>
+          <div className="flex items-start justify-center gap-2">
             <input
               type="text"
               value={formatValue(minValue)}
               onChange={handleMinChange}
-              className="text-black placeholder:text-sm text-xl w-full border-b border-gray-300 focus:outline-none focus:border-[#FF1645]"
+              className=" text-black text-[14px] sm:text-[12px] h-[40px] sm:h-[29px] text-center px-3 border-[#DEDEDE] rounded-[5px] flex-1 placeholder:text-[12px] text-xl w-full border flex justify-center items-center focus:outline-none"
               placeholder="0"
             />
           </div>
         </div>
 
-        <div className="flex flex-col">
-          <label className="text-sm text-gray-500 mb-1">Maximum Price</label>
+        <div className="flex flex-col ">
+          <label className="text-[10.5px] text-gray-500 mb-1">Max</label>
           <div className="flex items-center gap-2">
             <input
               type="text"
               value={formatValue(maxValue)}
               onChange={handleMaxChange}
-              className="text-black placeholder:text-sm text-xl w-full border-b border-gray-300 focus:outline-none focus:border-[#FF1645]"
+              className="text-black text-[14px] sm:text-[12px] h-[40px] sm:h-[29px] text-center px-3 border-[#DEDEDE] rounded-[5px] placeholder:text-[12px] text-xl w-full border flex justify-center items-center focus:outline-none"
               placeholder="Any"
             />
           </div>
         </div>
       </div>
 
-      <div className="flex w-full h-10 px-3 gap-3 mt-4">
-        <button
+      { (clearButton || doneButton) &&  <div className="flex w-full mt-2 h-[29.25px] gap-[4px]">
+       { clearButton &&  <button
           type="button"
-          className="border w-full rounded-[5px] text-[#FF1645] border-[#FF1645]"
+          className="border w-full font-normal font-poppins text-[10.5px] rounded-[5px] text-[#FF1645] border-[#FF1645]"
           onClick={handleReset}
         >
-          Clear
-        </button>
-        <button
-          className="border w-full rounded-[5px] bg-[#FF1645] text-white border-[#FF1645]"
+          Reset
+        </button>}
+        { doneButton && <button
+          className="border w-full font-normal font-poppins text-[10.5px] rounded-[5px] bg-[#FF1645] text-white border-[#FF1645]"
           onClick={handleDone}
         >
           Done
-        </button>
-      </div>
+        </button>}
+      </div>}
     </div>
   );
 };

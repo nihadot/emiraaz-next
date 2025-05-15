@@ -14,7 +14,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ items }) => {
     <nav className='max-w-[600px]'>
       <ul className='flex lg:flex-row flex-col gap-4  items-start laptop:items-center'>
         {items.map((item, index) => (
-          <li className='font-medium font-poppins text-[12px]' key={index}>
+          <li className='font-medium text-black font-poppins text-[12px]' key={index}>
             <a href={item.link}>{item.name}</a>
           </li>
         ))}

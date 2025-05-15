@@ -4,11 +4,13 @@ import "./globals.css";
 import { ReduxProvider } from "@/redux/provider";
 import { Toaster } from 'react-hot-toast'
 import AppInitializer from "./AppInitializer";
+import OfflineFallback from "@/components/OfflineFallback";
+import InternetCheck from "@/components/InternetCheck";
 
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
-  weight: ["300","400", "500","600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -27,9 +29,11 @@ export default function RootLayout({
     <html lang="en" className="">
       <body className={`${poppins.variable} antialiased`}>
         <ReduxProvider>
-          <AppInitializer />
-          <Toaster />
-          {children}
+          <InternetCheck>
+            <AppInitializer />
+            <Toaster />
+            {children}
+          </InternetCheck>
         </ReduxProvider>
       </body>
     </html>

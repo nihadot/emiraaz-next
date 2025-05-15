@@ -65,7 +65,7 @@ const MortgageCalculator = ({
       <div className="py-3">
         {headerTitle && <ProjectHeader
           title={headerTitle || 'Mortgage'}
-        contentClassName='font-medium text-[18.75px]' 
+          contentClassName='font-medium text-[18.75px]'
 
         />}
       </div>
@@ -162,7 +162,7 @@ const InputWithSlider = ({ label, value, min, max, step, onChange, unit }: {
           step={step}
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
-          className="w-full accent-red-500"
+          className="w-full custom-range"
         />
       </div>
     </div>

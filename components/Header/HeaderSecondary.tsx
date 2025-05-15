@@ -1,6 +1,7 @@
 "use client";
+import { FaAngleDown, FaAnglesDown } from "react-icons/fa6";
 
-import { drop_down_icon, logo, menu_icon, user_icon } from '@/app/assets';
+import { drop_down_icon, logo, menu_icon, propertySellerWhiteLogo, user_icon } from '@/app/assets';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import NavMenu from './NavMenu';
@@ -14,6 +15,7 @@ import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import { useRouter } from 'next/navigation';
 import { errorToast } from '../Toast';
 import Container from '../atom/Container/Container';
+import { FaCaretDown, FaChevronDown, FaDownload, FaRegUserCircle, FaUser } from 'react-icons/fa';
 
 function HeaderSecondary() {
   const [isOpen, setIsOpen] = useState(false);
@@ -76,7 +78,7 @@ function HeaderSecondary() {
 
         {/* Logo */}
         <div onClick={() => router.push("/")} className="w-[140px] cursor-pointer sm:w-[138.75px] ms-8 sm:ms-0 h-[50px] sm:h-[32.25px] relative ">
-          <Image src={logo} alt='logo' fill className='bg-cover' />
+          <Image src={propertySellerWhiteLogo} alt='logo' fill className='bg-cover' />
 
         </div>
         <PrimaryButton
@@ -85,7 +87,7 @@ function HeaderSecondary() {
         >
           <>
             <label htmlFor="" className='text-[11px] font-normal  font-poppins'>AED</label>
-            <Image src={drop_down_icon} alt='menu icon' width={9} height={9} />
+            {/* <Image src={drop_down_icon} alt='menu icon' width={9} height={9} /> */}
           </>
 
 
@@ -101,11 +103,11 @@ function HeaderSecondary() {
           </div>
 
 
-          <div className="lmin-laptop:block hidden">
+          {/* <div className="min-laptop:block hidden">
             <PrimaryButton
 
               type='button'
-              className='flex items-center gap-1'
+              className='flex border-white text-white items-center gap-1'
 
             >
 
@@ -115,7 +117,7 @@ function HeaderSecondary() {
               </>
 
             </PrimaryButton>
-          </div>
+          </div> */}
 
 
           {isAuthentication ?
@@ -123,9 +125,10 @@ function HeaderSecondary() {
             <div className="min-laptop:flex  gap-1 hidden">
               <PrimaryButton
                 type='button'
-                className='flex items-center gap-1'
+                className='flex items-center text-white gap-1'
               >
                 <>
+                  <FaUser color='white' size={18} />
                   <Image src={user_icon} alt='menu icon' width={20} />
                   <label htmlFor="">User</label>
                 </>
@@ -147,14 +150,14 @@ function HeaderSecondary() {
               </PrimaryButton>
             </div>
 
-            : <div className="min-laptop:flex  gap-1 hidden">
+            : <div className="min-laptop:flex  gap-[7.5px] hidden">
               <PrimaryButton
                 type='button'
-                className='flex w-[66.75px] items-center gap-1'
+                className='flex !px-3 text-white items-center gap-1'
               >
                 <>
                   <label htmlFor="" className='text-[12px] font-normal  font-poppins'>AED</label>
-                  <Image src={drop_down_icon} alt='menu icon' width={9} height={4.5} />
+                  <FaChevronDown />
                 </>
 
 
@@ -162,15 +165,17 @@ function HeaderSecondary() {
 
               <PrimaryButton
                 type='button'
-                className='flex w-[77.25px] h-[33px] items-center gap-1'
+                className='flex !px-3 text-white items-center gap-1'
               >
                 <>
-                  <Image src={user_icon} alt='menu icon' width={15} height={15} />
-                  <label htmlFor="" className='text-[12px] font-medium  font-poppins'>Login</label>
+                  <FaRegUserCircle size={18} />
+                  <label htmlFor="" className='text-[12px] font-normal  font-poppins'>AED</label>
                 </>
 
 
               </PrimaryButton>
+
+
             </div>}
         </div>
 

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import InputField from '../InputField/InputField';
 import PrimaryButton from '../Buttons';
-import { details_icon } from '@/app/assets';
-import Image from 'next/image';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { errorToast, successToast } from '../Toast';
@@ -11,22 +9,21 @@ import { baseUrl } from '@/api';
 import { RootState } from '@/redux/store';
 import { useSelector } from 'react-redux';
 import { LOCAL_STORAGE_KEYS } from '@/api/storage';
-import { User } from '@/redux/userSlice/types';
-import Container from '../atom/Container/Container';
 type Props = {
     item: {
         id: string;
         status: boolean;
     }
     setEnquiry: (option: any) => void;
+    onClose: () => void;
 };
+import { IoMdClose } from "react-icons/io";
 
 interface UserData {
     _id: string;
-    // Add more fields if needed
 }
 
-function ModalForm({ item, setEnquiry }: Props) {
+function ModalForm({ item, setEnquiry, onClose }: Props) {
     const [formData, setFormData] = useState({
         name: '',
         number: '',
@@ -42,8 +39,6 @@ function ModalForm({ item, setEnquiry }: Props) {
         setFormData({ ...formData, number: value });
     };
     const { isAuthentication } = useSelector((state: RootState) => state.user);
-
-    // console.log(localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA),'0000')
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -73,27 +68,36 @@ function ModalForm({ item, setEnquiry }: Props) {
             };
 
             const userDataString = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA);
-          
+
 
             if (userDataString) {
-               
-                    const userData: UserData = JSON.parse(userDataString);
-                    if(userData) payload.userId = userData._id
+
+                const userData: UserData = JSON.parse(userDataString);
+                if (userData) payload.userId = userData._id
             }
 
 
 
-            await axios.post(`${baseUrl}/enquiry`, payload);
-         
-            setEnquiry((prev: any) => ({
-                ...prev,
-                count: 2,
-            }))
-            successToast('Enquiry submitted successfully!');
+            const response = await axios.post(`${baseUrl}/enquiry`, payload);
+            if (response?.status === 201 && response?.data?.message && response?.data?.exist) {
+                setEnquiry((prev: any) => ({
+                    ...prev,
+                    status: true,
+                    count: 3,
+                }))
+            } else {
+
+
+                setEnquiry((prev: any) => ({
+                    ...prev,
+                    status: true,
+
+                    count: 2,
+                }))
+            }
             setFormData({ name: '', number: '' });
         } catch (error: any) {
             errorToast(error?.response?.data?.message || error?.data?.message || error?.response?.message || error?.message || 'Error occurred, please try again later');
-            // console.error(err);
         } finally {
             setLoading(false);
         }
@@ -101,11 +105,16 @@ function ModalForm({ item, setEnquiry }: Props) {
 
 
     return (
-        <Container
-        
-        >
-            <form className='sm:w-[436px] h-fit sm:h-[230px] flex flex-col gap-2 py-[20px]' onSubmit={handleSubmit}>
+        <>
 
+            <form className='sm:w-[436px] m-auto relative p-3 rounded-[5px] bg-white max-w-[400px] flex flex-col gap-2 w-full pt-[20px]' onSubmit={handleSubmit}>
+                <button
+                    type='button'
+                    className="absolute top-2 right-2 text-gray-600 dark:text-gray-300 hover:text-red-500"
+                    onClick={onClose}
+                >
+                    <IoMdClose size={18} color='#333333' />
+                </button>
                 <p className='text-center pb-2  text-[17.25px] font-poppins font-medium'>Please enter your details</p>
 
                 <InputField
@@ -126,7 +135,7 @@ function ModalForm({ item, setEnquiry }: Props) {
                     }}
                     inputStyle={{
                         width: '100%',
-                        height: '45px',
+                        height: '40px',
                         borderRadius: '3.5px',
                         borderColor: '#ccc',
                     }}
@@ -145,7 +154,7 @@ function ModalForm({ item, setEnquiry }: Props) {
                 </PrimaryButton>
             </form>
 
-        </Container>
+        </>
     );
 }
 

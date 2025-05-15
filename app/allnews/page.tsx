@@ -12,6 +12,7 @@ import Pagination from '@/components/Pagination/Pagination';
 import { useViewAllNewsQuery } from '@/redux/news/newsApi';
 import CustomSliderUi from '../home/CustomSliderUi';
 import { useRouter } from 'next/navigation';
+import Container from '@/components/atom/Container/Container';
 
 
 
@@ -59,7 +60,9 @@ function AllNews() {
                 <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
             </div>
 
-            <section className='px-5 max-w-[1200px] m-auto gap-[30px] pb-20 lg:px-8 xl:px-[144.75px] flex items-start '>
+<Container>
+
+            <section className='m-auto gap-[30px] pb-20 flex items-start '>
                 <div className="w-full">
                     <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-[12px] sm:gap-[37.5px]">
 
@@ -109,7 +112,7 @@ function AllNews() {
                         {/* <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">1 To 24 of 23,567 Listings</div> */}
                     </div>
                 </div>
-                <div className="max-w-[252px]  hidden sm:block">
+                <div className="max-w-[301.5px]  hidden sm:block">
 
                     <RecommendedText
                         title="Population"
@@ -161,6 +164,7 @@ function AllNews() {
 
 
             </section>
+</Container>
 
 
 

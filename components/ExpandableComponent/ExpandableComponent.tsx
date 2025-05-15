@@ -12,6 +12,7 @@ import React, {
 } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
+import { FaCaretDown } from 'react-icons/fa';
 
 export interface ExpandableComponentDropdownProps {
   label?: string;
@@ -28,7 +29,7 @@ export interface ExpandableDropdownRef {
   open: () => void;
 }
 
-const   ExpandableComponentDropdown = forwardRef<ExpandableDropdownRef, ExpandableComponentDropdownProps>(
+const ExpandableComponentDropdown = forwardRef<ExpandableDropdownRef, ExpandableComponentDropdownProps>(
   (
     {
       label = 'Select',
@@ -87,10 +88,10 @@ const   ExpandableComponentDropdown = forwardRef<ExpandableDropdownRef, Expandab
       <div
         ref={containerRef}
         onClick={toggleDropdown}
-        className='border py-3 rounded-[3px] px-3 gap-3 text-sm border-[#DEDEDE] cursor-pointer h-[50px] flex select-none relative'
+        className='border py-3 rounded-[5px] px-3 gap-3 text-sm border-[#DEDEDE] cursor-pointer h-[50px] flex select-none relative'
       >
         <div className='flex w-full justify-between items-center'>
-          <label>{label}</label>
+          <label className='text-[12px] font-poppins font-normal text-[#333333]'>{label}</label>
 
           <motion.div
             key={isOpen ? 'up' : 'down'}
@@ -100,12 +101,8 @@ const   ExpandableComponentDropdown = forwardRef<ExpandableDropdownRef, Expandab
             transition={{ duration: 0.25 }}
           >
             {!isSelected ? (
-              <Image
-                src={isOpen ? drop_up_red_icon : drop_down__red_icon}
-                alt='dropdown icon'
-                width={15} height={15} className={clsx('object-cover',isOpen ? 'rotate-180' : '')}
-
-              />
+                      <FaCaretDown className='w-[20px] h-[20px]' color='#FF1645'/>
+            
             ) : customCloseControl ? (
               <div onClick={handleClear}>{customCloseControl}</div>
             ) : (
@@ -113,7 +110,7 @@ const   ExpandableComponentDropdown = forwardRef<ExpandableDropdownRef, Expandab
                 className='mr-1 text-xs text-red-500 underline cursor-pointer'
                 onClick={handleClear}
               >
-                <Image src={close_icon} alt='clear icon' width={10} />
+          <FaCaretDown className='w-[20px] h-[20px]' color='#FF1645'/>
               </div>
             )}
           </motion.div>
@@ -126,7 +123,9 @@ const   ExpandableComponentDropdown = forwardRef<ExpandableDropdownRef, Expandab
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className='absolute top-full -left-20 mt-2 bg-white rounded-md z-10 p-2 text-sm text-black'
+              className='absolute top-full left-0 mt-2 z-10 text-black'
+              // className='absolute top-full -left-20 mt-2 z-10 text-black'
+
               onClick={(e) => e.stopPropagation()}
             >
               {children}

@@ -20,17 +20,17 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import Typography from '../atom/typography/Typography';
 import { getDaysAgo } from '../atom/button/getDaysAgo';
-// import Image from '../atom/image/Image';
 
 type Props = {
     item: AllProjectsItems;
     handleClick: (item: any) => void;
     handleEnquiryFormClick: (item: any) => void;
+    navigateDetailsButton: boolean;
 };
 
-function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
+function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetailsButton }: Props) {
     const { currency, value } = formatCurrencyParts(item.priceInAED);
-    const propertyType = item.propertyTypes.length > 0 ? item.propertyTypes[0] : '';
+    const propertyType = item?.propertyTypes?.length > 0 ? item?.propertyTypes[0] : '';
     const furnishing =
         item.furnishing === 'fully-furnished'
             ? 'Fully Furnish'
@@ -38,14 +38,18 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
                 ? 'Semi Furnish'
                 : item.furnishing === 'un-furnishing'
                     ? 'Under Furnish'
-                    : item.furnishing;
+                    : item.furnishing ? item.furnishing : 'Not available';
 
 
     return (
-        <div className="relative overflow-hidden w-full sm:w-full flex-none sm:h-[500px] lg:h-[260px] rounded lg:flex-row flex-col flex border border-[#DEDEDE]">
+        <div className="relative overflow-hidden w-full sm:w-full flex-none sm:h-[500px] lg:h-[260px] rounded lg:flex-row flex-col flex h-[400px] border border-[#DEDEDE]">
             <ProjectImageSlider item={item} />
 
-            <div className="flex font-poppins flex-col p-[10px] sm:p-[16.5px]">
+            <div className="flex font-poppins relative flex-col px-[10px] pt-[10px] pb-[3px] sm:p-[16.5px]">
+
+                <div className="absolute flex top-0 sm:hidden right-0 z-20">
+                    <FavoriteIcon projectId={item._id} />
+                </div>
                 <div className="relative w-fit">
                     {/* <h3 className="text-[20px] font-medium capitalize">
                         {item.projectTitle}
@@ -80,7 +84,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
                 </Typography> */}
 
                 {/* Price  */}
-                { (item.projectType === 'commercial-residential' || item.projectTitle === 'project-residential' || item.projectTitle === 'project-commercial') ? <p>
+                {(item.projectType === 'commercial-residential' || item.projectTitle === 'project-residential' || item.projectTitle === 'project-commercial') ? <p>
                     <span className='text-[17px] font-semibold'>Starting From</span>
                     <span className='font-poppins text-[24.75px] ms-2 sm:ms-1 font-semibold '>
                         {value}
@@ -88,24 +92,25 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
                     <span className='text-[11.928px] sm:text-[12.75px] font-semibold mt-[4.5px] font-poppins '>{currency}</span>
 
                 </p> :
-                
-                <p>
-                {/* <span className='text-[18px] font-semibold'>Starting From</span> */}
-                <span className='text-[11.928px] sm:text-[12.75px] font-semibold mt-[4.5px] font-poppins '>{currency}</span>
-                <span className='font-poppins font-semibold text-[24.75px] ms-2 sm:ms-1 '>
-                    {value}
-                </span>
-            </p>
-            }
+
+                    <p>
+                        {/* <span className='text-[18px] font-semibold'>Starting From</span> */}
+                        <span className='text-[11.928px] sm:text-[12.75px] font-semibold mt-[4.5px] font-poppins '>{currency}</span>
+                        <span className='font-poppins font-semibold text-[24.75px] ms-2 sm:ms-1 '>
+                            {value}
+                        </span>
+                    </p>
+                }
 
 
 
-                
+
 
 
                 {/* Property Type */}
 
                 <div className="flex mt-[2px] sm:mt-[4.5px] items-center gap-3">
+
                     <p className="capitalize font-semibold font-poppins text-[12px]">{propertyType}</p>
                     <div className="h-[17.25px] w-[1px] bg-[#333333]" />
                     {!(item.projectType === 'land-residential' || item.projectType === 'land-commercial') && <div className="flex items-center gap-3">
@@ -141,7 +146,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
                                 tag='p'
 
                                 className='text-[12px] font-light font-poppins'
-                                text={`${item.squareFeet} sqft`}
+                                text={`${item.squareFeet || 0} sqft`}
                             />
                         </div>
                     </div>
@@ -189,26 +194,30 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
                     />
                 </div>
 
-                <div className="flex mt-[9px] h-[27px] items-center rounded-[3.75px] bg-[#FFE7EC] gap-1 px-3 py-1.5  text-[#FF1645]">
-                    <Image src={christmas__icon_star} alt="authenticity icon" width={20} height={20} className="object-cover" />
+           
 
-                    <p
-                        className='text-[12px] font-light text-ellipsis line-clamp-1 '
-                    >
+
+                <div className="flex items-center mt-[9px] rounded-[3.75px] bg-[#FFE7EC] gap-1 px-3  text-[#FF1645]">
+                    <Image src={christmas__icon_star} alt="authenticity icon" width={20} height={20} className="object-cover py-1" />
+                    <div className="text-[12px] font-light bg-[#FFE7EC] text-ellipsis line-clamp-1 py-1">
                         This listing was newly introduced {getDaysAgo(item.createdAt)}
-                    </p>
+                    </div>
                 </div>
 
                 <div className="flex mt-[3px] sm:mt-[10.5px] bg-white h-8 items-center gap-2">
                     {/* Details Button */}
-                    <PrimaryButton
-                        onClick={() => handleClick(item)}
-                        type="button"
-                        className="flex w-full sm:w-[106.5px] h-[35px] items-center gap-2 rounded border-none bg-[#FF1645]"
-                    >
-                        <Image src={details_icon} alt="details icon" width={16.5} height={16.5} />
-                        <span className="text-[14px] text-white">Details</span>
-                    </PrimaryButton>
+                    {navigateDetailsButton &&
+
+                        <PrimaryButton
+                            onClick={() => handleClick(item)}
+                            type="button"
+                            className="flex w-full sm:w-[106.5px] h-[35px] items-center gap-2 rounded border-none bg-[#FF1645]"
+                        >
+                            <Image src={details_icon} alt="details icon" width={16.5} height={16.5} />
+                            <span className="text-[14px] text-white">Details</span>
+                        </PrimaryButton>
+
+                    }
 
                     {/* Enquiry Button */}
                     <PrimaryButton
@@ -221,15 +230,15 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick }: Props) {
                     </PrimaryButton>
                 </div>
 
-                <div className="absolute hidden min-1110px:block right-3 bottom-3">
-                    <Image src={item?.developerDetails?.image?.secure_url} alt="authenticity icon" width={57} height={11.25} className="object-cover" />
 
-                </div>
             </div>
 
 
+            <div className="absolute hidden min-1110px:block right-3 bottom-3">
+                <Image src={item?.developerDetails?.image?.secure_url} alt="authenticity icon" width={57} height={11.25} className="object-cover" />
 
-            <div className="absolute right-0 z-20">
+            </div>
+            <div className="absolute hidden sm:flex right-0 z-20">
                 <FavoriteIcon projectId={item._id} />
             </div>
         </div>

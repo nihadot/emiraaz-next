@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { useVerifyPasswordChangeMutation } from '@/redux/auth/authApi';
 import { errorToast, successToast } from '@/components/Toast';
+import { IoIosArrowRoundBack, IoMdArrowRoundBack } from "react-icons/io";
 
 const OTP_LENGTH = 6;
 
@@ -80,8 +81,11 @@ export default function OtpPage() {
             const payload = { token: resetPasswordToken, otp: enteredOtp };
             await verifyPasswordChange(payload).unwrap();
 
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.RESET_PASSWORD_TOKEN);
+
             successToast('Password changed successfully');
-            // Optionally redirect to login or homepage
+            router.push('/profile');
+
         } catch (error: any) {
             errorToast(error?.response?.data?.message || error?.data?.message || error?.response?.message || error?.message || 'Error occurred, please try again later');
             console.error("OTP Verification Error:", error.message);
@@ -91,10 +95,12 @@ export default function OtpPage() {
     return (
         <main>
             <Header />
-            <div className="min-h-screen flex items-center justify-center px-4">
-                <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-md text-center">
-                    <h2 className="text-xl font-semibold mb-4">Enter OTP</h2>
-                    <div className="flex justify-between gap-2 mb-6">
+
+            <div className=" flex my-40 items-center justify-center px-4">
+                <div className="w-full sm:max-w-[400px]  bg-white text-center">
+                    <h2 className='sm:text-[27px] text-[19.5px] font-medium font-poppins'>Enter OTP To Continue</h2>
+                    <p className='text-[#767676] font-normal font-poppins text-[9px] sm:text-[10.5px]'>Enter the code sent to <span className='text-[#FF1645] font-normal font-poppins text-[10.5px]'>jhondoe@gmail.com</span></p>
+                    <div className="flex justify-between mb-[18px] text-[11px] sm:gap-[15px] mt-[18px]">
                         {otp.map((digit, index) => (
                             <input
                                 key={index}
@@ -107,15 +113,19 @@ export default function OtpPage() {
                                 onKeyDown={(e) => handleKeyDown(e, index)}
                                 onPaste={handlePaste}
                                 autoFocus={index === 0}
-                                className="w-10 h-12 text-center text-xl border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-[40.5px] h-[40.5px] sm:w-[52.5px] sm:h-[52.5px] text-center text-xl border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#FFE7EC]"
                             />
                         ))}
                     </div>
+                    <p className='text-[#767676] font-normal font-poppins text-[10.5px]'>Didn&apos;t get OTP Code?</p>
+                    <p className='text-[#FF1645] font-normal font-poppins text-[10.5px]'>Resend Code</p>
+
                     <button
                         onClick={handleSubmit}
-                        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+                        className=" px-8 m-auto gap-[7px] w-full sm:w-fit bg-[#FFE7EC] justify-center items-center flex mt-[18px]  text-white py-2 rounded  transition"
                     >
-                        Verify OTP
+                        <IoMdArrowRoundBack size={18} color='#FF1645' />
+                        <span className='text-[#FF1645] font-poppins font-medium text-[12px] sm:text-[16px]'>Back</span>
                     </button>
                 </div>
             </div>

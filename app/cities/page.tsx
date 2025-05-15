@@ -1,5 +1,4 @@
 'use client'
-import BottomNavigation from '@/components/BottomNavigation/BottomNavigation'
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import SearchInput from '@/components/SearchField/Search'
@@ -9,6 +8,10 @@ import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Pagination from '@/components/Pagination/Pagination'
 import { CityItem } from '@/redux/cities/types'
+import Container from '@/components/atom/Container/Container'
+import PaginationNew from "@/components/PaginationNew/PaginationNew";
+import { useDeviceType } from '@/utils/useDeviceType'
+import SpaceWrapper from '@/components/atom/SpaceWrapper/SpaceWrapper'
 
 
 function Cities() {
@@ -82,89 +85,99 @@ function Cities() {
 
 
 
+    const deviceType = useDeviceType();
 
 
     return (
 
         <main>
 
-            <div className=" max-w-[1200px] mx-auto w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
-                <Header />
+            <Header />
+            <div className="w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
+
+                <Container>
+
+
+                    <section className="flex-wrap w-full flex items-center  gap-2">
+                        <div className="sm:flex-[18%] w-full  h-[50px]">
+                            <SearchInput
+                                value={filters.search}
+                                onChange={handleChangeSearch}
+                                placeholder="Search..."
+                            />
+                        </div>
+                        <div className=" md:flex-[30%] h-full">
+
+                        </div>
+                        <div className="sm:flex-[10%] sm:block hidden w-full h-[50px]">
+                            <SelectOption
+                                search
+                                // clearSelection={clear}
+                                className="w-[200px]"
+                                label="Emirates"
+                                options={emirateOptions}
+                                onSelect={handleSelect.emirate}
+                            />
+                        </div>
+
+                        <div className="w-full h-full flex sm:hidden gap-2">
+                            <SelectOption
+                                search
+                                // clearSelection={clear}
+                                className="w-[200px]"
+                                label="Emirates"
+                                options={emirateOptions}
+                                onSelect={handleSelect.emirate}
+                            />
+
+                        </div>
 
 
 
-                <section className="px-5 lg:px-8 xl:px-24 flex-wrap w-full flex items-center  gap-2">
-                    <div className="sm:flex-[18%] w-full  h-[50px]">
-                        <SearchInput
-                            value={filters.search}
-                            onChange={handleChangeSearch}
-                            placeholder="Search..."
-                        />
-                    </div>
-                    <div className=" md:flex-[30%] h-full">
-
-                    </div>
-                    <div className="sm:flex-[10%] sm:block hidden w-full h-[50px]">
-                        <SelectOption
-                            search
-                            // clearSelection={clear}
-                            className="w-[200px]"
-                            label="Emirates"
-                            options={emirateOptions}
-                            onSelect={handleSelect.emirate}
-                        />
-                    </div>
-
-                    <div className="w-full h-full flex sm:hidden gap-2">
-                        <SelectOption
-                            search
-                            // clearSelection={clear}
-                            className="w-[200px]"
-                            label="Emirates"
-                            options={emirateOptions}
-                            onSelect={handleSelect.emirate}
-                        />
-
-                    </div>
 
 
 
 
+                    </section>
+                </Container>
+
+                <Container>
+
+
+                    <div className="w-full h-[1px] bg-gray-200 my-4"></div>
+
+
+                    <section className='h-full pb-20 grid-cols-1 w-full gap-3 grid lg:grid-cols-3' >
+
+                        {
+                            allCities && allCities.data && allCities.data.map((item, index) => {
+                                return (
+                                    <Card
+                                        key={index}
+                                        item={item}
+                                    />
+                                )
+                            })
+                        }
+                    </section>
+                </Container>
 
 
 
-                </section>
+<SpaceWrapper
+className='py-10'
+>
 
-                <div className="w-full h-[1px] bg-gray-200 my-4"></div>
+    <PaginationNew
+                            currentPage={filters.page || 1}
+                            totalPages={totalPages}
+                            onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
+                            maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />
 
-
-                <section className='h-full pb-20 grid-cols-1 w-full px-5 md:px-8 xl:px-24 gap-3 grid lg:grid-cols-3' >
-
-                    {
-                        allCities && allCities.data && allCities.data.map((item, index) => {
-                            return (
-                                <Card
-                                    key={index}
-                                    item={item}
-                                />
-                            )
-                        })
-                    }
-                </section>
-
-
-
-                <Pagination
-                    currentPage={filters.page}
-                    totalPages={totalPages}
-                    onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
-                />
-
+                            </SpaceWrapper>
             </div>
 
-            <div className="sm:hidden block">
-                <BottomNavigation />
-            </div>
+ 
 
             <Footer />
         </main>

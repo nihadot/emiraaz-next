@@ -17,7 +17,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
 }) => {
     return (
         <div
-            className={`flex flex-1   gap-3 h-full w-full text-[13px] items-center border rounded px-3 py-3   border-[#DEDEDE] text-sm ${className}`}
+            className={`flex flex-1   gap-3 h-full w-full text-[13px] items-center border rounded-[5px] px-3 py-3   border-[#DEDEDE] text-sm ${className}`}
         >
             <Image src={search_icon} alt='menu icon' width={17.25} className="object-cover" height={17.25} />
 
