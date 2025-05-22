@@ -1,4 +1,4 @@
-import { app_store_icon, logo_footer_black, play_store_footer_icon, property_seller_black_new_logo_icon } from '@/app/assets'
+import { app_store_icon, logo_footer_black, play_store_footer_icon, property_seller_black_new_logo_icon, propertySellerWhiteLogo } from '@/app/assets'
 import Image from 'next/image'
 import React from 'react'
 import FooterList from './FooterList'
@@ -26,7 +26,7 @@ function Footer() {
                                 <Image
                                     className=''
                                     fill
-                                    src={property_seller_black_new_logo_icon}
+                                    src={propertySellerWhiteLogo}
                                     // fill
 
                                     alt='logo'
@@ -34,7 +34,7 @@ function Footer() {
                             </div>
 
 
-                            <div className="flex  justify-start mt- 0 items-start gap-3">
+                            <div className="sm:flex hidden  justify-start mt- 0 items-start gap-3">
                                 <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
                                     <PiInstagramLogoLight
                                         className='w-full h-full' color='black'
@@ -130,6 +130,47 @@ function Footer() {
                                 items={["Terms & Conditions", "Privacy Policy", "Banned Agents"]}
                             />
                         </section>
+
+
+  <div className="sm:hidden flex  justify-center mt- 0 items-start gap-3">
+                                <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                                    <PiInstagramLogoLight
+                                        className='w-full h-full' color='black'
+                                    />
+                                </div>
+
+                                <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                                    <SlSocialLinkedin
+                                        className='w-full h-full' color='black'
+                                    />
+                                </div>
+
+
+                                <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                                    <RiTwitterXLine
+                                        className='w-full h-full' color='black'
+                                    />
+                                </div>
+
+
+  <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                                    <FaThreads
+                                        className='w-full h-full' color='black'
+                                    />
+                                </div>
+
+
+  <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                                    <PiYoutubeLogoThin
+                                        className='w-full h-full' color='black'
+                                    />
+                                </div>
+
+
+
+
+                            </div>
+                        
                     </section>
                 </Container>
 

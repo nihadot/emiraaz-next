@@ -450,7 +450,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
 
               <ProjectBasicInfo
-
+      discount={data?.data?.discount || ''}
                 projectId={data?.data._id || ''}
                 projectType={data?.data?.projectType}
                 title={data?.data?.projectTitle}

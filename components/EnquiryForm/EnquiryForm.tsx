@@ -133,7 +133,7 @@ function EnquiryForm({ projectId, setEnquiry }: { projectId: string, setEnquiry:
             >
 
                 <div className='justify-center flex items-center gap-2'>
-                    <label className='text-white text-[14.25px] font-poppins font-medium'>Enquiry</label>
+                    <label className='text-white text-[14.25px] font-poppins font-medium'>Enquire Now</label>
                 </div>
             </PrimaryButton>
         </form>

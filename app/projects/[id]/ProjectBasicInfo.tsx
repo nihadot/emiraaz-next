@@ -18,7 +18,7 @@ interface UserData {
 
 
 const ProjectBasicInfo = ({ projectId,
-  title, address, propertyType, beds, baths, currency, value, squareFeet, projectType
+  title, address, propertyType, beds, baths, currency, value, squareFeet, projectType,discount
 }: {
   projectType?: string;
   title?: string,
@@ -30,6 +30,7 @@ const ProjectBasicInfo = ({ projectId,
   value: string,
   squareFeet: string
   projectId: string
+  discount:string
 }) => {
 
   const [toggleWishlist] = useToggleWishlistItemMutation();
@@ -90,6 +91,12 @@ const ProjectBasicInfo = ({ projectId,
   return (
     <div className="flex w-full justify-between mt-[9.75px]">
       <div className="">
+          {discount && (
+                            <span className="bg-[#44B842] rounded-[2px] text-white text-[9.75px] px-2 py-0.5 capitalize w-fit hidden lg:inline-block">
+                                {discount} Discount
+                            </span>
+                        )}
+
         { title ? <h3 className="text-[21.3px] capitalize sm:text-[26.25px] text-[#333333] font-medium font-poppins ">{title}</h3> : <div className=" w-full h-[40px] bg-gray-50"></div>}
         {/* Price */}
 

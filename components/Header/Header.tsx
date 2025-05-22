@@ -1,6 +1,6 @@
 "use client";
 
-import { drop_down_icon, logo, logo_footer_black, logoWebP, menu_icon, propertySellerWhiteLogo, user_icon } from '@/app/assets';
+import { drop_down_icon, logo, logo_footer_black, menu_icon, propertySellerWhiteLogo, user_icon } from '@/app/assets';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import NavMenu from './NavMenu';
@@ -76,8 +76,8 @@ function Header() {
 
 
         {/* Logo */}
-        <div onClick={() => router.push("/")} className="w-[130px] cursor-pointer sm:w-[138.75px] ms-5 sm:ms-0 h-[35px] sm:h-[32.25px] relative ">
-          <Image src={logoWebP} alt='logo' fill className='bg-cover' />
+        <div onClick={() => router.push("/")} className="w-[140px] cursor-pointer sm:w-[138.75px] ms-8 sm:ms-0 h-[50px] sm:h-[32.25px] relative ">
+          <Image src={logo_footer_black} alt='logo' fill className='bg-cover' />
 
         </div>
         <PrimaryButton

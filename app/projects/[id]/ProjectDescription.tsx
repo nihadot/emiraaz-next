@@ -110,7 +110,7 @@ const ProjectDescription: React.FC<ProjectDescriptionProps> = ({
        
             <div className=" flex-1 overflow-y-auto">
             {selected === 'arabic' && <Content
-            title='وصف'
+            title='العربية'
             containerClassName='flex justify-end'
               description={descriptionInArabic}
             />}

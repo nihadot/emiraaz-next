@@ -160,7 +160,7 @@ const StickyScrollHeader = ({ value, currency, title, projectId }: Props) => {
                             className="flex max-w-full w-[160px] h-[36px] items-center gap-2 rounded border-none bg-[#FF1645]"
                         >
                             <Image src={notes_icon} alt="enquiry icon" width={16.5} height={16.5} />
-                            <span className="text-[14px] text-white">Enquiry Now</span>
+                            <span className="text-[14px] text-white">Enquire Now</span>
                         </PrimaryButton>
 
 

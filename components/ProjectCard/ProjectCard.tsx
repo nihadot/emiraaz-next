@@ -47,9 +47,13 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
     return (
         <div className="relative overflow-hidden w-full sm:w-full flex-none sm:h-[500px] lg:h-[260px] rounded lg:flex-row flex-col flex h-[410px] border border-[#DEDEDE]">
 
-            {item.discount && <div className="bg-[#44B842] rounded-[3px] sm:hidden text-[10px] font-poppins font-normal top-3 px-3 right-3 absolute z-40  text-white">
-                <p
-                >{item.discount} Discount</p>
+            {item.discount && <div className="bg-[#44B842] rounded-[2px] sm:hidden text-[11px] font-poppins font-normal top-3 px-3 right-3 absolute z-40  text-white">
+
+               
+                            <div className=" ">
+                                {item.discount} Discount
+                            </div>
+                        
 
 
             </div>}
@@ -70,12 +74,12 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                     >
 
                         {item.projectTitle}
-
+{/* 
                         {item.discount && (
-                            <span className="bg-[#44B842] rounded-[2px] text-white text-[9.75px] px-2 py-0.5 capitalize w-fit hidden lg:inline-block">
+                            <span className="bg-[#44B842] absolute rounded-[2px] text-white text-[9.75px] px-2 py-0.5 capitalize w-fit hidden lg:inline-block">
                                 {item.discount} Discount
                             </span>
-                        )}
+                        )} */}
                     </Typography>
 
 
@@ -238,7 +242,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                         className="flex w-full sm:w-[140.5px] h-[35px] items-center gap-2 rounded border-none bg-[#FF1645]"
                     >
                         <Image src={notes_icon} alt="enquiry icon" width={16.5} height={16.5} />
-                        <span className="text-[14px] text-white text-nowrap">Enquiry Now</span>
+                        <span className="text-[14px] text-white text-nowrap">Enquire Now</span>
                     </PrimaryButton>
                 </div>
 
