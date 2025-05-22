@@ -78,7 +78,7 @@ function Card({ item }: Props) {
 {/* Location */}
                       <div className="flex items-center mt-[4.5px] gap-2">
                     <Image src={location_icon} alt="location icon" width={15} height={15} className="object-cover" />
-                    <p className="text-xs font-light font-poppins capitalize">{item.address || 'Jumeirah Village Circle, Dubai'}</p>
+                    {/* <p className="text-xs font-light font-poppins capitalize">{item.address || 'Jumeirah Village Circle, Dubai'}</p> */}
                     <Typography
                         tag='p'
 

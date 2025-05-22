@@ -8,6 +8,8 @@ import {
     location_icon,
     notes_icon,
 } from '@/app/assets';
+// import { LiaBedSolid } from "react-icons/lia";
+import { GoScreenFull } from "react-icons/go";
 
 import { AllProjectsItems } from '@/redux/project/types';
 import { formatCurrencyParts } from '@/utils/formateAmount';
@@ -20,6 +22,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import Typography from '../atom/typography/Typography';
 import { getDaysAgo } from '../atom/button/getDaysAgo';
+import { LiaBedSolid } from "react-icons/lia";
 
 type Props = {
     item: AllProjectsItems;
@@ -42,7 +45,14 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
 
 
     return (
-        <div className="relative overflow-hidden w-full sm:w-full flex-none sm:h-[500px] lg:h-[260px] rounded lg:flex-row flex-col flex h-[400px] border border-[#DEDEDE]">
+        <div className="relative overflow-hidden w-full sm:w-full flex-none sm:h-[500px] lg:h-[260px] rounded lg:flex-row flex-col flex h-[410px] border border-[#DEDEDE]">
+
+            {item.discount && <div className="bg-[#44B842] rounded-[3px] sm:hidden text-[10px] font-poppins font-normal top-3 px-3 right-3 absolute z-40  text-white">
+                <p
+                >{item.discount} Discount</p>
+
+
+            </div>}
             <ProjectImageSlider item={item} />
 
             <div className="flex font-poppins relative flex-col px-[10px] pt-[10px] pb-[3px] sm:p-[16.5px]">
@@ -115,26 +125,26 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                     <div className="h-[17.25px] w-[1px] bg-[#333333]" />
                     {!(item.projectType === 'land-residential' || item.projectType === 'land-commercial') && <div className="flex items-center gap-3">
                         <div className="flex items-center gap-2">
-                            <Image src={bed_icon} alt="bed icon" width={20} height={20} className="object-cover" />
+                            {/* <Image src={bed_icon} alt="bed icon" width={20} height={20} className="object-cover" /> */}
                             {/* <p className="text-sm font-light font-poppins">{item.numberOfBeds}</p> */}
-
+                            <LiaBedSolid size={20} color='#333' />
                             <Typography
                                 tag='p'
-                                className='text-[12px] line-clamp-1 text-ellipsis font-light font-poppins'
-                                text={item.numberOfBeds}
+                                className='text-[12px] line-clamp-1 font-light font-poppins'
+                                text={item.type}
                             />
                         </div>
 
 
-                        <div className="flex items-center gap-2">
-                            <Image src={bath_icon} alt="bath icon" width={20} height={20} className="object-cover" />
+                        {/* <div className="flex items-center gap-2"> */}
+                            {/* <Image src={bath_icon} alt="bath icon" width={20} height={20} className="object-cover" /> */}
                             {/* <p className="text-sm font-light font-poppins">{item.numberOfBath}</p> */}
-                            <Typography
+                            {/* <Typography
                                 tag='p'
                                 className='text-[12px] font-light font-poppins'
                                 text={item.numberOfBath}
-                            />
-                        </div>
+                            /> */}
+                        {/* </div> */}
                     </div>}
                     {!(item.projectType === 'land-residential' || item.projectType === 'land-commercial') && <div className="h-[20px] w-[1px] bg-[#333333]" />}
                     <div className="flex items-center gap-3">
@@ -142,6 +152,8 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                         <div className="flex items-center gap-2">
                             <Image src={bath_icon} alt="bath icon" width={20} height={20} className="object-cover" />
                             {/* <p className="text-sm font-light font-poppins">{item.squareFeet} </p> */}
+                            
+                            
                             <Typography
                                 tag='p'
 
@@ -194,7 +206,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                     />
                 </div>
 
-           
+
 
 
                 <div className="flex items-center mt-[9px] rounded-[3.75px] bg-[#FFE7EC] gap-1 px-3  text-[#FF1645]">

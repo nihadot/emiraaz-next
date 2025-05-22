@@ -6,6 +6,7 @@ import NewModal from '@/components/NewModal/NewModal'
 import PrimaryButton from '@/components/Buttons'
 import { close_icon, notes_red_edit, save_icon, share_button_icon } from '@/app/assets'
 import Image from 'next/image'
+import clsx from 'clsx'
 
 interface ProjectDescriptionProps {
     title?: string
@@ -22,7 +23,7 @@ const ProjectDescription: React.FC<ProjectDescriptionProps> = ({
 }) => {
     const options = [
         { label: 'English', value: 'english' },
-        { label: 'Arabic', value: 'arabic' },
+        { label: 'وصف', value: 'arabic' },
     ]
 
     const [selected, setSelected] = useState<string>('english')
@@ -109,7 +110,8 @@ const ProjectDescription: React.FC<ProjectDescriptionProps> = ({
        
             <div className=" flex-1 overflow-y-auto">
             {selected === 'arabic' && <Content
-            title='Description'
+            title='وصف'
+            containerClassName='flex justify-end'
               description={descriptionInArabic}
             />}
 
@@ -172,14 +174,17 @@ export default ProjectDescription
 
 type ContentProps = {
     title: string
-    description: string
+    description: string;
+    titleClassName?: string;
+    descriptionClassName?: string;  
+    containerClassName?: string;
 }
 
-function Content({ title, description }: ContentProps) {
+function Content({ title, description,containerClassName,descriptionClassName,titleClassName }: ContentProps) {
     return (
-        <div className='flex-1'>
-            <h2 className="text-lg font-bold mb-2">{title}</h2>
-            <p className="text-[12px] text-[#333333] font-normal font-poppins whitespace-pre-line">{description}</p>
+        <div className={clsx('flex-1',containerClassName)}>
+            <h2 className={clsx("text-lg font-bold mb-2",titleClassName)}>{title}</h2>
+            <p className={clsx("text-[12px] text-[#333333] font-normal font-poppins whitespace-pre-line",descriptionClassName)}>{description}</p>
         </div>
     )
 }

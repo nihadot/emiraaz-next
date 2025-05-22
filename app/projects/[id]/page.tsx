@@ -69,6 +69,8 @@ import { useToggleWishlistItemMutation, useViewAllWishlistsQuery } from "@/redux
 import { RootState } from "@/redux/store";
 import SectionDivider from "@/components/atom/SectionDivider/SectionDivider";
 import { parsePrice } from "@/utils/parsePrice";
+import { formatCustomDate } from "@/utils/formateCustomDate";
+import PropertyDetailsSectionStringArray from "./PropertyDetailsSectionStringArray";
 
 interface UserData {
   _id: string;
@@ -474,19 +476,32 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
 
               <PropertyDetailsSection
-                headerTitle="Property Information"
+                headerTitle="Project Information"
+                icon
                 data={[
                   { title: 'Type', content: data?.data?.propertyTypes?.slice(0, 1).map(item => item) },
                   { title: 'Furnishing', content: furnishing },
                   { title: 'Purpose', content: data?.data.purpose },
-                  { title: 'Area', content: data?.data.citiesDetails?.[0]?.name || 'Downtown Dubai' },
-                  { title: 'Developer', content: data?.data?.developerDetails?.name || 'Emaar' },
-                  { title: 'Status', content: data?.data.projectStatus },
+                  { title: 'Added on', content: formatCustomDate(data?.data?.createdAt || '') },
+                  { title: 'Reference no', content: 'Bayut - NANCY102368-Um..' },
+                  { title: 'Handover Date', content: `${data?.data?.handOverQuarter} ${data?.data?.handOverYear}`},
+                  { title: 'Completion', content: data?.data?.completionType },
+                  { title: 'Developer', content: data?.data?.developerDetails?.name },
+                  { title: 'Usage', content: data?.data?.usage },
+                  { title: 'Ownership', content: data?.data?.ownerShip },
+                  { title: 'Parking Availability', content: data?.data?.parkingAvailability },
+                  { title: 'Built-up Area', content: data?.data?.buildUpArea },
+                  { title: 'Total Parking Spaces', content: data?.data?.totalParkingSpaces },
+                  { title: 'Total Floors', content: data?.data?.totalFloors },
+                  { title: 'Total Building Area', content: data?.data?.totalBuildingArea },
+                  { title: 'Retail Centres', content: data?.data?.retailCenters },
+                  { title: 'Elevators', content: data?.data?.elevators },
+                  { title: 'Swimming Pools', content: data?.data?.swimmingPool },
                 ]}
               />
 
 
-
+{/* 
               <div className="mt-[32.25px]">
                 <PropertyDetailsSection
                   headerTitle="Validated Information"
@@ -499,10 +514,10 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
                   ]}
                 />
-              </div>
+              </div> */}
 
 
-              <div className="mt-[32.25px]">
+              {/* <div className="mt-[32.25px]">
 
                 <PropertyDetailsSection
                   headerTitle="Building Information"
@@ -516,7 +531,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
                     { title: 'Status', content: data?.data.projectStatus },
                   ]}
                 />
-              </div>
+              </div> */}
 
 
               <div className="mt-[24.75px]">
@@ -597,16 +612,11 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
                 />
               </div>}
 
-
-              <PropertyDetailsSection
+{/* {console.log(data?.data.paymentOptions,'data?.data.paymentPlan')} */}
+             {  data?.data?.paymentOptions ? <PropertyDetailsSectionStringArray
                 headerTitle="Payment Plan"
-                data={[
-                  { title: 'Type', content: 'Apartment' },
-                  { title: 'Bedrooms', content: '3' },
-                  { title: 'Developer', content: 'Emaar' },
-                  { title: 'Status', content: 'Under Construction' },
-                ]}
-              />
+                data={data?.data?.paymentOptions}
+              /> : 'Payment Plan not available'}
 
 
               <div className="flex mt-[18px] sm:mt-[25.5px] justify-between items-center w-full">
@@ -714,10 +724,14 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
           contentClassName="flex rounded-[6px] max-w-[1200px]  flex-col bg-white p-0 w-full h-screen  sm:max-h-fit"
 
         >
+   <div className=" flex justify-end  items-end" onClick={handleGalleryModal}>
+              <Image src={close_icon} alt="save icon" width={12} height={12} />
+            </div>
+
 
 
           <Container>
-            <div className="w-full flex flex-col bg-white py-[20px] rounded-[6px] h-screen sm:h-[85vh]">
+            <div className="w-full px-5 flex flex-col bg-white py-[20px] rounded-[6px] h-screen sm:h-[85vh]">
 
 
 
@@ -775,7 +789,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
                     ) : (
                       <GoHeart onClick={toggleWishlistItem} color="red" className="w-[20px] h-[20px]" />
                     )}
-                    <label className="text-[14.25px] text-[#FF1645] font-medium font-poppins">Wishlist</label>
+                    <label className="text-[14.25px] text-[#FF1645] font-medium font-poppins">Save</label>
                   </div>
                 </PrimaryButton>
 

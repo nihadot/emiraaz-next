@@ -53,7 +53,7 @@ export type AllProjectsItems = {
   selectedAds: string;
   projectNumber: string;
   qrCodeImage: ImageItem;
-  paymentPlan?: string;
+  paymentPlan?: string[];
   layoutImages: ImageItem[];
   mainImages: ImageItem[];
 

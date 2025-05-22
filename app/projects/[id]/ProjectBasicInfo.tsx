@@ -176,7 +176,7 @@ const ProjectBasicInfo = ({ projectId,
             ) : (
               <GoHeart onClick={toggleWishlistItem} color="red" className="w-[20px] h-[20px]" />
             )}
-            <label className="text-[14.25px] text-[#FF1645] font-medium font-poppins">Wishlist</label>
+            <label className="text-[14.25px] text-[#FF1645] font-medium font-poppins">Save</label>
           </div>
         </PrimaryButton>
 
