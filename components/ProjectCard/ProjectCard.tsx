@@ -74,12 +74,12 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                     >
 
                         {item.projectTitle}
-{/* 
+
                         {item.discount && (
-                            <span className="bg-[#44B842] absolute rounded-[2px] text-white text-[9.75px] px-2 py-0.5 capitalize w-fit hidden lg:inline-block">
+                            <span className="bg-[#44B842] sm:flex absolute right-5 top-3 rounded-[2px] text-white text-[9.75px] px-2 py-0.5 capitalize w-fit hidden">
                                 {item.discount} Discount
                             </span>
-                        )} */}
+                        )}
                     </Typography>
 
 
