@@ -2,6 +2,7 @@ import React from 'react'
 import ProjectHeader from './ProjectHeader'
 import Image from 'next/image'
 import { tick_green_icon } from '@/app/assets'
+import { IoCheckmarkCircle } from "react-icons/io5";
 
 type DetailItem = {
   title: string 
@@ -24,7 +25,12 @@ const PropertyDetailsSection: React.FC<PropertyDetailsSectionProps> = ({
     <div className='mt-[18px] sm:mt-[17.25px]'>
       <div className="flex py-2 gap-2 items-center ">
         <ProjectHeader contentClassName='font-medium sm:text-[18.75px] text-[17px]' title={headerTitle} />
-        {icon && <Image src={tick_green_icon} alt="location" width={18} height={18} />}
+        {icon && 
+        <IoCheckmarkCircle
+        color='#44B842'
+        size={20}
+        />
+        }
 
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2  sm:gap-x-6">

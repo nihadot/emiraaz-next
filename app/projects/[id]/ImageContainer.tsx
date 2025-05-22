@@ -84,7 +84,7 @@ function ImageContainer({ images,close }: Props) {
         </div>
       ) : (
         <div className="relative grid grid-cols-1 md:grid-cols-2 w-full gap-3">
-       <div className="p-1.5 sm:hidden fixed top-20 z-40 left-7 bg-[#FFE7EC] rounded-[3px] w-fit">
+       <div className="p-1.5 sm:hidden fixed top-[68px] z-40 left-7 bg-[#FFE7EC] rounded-[3px] w-fit">
           <IoCloseSharp size={17} color='#333333' onClick={close} />
        </div>
           {images?.map((item, index) => (

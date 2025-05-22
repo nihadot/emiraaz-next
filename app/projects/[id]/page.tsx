@@ -71,6 +71,11 @@ import SectionDivider from "@/components/atom/SectionDivider/SectionDivider";
 import { parsePrice } from "@/utils/parsePrice";
 import { formatCustomDate } from "@/utils/formateCustomDate";
 import PropertyDetailsSectionStringArray from "./PropertyDetailsSectionStringArray";
+import { IoMdClose } from "react-icons/io";
+import { PiShareFat } from "react-icons/pi";
+import { handleShare } from "@/utils/shareOption";
+import { PiNotePencil } from "react-icons/pi";
+import { extractNumber } from "@/utils/extractAmount";
 
 interface UserData {
   _id: string;
@@ -178,7 +183,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
   const handleLayoutSelect = (item: any) => setLayoutSelected(item)
   const [monthlyPayment, setMonthlyPayment] = useState(0);
   const [loanAmount, setLoanAmount] = useState(0);
-  const [totalPrice] = useState(1500000); // default
+  const [totalPrice,setTotalPrice] = useState<number>(); // default
   const [downPayment, setDownPayment] = useState(100000); // default
   const [years, setYears] = useState(15); // default
   const [interestRate, setInterestRate] = useState(3.5); // default
@@ -377,6 +382,16 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
     }
   };
 
+
+   useEffect(()=>{
+   if(data && data?.data?.priceInAED){
+     setTotalPrice(extractNumber(data.data.priceInAED))
+   }
+ },[data]);
+
+
+ console.log(totalPrice,'setTotalPrice')
+ 
   return (
     <div className=" mx-auto w-full   ">
       <div className="">
@@ -387,7 +402,9 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
         <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
       </div>
 
-      <MobileBreadcrumbNavigation />
+      <MobileBreadcrumbNavigation
+        projectTitle={data?.data?.projectTitle || ''}
+      />
 
       {data?.data._id && <StickyScrollHeader
         projectId={data?.data._id}
@@ -425,6 +442,14 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
                   </div>}
                 </div>
 
+                {data?.data?.discount && (
+                  <span className="bg-[#44B842] ms-3 absolute right-[14px] z-20 top-[14px] rounded-[2px] text-white text-[10px] font-normal font-poppins px-2 py-0.5 capitalize w-fit flex sm:hidden">
+                    {data?.data?.discount} Discount
+                  </span>
+                )}
+
+
+
 
                 <MainImageDisplay
                   mainImage={mainImage}
@@ -446,11 +471,18 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
               </div>
 
 
-              <ModalViewButtons />
+              <ModalViewButtons
+              
+              handleGalleryModal={handleGalleryModal}
+              handleGallerySelect={handleGallerySelect}
+              />
+              {/* handleGalleryModal()
+              handleGallerySelect('images') */}
 
 
               <ProjectBasicInfo
-      discount={data?.data?.discount || ''}
+                type={data?.data?.type || ''}
+                discount={data?.data?.discount || ''}
                 projectId={data?.data._id || ''}
                 projectType={data?.data?.projectType}
                 title={data?.data?.projectTitle}
@@ -466,9 +498,13 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
               <div className="mt-[24.75px]">
 
                 <ProjectDescription
+                userId={userId || ''}
+                setEnquiryForm={setEnquiryForm}
+                projectId={data?.data?._id || ''}
+                  projectTitle={data?.data?.projectTitle || ''}
                   descriptionInArabic={data?.data?.descriptionInArabic || ''}
                   descriptionInEnglish={data?.data.description || ''}
-                  descriptionInRussian={data?.data.descriptionInRussian || ''}
+                  // descriptionInRussian={data?.data.descriptionInRussian || ''}
                   title="Description"
                 />
               </div>
@@ -484,7 +520,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
                   { title: 'Purpose', content: data?.data.purpose },
                   { title: 'Added on', content: formatCustomDate(data?.data?.createdAt || '') },
                   { title: 'Reference no', content: 'Bayut - NANCY102368-Um..' },
-                  { title: 'Handover Date', content: `${data?.data?.handOverQuarter} ${data?.data?.handOverYear}`},
+                  { title: 'Handover Date', content: `${data?.data?.handOverQuarter} ${data?.data?.handOverYear}` },
                   { title: 'Completion', content: data?.data?.completionType },
                   { title: 'Developer', content: data?.data?.developerDetails?.name },
                   { title: 'Usage', content: data?.data?.usage },
@@ -501,7 +537,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
               />
 
 
-{/* 
+              {/* 
               <div className="mt-[32.25px]">
                 <PropertyDetailsSection
                   headerTitle="Validated Information"
@@ -575,18 +611,18 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
 
               {/* Loan Amount Options */}
-              <div className="mt-[24.75px]">
-                <LoanAmountOptions
+             <div className="mt-[24.75px]">
+               { totalPrice &&  <LoanAmountOptions
                   monthlyPayment={monthlyPayment}
                   totalPrice={totalPrice}
                   downPayment={downPayment}
                   years={years}
                   handleLoanAmountModal={handleLoanAmountModal}
                   interestRate={interestRate}
-                />
+                />  }
 
                 {/* Desktop view */}
-                <div className="hidden mt-[24.75px] sm:block">
+              { totalPrice ?   <div className="hidden mt-[24.75px] sm:block">
                   <MortgageCalculator
                     headerTitle="Mortgage"
                     data={({ monthlyPayment, loanAmount, interestRate, downPayment, years }) => {
@@ -601,19 +637,21 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
                     defaultYears={years}
                     defaultInterestRate={interestRate}
                   />
-                </div>
+                </div> : 
+                <div className="w-full h-[468px] bg-slate-50 rounded-[5px]"></div>
+                }
               </div>
 
 
               {<div className="mt-[18px] flex sm:hidden mt:mt-0">
                 <CustomSlider
                   images={shuffledImages}
-                  containerClassName="h-[80px] "
+                  containerClassName="h-[95px] border border-[#DEDEDE] "
                 />
               </div>}
 
-{/* {console.log(data?.data.paymentOptions,'data?.data.paymentPlan')} */}
-             {  data?.data?.paymentOptions ? <PropertyDetailsSectionStringArray
+              {/* {console.log(data?.data.paymentOptions,'data?.data.paymentPlan')} */}
+              {data?.data?.paymentOptions ? <PropertyDetailsSectionStringArray
                 headerTitle="Payment Plan"
                 data={data?.data?.paymentOptions}
               /> : 'Payment Plan not available'}
@@ -621,7 +659,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
               <div className="flex mt-[18px] sm:mt-[25.5px] justify-between items-center w-full">
                 <RegulatoryInformation
-                  qrCodeUrl={data?.data?.qrCodeImage?.secure_url || no_image_placeholder}
+                  qrCodeUrl={data?.data?.qrCodeImage?.secure_url}
                   icon
                   reportedProjectHandler={() => {
                     const userDataString = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA);
@@ -707,7 +745,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
               mainImage={mainImage}
               handleGallerySelect={handleGallerySelect}
               images={images}
-              videoLink={data?.data.youtubeVideoLink && `${data.data.youtubeVideoLink}&rel=0` || ''}
+              videoLink={data?.data.youtubeVideoLink}
               selectedIndex={imagesIndex}
               filteredProjectAdsCard={filteredProjectAdsCard ? filteredProjectAdsCard : []}
             />
@@ -721,19 +759,23 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
         <NewModal
           onClose={handleGalleryModal}
           isOpen={galleryModal}
-          contentClassName="flex rounded-[6px] max-w-[1200px]  flex-col bg-white p-0 w-full h-screen  sm:max-h-fit"
+          contentClassName="flex  rounded-[6px] max-w-[1200px]  flex-col bg-white p-0 w-full h-screen  sm:max-h-fit"
 
         >
-   <div className=" flex justify-end  items-end" onClick={handleGalleryModal}>
-              <Image src={close_icon} alt="save icon" width={12} height={12} />
-            </div>
+
 
 
 
           <Container>
-            <div className="w-full px-5 flex flex-col bg-white py-[20px] rounded-[6px] h-screen sm:h-[85vh]">
 
+            <div className="w-full sm:px-5 flex flex-col bg-white pb-4 pt-3 sm:py-[20px] rounded-[6px] h-screen sm:h-[85vh]">
 
+              <div className=" justify-end  sm:flex hidden items-end" onClick={handleGalleryModal}>
+                <IoMdClose
+                  className="w-[20px] h-[20px]"
+                  color="#333333"
+                />
+              </div>
 
 
 
@@ -777,31 +819,36 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
               />}
 
 
-              <div className="flex mt-[15px] gap-[7.5px] items-center sm:justify-end">
+              <div className="flex mt-[15px] gap-1 sm:gap-[7.5px] items-center sm:justify-end">
                 <PrimaryButton
                   type="button"
-                  className="bg-[#FFE7EC] border-none text-[#FF1645] font-poppins rounded "
+                  className="bg-[#FFE7EC] !px-3 sm:!px-4 !py-2 sm:!py-[9px] !w-full sm:!w-fit  border-none text-[#FF1645] font-poppins rounded "
 
                 >
                   <div className="flex items-center h-[26px] justify-center gap-2">
                     {isWishlist ? (
-                      <GoHeartFill onClick={toggleWishlistItem} color="red" className="w-[20px] h-[20px]" />
+                      <GoHeartFill onClick={toggleWishlistItem} color="red" className="w-[18px] h-[18px] sm:w-[20px] sm:h-[20px]" />
                     ) : (
-                      <GoHeart onClick={toggleWishlistItem} color="red" className="w-[20px] h-[20px]" />
+                      <GoHeart onClick={toggleWishlistItem} color="red" className="w-[18px] h-[18px] sm:w-[20px] sm:h-[20px]" />
                     )}
-                    <label className="text-[14.25px] text-[#FF1645] font-medium font-poppins">Save</label>
+                    <label className="text-[12px] sm:text-[14.25px] text-[#FF1645] font-medium font-poppins">Save</label>
                   </div>
                 </PrimaryButton>
 
                 <PrimaryButton
                   type="button"
-                  className="bg-[#FFE7EC] !px-[16px] w-fit border-none text-[#FF1645] font-poppins rounded "
+                  className="bg-[#FFE7EC] !px-3 sm:!px-4 !w-full sm:!w-fit  border-none text-[#FF1645] font-poppins rounded "
 
                 >
                   <div className="flex items-center gap-2 w-fit h-[25px]  sm:h-[28px] justify-center">
-                    <div className="w-[18px] sm:w-[21px] h-[18px] sm:h-[21px] relative">
-
-                      <Image src={share_button_icon} alt="share icon" fill />
+                    <div
+                      onClick={() => handleShare(data?.data?.projectTitle || '')}
+                      className="w-[18px] sm:w-[21px] h-[18px] sm:h-[21px] relative">
+                      <PiShareFat
+                        color='#FF1645'
+                        size={20}
+                      />
+                      {/* <Image src={share_button_icon} alt="share icon" fill /> */}
                     </div>
                     <label className="text-[12px] sm:text-[14.25px] text-nowrap text-[#FF1645] font-medium font-poppins">Share </label>
                   </div>
@@ -810,7 +857,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
                 <PrimaryButton
                   type="button"
-                  className="bg-[#FFE7EC] !px-[19px] w-fit border-none text-[#FF1645] font-poppins rounded "
+                  className="bg-[#FFE7EC] !px-4  !w-full sm:!w-fit border-none text-[#FF1645] font-poppins rounded "
 
                 >
                   <div
@@ -818,7 +865,11 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
                     onClick={() => setEnquiryForm({ status: true, id: data?.data?._id || '', count: 1 })}
                     className="flex items-center gap-2 w-fit h-[25px] sm:h-[28px] justify-center">
                     <div className="w-[18px] sm:w-[21px] h-[18px] sm:h-[21px] relative">
-                      <Image src={notes_red_edit} alt="share icon" fill />
+                      {/* <Image src={notes_red_edit} alt="share icon" fill /> */}
+                      <PiNotePencil
+                        className="w-[25px] h-[22px]"
+                        color="#FF1645"
+                      />
                     </div>
                     <label className="text-[12px] sm:text-[14.25px] text-nowrap text-[#FF1645] font-medium font-poppins">Enquire Now </label>
                   </div>
@@ -1019,60 +1070,60 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
 
               <div className="" onClick={handleLoanAmountModal}>
-                            <IoCloseOutline className="w-[25px] h-[25px]" color='#333333' />
+                <IoCloseOutline className="w-[25px] h-[25px]" color='#333333' />
 
               </div>
 
 
             </div>
 
-                <SectionDivider
-        containerClassName="mt-[10.5px] mb-[12px]"
-        lineClassName="h-[1px] w-full bg-[#DEDEDE]"
-      />
-
-<SpaceWrapper
-className="px-5"
->
-
-            <MortgageCalculator
-              wrapperContainerClassName="!border-none !p-0"
-              data={({ monthlyPayment, loanAmount, interestRate, downPayment, years }) => {
-                setMonthlyPayment((prev) => (prev !== monthlyPayment ? monthlyPayment : prev));
-                setLoanAmount((prev) => (prev !== loanAmount ? loanAmount : prev));
-                setInterestRate((prev) => (prev !== interestRate ? interestRate : prev));
-                setDownPayment((prev) => (prev !== downPayment ? downPayment : prev));
-                setYears((prev) => (prev !== years ? years : prev));
-              }}
-              defaultTotalPrice={parsePrice(data?.data?.priceInAED || 0) }
-              defaultDownPayment={downPayment}
-              defaultYears={years}
-              defaultInterestRate={interestRate}
+            <SectionDivider
+              containerClassName="mt-[10.5px] mb-[12px]"
+              lineClassName="h-[1px] w-full bg-[#DEDEDE]"
             />
 
+            <SpaceWrapper
+              className="px-5"
+            >
+
+              <MortgageCalculator
+                wrapperContainerClassName="!border-none !p-0"
+                data={({ monthlyPayment, loanAmount, interestRate, downPayment, years }) => {
+                  setMonthlyPayment((prev) => (prev !== monthlyPayment ? monthlyPayment : prev));
+                  setLoanAmount((prev) => (prev !== loanAmount ? loanAmount : prev));
+                  setInterestRate((prev) => (prev !== interestRate ? interestRate : prev));
+                  setDownPayment((prev) => (prev !== downPayment ? downPayment : prev));
+                  setYears((prev) => (prev !== years ? years : prev));
+                }}
+                defaultTotalPrice={parsePrice(data?.data?.priceInAED ?? 0)}
+                defaultDownPayment={downPayment}
+                defaultYears={years}
+                defaultInterestRate={interestRate}
+              />
 
 
-            <div className="flex h-20 gap-3 shadow-2xs border left-0 px-5  border-[#DEDEDE] rounded-t-2xl  w-full items-center absolute bottom-0">
-              <PrimaryButton
-                type="button"
-                onClick={handleReset} // <- add this
-                className="flex border h-12 border-[#DEDEDE] bg-white text-black w-full sm:w-fit items-center gap-2 rounded-[5px]"
-              >
-                <span className="text-sm font-poppins">Reset</span>
-              </PrimaryButton>
+
+              <div className="flex h-20 gap-3 shadow-2xs border left-0 px-5  border-[#DEDEDE] rounded-t-2xl  w-full items-center absolute bottom-0">
+                <PrimaryButton
+                  type="button"
+                  onClick={handleReset} // <- add this
+                  className="flex border h-12 border-[#DEDEDE] bg-white text-black w-full sm:w-fit items-center gap-2 rounded-[5px]"
+                >
+                  <span className="text-sm font-poppins">Reset</span>
+                </PrimaryButton>
 
 
-              {/* Enquiry Button */}
-              <PrimaryButton
-                onClick={handleLoanAmountModal}
-                type="button"
-                className="flex w-full h-12 items-center gap-2 sm:w-[160px] rounded-[5px] border-none bg-[#FF1645]"
-              >
-                <span className="text-sm text-white font-poppins">Apply</span>
-              </PrimaryButton>
-            </div>
+                {/* Enquiry Button */}
+                <PrimaryButton
+                  onClick={handleLoanAmountModal}
+                  type="button"
+                  className="flex w-full h-12 items-center gap-2 sm:w-[160px] rounded-[5px] border-none bg-[#FF1645]"
+                >
+                  <span className="text-sm text-white font-poppins">Apply</span>
+                </PrimaryButton>
+              </div>
 
-</SpaceWrapper>
+            </SpaceWrapper>
 
           </div>
         </>

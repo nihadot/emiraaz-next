@@ -8,5 +8,10 @@ export type AllSmallVideoItems = {
     thumbnail?: ImageType,
     slug: string;
     _id:string;
+    projectDetails: {
+       
+        slug: string;
+        
+    }
 }
     

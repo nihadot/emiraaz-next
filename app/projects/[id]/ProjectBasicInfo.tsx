@@ -7,9 +7,12 @@ import { errorToast } from "@/components/Toast";
 import { RootState } from "@/redux/store";
 import { useToggleWishlistItemMutation, useViewAllWishlistsQuery } from "@/redux/wishlist/wishlistApi";
 import { setWishlist } from "@/redux/wishlistSlice/wishlistSlice";
+import { handleShare } from "@/utils/shareOption";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { GoHeart, GoHeartFill } from "react-icons/go";
+import { GoHeart, GoHeartFill, GoScreenFull } from "react-icons/go";
+import { LiaBedSolid } from "react-icons/lia";
+import { PiShareFat } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 
 interface UserData {
@@ -17,7 +20,7 @@ interface UserData {
 }
 
 
-const ProjectBasicInfo = ({ projectId,
+const ProjectBasicInfo = ({ projectId,type,
   title, address, propertyType, beds, baths, currency, value, squareFeet, projectType,discount
 }: {
   projectType?: string;
@@ -31,6 +34,7 @@ const ProjectBasicInfo = ({ projectId,
   squareFeet: string
   projectId: string
   discount:string
+  type:string
 }) => {
 
   const [toggleWishlist] = useToggleWishlistItemMutation();
@@ -91,13 +95,18 @@ const ProjectBasicInfo = ({ projectId,
   return (
     <div className="flex w-full justify-between mt-[9.75px]">
       <div className="">
-          {discount && (
-                            <span className="bg-[#44B842] rounded-[2px] text-white text-[9.75px] px-2 py-0.5 capitalize w-fit hidden lg:inline-block">
+         
+
+       <div className="flex justify-start items-center">
+         { title ? <h3 className="text-[21.3px] capitalize sm:text-[26.25px] text-[#333333] font-medium font-poppins ">{title}</h3> : <div className=" w-full h-[40px] bg-gray-50"></div>}
+        
+        
+         {discount && (
+                            <span className="bg-[#44B842] ms-3 rounded-[2px] text-white text-[12px] font-normal font-poppins px-2 py-0.5 capitalize w-fit hidden sm:flex">
                                 {discount} Discount
                             </span>
                         )}
-
-        { title ? <h3 className="text-[21.3px] capitalize sm:text-[26.25px] text-[#333333] font-medium font-poppins ">{title}</h3> : <div className=" w-full h-[40px] bg-gray-50"></div>}
+       </div>
         {/* Price */}
 
         {(projectType === 'commercial-residential' || projectType === 'project-residential' || projectType === 'project-commercial') ? <h4>
@@ -133,31 +142,38 @@ const ProjectBasicInfo = ({ projectId,
           <div className="h-[18px] w-[1px] bg-[#333333]" />
           {!(propertyType === 'land-residential' || propertyType === 'land-commercial') && <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <Image src={bed_icon} alt="bed icon" width={20} height={20} className="object-cover" />
+           <LiaBedSolid size={20} color='#333' />
+              {/* <Image src={bed_icon} alt="bed icon" width={20} height={20} className="object-cover" /> */}
               {/* <p className="text-sm font-light font-poppins">{item.numberOfBeds}</p> */}
 
               <Typography
                 tag='p'
                 className='text-[12px] text-nowrap font-light font-poppins'
-                text={`Bedrooms: ${beds}`}
+                 text={type}
               />
             </div>
 
-            <div className="flex items-center gap-2">
-              <Image src={bath_icon} alt="bath icon" width={20} height={20} className="object-cover" />
+
+            {/* <div className="flex items-center gap-2"> */}
+              {/* <Image src={bath_icon} alt="bath icon" width={20} height={20} className="object-cover" /> */}
               {/* <p className="text-sm font-light font-poppins">{item.numberOfBath}</p> */}
-              <Typography
+              {/* <Typography
                 tag='p'
                 className='text-[12px] text-nowrap font-light font-poppins'
                 text={`Bathrooms: ${baths}`}
-              />
-            </div>
+              />*/}
+
+            {/* </div>  */}
           </div>}
           {!(propertyType === 'land-residential' || propertyType === 'land-commercial') && <div className="h-[18px] w-[1px] bg-[#333333]" />}
           <div className="flex items-center gap-3">
 
             <div className="flex items-center gap-2">
-              <Image src={bath_icon} alt="bath icon" width={20} height={20} className="object-cover" />
+              {/* <Image src={bath_icon} alt="bath icon" width={20} height={20} className="object-cover" /> */}
+            <GoScreenFull
+                                       color='#333'
+                                       className='w-[20px] h-[20px]'
+                                       />
               {/* <p className="text-sm font-light font-poppins">{item.squareFeet} </p> */}
               <Typography
                 tag='p'
@@ -188,12 +204,17 @@ const ProjectBasicInfo = ({ projectId,
         </PrimaryButton>
 
         <PrimaryButton
+        onClick={()=>handleShare(title)}
           type="button"
           className="bg-[#FFE7EC] border-none text-[#FF1645] font-poppins rounded "
 
         >
-          <div className="flex items-center gap-2 w-[60px] h-[35.25px] justify-center">
-            <Image src={share_button_icon} alt="share icon" width={21.75} height={21.75} />
+          <div className="flex items-center gap-2 justify-center">
+             <PiShareFat
+                                color="red"
+                               className="w-[20px] h-[20px]"
+                                />
+            {/* <Image src={share_button_icon} alt="share icon" width={21.75} height={21.75} /> */}
             <label className="text-[14.25px] text-[#FF1645] font-medium font-poppins">Share </label>
           </div>
         </PrimaryButton>

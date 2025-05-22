@@ -4,6 +4,8 @@ import { formatCurrencyParts } from '@/utils/formateAmount'
 import Image from 'next/image'
 import React from 'react'
 import Typography from '../atom/typography/Typography'
+import { LiaBedSolid } from 'react-icons/lia'
+import { GoScreenFull } from 'react-icons/go'
 
 type Props = {
   item: AllProjectsItems
@@ -37,33 +39,26 @@ function Card({ item }: Props) {
                           <div className="h-[20px] w-[1px] bg-[#333333]" />
                           {!(item.projectType === 'land-residential' || item.projectType === 'land-commercial') && <div className="flex items-center gap-3">
                               <div className="flex items-center gap-2">
-                                  <Image src={bed_icon} alt="bed icon" width={20} height={20} className="object-cover" />
+                                  {/* <Image src={bed_icon} alt="bed icon" width={20} height={20} className="object-cover" /> */}
                                   {/* <p className="text-sm font-light font-poppins">{item.numberOfBeds}</p> */}
-      
+         <LiaBedSolid size={20} color='#333' />
                                   <Typography
                                       tag='p'
-                                      className='text-[12px] line-clamp-1 text-ellipsis font-light font-poppins'
-                                      text={item.numberOfBeds}
+                                      className='text-[12px] line-clamp-1 font-light font-poppins'
+                                      text={item.type}
                                   />
                               </div>
       
-                              <div className="flex items-center gap-2">
-                                  <Image src={bath_icon} alt="bath icon" width={20} height={20} className="object-cover" />
-                                  {/* <p className="text-sm font-light font-poppins">{item.numberOfBath}</p> */}
-                                  <Typography
-                                      tag='p'
-                                      className='text-[12px] line-clamp-1 text-ellipsis font-light font-poppins'
-                                      text={item.numberOfBath}
-                                  />
-                              </div>
+                             
                           </div>}
                           {!(item.projectType === 'land-residential' || item.projectType === 'land-commercial') && <div className="h-[20px] w-[1px] bg-[#333333]" />}
                           <div className="flex items-center gap-3">
       
                               <div className="flex items-center gap-2">
-                                  <Image src={bath_icon} alt="bath icon" width={20} height={20} className="object-cover" />
-                                  {/* <p className="text-sm font-light font-poppins">{item.squareFeet} </p> */}
-                                  <Typography
+                                  <GoScreenFull
+                                                             color='#333'
+                                                             className='w-[20px] h-[20px]'
+                                                             /> <Typography
                                       tag='p'
       
                                       className='text-[12px] line-clamp-1 text-ellipsis font-light font-poppins'

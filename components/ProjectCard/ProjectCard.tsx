@@ -47,16 +47,12 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
     return (
         <div className="relative overflow-hidden w-full sm:w-full flex-none sm:h-[500px] lg:h-[260px] rounded lg:flex-row flex-col flex h-[410px] border border-[#DEDEDE]">
 
-            {item.discount && <div className="bg-[#44B842] rounded-[2px] sm:hidden text-[11px] font-poppins font-normal top-3 px-3 right-3 absolute z-40  text-white">
-
-               
-                            <div className=" ">
+ {item.discount && (
+                            <span className="bg-[#44B842] font-medium font-poppins absolute sm:hidden z-40  right-5 top-3 rounded-[2px] text-white text-[10px] px-3 py-0.5 capitalize w-fit flex">
                                 {item.discount} Discount
-                            </div>
-                        
+                            </span>
+                        )}
 
-
-            </div>}
             <ProjectImageSlider item={item} />
 
             <div className="flex font-poppins relative flex-col px-[10px] pt-[10px] pb-[3px] sm:p-[16.5px]">
@@ -76,7 +72,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                         {item.projectTitle}
 
                         {item.discount && (
-                            <span className="bg-[#44B842] sm:flex absolute right-5 top-3 rounded-[2px] text-white text-[9.75px] px-2 py-0.5 capitalize w-fit hidden">
+                            <span className="bg-[#44B842] font-poppins sm:flex  right-5 top-3 rounded-[2px] text-white text-[9.75px] px-2 py-0.5 capitalize w-fit hidden">
                                 {item.discount} Discount
                             </span>
                         )}
@@ -154,9 +150,11 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                     <div className="flex items-center gap-3">
 
                         <div className="flex items-center gap-2">
-                            <Image src={bath_icon} alt="bath icon" width={20} height={20} className="object-cover" />
                             {/* <p className="text-sm font-light font-poppins">{item.squareFeet} </p> */}
-                            
+                            <GoScreenFull
+                            color='#333'
+                            className='w-[20px] h-[20px]'
+                            />
                             
                             <Typography
                                 tag='p'

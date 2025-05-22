@@ -28,7 +28,7 @@ const PropertyDetailsSectionStringArray: React.FC<PropertyDetailsSectionProps> =
         {icon && <Image src={tick_green_icon} alt="location" width={18} height={18} />}
 
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2  sm:gap-x-6">
+      <div className="grid grid-cols-1 sm:grid-cols-4  sm:gap-x-6">
         {data?.map((item, index) => (
           <PropertyDetailItem key={index} item={item} />
         ))}

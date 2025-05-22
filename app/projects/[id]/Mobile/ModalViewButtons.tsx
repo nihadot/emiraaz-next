@@ -5,10 +5,20 @@ import React from 'react'
 import { PiMapPin } from "react-icons/pi";
 import { PiPlayCircle } from "react-icons/pi";
 
-function ModalViewButtons() {
+function ModalViewButtons({
+  handleGalleryModal,
+  handleGallerySelect,
+}:{
+  handleGalleryModal:()=>void;
+  handleGallerySelect:(item:any)=>void;
+}) {
   return (
     <div className="flex w-full gap-2 mt-[8.5px] sm:hidden h-[35px]">
     <PrimaryButton
+    onClick={()=>{
+      handleGalleryModal()
+      handleGallerySelect('map')
+    }}
       type="button"
       className="bg-[#FFE7EC] flex-1 border-none text-[#FF1645] font-poppins rounded "
    
@@ -23,6 +33,10 @@ function ModalViewButtons() {
         </div>
       </PrimaryButton>
     <PrimaryButton
+     onClick={()=>{
+      handleGalleryModal()
+      handleGallerySelect('video')
+    }}
       type="button"
       className="bg-[#FFE7EC] flex-1 border-none text-[#FF1645] font-poppins rounded "
     >

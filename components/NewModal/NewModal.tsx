@@ -13,13 +13,22 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children,contentClassName,
   wrapperClassName
  }) => {
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [onClose]);
+   useEffect(() => {
+     const handleEscape = (e: KeyboardEvent) => {
+       if (e.key === 'Escape') onClose();
+     };
+ 
+     if (isOpen) {
+       document.body.style.overflow = 'hidden';
+       document.addEventListener('keydown', handleEscape);
+     }
+ 
+     return () => {
+       document.body.style.overflow = '';
+       document.removeEventListener('keydown', handleEscape);
+     };
+   }, [isOpen, onClose]);
+ 
 
   if (!isOpen) return null;
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from 'next/navigation';
 
@@ -62,6 +62,7 @@ import { useDeviceType } from "@/utils/useDeviceType";
 import { usePagination } from "@/utils/usePagination";
 import PaginationNew from "@/components/PaginationNew/PaginationNew";
 import AlreadyEnquired from "@/components/EnquiryForm/AlreadyEnquired";
+import CustomSlider from "@/components/CustomSlider/CustomSlider";
 
 type FiltersState = {
     developers?: string[];
@@ -273,6 +274,15 @@ export default function HomePage() {
 
     const banners = portraitBannerData?.data || [];
     const shuffledImages = useMemo(() => shuffle(banners), [banners]);
+
+    const shuffleArray = (arr: any[]) => {
+        const copy = [...arr];
+        for (let i = copy.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+    };
 
     // Event Handlers
     const handleChangeSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -725,7 +735,7 @@ export default function HomePage() {
                         <div className="mb-4 flex gap-2">
                             <div className="flex-1 h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
 
-                                {projects ? projects?.data?.map((item, index) => (
+                                {/* {projects ? projects?.data?.map((item, index) => (
                                     <ProjectCard
                                         navigateDetailsButton={true}
                                         key={index}
@@ -741,17 +751,45 @@ export default function HomePage() {
                                         })}
                                     </>
 
-                                }
+                                } */}
+                                {projects ? (
+                                    projects.data.map((item, index) => (
+                                        <React.Fragment key={index}>
+                                            <ProjectCard
+                                                navigateDetailsButton={true}
+                                                item={item}
+                                                handleClick={handleClick}
+                                                handleEnquiryFormClick={handleEnquiryFormClick}
+                                            />
+
+                                            {/* Add separator after every 5 items */}
+                                            {(index + 1) % 5 === 0 && (
+                                                <>
+                                                    <div className=" flex sm:hidden mt:mt-0">
+                                                        <CustomSlider
+                                                            images={shuffleArray(shuffledImages)}
+                                                            containerClassName="h-[95px] border border-[#DEDEDE] "
+                                                        />
+                                                    </div></>
+                                            )}
+                                        </React.Fragment>
+                                    ))
+                                ) : (
+                                    Array.from({ length: 10 }).map((_, index) => (
+                                        <ProjectCardSkelton key={index} />
+                                    ))
+                                )}
                             </div>
 
                             <div className="w-full xl:block hidden max-w-[301.5px]">
 
-                                {smallVideoAds && smallVideoAds.length > 0 &&
-                                    <div className="w-full mb-[12px] relative">
+                                {smallVideoAds && smallVideoAds.length > 0 ?
+                                    <div className="w-full mb-[12px] flex relative">
                                         <VideoPreview
+                                        projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
                                             src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
                                         />
-                                    </div>
+                                    </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>
                                 }
 
                                 <div className="sticky top-3 left-0">
@@ -851,6 +889,7 @@ export default function HomePage() {
                     onClose={() => setFilterModel(false)}
                     show={filterModel}
                 />
+
 
 
                 <Footer />

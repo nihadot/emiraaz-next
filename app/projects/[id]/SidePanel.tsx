@@ -21,7 +21,7 @@ const SidePanel = ({
     mainImage: string,
     images: { secure_url: string }[],
     selectedIndex: number,
-    videoLink: string,
+    videoLink?: string,
     filteredProjectAdsCard: AllProjectAdsCards[];
     handleGalleryModal: () => void;
     shuffledImages: any[];
@@ -66,7 +66,7 @@ const SidePanel = ({
 
                    { videoLink ?  <VideoContainer
                         clickDisable
-                        videoUrl={videoLink || ''}
+                        videoUrl={videoLink}
                     /> :
                      <div className="h-[177.5px] w-full bg-gray-50"></div>
                     

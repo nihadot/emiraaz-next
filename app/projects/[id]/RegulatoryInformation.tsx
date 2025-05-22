@@ -3,6 +3,9 @@ import ProjectHeader from './ProjectHeader';
 import Image from 'next/image';
 import { info_icon, report_icon, tick_green_icon } from '@/app/assets';
 import PrimaryButton from '@/components/Buttons';
+import { RiFlag2Line } from "react-icons/ri";
+import { IoCheckmarkCircle } from 'react-icons/io5';
+import { BsExclamationCircle } from "react-icons/bs";
 
 type DetailItem = {
   title: string
@@ -13,7 +16,7 @@ type Props = {
   headerTitle: string;
   data: { label: string, value: string }[]
   icon: boolean,
-  qrCodeUrl: string;
+  qrCodeUrl?: string;
   reportedProjectHandler: () => void;
 }
 function RegulatoryInformation({ qrCodeUrl, icon, data, headerTitle, reportedProjectHandler }: Props) {
@@ -24,7 +27,12 @@ function RegulatoryInformation({ qrCodeUrl, icon, data, headerTitle, reportedPro
           contentClassName='font-medium text-[18.75px]'
 
           title={headerTitle} />
-        {icon && <Image src={tick_green_icon} alt="location" width={20} />}
+        {icon && 
+               <IoCheckmarkCircle
+               color='#44B842'
+               size={20}
+               />
+               }
       </div>
       <div className="flex flex-col sm:flex-row items-center justify-between w-full ">
 
@@ -38,7 +46,7 @@ function RegulatoryInformation({ qrCodeUrl, icon, data, headerTitle, reportedPro
         </div>
         <div className="my-6 sm:my-0 relative h-[101.25px] w-[101.25px] ">
 
-          <Image fill src={qrCodeUrl} alt={'QR code'} className="object-cover" />
+          { qrCodeUrl ? <Image fill src={qrCodeUrl} alt={'QR code'} className="object-cover" /> : <div className="w-full h-[101.25px] bg-[#F5F5F5] rounded-[5px]"></div>}
         </div>
 
 
@@ -52,7 +60,11 @@ function RegulatoryInformation({ qrCodeUrl, icon, data, headerTitle, reportedPro
           className=" bg-[#FFE7EC] max-w-[280px] w-full border-none "
         >
           <div className="flex justify-center items-center gap-2">
-            <Image src={report_icon} alt="save icon" width={21} height={21} className='object-cover' />
+          <RiFlag2Line
+          size={21}
+          color='#FF1645'
+          />
+            {/* <Image src={report_icon} alt="save icon" width={21} height={21} className='object-cover' /> */}
             <label className="text-sm font-medium text-[#FF1645] text-[14.25px] font-poppins">Report Property</label>
           </div>
         </PrimaryButton>
@@ -69,7 +81,10 @@ const PropertyDetailItem: React.FC<DetailItem> = ({ title, content }) => {
     <div className="flex font-poppins gap-[20.25px] py-3 items-center ">
       <p className="flex-1 font-normal gap-[6.75px] flex items-center text-[#333333]">
         <label className='font-poppins text-nowrap font-normal text-[13.75px]'>{title}</label>
-        <Image src={info_icon} alt="location" width={15} height={15} />
+      <BsExclamationCircle
+      color='#FF1645'
+      size={15}
+      />
       </p>
       <p className="flex-1 text-[13.5px] font-poppins text-black">{content}</p>
     </div>
