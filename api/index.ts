@@ -5,8 +5,8 @@ import { LOCAL_STORAGE_KEYS } from "./storage";
 import { logoutStart, logoutSuccess } from "@/redux/userSlice/userSlice";
 // import { logoutStart, logoutSuccess } from "../features/adminSlice/adminSlice";
 
-export const baseUrl = `https://api.propertyseller.com/api/v1`
-// export const baseUrl = `http://localhost:4000/api/v1`
+// export const baseUrl = `https://api.propertyseller.com/api/v1`
+export const baseUrl = `http://localhost:4000/api/v1`
 // export const baseUrl = `https://ai-updations-api.onrender.com/api/v1`
 export const placeHolderLink = 'https://placehold.co/300x468'
 

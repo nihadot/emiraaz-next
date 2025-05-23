@@ -110,8 +110,10 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
   );
   const { data: portraitBannerData } = useFetchAllPortraitBannersQuery({});
 
-  const banners = portraitBannerData?.data || [];
+  const banners = (portraitBannerData?.data && portraitBannerData?.data?.filter(item=>item.projectDetails.slug !== data?.data?.slug) || []);
 
+  console.log(portraitBannerData,'portraitBannerData')
+  console.log(banners,'banners')
   const shuffledImages = useMemo(() => shuffle(banners), []);
 
 

@@ -3,6 +3,7 @@ import React from 'react'
 
 function MobileFooterBanner({ }) {
     return (
+       <>
         <div className="px-5 lg:px-8 flex sm:hidden">
 
             <div className='border-[#DEDEDE] px-3 py-4 rounded-[7.6px]  border '>
@@ -27,6 +28,7 @@ function MobileFooterBanner({ }) {
                 </div>
             </div>
         </div>
+       </>
 
     )
 }

@@ -10,6 +10,7 @@ import { SelectHandoverDate } from "@/components/SelectHandoverDate";
 import { SelectOption, SwitchSelector } from "@/components/SelectOption";
 import ExpandableComponentDropdown from "@/components/ExpandableComponent/ExpandableComponent";
 import ProjectCard from "@/components/ProjectCard/ProjectCard";
+import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 
 import { useFetchAllCityNamesQuery } from "@/redux/cities/citiesApi";
 import { useFetchAllEmirateNamesQuery } from "@/redux/emirates/emiratesApi";
@@ -174,7 +175,7 @@ export default function HomePage() {
         facilities: [],
         // propertyType: [],
         // propertyTypes: 'all',
-        // propertyTypeSecond: "all",
+        propertyTypeSecond: "all",
         emirate: "",
         completionType: "",
         handoverDate: undefined,
@@ -423,7 +424,7 @@ export default function HomePage() {
                         </div> */}
 
 
-                            <div className="h-[50px]">
+                            <div className="md:h-[50px] h-[45px]">
                                 <SearchNew
                                     value={filters?.search || ''}
                                     onChange={handleChangeSearch}
@@ -498,7 +499,7 @@ export default function HomePage() {
 
 
                             {/* Done */}
-                            {productTypeOptionFirstItems.length > 0 ? <div className="h-[50px]">
+                            {productTypeOptionFirstItems.length > 0 ? <div className="h-[45px] sm:h-[50px]">
                                 <SwitchSelector
                                     onSelect={handleSelect.productTypeOptionFirst}
                                     defaultValue={filters.productTypeOptionFirst}
@@ -509,20 +510,24 @@ export default function HomePage() {
 
 
 
-                            <div className="flex gap-2 h-[50px]">
+                            <div className="flex gap-2 h-[45px] sm:h-[50px]">
                                 <SwitchSelector
                                     onSelect={handleSelect.propertyTypeSecond}
                                     defaultValue={filters.propertyTypeSecond}
                                     options={propertyTypeSecond}
                                 />
-                                <button onClick={handleFilterModal} className="bg-red-600/10 rounded flex justify-center items-center  border border-[#DEDEDE] w-[55px] lg:hidden h-full">
-                                    <Image
+                                <button onClick={handleFilterModal} className="bg-red-600/10 rounded flex justify-center items-center  border-none w-[55px] lg:hidden h-full">
+                                    {/* <Image
                                         src={filter_icon}
                                         className=" object-cover"
                                         alt="filter"
                                         width={18}
                                         height={18}
 
+                                    /> */}
+                                    <HiOutlineAdjustmentsHorizontal
+                                   className="w-[22px] h-[22px]"
+                                    color='red'
                                     />
                                 </button>
                             </div>

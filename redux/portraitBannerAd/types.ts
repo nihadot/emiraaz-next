@@ -25,5 +25,8 @@ export type PortraitBanner = {
     slug: string;
     desktopImage?: ImageType,
     mobileImage?: ImageType,
+    projectDetails:{
+        slug: string;
+    }
 }
 

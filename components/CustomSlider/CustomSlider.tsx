@@ -4,6 +4,7 @@ import { PortraitBanner } from '@/redux/portraitBannerAd/types';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 
 interface CustomSliderProps {
   images: PortraitBanner[];
@@ -34,7 +35,7 @@ const CustomSliderComponent = ({
   if (images.length === 0) return null;
 
   return (
-    <div className={`relative w-full overflow-hidden ${containerClassName}`}>
+    <Link href={`/projects/${images[currentIndex].projectDetails?.slug}`} className={`relative flex w-full overflow-hidden ${containerClassName}`}>
       <div className="relative h-[600px] w-full">
         <AnimatePresence>
           <motion.div
@@ -57,7 +58,7 @@ const CustomSliderComponent = ({
           </motion.div>
         </AnimatePresence>
       </div>
-    </div>
+    </Link>
   );
 };
 
