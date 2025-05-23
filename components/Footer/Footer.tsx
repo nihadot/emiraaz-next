@@ -19,7 +19,7 @@ function Footer() {
 
                 <Container>
 
-                    <section className=' flex gap-10  flex-col lg:flex-row w-full py-10 '>
+                    <section className=' flex gap-10  flex-col lg:flex-row w-full pt-10 pb-3 sm:py-10 '>
                         <section className=''>
                             <div className="flex w-[180px] m-auto justify-center items-center relative h-[80px] object-cover ">
 
@@ -74,7 +74,7 @@ function Footer() {
                             </div>
 
 
-                            <div className="relative mt-10 bg-white w-[117.5px] h-[36px] object-cover">
+                            <div className="relative sm:flex hidden mt-10 bg-white w-[117.5px] h-[36px] object-cover">
                                 {/* <Image
                                     fill
                                     priority
@@ -93,7 +93,7 @@ function Footer() {
                             </div>
 
 
-                            <div className="relative mt-2 bg-white w-[117.5px] h-[36px] object-cover">
+                            <div className="relative mt-2 sm:flex hidden bg-white w-[117.5px] h-[36px] object-cover">
                                   <img
                                                                    src={app_store_icon.src}
                                                                    alt='play store icon here'
@@ -107,27 +107,159 @@ function Footer() {
 
                             <FooterList
                                 title="Explore"
-                                items={["Home", "About", "Blog", "News", "Property Talks", "Rental Income", "Developers", "Emirates", "Cities"]}
+                                items={[
+                                    {
+                                        title: "Home",
+                                        link: "/"
+                                    },
+                                    {
+                                        title: "About",
+                                        link: "/about"
+                                    },
+                                    {
+                                        title: "Blog",
+                                        link: "/blogs"
+                                    },
+                                    {
+                                        title: "News",
+                                        link: "/allnews"
+                                    },
+                                    {
+                                        title: "Property Talks",
+                                        link: "/talks"
+                                    },
+                                    {
+                                        title: "Rental Income",
+                                        link: "/rental-income"
+                                    },
+                                    {
+                                        title: "Developers",
+                                        link: "/developers"
+                                    },
+                                    {
+                                        title: "Emirates",
+                                        link: "/"
+                                    },
+                                    {
+                                        title: "Cities",
+                                        link: "/cities"
+                                    }
+                                ]}
+                                // items={["Home", "About", "Blog", "News", "Property Talks", "Rental Income", "Developers", "Emirates", "Cities"]}
                             />
                             <FooterList
                                 title="Residential"
-                                items={["Offplan Projects", "Offplan Resale", "Secondary", "Land"]}
+                                items={[
+                                    {
+                                        title: "Offplan Projects",
+                                        link: "/"
+                                    },
+                                    {
+                                        title: "Offplan Resale",
+                                        link: "/"
+                                    },
+                                    {
+                                        title: "Secondary",
+                                        link: "/"
+                                    },
+                                    {
+                                        title: "Land",
+                                        link: "/"
+                                    }
+                                ]}
+                                // items={["Offplan Projects", "Offplan Resale", "Secondary", "Land"]}
                             />
                             <FooterList
                                 title="Commercial"
-                                items={["Offplan Projects", "Offplan Resale", "Secondary", "Land"]}
+                                items={[
+                                    {
+                                        title: "Offplan Projects",
+                                        link: "/"
+                                    },
+                                    {
+                                        title: "Offplan Resale",
+                                        link: "/"
+                                    },
+                                    {
+                                        title: "Secondary",
+                                        link: "/"
+                                    },
+                                    {
+                                        title: "Land",
+                                        link: "/"
+                                    }
+                                ]}
+                                // items={["Offplan Projects", "Offplan Resale", "Secondary", "Land"]}
                             />
                             <FooterList
                                 title="Emirates"
-                                items={["Abu Dhabi", "Sharjah", "Ajman", "Umm Al-Quwain", "Ras Al Khaimah", "Fujairah"]}
+                                items={[{
+                                    title: "Abu Dhabi",
+                                    link: "/"
+                                },
+                                {
+                                    title: "Sharjah",
+                                    link: "/"
+                                },
+                                {
+                                    title: "Ajman",
+                                    link: "/"
+                                },
+
+                                 {
+                                    title: "Umm Al-Quwain",
+                                    link: "/"
+                                },
+                                  {
+                                    title: "Ras Al Khaimah",
+                                    link: "/"
+                                },
+                                ]}
+                                // items={["Abu Dhabi", "Sharjah", "Ajman", "Umm Al-Quwain", "Ras Al Khaimah", "Fujairah"]}
                             />
                             <FooterList
                                 title="My Account"
-                                items={["Login / Register", "My Profile", "Saved Properties", "Enquired Properties", "Purchase History"]}
+                                items={[
+                                    {
+                                        title: "Login / Register",
+                                        link: "/login"
+                                    },
+                                    {
+                                        title: "My Profile",
+                                        link: "/profile"
+                                    },
+                                    {
+                                        title: "Saved Properties",
+                                        link: "/saved-properties"
+                                    },
+                                    {
+                                        title: "Enquired Properties",
+                                        link: "/enquired-properties"
+                                    },
+                                    {
+                                        title: "Purchase History",
+                                        link: "/purchase-history"
+                                    }
+                                ]}
+                                // items={["Login / Register", "My Profile", "Saved Properties", "Enquired Properties", "Purchase History"]}
                             />
                             <FooterList
                                 title="Quick Links"
-                                items={["Terms & Conditions", "Privacy Policy", "Banned Agents"]}
+                                items={[
+                                    {
+                                        title: "Terms & Conditions",
+                                        link: "/terms"
+                                    },
+                                    {
+                                        title: "Privacy Policy",
+                                        link: "/privacy-policy"
+                                    },
+                                    {
+                                        title: "Donations",
+                                        link: "/donations"
+                                    }
+                                ]}
+                                // items={["Terms & Conditions", "Privacy Policy", "Donations"]}
                             />
                         </section>
 

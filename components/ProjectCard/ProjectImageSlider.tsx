@@ -81,8 +81,8 @@ function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
                     // Delay navigation assignment until refs are defined
                     setTimeout(() => {
                         if (
-                          swiper.params.navigation &&
-                          typeof swiper.params.navigation !== 'boolean'
+                          swiper?.params?.navigation &&
+                          typeof swiper?.params?.navigation !== 'boolean'
                         ) {
                           swiper.params.navigation.prevEl = prevRef.current;
                           swiper.params.navigation.nextEl = nextRef.current;

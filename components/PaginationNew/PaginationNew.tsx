@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 interface PaginationProps {
   currentPage: number;
@@ -31,6 +31,7 @@ const Pagination: React.FC<PaginationProps> = ({
     return pages;
   };
 
+
   const visiblePages = getVisiblePages();
 
   return (
@@ -44,7 +45,11 @@ const Pagination: React.FC<PaginationProps> = ({
                 ? "bg-red-600/10 text-red-600 font-medium"
                 : "bg-[#F5F5F5]"
             }`}
-            onClick={() => onPageChange(page)}
+            onClick={() => {
+              onPageChange(page)
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            }}
           >
             {page}
           </button>

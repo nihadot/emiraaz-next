@@ -11,8 +11,8 @@ interface NavMenuProps {
 
 const NavMenu: React.FC<NavMenuProps> = ({ items }) => {
   return (
-    <nav className='max-w-[600px]'>
-      <ul className='flex lg:flex-row flex-col gap-4  items-start laptop:items-center'>
+    <nav className='max-w-[600px] mt-3'>
+      <ul className='flex lg:flex-row flex-col gap-[19px]  items-start laptop:items-center'>
         {items.map((item, index) => (
           <li className='font-medium text-black font-poppins text-[12px]' key={index}>
             <a href={item.link}>{item.name}</a>

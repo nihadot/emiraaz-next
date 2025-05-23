@@ -25,11 +25,9 @@ import {
     PaymentPlan,
     PropertyTypes,
     productTypeOptionFirstItems,
-    propertyTypeFirst,
     propertyTypeSecond,
 } from "@/data";
 
-import { close_icon, filter_icon, search_icon } from "../assets";
 import Modal from "@/components/Modal/Modal";
 import ModalForm from "@/components/EnquiryForm/ModalForm";
 import RegistrationSuccess from "@/components/EnquiryForm/RegistrationSuccess";
@@ -757,6 +755,7 @@ export default function HomePage() {
                                     </>
 
                                 } */}
+                                {/* projects */}
                                 {projects ? (
                                     projects.data.map((item, index) => (
                                         <React.Fragment key={index}>
@@ -857,7 +856,7 @@ export default function HomePage() {
                 />
 
 
-                {/* <BottomBanner /> */}
+                <BottomBanner />
 
                 {smallVideoAds && smallVideoAds.length > 0 &&
                     <Container>
