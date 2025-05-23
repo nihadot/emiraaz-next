@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import InputField from '../InputField/InputField'
 import PrimaryButton from '../Buttons';
-import { notes_icon } from '@/app/assets';
-import Image from 'next/image';
 import { errorToast } from '../Toast';
 import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import axios from 'axios';

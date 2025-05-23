@@ -4,6 +4,7 @@ import HomePage from './home/page'
 import Image from 'next/image'
 import { big_white_logo_icon } from './assets'
 
+
 function Page() {
   const [loading, setLoading] = useState(false)
 
