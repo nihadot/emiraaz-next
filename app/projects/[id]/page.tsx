@@ -114,7 +114,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
 
   console.log(portraitBannerData,'portraitBannerData')
   console.log(banners,'banners')
-  const shuffledImages = useMemo(() => shuffle(banners), []);
+  const shuffledImages = useMemo(() => shuffle(banners), [router]);
 
 
   const options = [
