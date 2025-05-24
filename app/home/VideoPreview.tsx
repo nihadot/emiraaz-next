@@ -418,8 +418,9 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
           {/* Bottom Controls */}
           <div
             className={clsx(
-              "w-[98%] px-[10px] flex justify-between absolute bottom-3 h-[15px] z-[100] transition-opacity duration-300",
-              showControls ? "opacity-100" : "opacity-0 pointer-events-none"
+              "w-[98%] px-[10px] flex justify-between absolute h-[15px] z-40 transition-opacity duration-300",
+              showControls ? "opacity-100" : "opacity-0 pointer-events-none",
+              isFullscreen ? ' bottom-6' : 'bottom-3'
             )}
           >
             <div onClick={toggleMute} className="cursor-pointer">
