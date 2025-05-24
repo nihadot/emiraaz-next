@@ -92,7 +92,7 @@ const YearSelector = ({
           <div
             key={q}
             onClick={() => handleQuarterSelect(q)}
-            className={`flex-1 w-full sm:w-[42px] h-[42px] text-[13.5px] border border-gray-300 rounded-[5px] flex justify-center font-medium font-poppins items-center cursor-pointer 
+            className={`flex-1 w-full sm:w-[42px] h-[42px] text-[13.5px] border border-gray-300 rounded-[5px] flex justify-center font-normal font-poppins items-center cursor-pointer 
               ${selectedQuarter === q ? "bg-red-600/10 border-none text-red-600" : ""}`}
           >
             {q}
