@@ -396,7 +396,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
  
   return (
     <div className=" mx-auto w-full   ">
-      <div className="">
+      <div className="hidden sm:block">
         <Header />
       </div>
 
@@ -409,6 +409,7 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
       />
 
       {data?.data._id && <StickyScrollHeader
+      projectType={data.data.projectType}
         projectId={data?.data._id}
         currency={currency}
         value={value}
@@ -519,15 +520,15 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
                 data={[
                   { title: 'Type', content: data?.data?.propertyTypes?.slice(0, 1).map(item => item) },
                   { title: 'Furnishing', content: furnishing },
-                  { title: 'Purpose', content: data?.data.purpose },
+                  // { title: 'Purpose', content: data?.data.purpose },
                   { title: 'Added on', content: formatCustomDate(data?.data?.createdAt || '') },
-                  { title: 'Reference no', content: 'Bayut - NANCY102368-Um..' },
+                  // { title: 'Reference no', content: 'Bayut - NANCY102368-Um..' },
                   { title: 'Handover Date', content: `${data?.data?.handOverQuarter} ${data?.data?.handOverYear}` },
                   { title: 'Completion', content: data?.data?.completionType },
                   { title: 'Developer', content: data?.data?.developerDetails?.name },
-                  { title: 'Usage', content: data?.data?.usage },
+                  // { title: 'Usage', content: data?.data?.usage },
                   { title: 'Ownership', content: data?.data?.ownerShip },
-                  { title: 'Parking Availability', content: data?.data?.parkingAvailability },
+                  // { title: 'Parking Availability', content: data?.data?.parkingAvailability },
                   { title: 'Built-up Area', content: data?.data?.buildUpArea },
                   { title: 'Total Parking Spaces', content: data?.data?.totalParkingSpaces },
                   { title: 'Total Floors', content: data?.data?.totalFloors },
@@ -535,6 +536,8 @@ const ProjectDetails = ({ params }: { params: Promise<{ id: string }> }) => {
                   { title: 'Retail Centres', content: data?.data?.retailCenters },
                   { title: 'Elevators', content: data?.data?.elevators },
                   { title: 'Swimming Pools', content: data?.data?.swimmingPool },
+                  { title: 'Unique ID', content: data?.data?.uniqueId },
+                  { title: 'Project No', content: data?.data?.projectNumber },
                 ]}
               />
 

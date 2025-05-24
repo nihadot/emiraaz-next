@@ -10,6 +10,7 @@ import {
 } from '@/app/assets';
 // import { LiaBedSolid } from "react-icons/lia";
 import { GoScreenFull } from "react-icons/go";
+import { FaRegBuilding } from "react-icons/fa";
 
 import { AllProjectsItems } from '@/redux/project/types';
 import { formatCurrencyParts } from '@/utils/formateAmount';
@@ -23,6 +24,7 @@ import 'swiper/css/pagination';
 import Typography from '../atom/typography/Typography';
 import { getDaysAgo } from '../atom/button/getDaysAgo';
 import { LiaBedSolid } from "react-icons/lia";
+import { HiOutlineBuildingOffice } from 'react-icons/hi2';
 
 type Props = {
     item: AllProjectsItems;
@@ -94,7 +96,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                 </Typography> */}
 
                 {/* Price  */}
-                {(item.projectType === 'commercial-residential' || item.projectTitle === 'project-residential' || item.projectTitle === 'project-commercial') ? <p>
+                {(item.projectType === 'commercial-residential' || item.projectType === 'project-residential' || item.projectType === 'project-commercial') ? <p>
                     <span className='text-[17px] font-semibold'>Starting From</span>
                     <span className='font-poppins text-[24.75px] ms-2 sm:ms-1 font-semibold '>
                         {value}
@@ -151,16 +153,20 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
 
                         <div className="flex items-center gap-2">
                             {/* <p className="text-sm font-light font-poppins">{item.squareFeet} </p> */}
-                            <GoScreenFull
+                            {/* <GoScreenFull
                             color='#333'
                             className='w-[20px] h-[20px]'
+                            /> */}
+                            <HiOutlineBuildingOffice
+                              color='#333'
+                            className='w-[18px] h-[18px]'
                             />
                             
                             <Typography
                                 tag='p'
 
                                 className='text-[12px] font-light font-poppins'
-                                text={`${item.squareFeet || 0} sqft`}
+                                text={`${item.totalFloors || 0} floors`}
                             />
                         </div>
                     </div>

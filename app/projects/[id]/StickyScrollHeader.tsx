@@ -19,13 +19,14 @@ type Props = {
     value: string;
     title: string;
     projectId: string;
+    projectType:string;
 }
 
 interface UserData {
     _id: string;
     // Add more fields if needed
 }
-const StickyScrollHeader = ({ value, currency, title, projectId }: Props) => {
+const StickyScrollHeader = ({ value, currency, title, projectId,projectType }: Props) => {
     const [showHeader, setShowHeader] = useState(false);
 
     useEffect(() => {
@@ -128,7 +129,7 @@ const StickyScrollHeader = ({ value, currency, title, projectId }: Props) => {
                         <div className="flex flex-col items-start justify-start py-3">
                             <h3 className="text-[18px] font-medium font-poppins ">{title}</h3>
                             <h4 className='text-[18px] font-poppins  font-semibold'>
-                                <span className="text-[12px] font-semibold font-poppins">{currency}</span> {value}
+                                <span className="text-[12px] font-semibold font-poppins">{(projectType === 'commercial-residential' || projectType === 'project-residential' || projectType === 'project-commercial') &&   <span className='text-[17px] font-medium'>Starting From</span> } </span> {value}  <span className='text-[11.928px] sm:text-[12.75px] font-semibold mt-[4.5px] font-poppins '>{currency}</span>
                             </h4>
                         </div>
                         {/* <div className="flex gap-3 h-10">

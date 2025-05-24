@@ -1,5 +1,5 @@
 'use client'
-import { back_to_black_icon, share_black_icon, wishlist_black_icon } from '@/app/assets'
+import { back_to_black_icon, logoWebP, share_black_icon, wishlist_black_icon } from '@/app/assets'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React from 'react'
@@ -20,8 +20,8 @@ function MobileBreadcrumbNavigation({projectTitle}:{projectTitle:string}) {
         handleShare(title);
     }
   return (
-    <div className="flex px-5  sm:hidden py-3 h-[64px] w-full items-center justify-between">
-                <div onClick={()=> goBack() } className="bg-[#FFE7EC] p-2 w-fit rounded relative">
+    <div className="flex justify-between px-5  sm:hidden py-3 h-[64px] w-full items-center">
+                <div onClick={()=> goBack() } className=" p-0 w-fit rounded relative">
                     {/* <Image
                     src={back_to_black_icon}
                     width={17}
@@ -29,13 +29,24 @@ function MobileBreadcrumbNavigation({projectTitle}:{projectTitle:string}) {
                     className="object-contain"
                     alt="back to"
                     /> */}
-                    <IoChevronBackOutline color='#FF1645' size={20} />
+                    <IoChevronBackOutline color='black' size={22} />
                 </div>
 
-                <div className="flex gap-1 items-center">
+<div className="w-[120px]  ms-12 h-[30px] relative object-cover">
+
+                  <Image
+                    src={logoWebP}
+                    className="w-full h-full"
+                    alt="logo"
+                    fill
+                    
+                    />
+                    </div>
+
+                <div className="flex gap-1 items-center ">
 
 
-                <div className="px-[10px] bg-[#FFE7EC] p-2  w-fit rounded relative">
+                <div className="px-[10px] bg-transparent p-1  w-fit rounded relative">
                     {/* <Image
                     src={wishlist_black_icon}
                     width={20}
@@ -45,7 +56,7 @@ function MobileBreadcrumbNavigation({projectTitle}:{projectTitle:string}) {
                     /> */}
 
                     <GoHeart
-                    color='#FF1645'
+                    color='black'
                     size={19}
                     />
 
@@ -53,10 +64,10 @@ function MobileBreadcrumbNavigation({projectTitle}:{projectTitle:string}) {
 
                 <div
                 onClick={()=>handleShareFun(projectTitle)}
-                className=" w-fit rounded bg-[#FFE7EC] p-2 relative">
+                className=" w-fit rounded bg-transparent p-1 relative">
                   
                     <PiShareFat
-                    color='#FF1645'
+                    color='black'
                     size={20}
                     />
                 </div>

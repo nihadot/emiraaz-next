@@ -9,9 +9,12 @@ import React from 'react'
 function page() {
     return (
         <main>
-            <AboutHeader />
+    <Header/>
 
-            <section className='bg-black text-white'>
+      <div className="">
+        <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
+      </div>
+            <section className='bg-white text-black'>
 
                 <Container>
                     <h2 className=' font-poppins  font-medium text-[10px] sm:text-[12px] text-center py-[10px]'>About Us</h2>
@@ -28,12 +31,12 @@ We saw a gap in the market where buyers struggled to find reliable information, 
                     </SpaceWrapper>
 
 
-                    <div className='flex flex-col sm:flex-row gap-[38px] mt-4 sm:mt-[97px] items-center justify-between'>
+                    <div className='flex pb-10 flex-col sm:flex-row gap-[38px] mt-4 sm:mt-[97px] items-center justify-between'>
 
 
-                        <div className="h-[329px] sm:h-[450px] w-[346px] rounded-[9px] border-[4px]"></div>
+                        <div className="h-[329px] sm:h-[450px] w-[346px] border-[#DEDEDE] rounded-[9px] border-[4px]"></div>
                         <div className="flex-1">
-                            <h3 className=' font-poppins  font-medium text-[19.5px] pb-3 sm:text-[37.5px] text-start'>Meet the Founder – Ashiq Emiraaz</h3>
+                            <h3 className=' font-poppins  font-medium text-[19.5px] pb-3 sm:text-[37.5px] text-center'>Meet the Founder – Ashiq Emiraaz</h3>
 
                             <SpaceWrapper className=''>
                                 <Paragraph
@@ -65,7 +68,7 @@ function Paragraph({
     className?: string
 }) {
     return (
-        <p className={clsx('font-poppins font-normal text-[10.5px] sm:text-[12px] text-white', className)}>
+        <p className={clsx('font-poppins font-normal text-[10.5px] sm:text-[12px] text-black', className)}>
             {content}
         </p>
     )

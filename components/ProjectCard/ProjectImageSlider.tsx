@@ -42,7 +42,7 @@ function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
     const getProjectTypeLabel = (projectType: ProjectType): string => {
         switch (projectType) {
             case 'commercial-residential':
-                return 'Commercial & Residential';
+                return 'Residential & Commercial';
             case 'project-commercial':
                 return 'Commercial Project';
             case 'project-residential':
