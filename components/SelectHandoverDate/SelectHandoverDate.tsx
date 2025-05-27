@@ -67,7 +67,7 @@ const YearSelector = ({
   };
 
   return (
-    <div className={clsx("flex items-center h-[203px] gap-2 pt-[8.25px] rounded-[3px] border bg-white border-gray-200 flex-col w-[223px]",wrapperClassName)}>
+    <div className={clsx("flex items-center h-[203px] gap-2 pt-[8.25px] rounded-[3px] border shadow-md bg-white border-gray-200 flex-col w-[223px]",wrapperClassName)}>
       <p className="pb-2 font-poppins mt-1 md:mt-0 font-normal text-[12px]">Choose Year</p>
       <div className="flex gap-[18px] items-center justify-center">
         <FaCaretDown

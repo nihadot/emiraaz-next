@@ -590,7 +590,7 @@ export default function HomePage() {
 
 
                             {/* Done */}
-                            {propertyTypesCondition && <div className={clsx(`h-[50px]`, propertyTypesCondition ? 'w-[130px]' : 'flex-[8%]')}>
+                            {propertyTypesCondition && <div className={clsx(`h-[50px]`, propertyTypesCondition ? 'w-[150px]' : 'flex-[8%]')}>
 
                                 <SelectNew
                                     // clearSelection={clear}
@@ -772,7 +772,7 @@ export default function HomePage() {
                                                     <div className=" flex sm:hidden mt:mt-0">
                                                         <CustomSlider
                                                             images={shuffleArray(shuffledImages)}
-                                                            containerClassName="h-[95px] border border-[#DEDEDE] "
+                                                            containerClassName="!h-[95px] border border-[#DEDEDE] "
                                                         />
                                                     </div></>
                                             )}

@@ -8,6 +8,8 @@ import {
     location_icon,
     notes_icon,
 } from '@/app/assets';
+import { BsStars } from "react-icons/bs";
+
 // import { LiaBedSolid } from "react-icons/lia";
 import { GoScreenFull } from "react-icons/go";
 import { FaRegBuilding } from "react-icons/fa";
@@ -218,7 +220,8 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
 
 
                 <div className="flex items-center mt-[9px] rounded-[3.75px] bg-[#FFE7EC] gap-1 px-3  text-[#FF1645]">
-                    <Image src={christmas__icon_star} alt="authenticity icon" width={20} height={20} className="object-cover py-1" />
+                    {/* <Image src={christmas__icon_star} alt="authenticity icon" width={20} height={20} className="object-cover py-1" /> */}
+                   <BsStars size={20}/>
                     <div className="text-[12px] font-light bg-[#FFE7EC] text-ellipsis line-clamp-1 py-1">
                         This listing was newly introduced {getDaysAgo(item.createdAt)}
                     </div>

@@ -356,7 +356,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   }}
   animate={{
     width: isFullscreen ? "1000px" : "100%",
-    height: isFullscreen ? "600px" : "250px",
+    height: isFullscreen ? "620px" : "250px",
     top: isFullscreen ? "50%" : "auto",
     left: isFullscreen ? "50%" : "auto",
     transform: isFullscreen ? "translate(-50%, -50%)" : "none",
@@ -420,7 +420,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
             className={clsx(
               "w-[98%] px-[10px] flex justify-between absolute h-[15px] z-40 transition-opacity duration-300",
               showControls ? "opacity-100" : "opacity-0 pointer-events-none",
-              isFullscreen ? ' bottom-6' : 'bottom-3'
+              isFullscreen ? ' bottom-3' : 'bottom-3'
             )}
           >
             <div onClick={toggleMute} className="cursor-pointer">
@@ -442,13 +442,13 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
         </div>
 
         {/* Know More */}
-        {!isFullscreen && (
+        {/* {!isFullscreen && ( */}
           <Link href={`/projects/${projectSlug}`} className="bg-[#F5F5F5] h-[70px] flex justify-center items-center w-full">
             <button className="font-poppins text-[9px] w-[97px] h-[25px] flex justify-center items-center bg-[#333333] rounded-[3px] text-white font-medium">
               Know More
             </button>
           </Link>
-        )}
+        {/* )} */}
       </motion.div>
     </AnimatePresence>
   );

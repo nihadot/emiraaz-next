@@ -310,8 +310,8 @@ function Footer() {
 
                     <p className='flex gap-1 justify-center py-5 items-center'>
 
-                        <span className="text-[10.5px] font-poppins font-medium bg-black text-center text-white">Copyright ⓒ 2025 PropertySeller</span>
-                        <span className='hidden sm:flex text-[10.5px] font-poppins font-medium bg-black text-center text-white'>. All Rights Reserved</span> </p>
+                        <span className="text-[10.5px] font-poppins font-medium bg-black text-center text-white">Copyright ⓒ 2025 PropertySeller.</span>
+                        <span className='hidden sm:flex text-[10.5px] font-poppins font-medium bg-black text-center text-white'> All Rights Reserved</span> </p>
                 </Container>
 
             </footer>

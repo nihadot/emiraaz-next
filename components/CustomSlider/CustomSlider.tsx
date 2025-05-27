@@ -36,7 +36,7 @@ const CustomSliderComponent = ({
 
   return (
     <Link href={`/projects/${images[currentIndex].projectDetails?.slug}`} className={`relative flex w-full overflow-hidden ${containerClassName}`}>
-      <div className="relative h-[600px] w-full">
+      <div className="relative h-[95px] sm:h-[600px] w-full">
         <AnimatePresence>
           <motion.div
             key={currentIndex}
@@ -50,10 +50,17 @@ const CustomSliderComponent = ({
             className="absolute top-0 left-0 h-full w-full"
           >
             <Image
-              alt=""
+              alt={'ads image'}
+              fill
+              src={images[currentIndex]?.mobileImage?.secure_url || ''}
+              className={`object-cover sm:hidden ${imageClassName}`}
+            />
+
+             <Image
+              alt={'ads image'}
               fill
               src={images[currentIndex]?.desktopImage?.secure_url || ''}
-              className={`object-cover ${imageClassName}`}
+              className={`object-cover hidden sm:block ${imageClassName}`}
             />
           </motion.div>
         </AnimatePresence>
