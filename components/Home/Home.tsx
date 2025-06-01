@@ -716,7 +716,7 @@ export default function HomePage({ initialData }: { initialData: any }) {
                                 <SwitchSelector
                                     defaultValue={defaultCompletionType}
                                     onSelect={(e) => {
-                                        console.log(e, 'event value')
+                                         
 
                                         const url = new URL(window.location.href);
                                         if (e == 'all') {
@@ -818,12 +818,12 @@ export default function HomePage({ initialData }: { initialData: any }) {
                                     {
                                         value: "with-discount",
                                         label: "With Discount",
-                                        count: allCounts?.data?.discount.find(item => item?.discount === 'with-discount')?.count || 0,
+                                        count: allCounts?.data?.discount?.find(item => item?.discount === 'with-discount')?.count || 0,
                                     },
                                     {
                                         value: "without-discount",
                                         label: "Without Discount",
-                                        count: allCounts?.data?.discount.find(item => item?.discount === 'without-discount')?.count || 0,
+                                        count: allCounts?.data?.discount?.find(item => item?.discount === 'without-discount')?.count || 0,
 
                                     },]}
                                     onSelect={handleSelect.discount}
@@ -993,7 +993,6 @@ export default function HomePage({ initialData }: { initialData: any }) {
                 <MobileFilterOption
 
                     resultProjects={() => {
-                        console.log('first')
                         setAllProjects(projects?.data);
                     }}
                     setFiltersHandler={setFilters}

@@ -448,7 +448,7 @@ function Commercial() {
                                 <SwitchSelector
                                     defaultValue={defaultCompletionType}
                                     onSelect={(e) => {
-                                        console.log(e, 'event value')
+                                         
 
                                         const url = new URL(window.location.href);
                                         if (e == 'all') {
@@ -550,12 +550,12 @@ function Commercial() {
                                     {
                                         value: "with-discount",
                                         label: "With Discount",
-                                        count: allCounts?.data.discount.find(item => item?.discount === 'with-discount')?.count || 0,
+                                        count:  allCounts?.data?.discount?.find(item => item?.discount === 'with-discount')?.count || 0,
                                     },
                                     {
                                         value: "without-discount",
                                         label: "Without Discount",
-                                        count: allCounts?.data.discount.find(item => item?.discount === 'without-discount')?.count || 0,
+                                        count:  allCounts?.data?.discount?.find(item => item?.discount === 'without-discount')?.count || 0,
 
                                     },]}
                                     onSelect={handleSelect.discount}
@@ -600,7 +600,7 @@ function Commercial() {
                                     title='Offplan Projects :'
                                     items={[
                                         {
-                                            title:  filters.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
+                                            title:  filters?.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
                                              
                                         },
                                         {

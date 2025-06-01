@@ -51,63 +51,63 @@ function Land() {
     const [rangeCalculator, setRangeCalculator] = useState(false);
     const [areaRange, setShowAreaRange] = useState(false);
 
-   const [filters, setFilters] = useState<FiltersState>({
-           page: 1,
-           search: "",
-           cities: [],
-           developers: [],
-           facilities: [],
-           propertyTypeSecond: "all",
-           emirate: "",
-           completionType: "",
-           handoverDate: undefined,
-           paymentPlan: undefined,
-           furnishType: "",
-           discount: "",
-           projectTypeFirst: 'off-plan-land',
-           projectTypeLast: 'all',
-           bedAndBath: "",
-           minPrice: '',
-           maxPrice: '',
-           minSqft: "",
-           maxSqft: "",
-           beds: "",
-           bath: "",
-       });
+    const [filters, setFilters] = useState<FiltersState>({
+        page: 1,
+        search: "",
+        cities: [],
+        developers: [],
+        facilities: [],
+        propertyTypeSecond: "all",
+        emirate: "",
+        completionType: "",
+        handoverDate: undefined,
+        paymentPlan: undefined,
+        furnishType: "",
+        discount: "",
+        projectTypeFirst: 'off-plan-land',
+        projectTypeLast: 'all',
+        bedAndBath: "",
+        minPrice: '',
+        maxPrice: '',
+        minSqft: "",
+        maxSqft: "",
+        beds: "",
+        bath: "",
+    });
 
     // Event Handlers
     const handleChangeSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setFilters(prev => ({ ...prev, search: event.target.value }));
     }, []);
 
-     // Data fetching with memoized query params
-        const queryParams = useMemo(() => ({
-               limit: 20,
-               page: filters.page,
-               search: debouncedSearch,
-               cities: filters.cities,
-               developers: filters.developers,
-               facilities: filters.facilities,
-               propertyType: filters.propertyType,
-               completionType: filters.completionType,
-               paymentPlan: filters.paymentPlan,
-               year: filters.handoverDate?.year,
-               qtr: filters.handoverDate?.quarter,
-               discount: filters.discount,
-               projectTypeFirst: filters.projectTypeFirst,
-               projectTypeLast: filters.projectTypeLast,
-               furnishing: filters.furnishType,
-               emirate: filters.emirate,
-               maxPrice: filters.maxPrice,
-               minPrice: filters.minPrice,
-               minSqft: filters.minSqft,
-               maxSqft: filters.maxSqft,
-               beds: filters.beds,
-               bath: filters.bath,
-               productTypeOptionFirst: filters.productTypeOptionFirst,
-               productTypeOptionLast: filters.productTypeOptionLast,
-           }), [filters, debouncedSearch]);
-       
+    // Data fetching with memoized query params
+    const queryParams = useMemo(() => ({
+        limit: 20,
+        page: filters.page,
+        search: debouncedSearch,
+        cities: filters.cities,
+        developers: filters.developers,
+        facilities: filters.facilities,
+        propertyType: filters.propertyType,
+        completionType: filters.completionType,
+        paymentPlan: filters.paymentPlan,
+        year: filters.handoverDate?.year,
+        qtr: filters.handoverDate?.quarter,
+        discount: filters.discount,
+        projectTypeFirst: filters.projectTypeFirst,
+        projectTypeLast: filters.projectTypeLast,
+        furnishing: filters.furnishType,
+        emirate: filters.emirate,
+        maxPrice: filters.maxPrice,
+        minPrice: filters.minPrice,
+        minSqft: filters.minSqft,
+        maxSqft: filters.maxSqft,
+        beds: filters.beds,
+        bath: filters.bath,
+        productTypeOptionFirst: filters.productTypeOptionFirst,
+        productTypeOptionLast: filters.productTypeOptionLast,
+    }), [filters, debouncedSearch]);
+
 
     const { data: emiratesData } = useFetchAllEmirateNamesQuery();
     const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
@@ -143,28 +143,28 @@ function Land() {
     const deviceType = useDeviceType();
 
     const handleSelect = useMemo(() => ({
-           emirate: (option: any) => setFilters(prev => ({ ...prev, emirate: option?.value || '' })),
-           propertyType: (option: any) => setFilters(prev => ({ ...prev, propertyType: option?.value || '' })),
-           propertyTypeSecond: (option: any) => setFilters(prev => ({ ...prev, propertyTypeSecond: option })),
-           completionType: (option: any) => setFilters(prev => ({ ...prev, completionType: option })),
-           productTypeOptionFirst: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionFirst: option })),
-           projectTypeFirst: (option: any) => setFilters(prev => ({ ...prev, projectTypeFirst: option })),
-           projectTypeLast: (option: any) => setFilters(prev => ({ ...prev, projectTypeLast: option })),
-           productTypeOptionLast: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionLast: option })),
-           handoverDate: (data: any) => setFilters(prev => ({ ...prev, handoverDate: data })),
-           projectType: (option: any) => setFilters(prev => ({ ...prev, projectType: option })),
-           paymentPlan: (option: any) => setFilters(prev => ({ ...prev, paymentPlan: option?.value || '' })),
-           furnishType: (option: any) => setFilters(prev => ({ ...prev, furnishType: option?.value || '' })),
-           discount: (option: any) => setFilters(prev => ({ ...prev, discount: option?.value || '' })),
-           bedAndBath: (option: any) => setFilters(prev => ({ ...prev, bedAndBath: option?.value || '' })),
-           maxPrice: (option: any) => setFilters(prev => ({ ...prev, maxPrice: option || '' })),
-           minSqft: (option: any) => setFilters(prev => ({ ...prev, minSqft: option || '' })),
-           maxSqft: (option: any) => setFilters(prev => ({ ...prev, maxSqft: option || '' })),
-           minPrice: (option: any) => setFilters(prev => ({ ...prev, minPrice: option || '' })),
-           beds: (option: any) => setFilters(prev => ({ ...prev, beds: option || '' })),
-           bath: (option: any) => setFilters(prev => ({ ...prev, bath: option || '' })),
-       }), []);
-   
+        emirate: (option: any) => setFilters(prev => ({ ...prev, emirate: option?.value || '' })),
+        propertyType: (option: any) => setFilters(prev => ({ ...prev, propertyType: option?.value || '' })),
+        propertyTypeSecond: (option: any) => setFilters(prev => ({ ...prev, propertyTypeSecond: option })),
+        completionType: (option: any) => setFilters(prev => ({ ...prev, completionType: option })),
+        productTypeOptionFirst: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionFirst: option })),
+        projectTypeFirst: (option: any) => setFilters(prev => ({ ...prev, projectTypeFirst: option })),
+        projectTypeLast: (option: any) => setFilters(prev => ({ ...prev, projectTypeLast: option })),
+        productTypeOptionLast: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionLast: option })),
+        handoverDate: (data: any) => setFilters(prev => ({ ...prev, handoverDate: data })),
+        projectType: (option: any) => setFilters(prev => ({ ...prev, projectType: option })),
+        paymentPlan: (option: any) => setFilters(prev => ({ ...prev, paymentPlan: option?.value || '' })),
+        furnishType: (option: any) => setFilters(prev => ({ ...prev, furnishType: option?.value || '' })),
+        discount: (option: any) => setFilters(prev => ({ ...prev, discount: option?.value || '' })),
+        bedAndBath: (option: any) => setFilters(prev => ({ ...prev, bedAndBath: option?.value || '' })),
+        maxPrice: (option: any) => setFilters(prev => ({ ...prev, maxPrice: option || '' })),
+        minSqft: (option: any) => setFilters(prev => ({ ...prev, minSqft: option || '' })),
+        maxSqft: (option: any) => setFilters(prev => ({ ...prev, maxSqft: option || '' })),
+        minPrice: (option: any) => setFilters(prev => ({ ...prev, minPrice: option || '' })),
+        beds: (option: any) => setFilters(prev => ({ ...prev, beds: option || '' })),
+        bath: (option: any) => setFilters(prev => ({ ...prev, bath: option || '' })),
+    }), []);
+
 
 
 
@@ -175,7 +175,7 @@ function Land() {
         const toConvertedCitiesParams = cities?.split(',')
 
 
-       
+
         if (emirate) {
             setDefaultEmirate(emirate)
         }
@@ -183,7 +183,7 @@ function Land() {
             setDefaultCities(toConvertedCitiesParams)
         }
 
-        
+
     }, []);
 
     const handleChangeCities = useCallback((option: any[]) => {
@@ -211,13 +211,13 @@ function Land() {
         setFilterModel(prev => !prev);
     }, []);
 
-          const [allProjects, setAllProjects] = useState<AllProjectsItems[]>();
-    
-       useEffect(() => {
-            if (projects?.data) {
-                setAllProjects(projects?.data);
-            }
-        }, [projects]);
+    const [allProjects, setAllProjects] = useState<AllProjectsItems[]>();
+
+    useEffect(() => {
+        if (projects?.data) {
+            setAllProjects(projects?.data);
+        }
+    }, [projects]);
 
 
 
@@ -425,14 +425,7 @@ function Land() {
                                 options={propertyTypeSecond}
                             />
                             <button onClick={handleFilterModal} className="bg-red-600/10 rounded flex justify-center items-center  border-none w-[55px] lg:hidden h-full">
-                                {/* <Image
-                                                    src={filter_icon}
-                                                    className=" object-cover"
-                                                    alt="filter"
-                                                    width={18}
-                                                    height={18}
-            
-                                                /> */}
+
                                 <HiOutlineAdjustmentsHorizontal
                                     className="w-[22px] h-[22px]"
                                     color='red'
@@ -449,67 +442,67 @@ function Land() {
 
                 <Container>
                     <section className=" lg:flex gap-2 justify-between  mt-2  hidden">
-                     <div className="flex gap-2">
-                           <div className="h-[33px]">
+                        <div className="flex gap-2">
+                            <div className="h-[33px]">
 
-                            <ExpandableComponentDropdown
-                                isOpen={rangeCalculator}
-                                onToggle={() => setRangeCalculator(prev => !prev)}
-                                label="Price"
-                                isSelected={false}
-                                customCloseControl={<button className="text-xs text-red-600">X</button>}
-                            >
-                                <RangeCalculator
-                                    wrapperClassName=""
-                                    onDone={(minValue, maxValue) => {
-                                        handleSelect.maxPrice(maxValue);
-                                        handleSelect.minPrice(minValue);
+                                <ExpandableComponentDropdown
+                                    isOpen={rangeCalculator}
+                                    onToggle={() => setRangeCalculator(prev => !prev)}
+                                    label="Price"
+                                    isSelected={false}
+                                    customCloseControl={<button className="text-xs text-red-600">X</button>}
+                                >
+                                    <RangeCalculator
+                                        wrapperClassName=""
+                                        onDone={(minValue, maxValue) => {
+                                            handleSelect.maxPrice(maxValue);
+                                            handleSelect.minPrice(minValue);
+                                        }}
+                                        onClose={() => setRangeCalculator(prev => !prev)}
+
+                                    />
+                                </ExpandableComponentDropdown>
+
+                            </div>
+
+
+                            <div className=" w-[100px]  h-[33px]">
+
+                                <ExpandableComponentDropdown
+                                    isOpen={areaRange}
+                                    onToggle={() => setShowAreaRange(prev => !prev)}
+                                    label="Sqft"
+                                    isSelected={false}
+
+                                    onClear={() => {
+
                                     }}
-                                    onClose={() => setRangeCalculator(prev => !prev)}
+                                    customCloseControl={<button className="text-xs text-red-600">X</button>}
+                                >
+                                    <AreaRangeInput
+                                        onClose={() => setShowAreaRange(prev => !prev)}
+                                        onDone={(minValue, maxValue) => {
+                                            handleSelect.minSqft(minValue)
+                                            handleSelect.maxSqft(maxValue)
+                                        }}
 
-                                />
-                            </ExpandableComponentDropdown>
+                                    />
 
+                                </ExpandableComponentDropdown>
+
+                                <div className=""></div>
+
+                            </div>
                         </div>
 
 
-                        <div className=" w-[100px]  h-[33px]">
 
-                            <ExpandableComponentDropdown
-                                isOpen={areaRange}
-                                onToggle={() => setShowAreaRange(prev => !prev)}
-                                label="Sqft"
-                                isSelected={false}
-
-                                onClear={() => {
-
-                                }}
-                                customCloseControl={<button className="text-xs text-red-600">X</button>}
-                            >
-                                <AreaRangeInput
-                                    onClose={() => setShowAreaRange(prev => !prev)}
-                                    onDone={(minValue, maxValue) => {
-                                        handleSelect.minSqft(minValue)
-                                        handleSelect.maxSqft(maxValue)
-                                    }}
-
-                                />
-
-                            </ExpandableComponentDropdown>
-
-                            <div className=""></div>
-
+                        <div onClick={() => handleClear()} className="flex cursor-pointer max-w-[120px] h-[33px] items-center gap-2">
+                            <label className="text-[12px] cursor-pointer">Clear Filters</label>
+                            <div className="bg-black cursor-pointer w-[14px] rounded-full h-[14px] flex justify-center items-center">
+                                <IoCloseOutline size={12} color="white" />
+                            </div>
                         </div>
-                     </div>
-
-
-
-                          <div onClick={() => handleClear()} className="flex cursor-pointer max-w-[120px] h-[33px] items-center gap-2">
-                                                        <label className="text-[12px] cursor-pointer">Clear Filters</label>
-                                                        <div className="bg-black cursor-pointer w-[14px] rounded-full h-[14px] flex justify-center items-center">
-                                                            <IoCloseOutline size={12} color="white" />
-                                                        </div>
-                                                    </div>
 
                     </section>
                 </Container>
@@ -530,14 +523,14 @@ function Land() {
                     <div className="mb-4 flex gap-2">
                         <div className="w-full h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
 
-                              {/* Breadcrumbs navigation link */}
+                            {/* Breadcrumbs navigation link */}
                             <div className="flex justify-between flex-col md:flex-row flex-1 items-start md:items-center w-full py-3">
 
                                 <BreadcampNavigation
                                     title='Offplan Projects :'
                                     items={[
                                         {
-                                            title: filters.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
+                                            title: filters?.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
 
                                         },
                                         {
@@ -653,15 +646,15 @@ function Land() {
                 setEnquiryForm={setEnquiryForm}
             />
 
-              <MobileFilterOption
-            
-                            resultProjects={() => {
-                                setAllProjects(projects?.data);
-                            }}
-                            setFiltersHandler={setFilters}
-                            onClose={() => setFilterModel(false)}
-                            show={filterModel}
-                        />
+            <MobileFilterOption
+
+                resultProjects={() => {
+                    setAllProjects(projects?.data);
+                }}
+                setFiltersHandler={setFilters}
+                onClose={() => setFilterModel(false)}
+                show={filterModel}
+            />
 
 
         </main>

@@ -305,7 +305,6 @@ function Secondary() {
                                 search
                                 multiple
                                 onSelectMultiple={(e) => {
-                                    // console.log(e, 'event')
                                     const url = new URL(window.location.href);
 
                                     if (e) {
@@ -420,14 +419,7 @@ function Secondary() {
                                 options={propertyTypeSecond}
                             />
                             <button onClick={handleFilterModal} className="bg-red-600/10 rounded flex justify-center items-center  border-none w-[55px] lg:hidden h-full">
-                                {/* <Image
-                                                    src={filter_icon}
-                                                    className=" object-cover"
-                                                    alt="filter"
-                                                    width={18}
-                                                    height={18}
-            
-                                                /> */}
+                             
                                 <HiOutlineAdjustmentsHorizontal
                                     className="w-[22px] h-[22px]"
                                     color='red'
@@ -532,7 +524,7 @@ function Secondary() {
                                     title='Offplan Projects :'
                                     items={[
                                         {
-                                            title: filters.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
+                                            title: filters?.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
 
                                         },
                                         {
@@ -560,7 +552,7 @@ function Secondary() {
 
                             {/* projects */}
                             {projects ? (
-                                projects.data.map((item, index) => (
+                                projects?.data?.map((item, index) => (
                                     <React.Fragment key={index}>
                                         <ProjectCard
                                             navigateDetailsButton={true}

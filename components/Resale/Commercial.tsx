@@ -530,9 +530,7 @@ function Commercial() {
                                         reset={() => {
 
                                         }}
-                                        onChange={(year, quarter) => {
-
-                                        }}
+                                 
                                     />
                                 </ExpandableComponentDropdown>
 
@@ -597,7 +595,7 @@ function Commercial() {
                                     title='Offplan Projects :'
                                     items={[
                                         {
-                                            title: filters.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
+                                            title: filters?.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
 
                                         },
                                         {

@@ -400,7 +400,7 @@ function Residential() {
                                 onSelect={(e) => {
                                     const url = new URL(window.location.href);
                                     const searchParams = url.search;
-                                    console.log(e, 'Event Value')
+                                     
                                     handleSelect.projectTypeLast(e);
                                     let path = '/';
 
@@ -431,14 +431,7 @@ function Residential() {
                                 options={propertyTypeSecond}
                             />
                             <button onClick={handleFilterModal} className="bg-red-600/10 rounded flex justify-center items-center  border-none w-[55px] lg:hidden h-full">
-                                {/* <Image
-                                                    src={filter_icon}
-                                                    className=" object-cover"
-                                                    alt="filter"
-                                                    width={18}
-                                                    height={18}
-            
-                                                /> */}
+                             
                                 <HiOutlineAdjustmentsHorizontal
                                     className="w-[22px] h-[22px]"
                                     color='red'
@@ -624,7 +617,7 @@ function Residential() {
                                     title='Offplan Projects :'
                                     items={[
                                         {
-                                            title: filters.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
+                                            title: filters?.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
 
                                         },
                                         {

@@ -54,63 +54,63 @@ function OffplanProjects() {
     const [areaRange, setShowAreaRange] = useState(false);
     const [allProjects, setAllProjects] = useState<AllProjectsItems[]>();
 
-  const [filters, setFilters] = useState<FiltersState>({
-            page: 1,
-            search: "",
-            cities: [],
-            developers: [],
-            facilities: [],
-            propertyTypeSecond: "all",
-            emirate: "",
-            completionType: "",
-            handoverDate: undefined,
-            paymentPlan: undefined,
-            furnishType: "",
-            discount: "",
-            projectTypeFirst: 'off-plan-projects',
-            projectTypeLast: 'all',
-            bedAndBath: "",
-            minPrice: '',
-            maxPrice: '',
-            minSqft: "",
-            maxSqft: "",
-            beds: "",
-            bath: "",
-        });
+    const [filters, setFilters] = useState<FiltersState>({
+        page: 1,
+        search: "",
+        cities: [],
+        developers: [],
+        facilities: [],
+        propertyTypeSecond: "all",
+        emirate: "",
+        completionType: "",
+        handoverDate: undefined,
+        paymentPlan: undefined,
+        furnishType: "",
+        discount: "",
+        projectTypeFirst: 'off-plan-projects',
+        projectTypeLast: 'all',
+        bedAndBath: "",
+        minPrice: '',
+        maxPrice: '',
+        minSqft: "",
+        maxSqft: "",
+        beds: "",
+        bath: "",
+    });
 
     // Event Handlers
     const handleChangeSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setFilters(prev => ({ ...prev, search: event.target.value }));
     }, []);
 
-   // Data fetching with memoized query params
-         const queryParams = useMemo(() => ({
-             limit: 20,
-             page: filters.page,
-             search: debouncedSearch,
-             cities: filters.cities,
-             developers: filters.developers,
-             facilities: filters.facilities,
-             propertyType: filters.propertyType,
-             completionType: filters.completionType,
-             paymentPlan: filters.paymentPlan,
-             year: filters.handoverDate?.year,
-             qtr: filters.handoverDate?.quarter,
-             discount: filters.discount,
-             projectTypeFirst: filters.projectTypeFirst,
-             projectTypeLast: filters.projectTypeLast,
-             furnishing: filters.furnishType,
-             emirate: filters.emirate,
-             maxPrice: filters.maxPrice,
-             minPrice: filters.minPrice,
-             minSqft: filters.minSqft,
-             maxSqft: filters.maxSqft,
-             beds: filters.beds,
-             bath: filters.bath,
-             productTypeOptionFirst: filters.productTypeOptionFirst,
-             productTypeOptionLast: filters.productTypeOptionLast,
-         }), [filters, debouncedSearch]);
-     
+    // Data fetching with memoized query params
+    const queryParams = useMemo(() => ({
+        limit: 20,
+        page: filters.page,
+        search: debouncedSearch,
+        cities: filters.cities,
+        developers: filters.developers,
+        facilities: filters.facilities,
+        propertyType: filters.propertyType,
+        completionType: filters.completionType,
+        paymentPlan: filters.paymentPlan,
+        year: filters.handoverDate?.year,
+        qtr: filters.handoverDate?.quarter,
+        discount: filters.discount,
+        projectTypeFirst: filters.projectTypeFirst,
+        projectTypeLast: filters.projectTypeLast,
+        furnishing: filters.furnishType,
+        emirate: filters.emirate,
+        maxPrice: filters.maxPrice,
+        minPrice: filters.minPrice,
+        minSqft: filters.minSqft,
+        maxSqft: filters.maxSqft,
+        beds: filters.beds,
+        bath: filters.bath,
+        productTypeOptionFirst: filters.productTypeOptionFirst,
+        productTypeOptionLast: filters.productTypeOptionLast,
+    }), [filters, debouncedSearch]);
+
 
     const { data: emiratesData } = useFetchAllEmirateNamesQuery();
     const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
@@ -147,28 +147,28 @@ function OffplanProjects() {
     const deviceType = useDeviceType();
 
     const handleSelect = useMemo(() => ({
-             emirate: (option: any) => setFilters(prev => ({ ...prev, emirate: option?.value || '' })),
-             propertyType: (option: any) => setFilters(prev => ({ ...prev, propertyType: option?.value || '' })),
-             propertyTypeSecond: (option: any) => setFilters(prev => ({ ...prev, propertyTypeSecond: option })),
-             completionType: (option: any) => setFilters(prev => ({ ...prev, completionType: option })),
-             productTypeOptionFirst: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionFirst: option })),
-             projectTypeFirst: (option: any) => setFilters(prev => ({ ...prev, projectTypeFirst: option })),
-             projectTypeLast: (option: any) => setFilters(prev => ({ ...prev, projectTypeLast: option })),
-             productTypeOptionLast: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionLast: option })),
-             handoverDate: (data: any) => setFilters(prev => ({ ...prev, handoverDate: data })),
-             projectType: (option: any) => setFilters(prev => ({ ...prev, projectType: option })),
-             paymentPlan: (option: any) => setFilters(prev => ({ ...prev, paymentPlan: option?.value || '' })),
-             furnishType: (option: any) => setFilters(prev => ({ ...prev, furnishType: option?.value || '' })),
-             discount: (option: any) => setFilters(prev => ({ ...prev, discount: option?.value || '' })),
-             bedAndBath: (option: any) => setFilters(prev => ({ ...prev, bedAndBath: option?.value || '' })),
-             maxPrice: (option: any) => setFilters(prev => ({ ...prev, maxPrice: option || '' })),
-             minSqft: (option: any) => setFilters(prev => ({ ...prev, minSqft: option || '' })),
-             maxSqft: (option: any) => setFilters(prev => ({ ...prev, maxSqft: option || '' })),
-             minPrice: (option: any) => setFilters(prev => ({ ...prev, minPrice: option || '' })),
-             beds: (option: any) => setFilters(prev => ({ ...prev, beds: option || '' })),
-             bath: (option: any) => setFilters(prev => ({ ...prev, bath: option || '' })),
-         }), []);
-     
+        emirate: (option: any) => setFilters(prev => ({ ...prev, emirate: option?.value || '' })),
+        propertyType: (option: any) => setFilters(prev => ({ ...prev, propertyType: option?.value || '' })),
+        propertyTypeSecond: (option: any) => setFilters(prev => ({ ...prev, propertyTypeSecond: option })),
+        completionType: (option: any) => setFilters(prev => ({ ...prev, completionType: option })),
+        productTypeOptionFirst: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionFirst: option })),
+        projectTypeFirst: (option: any) => setFilters(prev => ({ ...prev, projectTypeFirst: option })),
+        projectTypeLast: (option: any) => setFilters(prev => ({ ...prev, projectTypeLast: option })),
+        productTypeOptionLast: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionLast: option })),
+        handoverDate: (data: any) => setFilters(prev => ({ ...prev, handoverDate: data })),
+        projectType: (option: any) => setFilters(prev => ({ ...prev, projectType: option })),
+        paymentPlan: (option: any) => setFilters(prev => ({ ...prev, paymentPlan: option?.value || '' })),
+        furnishType: (option: any) => setFilters(prev => ({ ...prev, furnishType: option?.value || '' })),
+        discount: (option: any) => setFilters(prev => ({ ...prev, discount: option?.value || '' })),
+        bedAndBath: (option: any) => setFilters(prev => ({ ...prev, bedAndBath: option?.value || '' })),
+        maxPrice: (option: any) => setFilters(prev => ({ ...prev, maxPrice: option || '' })),
+        minSqft: (option: any) => setFilters(prev => ({ ...prev, minSqft: option || '' })),
+        maxSqft: (option: any) => setFilters(prev => ({ ...prev, maxSqft: option || '' })),
+        minPrice: (option: any) => setFilters(prev => ({ ...prev, minPrice: option || '' })),
+        beds: (option: any) => setFilters(prev => ({ ...prev, beds: option || '' })),
+        bath: (option: any) => setFilters(prev => ({ ...prev, bath: option || '' })),
+    }), []);
+
 
 
     useEffect(() => {
@@ -443,34 +443,34 @@ function OffplanProjects() {
                             <SelectLatest
                                 label="Property Types"
                                 options={[{
-                                        value: "all",
-                                        label: "All",
-                                        count: 0,
+                                    value: "all",
+                                    label: "All",
+                                    count: 0,
 
-                                    }, {
-                                        value: "villa",
-                                        label: "Villa",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'villa')?.count || 0,
+                                }, {
+                                    value: "villa",
+                                    label: "Villa",
+                                    count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'villa')?.count || 0,
 
-                                    },
-                                    {
-                                        value: "apartment",
-                                        label: "Apartment",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'apartment')?.count || 0,
+                                },
+                                {
+                                    value: "apartment",
+                                    label: "Apartment",
+                                    count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'apartment')?.count || 0,
 
-                                    },
-                                    {
-                                        value: "penthouse",
-                                        label: "Penthouse",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'penthouse')?.count || 0,
+                                },
+                                {
+                                    value: "penthouse",
+                                    label: "Penthouse",
+                                    count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'penthouse')?.count || 0,
 
-                                    },
-                                    {
-                                        value: "townhouse",
-                                        label: "Townhouse",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'townhouse')?.count || 0,
+                                },
+                                {
+                                    value: "townhouse",
+                                    label: "Townhouse",
+                                    count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'townhouse')?.count || 0,
 
-                                    }]}
+                                }]}
                                 onSelect={(e) => {
                                     const url = new URL(window.location.href);
                                     if (e?.value) {
@@ -495,7 +495,7 @@ function OffplanProjects() {
                             <SwitchSelector
                                 defaultValue={defaultCompletionType}
                                 onSelect={(e) => {
-                                    console.log(e, 'event value')
+
 
                                     const url = new URL(window.location.href);
                                     if (e == 'all') {
@@ -554,19 +554,19 @@ function OffplanProjects() {
                                 clearSelection={clear}
                                 className="w-[200px]"
                                 label="Payment Plan"
-                               options={[{
-                                        value: "all",
-                                        label: "All",
-                                    }, {
-                                        value: "on-handover",
-                                        label: "On Handover",
-                                        count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'on-handover')?.count || 0,
-                                    },
-                                    {
-                                        value: "post-handover",
-                                        label: "Post Handover",
-                                        count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'post-handover')?.count || 0,
-                                    },]}
+                                options={[{
+                                    value: "all",
+                                    label: "All",
+                                }, {
+                                    value: "on-handover",
+                                    label: "On Handover",
+                                    count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'on-handover')?.count || 0,
+                                },
+                                {
+                                    value: "post-handover",
+                                    label: "Post Handover",
+                                    count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'post-handover')?.count || 0,
+                                },]}
                                 onSelect={handleSelect.paymentPlan}
                             />
                         </div>
@@ -592,20 +592,20 @@ function OffplanProjects() {
                                 className="w-[200px] "
                                 label="Discount"
                                 options={[{
-                                        value: "all",
-                                        label: "All",
-                                    },
-                                    {
-                                        value: "with-discount",
-                                        label: "With Discount",
-                                        count: allCounts?.data.discount.find(item => item?.discount === 'with-discount')?.count || 0,
-                                    },
-                                    {
-                                        value: "without-discount",
-                                        label: "Without Discount",
-                                        count: allCounts?.data.discount.find(item => item?.discount === 'without-discount')?.count || 0,
+                                    value: "all",
+                                    label: "All",
+                                },
+                                {
+                                    value: "with-discount",
+                                    label: "With Discount",
+                                    count: allCounts?.data?.discount?.find(item => item?.discount === 'with-discount')?.count || 0,
+                                },
+                                {
+                                    value: "without-discount",
+                                    label: "Without Discount",
+                                    count: allCounts?.data?.discount?.find(item => item?.discount === 'without-discount')?.count || 0,
 
-                                    },]}
+                                },]}
                                 onSelect={handleSelect.discount}
                             />
                         </div>
@@ -646,7 +646,7 @@ function OffplanProjects() {
                                     title='Offplan Projects :'
                                     items={[
                                         {
-                                            title: filters.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
+                                            title: filters?.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
 
                                         },
                                         {
