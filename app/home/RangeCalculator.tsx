@@ -1,6 +1,6 @@
 import { errorToast } from "@/components/Toast";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface PriceRangeInputProps {
   initialMin?: number;
@@ -22,7 +22,7 @@ const PriceRangeInput = ({
   reset,
   onChange,
   wrapperClassName,
-  clearButton = true,
+  clearButton,
   doneButton = true
 }: PriceRangeInputProps) => {
   const [minValue, setMinValue] = useState<number | ''>(initialMin || '');
@@ -67,8 +67,15 @@ const PriceRangeInput = ({
     return value === '' ? '' : value.toLocaleString();
   };
 
+  useEffect(()=>{
+    if(clearButton){
+      setMinValue('');
+      setMaxValue('');
+      onDone('', '');
+    }
+  },[clearButton])
   return (
-    <div className={clsx("flex rounded-[5px] sm:p-[11px] border bg-white border-gray-200 flex-col w-[223px]",wrapperClassName)}>
+    <div className={clsx("flex rounded-[3px] sm:p-[11px] border bg-white border-gray-200 flex-col w-[223px]",wrapperClassName)}>
       <p className="pb-2 font-poppins justify-start md:text-center font-medium sm:font-normal text-[14px] mt-3 sm:mt-0 sm:text-[12px]">Price(AED)</p>
       
       <div className="w-full flex gap-[4px]">
@@ -79,7 +86,7 @@ const PriceRangeInput = ({
               type="text"
               value={formatValue(minValue)}
               onChange={handleMinChange}
-              className=" text-black text-[14px] sm:text-[12px] h-[40px] sm:h-[29px] text-center px-3 border-[#DEDEDE] rounded-[5px] flex-1 placeholder:text-[12px] text-xl w-full border flex justify-center items-center focus:outline-none"
+              className=" text-black text-[14px] sm:text-[12px] h-[40px] sm:h-[29px] text-center px-3 border-[#DEDEDE] rounded-[3px] flex-1 placeholder:text-[12px] text-xl w-full border flex justify-center items-center focus:outline-none"
               placeholder="0"
             />
           </div>
@@ -92,7 +99,7 @@ const PriceRangeInput = ({
               type="text"
               value={formatValue(maxValue)}
               onChange={handleMaxChange}
-              className="text-black text-[14px] sm:text-[12px] h-[40px] sm:h-[29px] text-center px-3 border-[#DEDEDE] rounded-[5px] placeholder:text-[12px] text-xl w-full border flex justify-center items-center focus:outline-none"
+              className="text-black text-[14px] sm:text-[12px] h-[40px] sm:h-[29px] text-center px-3 border-[#DEDEDE] rounded-[3px] placeholder:text-[12px] text-xl w-full border flex justify-center items-center focus:outline-none"
               placeholder="Any"
             />
           </div>
@@ -102,13 +109,13 @@ const PriceRangeInput = ({
       { (clearButton || doneButton) &&  <div className="flex w-full mt-2 h-[29.25px] gap-[4px]">
        { clearButton &&  <button
           type="button"
-          className="border w-full font-normal font-poppins text-[10.5px] rounded-[5px] text-[#FF1645] border-[#FF1645]"
+          className="border w-full font-normal font-poppins text-[10.5px] rounded-[3px] text-[#FF1645] border-[#FF1645]"
           onClick={handleReset}
         >
           Reset
         </button>}
         { doneButton && <button
-          className="border w-full font-normal font-poppins text-[10.5px] rounded-[5px] bg-[#FF1645] text-white border-[#FF1645]"
+          className="border w-full font-normal font-poppins text-[10.5px] rounded-[3px] bg-[#FF1645] text-white border-[#FF1645]"
           onClick={handleDone}
         >
           Done

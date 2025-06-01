@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface BedBathSelectorProps {
   initialBeds?: number | 'Studio' | '6+' | '7+';
@@ -24,7 +24,7 @@ const BedBathSelector = ({
   onClose,
   reset,
   onChange,
-  clearButton = true,
+  clearButton,
   doneButton = true,
   wrapperClassName,
 
@@ -58,8 +58,16 @@ const BedBathSelector = ({
     onClose();
   };
 
+  useEffect(()=>{
+    if(clearButton){
+      setSelectedBeds('');
+      setSelectedBaths('');
+      onDone('', '');
+    }
+  },[clearButton])
+
   return (
-    <div className={clsx("flex rounded-[5px] border sm:p-[11.25px] bg-white border-gray-200 flex-col w-[223px]", wrapperClassName)}>
+    <div className={clsx("flex rounded-[3px] border sm:p-[11.25px] bg-white border-gray-200 flex-col w-[223px]", wrapperClassName)}>
       <p className=" font-poppins font-medium sm:font-normal pb-[7px] text-[14px] sm:text-[12px] mt-3">No of Beds</p>
 
       <div className="w-full">
@@ -70,7 +78,7 @@ const BedBathSelector = ({
               <button
                 key={bed.toString()}
                 onClick={() => handleBedSelect(bed)}
-                className={`py-[9px] sm:py-[6px] text-[12px]  font-poppins font-normal px-[14px] sm:px-[10px] w-fit rounded-[5px] border border-gray-300 text-center
+                className={`py-[9px] sm:py-[6px] text-[12px]  font-poppins font-normal px-[14px] sm:px-[10px] w-fit rounded-[3px] border border-gray-300 text-center
                   ${selectedBeds === bed ? 'bg-red-600/10 text-red-600   border-none' : 'text-gray-700'}`}
               >
                 {bed}
@@ -87,7 +95,7 @@ const BedBathSelector = ({
               <button
                 key={bath.toString()}
                 onClick={() => handleBathSelect(bath)}
-                className={`py-[9px] sm:py-[6px]  text-[12px] px-[14px] sm:px-[10px] rounded-[5px] border border-gray-300 w-fit font-poppins  font-normal text-center
+                className={`py-[9px] sm:py-[6px]  text-[12px] px-[14px] sm:px-[10px] rounded-[3px] border border-gray-300 w-fit font-poppins  font-normal text-center
                   ${selectedBaths === bath ? 'bg-red-600/10 text-red-600   border-none' : 'text-gray-700'}`}
               >
                 {bath}
@@ -100,13 +108,13 @@ const BedBathSelector = ({
       { (clearButton || doneButton) &&  <div className="flex w-full h-[29.25px] sm:px-3 gap-3">
        { clearButton &&  <button
           type="button"
-          className="border w-full font-normal font-poppins text-[10.5px] rounded-[5px] text-[#FF1645] border-[#FF1645]"
+          className="border w-full font-normal font-poppins text-[10.5px] rounded-[3px] text-[#FF1645] border-[#FF1645]"
           onClick={handleReset}
         >
           Reset
         </button>}
         { doneButton && <button
-          className="border w-full font-normal font-poppins text-[10.5px] rounded-[5px] bg-[#FF1645] text-white border-[#FF1645]"
+          className="border w-full font-normal font-poppins text-[10.5px] rounded-[3px] bg-[#FF1645] text-white border-[#FF1645]"
           onClick={handleDone}
         >
           Done

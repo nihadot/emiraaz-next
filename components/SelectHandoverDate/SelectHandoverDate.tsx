@@ -67,7 +67,7 @@ const YearSelector = ({
   };
 
   return (
-    <div className={clsx("flex items-center h-[203px] gap-2 pt-[8.25px] rounded-[3px] border shadow-md bg-white border-gray-200 flex-col w-[223px]",wrapperClassName)}>
+    <div className={clsx("flex items-center h-[203px] gap-2 pt-[8.25px] rounded-[3px] shadow-md bg-white outline-[#DEDEDE] flex-col w-[223px]",wrapperClassName)}>
       <p className="pb-2 font-poppins mt-1 md:mt-0 font-normal text-[12px]">Choose Year</p>
       <div className="flex gap-[18px] items-center justify-center">
         <FaCaretDown
@@ -92,7 +92,7 @@ const YearSelector = ({
           <div
             key={q}
             onClick={() => handleQuarterSelect(q)}
-            className={`flex-1 w-full sm:w-[42px] h-[42px] text-[13.5px] border border-gray-300 rounded-[5px] flex justify-center font-normal font-poppins items-center cursor-pointer 
+            className={`flex-1 w-full sm:w-[42px] h-[42px] text-[13.5px] border border-gray-300 rounded-[3px] flex justify-center font-normal font-poppins items-center cursor-pointer 
               ${selectedQuarter === q ? "bg-red-600/10 border-none text-red-600" : ""}`}
           >
             {q}
@@ -103,13 +103,13 @@ const YearSelector = ({
       { (clearButton || doneButton) &&  <div className="flex w-full h-[29.25px] sm:px-3 gap-3">
        { clearButton &&  <button
           type="button"
-          className="border w-full font-normal font-poppins text-[10.5px] rounded-[5px] text-[#FF1645] border-[#FF1645]"
+          className="border w-full font-normal font-poppins text-[10.5px] rounded-[3px] text-[#FF1645] border-[#FF1645]"
           onClick={handleReset}
         >
           Reset
         </button>}
         { doneButton && <button
-          className="border w-full font-normal font-poppins text-[10.5px] rounded-[5px] bg-[#FF1645] text-white border-[#FF1645]"
+          className="border w-full font-normal font-poppins text-[10.5px] rounded-[3px] bg-[#FF1645] text-white border-[#FF1645]"
           onClick={handleDone}
         >
           Done

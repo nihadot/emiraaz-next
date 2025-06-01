@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 
-interface PaginationProps {
+interface PaginationNewProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
   maxVisiblePages?: number; // e.g., 6
 }
 
-const Pagination: React.FC<PaginationProps> = ({
+const PaginationNew: React.FC<PaginationNewProps> = ({
   currentPage,
   totalPages,
   onPageChange,
@@ -59,4 +59,4 @@ const Pagination: React.FC<PaginationProps> = ({
   );
 };
 
-export default Pagination;
+export default PaginationNew;

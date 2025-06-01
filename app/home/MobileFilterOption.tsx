@@ -3,69 +3,42 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AiOutlineClose } from "react-icons/ai";
 import SectionDivider from '@/components/atom/SectionDivider/SectionDivider';
 import Container from '@/components/atom/Container/Container';
-import SelectNew from '@/components/SelectOption/SelectNew';
-import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
-import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
 import { CompletionTypes, propertyTypeFirst, PropertyTypes, propertyTypeSecond } from '@/data';
 import SwitchSelectorMobile from '@/components/SelectOption/SwitchSelectorMobile';
-import RoundIconButton from './RoundIconButton';
 import { SelectHandoverDate } from '@/components/SelectHandoverDate';
 import PriceRangeInput from './RangeCalculator';
 import BedBathSelector from './BedBathSelector';
-import { apartment_icon, penthouse_icon, townhouse_icon, villa_icon } from '../assets';
 import clsx from 'clsx';
-import SelectNewMultiple from '@/components/SelectOption/SelectNewMultiple';
 import { AllProjectsItems } from '@/redux/project/types';
+import SelectLatest from '@/components/SelectOption/SelectLatest';
+import { PiBuildingApartmentLight, PiBuildingOffice, PiBuildingOfficeLight } from "react-icons/pi";
+import { GiVillage } from "react-icons/gi";
+import { PiBuildingsLight } from "react-icons/pi";
+import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
+import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
+import { useFetchAllProjectsQuery } from '@/redux/project/projectApi';
+import { FiltersState } from '@/components/types';
 
 type Props = {
     show: boolean;
     onClose: () => void;
     handleFilterChanges?: (item: AllProjectsItems[]) => void;
     setFiltersHandler: (item: FiltersState) => void;
+    resultProjects: (item: AllProjectsItems[]) => void;
+    priceRange?: boolean;
+    bathroomsRange?: boolean;
+
 };
 
-
-type FiltersState = {
-    developers?: string[];
-    facilities?: string[];
-    propertyTypeSecond?: string;
-    emirate?: string;
-    handoverDate?: HandoverDate;
-    projectType?: string;
-    furnishType?: string;
-    bedAndBath?: string;
-    minSqft?: string;
-    maxSqft?: string;
-    beds?: string;
-    bath?: string;
-
-
-    page?: number,
-    limit?: number,
-    search?: string,
-    propertyType?: string[],
-    completionType?: string,
-    furnishing?: string,
-    cities?: string[],
-    projectTypeLast?: string
-    year?: number | '',
-    qtr?: string,
-    paymentPlan?: string,
-    discount?: string,
-    maxPrice?: string,
-    minPrice?: string,
-};
-
-type HandoverDate = {
-    year?: number | "";
-    quarter?: string | "";
-};
-
-/* eslint-disable @next/next/no-img-element */
-function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandler }: Props) {
+function MobileFilterOption({
+    show,
+    onClose,
+    setFiltersHandler,
+    resultProjects,
+    bathroomsRange,
+    priceRange,
+}: Props) {
     const [clear, setClear] = React.useState(false);
-   
-    const [propertyTypeSelected, setPropertyTypeSelected] = useState<{ label: string, value: string }>({ label: 'Apartment', value: 'apartment' });
 
 
     React.useEffect(() => {
@@ -81,7 +54,6 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
     }, [show]);
     const { data: emiratesData } = useFetchAllEmirateNamesQuery();
 
-    console.log("PropertyTypeSelected: ", propertyTypeSelected)
 
     const [filters, setFilters] = useState<FiltersState>({
         page: 1,
@@ -89,15 +61,15 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
         cities: [],
         developers: [],
         facilities: [],
-        propertyType: [],
-        propertyTypeSecond: undefined,
+        propertyTypeSecond: "all",
         emirate: "",
         completionType: "",
         handoverDate: undefined,
-        projectType: "",
         paymentPlan: undefined,
         furnishType: "",
         discount: "",
+        projectTypeFirst: 'all',
+        projectTypeLast: 'all',
         bedAndBath: "",
         minPrice: '',
         maxPrice: '',
@@ -124,11 +96,16 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
     const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
     const [rangeCalculator, setRangeCalculator] = useState(false);
 
+
     const handleSelect = useMemo(() => ({
         emirate: (option: any) => setFilters(prev => ({ ...prev, emirate: option?.value || '' })),
         propertyType: (option: any) => setFilters(prev => ({ ...prev, propertyType: option?.value || '' })),
         propertyTypeSecond: (option: any) => setFilters(prev => ({ ...prev, propertyTypeSecond: option })),
         completionType: (option: any) => setFilters(prev => ({ ...prev, completionType: option })),
+        productTypeOptionFirst: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionFirst: option })),
+        projectTypeFirst: (option: any) => setFilters(prev => ({ ...prev, projectTypeFirst: option })),
+        projectTypeLast: (option: any) => setFilters(prev => ({ ...prev, projectTypeLast: option })),
+        productTypeOptionLast: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionLast: option })),
         handoverDate: (data: any) => setFilters(prev => ({ ...prev, handoverDate: data })),
         projectType: (option: any) => setFilters(prev => ({ ...prev, projectType: option })),
         paymentPlan: (option: any) => setFilters(prev => ({ ...prev, paymentPlan: option?.value || '' })),
@@ -144,11 +121,13 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
     }), []);
 
 
+
+
     const cityOptions = useMemo(() => {
         const mappedOptions = cities?.data.map((item) => ({
             label: item.name,
             value: item.name,
-            count: 100,
+            count: item.count,
         })) || [];
 
         return [
@@ -168,51 +147,19 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
     const [showBedBath, setShowBedBath] = useState(false);
 
 
-       const handleClear = useCallback(() => {
-            setFilters({
-                page: 1,
-                search: "",
-                cities: [],
-                developers: [],
-                facilities: [],
-                propertyType: [],
-                propertyTypeSecond: undefined,
-                emirate: "",
-                completionType: "",
-                handoverDate: undefined,
-                projectType: '',
-                paymentPlan: undefined,
-                furnishType: "",
-                discount: "",
-                bedAndBath: '',
-                maxPrice: '',
-                minPrice: '',
-                maxSqft: '',
-                minSqft: '',
-                bath: '',
-                beds: ''
-                ,
-            });
-            setClear(true);
-            setTimeout(() => setClear(false), 100);
-        }, []);
-        
-    console.log('All Filters:',filters)
-
-
-    useEffect(()=>{
-     setFilters({
+    const handleClear = useCallback(() => {
+        setFilters({
             page: 1,
             search: "",
             cities: [],
             developers: [],
             facilities: [],
             propertyType: [],
-            propertyTypeSecond: "all",
+            propertyTypeSecond: undefined, // first one propert stage
             emirate: "",
             completionType: "",
             handoverDate: undefined,
-            projectType: '',
+            projectType: '', // last one propert types (offplan ....)
             paymentPlan: undefined,
             furnishType: "",
             discount: "",
@@ -225,13 +172,114 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
             beds: ''
             ,
         });
-    },[])
-       
-    const handleDone = ()=>{
+        setClear(true);
+        setTimeout(() => setClear(false), 100);
+    }, []);
+
+
+
+    useEffect(() => {
+        setFilters({
+            page: 1,
+            search: "",
+            cities: [],
+            developers: [],
+            facilities: [],
+            propertyType: [],
+            propertyTypeSecond: "all",
+            projectTypeFirst: "all",
+            projectTypeLast: "all",
+            emirate: "",
+            completionType: "",
+            handoverDate: undefined,
+            projectType: '', // last one propert types (offplan ....)
+            paymentPlan: undefined,
+            furnishType: "",
+            discount: "",
+            bedAndBath: '',
+            maxPrice: '',
+            minPrice: '',
+            maxSqft: '',
+            minSqft: '',
+            bath: '',
+            beds: ''
+            ,
+        });
+    }, [])
+
+    const [defaultEmirate, setDefaultEmirate] = useState<string>('');
+    const [defaultCities, setDefaultCities] = useState<any>('');
+
+
+    const handleDone = () => {
         setFiltersHandler(filters);
         onClose()
-      
+
+        if (projects?.data) {
+            resultProjects(projects?.data)
+        }
     }
+
+    // Data fetching with memoized query params
+    const queryParams = useMemo(() => ({
+        limit: 20,
+        page: filters.page,
+        cities: filters.cities,
+        developers: filters.developers,
+        facilities: filters.facilities,
+        propertyType: filters.propertyType,
+        completionType: filters.completionType,
+        paymentPlan: filters.paymentPlan,
+        year: filters.handoverDate?.year,
+        qtr: filters.handoverDate?.quarter,
+        discount: filters.discount,
+        projectTypeFirst: filters.projectType, // off plan or ....
+        projectTypeLast: filters.propertyTypeSecond, // 'residential' or 'commercial'
+        furnishing: filters.furnishType,
+        emirate: filters.emirate,
+        maxPrice: filters.maxPrice,
+        minPrice: filters.minPrice,
+        minSqft: filters.minSqft,
+        maxSqft: filters.maxSqft,
+        beds: filters.beds,
+        bath: filters.bath,
+        // productTypeOptionFirst: filters.productTypeOptionFirst,
+        // productTypeOptionLast: filters.productTypeOptionLast,
+    }), [filters]);
+
+
+    const { data: projects } = useFetchAllProjectsQuery(queryParams);
+
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        // const propertyType = urlParams.get('property-type');
+        const emirate = urlParams.get('emirate');
+        const cities = urlParams.get('cities');
+        const toConvertedCitiesParams = cities?.split(',')
+        // const completionType = urlParams.get('completion-type') ? urlParams.get('completion-type') : 'all';
+
+
+        // if (propertyType) {
+        //     setDefaultPropertyType(propertyType)
+        // }
+        if (emirate) {
+            setDefaultEmirate(emirate)
+        }
+        if (toConvertedCitiesParams) {
+            setDefaultCities(toConvertedCitiesParams)
+        }
+
+        // if (completionType) {
+        //     setDefaultCompletionType(completionType)
+        // }
+
+
+    }, []);
+
+    console.log(filters, 'filter')
+
+
     return (
         <AnimatePresence>
             {show && (
@@ -269,26 +317,61 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
 
                                 {/* Emirates */}
                                 <div className=" h-[40px] w-full">
-                                    <SelectNew
-                                        className="w-[200px]"
+                                    <SelectLatest
+                                        dropdownContainerClassName="!justify-center"
+                                        listContainerUlListContainerClassName="w-[200px]"
                                         search
+                                        defaultValue={emirateOptions?.find((item) => item?.label === defaultEmirate)}
                                         clearSelection={clear}
                                         label="Emirates"
                                         options={emirateOptions}
-                                        onSelect={handleSelect.emirate}
+                                        onSelect={(e) => {
+                                            const url = new URL(window.location.href);
+                                            if (e?.value) {
+                                                url.searchParams.set('emirate', e?.label ?? '');
+                                            } else {
+                                                url.searchParams.delete('emirate');
+                                            }
+                                            const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                            window.history.pushState({}, '', newUrl);
+                                            handleSelect.emirate(e)
+                                        }}
                                     />
                                 </div>
 
 
                                 {/* Cities */}
                                 <div className=" h-[40px] w-full">
-                                    <SelectNewMultiple
+                                    <SelectLatest
+                                        dropdownContainerClassName="!justify-center"
+
+                                        defaultValueMultiple={cityOptions?.filter((item) => defaultCities?.includes(item.label))}
                                         search
+                                        multiple
+                                        onSelectMultiple={(e) => {
+                                            const url = new URL(window.location.href);
+
+                                            if (e) {
+
+                                                if (e && e.length > 0) {
+
+                                                    url.searchParams.set('cities', e?.map((item) => item.label).join(','));
+                                                } else {
+                                                    url.searchParams.delete('cities');
+                                                }
+                                                const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                                window.history.pushState({}, '', newUrl);
+
+                                                handleChangeCities(e);
+
+                                            }
+
+
+                                        }}
                                         clearSelection={clear}
-                                        className="w-[220px] "
+                                        // listContainerClassName="w-[220px] sm:!left-0 !-left-14 "
                                         label="Cities"
                                         options={cityOptions}
-                                        onSelect={handleChangeCities}
                                     />
                                 </div>
 
@@ -297,17 +380,19 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
                                 <div className="flex gap-2 h-[45px]">
 
                                     <SwitchSelectorMobile
-                                    className='!grid-cols-3 '
+                                        clearSelection={clear}
+                                        className='!grid-cols-3 '
                                         onSelect={handleSelect.propertyTypeSecond}
-                                        defaultValue={filters.propertyTypeSecond}
+                                        defaultValue={propertyTypeSecond[0].value}
                                         options={propertyTypeSecond}
                                     />
                                 </div>
 
 
                                 {/* Property Type First */}
-                                <div className="h-[80px]">
+                                <div className="h-[120px]">
                                     <SwitchSelectorMobile
+                                        clearSelection={clear}
                                         onSelect={handleSelect.projectType}
                                         defaultValue={propertyTypeFirst[0].value}
                                         options={propertyTypeFirst}
@@ -320,35 +405,30 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
 
                                 <div className="flex justify-between ">
                                     <div className="flex flex-col gap-1 ">
+                                        <div
+                                            onClick={() => handleSelect.propertyType({ label: PropertyTypes[2].label, value: PropertyTypes[2].value })}
 
-                                        <RoundIconButton
-                                              onClick={() => handleSelect.propertyType({ label: PropertyTypes[2].label, value: PropertyTypes[2].value })}
-                                              className={clsx('rounded-full', filters?.propertyType?.includes(PropertyTypes[2].value) ? 'outline outline-black' : '')}
-                                               icon={
-                                                <div className=' relative w-[36px] p-1 h-[36px] '>
-                                                    <img alt='apartment' src={apartment_icon?.src} className='w-full h-full object-cover' />
-                                                </div>
-                                            }
-                                            size={58}
-                                        />
+                                            className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[2].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
+                                            <PiBuildingOfficeLight
+                                                size={30}
+                                                color={filters?.propertyType?.includes(PropertyTypes[2].value) ? 'red' : ''}
+                                            />
+                                        </div>
                                         <p className='text-[10px]  font-medium font-poppins text-center'>Apartment</p>
 
                                     </div>
 
 
-                                    <div className="flex flex-col gap-1">
-
-                                        <RoundIconButton
+                                    <div className="flex flex-col gap-1 ">
+                                        <div
                                             onClick={() => handleSelect.propertyType({ label: PropertyTypes[3].label, value: PropertyTypes[3].value })}
-                                            className={clsx('rounded-full', filters?.propertyType?.includes(PropertyTypes[3].value) ? 'outline outline-black' : '')}
 
-                                            icon={
-                                                <div className='relative w-[36px] p-1 h-[36px] '>
-                                                    <img alt='townhouse' src={penthouse_icon?.src} className='w-full h-full object-cover' />
-                                                </div>
-                                            }
-                                            size={58}
-                                        />
+                                            className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[3].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
+                                            <PiBuildingApartmentLight
+                                                size={30}
+                                                color={filters?.propertyType?.includes(PropertyTypes[3].value) ? 'red' : ''}
+                                            />
+                                        </div>
                                         <p className='text-[10px]  font-medium font-poppins text-center'>Penthouse</p>
 
                                     </div>
@@ -357,33 +437,30 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
 
                                     <div className="flex flex-col gap-1">
 
-                                        <RoundIconButton
-   onClick={() => handleSelect.propertyType({ label: PropertyTypes[4].label, value: PropertyTypes[4].value })}
-   className={clsx('rounded-full', filters?.propertyType?.includes(PropertyTypes[4].value) ? 'outline outline-black' : '')}
-   icon={
-                                                <div className='relative w-[36px] p-1 h-[36px] '>
-                                                    <img alt='townhouse' src={townhouse_icon?.src} className='w-full h-full object-cover' />
-                                                </div>
-                                            }
-                                            size={58}
-                                        />
+                                        <div
+                                            onClick={() => handleSelect.propertyType({ label: PropertyTypes[4].label, value: PropertyTypes[4].value })}
+
+                                            className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[4].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
+                                            <PiBuildingsLight
+                                                size={30}
+                                                color={filters?.propertyType?.includes(PropertyTypes[4].value) ? 'red' : ''}
+                                            />
+                                        </div>
                                         <p className='text-[10px]  font-medium font-poppins text-center'>Townhouse</p>
 
                                     </div>
 
                                     <div className="flex flex-col gap-1">
 
-                                        <RoundIconButton
+                                        <div
                                             onClick={() => handleSelect.propertyType({ label: PropertyTypes[1].label, value: PropertyTypes[1].value })}
-                                            className={clsx('rounded-full', filters?.propertyType?.includes(PropertyTypes[1].value) ? 'outline outline-black' : '')}
-                                            
-                                            icon={
-                                                <div className='relative w-[36px] p-1 h-[36px] '>
-                                                    <img alt='villa' src={villa_icon?.src} className='w-full h-full object-cover' />
-                                                </div>
-                                            }
-                                            size={58}
-                                        />
+
+                                            className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[1].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
+                                            <GiVillage
+                                                size={30}
+                                                color={filters?.propertyType?.includes(PropertyTypes[1].value) ? 'red' : ''}
+                                            />
+                                        </div>
                                         <p className='text-[10px]  font-medium font-poppins text-center'>Villa</p>
 
                                     </div>
@@ -400,6 +477,7 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
                                         defaultValue={CompletionTypes[0].value}
                                         onSelect={handleSelect.completionType}
                                         options={CompletionTypes}
+                                        clearSelection={clear}
                                     />
                                 </div>
 
@@ -409,19 +487,19 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
                                 <SelectHandoverDate
                                     clearButton={false}
                                     doneButton={false}
-                                    wrapperClassName='!w-full !h-fit !border-none'
+                                    wrapperClassName='!w-full !h-fit !border-none !shadow-none'
                                     initialYear={filters.handoverDate?.year ? filters.handoverDate?.year : 2025}
                                     initialQuarter={filters.handoverDate?.quarter ? filters.handoverDate?.quarter : "Q3"}
 
                                     onDone={(year, quarter) => {
                                         handleSelect.handoverDate({ quarter, year })
                                     }}
-                                // onClose={() => setShowYearSelector(false)}
-                                // reset={() => console.log("Reset triggered")}
-                                onChange={(year, quarter) => {
-                                    console.log('first')
-                                    handleSelect.handoverDate({ quarter, year })
-                                }}
+                                    // onClose={() => setShowYearSelector(false)}
+                                    // reset={() => console.log("Reset triggered")}
+                                    onChange={(year, quarter) => {
+                                        // console.log('first')
+                                        handleSelect.handoverDate({ quarter, year })
+                                    }}
                                 />
 
 
@@ -430,7 +508,7 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
                                 <label htmlFor="" className='font-medium font-poppins flex mt-2 text-[14px]'>Payment Plan</label>
                                 <div className="flex gap-[5px] h-[40px]">
                                     <button
-                                        className={`text-[12px] font-poppins font-normal text-[#333333] text-nowrap  h-full rounded px-2 sm:px-3 py-1 flex items-center justify-center w-full transition-all  duration-200 ${filters.paymentPlan === 'on-handover'
+                                        className={`text-[12px] font-poppins font-normal text-[#333333] text-nowrap  h-full rounded-[3px] px-2 sm:px-3 py-1 flex items-center justify-center w-full transition-all  duration-200 ${filters.paymentPlan === 'on-handover'
                                             ? 'bg-red-600/10 text-red-600'
                                             : 'bg-white border border-[#DEDEDE] text-black hover:text-red-600 hover:bg-red-100'
                                             }`}
@@ -444,7 +522,7 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
 
 
                                     <button
-                                        className={` text-[12px] font-poppins font-normal text-[#333333] text-nowrap  h-full rounded px-2 sm:px-3 py-1 flex items-center justify-center w-full transition-all  duration-200 ${filters.paymentPlan === 'post-handover'
+                                        className={` text-[12px] font-poppins font-normal text-[#333333] text-nowrap  h-full rounded-[3px] px-2 sm:px-3 py-1 flex items-center justify-center w-full transition-all  duration-200 ${filters.paymentPlan === 'post-handover'
                                             ? 'bg-red-600/10 text-red-600'
                                             : 'bg-white border border-[#DEDEDE] text-black hover:text-red-600 hover:bg-red-100'
                                             }`}
@@ -452,7 +530,7 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
                                             label: 'Post Handover',
                                             value: 'post-handover'
                                         })}
-                                  >
+                                    >
                                         Post Handover
                                     </button>
                                 </div>
@@ -460,9 +538,9 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
 
 
                                 {/* Price Range */}
-                                <div className="">
+                                {priceRange && <div className="">
                                     <PriceRangeInput
-                                        clearButton={false}
+                                        clearButton={clear}
                                         doneButton={false}
                                         wrapperClassName='!border-none !w-full'
                                         onDone={(minValue, maxValue) => {
@@ -476,16 +554,16 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
                                         onClose={() => setRangeCalculator(prev => !prev)}
 
                                     />
-                                </div>
+                                </div>}
                             </div>
 
 
 
 
                             {/* Bed And Bath Selector */}
-                            <div className="">
+                            {bathroomsRange && <div className="">
                                 <BedBathSelector
-                                    doneButton={false}
+                                    doneButton={clear}
                                     clearButton={false}
                                     wrapperClassName='!border-none !w-full '
                                     onDone={(beds, baths) => {
@@ -501,9 +579,10 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
                                         handleSelect.beds(beds);
 
                                     }}
+
                                     onClose={() => setShowBedBath(false)}
                                 />
-                            </div>
+                            </div>}
 
 
 
@@ -511,18 +590,18 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
                             <label htmlFor="" className='font-medium font-poppins flex mt-4 text-[14px]'>Furnish Type</label>
                             <div className="flex mt-2 gap-[5px] h-[40px]">
                                 <button
-                                    className={`text-[12px] font-poppins font-normal text-[#333333] text-nowrap  h-full rounded px-2 sm:px-3 py-1 flex items-center justify-center w-full transition-all  duration-200 ${filters.furnishType === 'fully-furnished'
+                                    className={`text-[12px] font-poppins font-normal text-[#333333] text-nowrap  h-full rounded-[3px] px-2 sm:px-3 py-1 flex items-center justify-center w-full transition-all  duration-200 ${filters.furnishType === 'fully-furnished'
                                         ? 'bg-red-600/10 text-red-600'
                                         : 'bg-white border border-[#DEDEDE] text-black hover:text-red-600 hover:bg-red-100'
                                         }`}
-                                    onClick={() => handleSelect.furnishType({label: 'Fully Furnished', value: 'fully-furnished' })}
+                                    onClick={() => handleSelect.furnishType({ label: 'Fully Furnished', value: 'fully-furnished' })}
                                 >
                                     Fully Furnished
                                 </button>
 
 
                                 <button
-                                    className={` text-[12px] font-poppins font-normal text-[#333333] text-nowrap  h-full rounded px-2 sm:px-3 py-1 flex items-center justify-center w-full transition-all  duration-200 ${filters.furnishType === 'semi-furnished'
+                                    className={` text-[12px] font-poppins font-normal text-[#333333] text-nowrap  h-full rounded-[3px] px-2 sm:px-3 py-1 flex items-center justify-center w-full transition-all  duration-200 ${filters.furnishType === 'semi-furnished'
                                         ? 'bg-red-600/10 text-red-600'
                                         : 'bg-white border border-[#DEDEDE] text-black hover:text-red-600 hover:bg-red-100'
                                         }`}
@@ -534,7 +613,7 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
 
 
                                 <button
-                                    className={` text-[12px] font-poppins font-normal text-[#333333] text-nowrap  h-full rounded px-2 sm:px-3 py-1 flex items-center justify-center w-full transition-all  duration-200 ${filters.furnishType === 'un-furnishing'
+                                    className={` text-[12px] font-poppins font-normal text-[#333333] text-nowrap  h-full rounded-[3px] px-2 sm:px-3 py-1 flex items-center justify-center w-full transition-all  duration-200 ${filters.furnishType === 'un-furnishing'
                                         ? 'bg-red-600/10 text-red-600'
                                         : 'bg-white border border-[#DEDEDE] text-black hover:text-red-600 hover:bg-red-100'
                                         }`}
@@ -552,7 +631,7 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
 
                             <div className="flex mt-2 gap-[5px] h-[40px]">
                                 <button
-                                    className={`text-[12px] font-poppins font-normal text-[#333333] text-nowrap  h-full rounded px-2 sm:px-3 py-1 flex items-center justify-center w-full transition-all  duration-200 ${filters?.discount === 'with-discount'
+                                    className={`text-[12px] font-poppins font-normal text-[#333333] text-nowrap  h-full rounded-[3px] px-2 sm:px-3 py-1 flex items-center justify-center w-full transition-all  duration-200 ${filters?.discount === 'with-discount'
                                         ? 'bg-red-600/10 text-red-600'
                                         : 'bg-white border border-[#DEDEDE] text-black hover:text-red-600 hover:bg-red-100'
                                         }`}
@@ -563,7 +642,7 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
 
 
                                 <button
-                                    className={` text-[12px] font-poppins font-normal text-[#333333] text-nowrap  h-full rounded px-2 sm:px-3 py-1 flex items-center justify-center w-full transition-all  duration-200 ${filters?.discount === 'without-discount'
+                                    className={` text-[12px] font-poppins font-normal text-[#333333] text-nowrap  h-full rounded-[3px] px-2 sm:px-3 py-1 flex items-center justify-center w-full transition-all  duration-200 ${filters?.discount === 'without-discount'
                                         ? 'bg-red-600/10 text-red-600'
                                         : 'bg-white border border-[#DEDEDE] text-black hover:text-red-600 hover:bg-red-100'
                                         }`}
@@ -588,24 +667,24 @@ function MobileFilterOption({ show, onClose,handleFilterChanges,setFiltersHandle
 
 
                         <div className="w-full h-[65px] border-[#DEDEDE] bg-white border-t rounded-t-[12px] shadow-2xs fixed bottom-0 left-0 right-0 z-[60]">
-                          <Container>
+                            <Container>
 
-                            <div className="flex w-full mt-[13px] h-[35px] gap-[5.25px]">
-                                <button
-                                    type="button"
-                                    className="border w-full font-medium font-poppins text-[10.5px] rounded-[5px] text-[#333333] border-[#DEDEDE]"
-                                  onClick={handleClear}
-                                >
-                                    Reset
-                                </button>
-                                <button
-                                    className="border w-full font-medium font-poppins text-[10.5px] rounded-[5px] bg-[#FF1645] text-white border-[#FF1645]"
-                                  onClick={handleDone}
-                                >
-                                    Show 122 Properties
-                                </button>
-                            </div>
-                          </Container>
+                                <div className="flex w-full mt-[13px] h-[35px] gap-[5.25px]">
+                                    <button
+                                        type="button"
+                                        className="border w-full font-medium font-poppins text-[10.5px] rounded-[3px] text-[#333333] border-[#DEDEDE]"
+                                        onClick={handleClear}
+                                    >
+                                        Reset
+                                    </button>
+                                    <button
+                                        className="border w-full font-medium font-poppins text-[10.5px] rounded-[3px] bg-[#FF1645] text-white border-[#FF1645]"
+                                        onClick={handleDone}
+                                    >
+                                        Show {projects?.data?.length ?? 0} Properties
+                                    </button>
+                                </div>
+                            </Container>
 
                         </div>
 

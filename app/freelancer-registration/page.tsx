@@ -46,7 +46,7 @@ const FreelancerRegisterPage = () => {
         setLoading(true)
         const response = await axios.get(`${baseUrl}/countries`)
         setNationalities(response.data?.data) // Assuming the response contains an array of nationalities
-        console.log(response.data?.data, 'response.data')
+        // console.log(response.data?.data, 'response.data')
         setLoading(false)
       } catch (error) {
         setLoading(false)
@@ -68,7 +68,7 @@ const FreelancerRegisterPage = () => {
 
       const response = await apiClient.post(`${baseUrl}/freelancers`, data);
       if (response.data.success) {
-        console.log(response, 'response')
+        // console.log(response, 'response')
         successToast("Freelancer registered successfully")
         router.push('/') // or any route you want
       } else {

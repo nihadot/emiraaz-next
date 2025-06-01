@@ -1,6 +1,6 @@
 "use client";
 
-import { drop_down_icon, logo, logo_footer_black, menu_icon, mobileAppIcon, propertySellerWhiteLogo, user_icon } from '@/app/assets';
+import { drop_down_icon, logo, logo_footer_black, menu_icon, mobileAppIcon, propertySellerWhiteLogo, ps_logo, user_icon } from '@/app/assets';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import NavMenu from './NavMenu';
@@ -29,7 +29,7 @@ function Header() {
     { name: 'Property Talks', link: '/talks' },
     { name: 'Rental Income', link: '/rental-income' },
     { name: 'Developers', link: '/developers' },
-    { name: 'Cities', link: '/cities' }
+    { name: 'Donations', link: '/donations' },
   ];
 
   const dispatch = useDispatch();
@@ -81,8 +81,9 @@ function Header() {
 
 
         {/* Logo */}
-        <div onClick={() => router.push("/")} className="w-[140px] cursor-pointer sm:w-[138.75px] ms-8 sm:ms-0 h-[50px] sm:h-[32.25px] relative ">
-          <Image src={logo_footer_black} alt='logo' fill className='bg-cover' />
+        <div onClick={() => router.push("/")} className="w-[140px] cursor-pointer sm:w-[138.75px] ms-7 sm:ms-0 h-[50px] sm:h-[32.25px] relative ">
+          {/* <Image src={logo_footer_black} alt='logo' fill className='bg-cover' /> */}
+          <Image src={ps_logo.src} alt="" width={140} height={50}  className='object-contain h-full  max-w-[200px] w-full' />
 
         </div>
         <PrimaryButton

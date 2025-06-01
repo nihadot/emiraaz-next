@@ -18,7 +18,7 @@ const SearchNew: React.FC<SearchInputProps> = ({
 }) => {
     return (
         <div
-            className={`flex flex-1   gap-3 h-full w-full text-[13px] items-center border rounded-[5px] px-3 py-3   border-[#DEDEDE] text-sm ${className}`}
+            className={`flex flex-1   gap-3 h-full w-full text-[13px] items-center outline rounded-[3px] px-3 py-3   outline-[#DEDEDE] text-sm ${className}`}
         >
             {/* <Image src={search_icon} alt='menu icon' width={17.25} className="object-cover" height={17.25} /> */}
             <FaSearch color="#FF1645" className="text-[11px] w-[17px] h-[17px]" />

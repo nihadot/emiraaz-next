@@ -1,14 +1,14 @@
 import React from 'react';
 import Image from 'next/image';
 import {
-    bath_icon,
-    bed_icon,
-    christmas__icon_star,
     details_icon,
     location_icon,
     notes_icon,
 } from '@/app/assets';
 import { BsStars } from "react-icons/bs";
+import { PiNotePencilThin } from "react-icons/pi";
+import { IoIosListBox } from "react-icons/io";
+import { RiFileList2Line } from "react-icons/ri";
 
 // import { LiaBedSolid } from "react-icons/lia";
 import { GoScreenFull } from "react-icons/go";
@@ -27,6 +27,7 @@ import Typography from '../atom/typography/Typography';
 import { getDaysAgo } from '../atom/button/getDaysAgo';
 import { LiaBedSolid } from "react-icons/lia";
 import { HiOutlineBuildingOffice } from 'react-icons/hi2';
+import { PiNotePencilLight } from "react-icons/pi";
 
 type Props = {
     item: AllProjectsItems;
@@ -236,7 +237,12 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                             type="button"
                             className="flex w-full sm:w-[106.5px] h-[35px] items-center gap-2 rounded border-none bg-[#FF1645]"
                         >
-                            <Image src={details_icon} alt="details icon" width={16.5} height={16.5} />
+                              <div className="relative w-[20px] h-[20px]">
+
+                        <RiFileList2Line size={20} color='white' />
+                        </div>
+
+                            {/* <Image src={details_icon} alt="details icon" width={16.5} height={16.5} /> */}
                             <span className="text-[14px] text-white">Details</span>
                         </PrimaryButton>
 
@@ -248,7 +254,10 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                         type="button"
                         className="flex w-full sm:w-[140.5px] h-[35px] items-center gap-2 rounded border-none bg-[#FF1645]"
                     >
-                        <Image src={notes_icon} alt="enquiry icon" width={16.5} height={16.5} />
+                        <div className="relative w-[20px] h-[20px]">
+
+                        <PiNotePencilLight size={20} color='white' />
+                        </div>
                         <span className="text-[14px] text-white text-nowrap">Enquire Now</span>
                     </PrimaryButton>
                 </div>

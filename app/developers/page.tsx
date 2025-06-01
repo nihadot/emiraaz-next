@@ -13,6 +13,7 @@ import Container from '@/components/atom/Container/Container'
 import PaginationNew from "@/components/PaginationNew/PaginationNew";
 import { useDeviceType } from '@/utils/useDeviceType'
 import SpaceWrapper from '@/components/atom/SpaceWrapper/SpaceWrapper'
+import { RxArrowTopRight } from "react-icons/rx";
 
 
 function Developers() {
@@ -57,7 +58,7 @@ function Developers() {
     }, [filters.search]);
 
     const queryParams = useMemo(() => ({
-        limit: 20,
+        limit: 21,
         page: filters.page,
         search: debouncedSearch,
         emirate: filters.emirate,
@@ -197,16 +198,18 @@ type CardProps = {
 
 function Card({ item }: CardProps) {
     return (
-        <div className='border flex-1 font-poppins h-[100px] w-full  rounded-md border-black/20 p-4'>
-            <div className="flex gap-2 w-full items-center">
-                <div className="flex overflow-hidden justify-center items-center w-[70px] border-[#DEDEDE] rounded-md h-[60px] gap-2 ">
-                    <Image src={item?.image?.secure_url || ''} alt="bed icon" width={100} height={100} className="object-cover flex justify-center items-center" />
+        <div className='border flex-1 font-poppins h-[115px] w-full  flex justify-center items-center rounded-[3px] border-[#DEDEDE] p-0'>
+            <div className="flex ms-3 gap-2 w-full items-center ">
+                <div className="flex overflow-hidden justify-center items-center border px-3 py-1 w-[100px] h-[80px] border-[#DEDEDE] rounded-[3px] ">
+                    <Image src={item?.image?.secure_url || ''} alt="bed icon" width={100} height={80} className="object-cover flex justify-center items-center" />
                 </div>
-                <div className="flex w-full  gap-2">
+                <div className="flex w-full items-center justify-start pe-4 gap-2">
 
-                    <p className='text-[18px] font-medium font-poppins'>{item.name}</p>
-                    <Image src={top_arrow_icon || ''} alt="bed icon" width={12} height={12} className="object-contain flex justify-center items-center" />
-
+                    <p className='text-[18px] line-clamp-2 font-medium font-poppins'>{item.name}</p>
+                    {/* <Image src={top_arrow_icon || ''} alt="bed icon" width={12} height={12} className="object-contain flex justify-center items-center" /> */}
+        <div className="w-4 h-4  ">
+             <RxArrowTopRight size={20} color='black' />
+        </div>
                 </div>
 
             </div>

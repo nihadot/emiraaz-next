@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseUrl, createBaseQueryWithReAuth } from '../../api';
 import { prepareAuthHeaders } from '../../api/authHeader';
-import { FetchAllCitiesResponse, FetchAllCityNamesResponse, FetchCityByIdPayload, FetchCityByIdResponse } from './types';
+import { FetchAllCitiesResponse, FetchAllCityAndCountResponse, FetchAllCityNamesResponse, FetchCityByIdPayload, FetchCityByIdResponse } from './types';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${baseUrl}/city/`,
@@ -23,29 +23,65 @@ const baseQueryWithReAuth = createBaseQueryWithReAuth(baseQuery, refreshTokenBas
 export const citiesApi = createApi({
   reducerPath: "citiesApi",
   baseQuery: baseQueryWithReAuth,
-  tagTypes: ["AllCities", "Cities", "City"],
+  tagTypes: ["AllCities", "Cities", "City", "AllCitiesWithCount"],
   endpoints: (builder) => ({
     fetchAllCityNames: builder.query<
-    FetchAllCityNamesResponse,
-    {
-      page?: number;
-      limit?: number;
-      search?: string;
-      sortBy?: string;
-      sortOrder?: string;
-      emirate?:string
-    }
-  >({
-    query: ({
-      emirate
-    }) => ({
-      url: `/names?emirate=${emirate}`,
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
+      FetchAllCityNamesResponse,
+      {
+        page?: number;
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        sortOrder?: string;
+        emirate?: string
+      }
+    >({
+      query: ({
+        emirate
+      }) => ({
+        url: `/names?emirate=${emirate}`,
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }),
+      providesTags: ["AllCities"],
     }),
-    providesTags: ["AllCities"],
-  }),
 
+    fetchAllCityWithDetailedCount: builder.query<
+      FetchAllCityAndCountResponse,
+      {
+        page?: number;
+        limit?: number;
+        search?: string;
+        sortBy?: string;
+        sortOrder?: string;
+        emirate?: string
+      }
+    >({
+      query: (params) => {
+        const {
+          page = 1,
+          limit = 20,
+          search = "",
+          ...restParams
+        } = params;
+
+        const queryParams = new URLSearchParams({
+          page: page.toString(),
+          limit: limit.toString(),
+          search,
+          ...Object.fromEntries(
+            Object.entries(restParams).filter(([_, v]) => v !== undefined && v !== "")
+          ),
+        });
+
+        return {
+          url: `/detailed/count/?${queryParams.toString()}`,
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        };
+      },
+      providesTags: ["AllCitiesWithCount"],
+    }),
     // fetchAllCities: builder.query<FetchAllCitiesResponse, {
     //   page?: number,
     //   limit?: number,
@@ -69,43 +105,43 @@ export const citiesApi = createApi({
     // }),
 
     fetchAllCities: builder.query<FetchAllCitiesResponse, {
-                  page?: number,
-                  limit?: number,
-                  search?: string,
-                  emirates?: string[],
-                }>({
-                  query: (params) => {
-                    const {
-                      page = 1,
-                      limit = 20,
-                      search = "",
-                      emirates,
-                      ...restParams
-                    } = params;
-            
-                    const queryParams = new URLSearchParams({
-                      page: page.toString(),
-                      limit: limit.toString(),
-                      search,
-                      ...Object.fromEntries(
-                        Object.entries(restParams).filter(
-                          ([_, v]) => v !== undefined && (typeof v !== "string" || v !== "")
-                        )                  ),
-                    });
-            
-                    if (emirates && emirates.length > 0) {
-                      emirates.forEach(city => queryParams.append("emirates", city));
-                    }
-            
-                    return {
-                      url: `/?${queryParams.toString()}`,
-                      method: "GET",
-                      headers: { "Content-Type": "application/json" },
-                    };
-                  },
-                  providesTags: ["AllCities"],
-                }),
-            
+      page?: number,
+      limit?: number,
+      search?: string,
+      emirates?: string[],
+    }>({
+      query: (params) => {
+        const {
+          page = 1,
+          limit = 20,
+          search = "",
+          emirates,
+          ...restParams
+        } = params;
+
+        const queryParams = new URLSearchParams({
+          page: page.toString(),
+          limit: limit.toString(),
+          search,
+          ...Object.fromEntries(
+            Object.entries(restParams).filter(
+              ([_, v]) => v !== undefined && (typeof v !== "string" || v !== "")
+            )),
+        });
+
+        if (emirates && emirates.length > 0) {
+          emirates.forEach(city => queryParams.append("emirates", city));
+        }
+
+        return {
+          url: `/?${queryParams.toString()}`,
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        };
+      },
+      providesTags: ["AllCities"],
+    }),
+
 
 
     fetchCityById: builder.query<FetchCityByIdResponse, FetchCityByIdPayload>({
@@ -121,7 +157,8 @@ export const citiesApi = createApi({
 
 export const {
   useFetchAllCityNamesQuery,
-    useFetchAllCitiesQuery,
+  useFetchAllCitiesQuery,
   useFetchCityByIdQuery,
+  useFetchAllCityWithDetailedCountQuery,
 
 } = citiesApi;

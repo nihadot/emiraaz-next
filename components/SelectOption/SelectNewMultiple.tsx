@@ -20,13 +20,50 @@ interface SelectOptionProps {
   search?: boolean;
   className?: string;
   clearSelection?: boolean;
+  defaultValue?: OptionType[];
 }
 
-function SelectNewMultiple({ className, options, search, onSelect, clearSelection, label = 'Select' }: SelectOptionProps) {
+function SelectNewMultiple({ 
+  className, 
+  options, 
+  search, 
+  onSelect, 
+  clearSelection, 
+  label = 'Select',
+  defaultValue = []
+}: SelectOptionProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<OptionType[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [hasInitialized, setHasInitialized] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  // Initialize with defaultValue on component mount - Fix 1: Remove onSelect from dependencies
+  // useEffect(() => {
+  //   if (!hasInitialized) {
+  //     if (defaultValue.length > 0) {
+  //       console.log('Initializing with defaultValue:', defaultValue);
+  //       setSelected(defaultValue);
+  //       onSelect(defaultValue);
+  //     }
+  //     setHasInitialized(true);
+  //   }
+  // }, [defaultValue, hasInitialized]); // Removed onSelect from dependencies
+
+  // Fix 2: Separate useEffect to handle defaultValue changes after initialization
+  // useEffect(() => {
+  //   if (hasInitialized && defaultValue.length > 0) {
+  //     // Only update if the defaultValue has actually changed
+  //     const hasChanged = defaultValue.length !== selected.length || 
+  //       !defaultValue.every(item => selected.some(sel => sel.value === item.value));
+      
+  //     if (hasChanged) {
+  //       console.log('Updating selected values:', defaultValue);
+  //       setSelected(defaultValue);
+  //       onSelect(defaultValue);
+  //     }
+  //   }
+  // }, [defaultValue, hasInitialized]); // Don't include selected or onSelect
 
   // Clear selection when clearSelection prop changes to true
   useEffect(() => {
@@ -36,7 +73,7 @@ function SelectNewMultiple({ className, options, search, onSelect, clearSelectio
       setIsOpen(false);
       setSearchTerm('');
     }
-  }, [clearSelection, onSelect]);
+  }, [clearSelection]); // Removed onSelect from dependencies
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
@@ -45,6 +82,15 @@ function SelectNewMultiple({ className, options, search, onSelect, clearSelectio
       setIsOpen(false);
     }
   };
+
+
+useEffect(() => {
+  if (!hasInitialized && defaultValue.length > 0) {
+    setSelected(defaultValue); // Single state update
+    onSelect(defaultValue);    // Single callback
+    setHasInitialized(true);
+  }
+}, [defaultValue, hasInitialized]);
 
   const handleSelect = (option: OptionType) => {
     let updatedSelected: OptionType[];
@@ -67,6 +113,7 @@ function SelectNewMultiple({ className, options, search, onSelect, clearSelectio
     setSearchTerm(e.target.value.toLowerCase());
   };
 
+  // to check if the search term is exist in options label
   const filteredOptions = options.filter((option) =>
     option.label.toLowerCase().includes(searchTerm)
   );
@@ -113,7 +160,6 @@ function SelectNewMultiple({ className, options, search, onSelect, clearSelectio
           transition={{ duration: 0.25 }}
         >
           <FaCaretDown className='w-[20px] h-[20px]' color='#FF1645' />
-
         </motion.div>
       </div>
 

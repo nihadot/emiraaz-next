@@ -87,7 +87,7 @@ const SellerRegisterPage = () => {
 
       const response = await apiClient.post(`${baseUrl}/sellers`, data);
       if (response.data.success) {
-        console.log(response, 'response')
+        // console.log(response, 'response')
         successToast("Seller registered successfully")
         router.push('/') // or any route you want
       } else {

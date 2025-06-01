@@ -33,6 +33,7 @@ export const projectApi = createApi({
       furnishing?: string,
       cities?: string[],
       projectTypeLast?: string
+      projectTypeFirst?: string,
       year?: number | '',
       qtr?: string,
       paymentPlan?: string,
@@ -45,7 +46,7 @@ export const projectApi = createApi({
       query: (params) => {
         const {
           page = 1,
-          limit = 20,
+          limit = 24,
           search = "",
           cities,
           ...restParams

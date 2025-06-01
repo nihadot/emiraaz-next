@@ -15,7 +15,15 @@ const nextConfig: NextConfig = {
 
   
   },
+
+  // reactStrictMode: false, // optional if causing too many re-renders
+  // turbo: true,
+  // typescript: {
+  //   ignoreBuildErrors: true, // in dev only!
+  // },
 };
+
+// tsc --noEmit --watch
 
 
 

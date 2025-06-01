@@ -88,7 +88,7 @@ const ExpandableComponentDropdown = forwardRef<ExpandableDropdownRef, Expandable
       <div
         ref={containerRef}
         onClick={toggleDropdown}
-        className='border py-3 rounded-[5px] px-3 gap-3 text-sm border-[#DEDEDE] cursor-pointer h-[50px] flex select-none relative'
+        className='py-3 rounded-[3px] px-3 gap-3 text-sm outline-[#DEDEDE] cursor-pointer outline h-full flex select-none relative'
       >
         <div className='flex w-full justify-between items-center'>
           <label className='text-[12px] font-poppins font-normal text-[#333333]'>{label}</label>

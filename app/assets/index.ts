@@ -48,7 +48,7 @@ export { default as app_store_icon } from "./app-store.svg";
 export { default as why_dubai_icon } from "./architecture-ancient-monument-world-heritage-day-celebration.webp";
 export { default as high_roi_icon } from "./high_roi_icon.svg";
 export { default as no_tax } from "./no-tax.svg";
-export { default as propertySellerWhiteLogo } from "./PropertysellerWhiteLogo.svg";
+export { default as propertySellerWhiteLogo } from "./PropertysellerBlackLogo.png";
 export { default as apartment_icon } from "./apartment.svg";
 export { default as penthouse_icon } from "./penthouse.svg";
 export { default as townhouse_icon } from "./townhouse.svg";
@@ -67,3 +67,4 @@ export { default as explore_icon } from "./explore.svg"
 export { default as propertySellerWhiteLogo_icon } from "./PropertysellerWhiteLogo.svg"
 export {default as logoWebP} from "./logo.webp"
 export {default as mobileAppIcon} from "./mobile-menu-app-icon.png"
+export {default as ps_logo} from "./PropertysellerBlackLogo-new.png"

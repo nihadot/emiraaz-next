@@ -12,10 +12,72 @@ const poppins = Poppins({
   weight: ["300", "400", "500", "600", "700"],
 });
 
+
 export const metadata: Metadata = {
-  title: "PropertySeller",
-  description: "Property Seller",
+  title: "Propertyseller UAE | Apartments, Villas, Townhouses, Penthouses",
+  description: "PropertySeller is your partner for the latest off-plan projects and new developments across the UAE. If you're a investor or homebuyer all in one place with reliable and hassle-free.",
+ keywords: [
+    "New Developments",
+    "Off Plan",
+    "New Developments in Dubai",
+    "Off Plan Projects",
+    "Offplan Projects",
+    "Off Plan in Dubai",
+    "Buy Apartments in Dubai",
+    "Buy Villas in Dubai",
+    "Buy Townhouses in Dubai",
+    "Sale Apartments in Dubai",
+    "Sale Villas in Dubai",
+    "Sale Townhouses in Dubai",
+    "Tanami Properties",
+    "Properties in Dubai",
+    "Rent Properties in Dubai",
+    "Rent in Dubai",
+    "New Off Plan Project",
+    "Upcoming Off Plan Properties",
+    "New Launch Off-Plan Properties",
+    "Dubai Properties Projects",
+    "Dubai Real Estate",
+    "Real Estate Projects in Dubai",
+    "Real Estate Projects in UAE",
+    "Tanami Real Estate",
+    "Real Estate Information",
+    "Dubai Developers",
+    "Dubai Communities",
+    "New Launches",
+    "Under Constructions",
+    "Ready to Move",
+    "Apartment",
+    "Villa",
+    "Townhouses"
+  ],  openGraph: {
+    title: "Propertyseller UAE | Apartments, Villas, Townhouses, Penthouses",
+    description: "PropertySeller is your partner for the latest off-plan projects and new developments across the UAE. If you're a investor or homebuyer all in one place with reliable and hassle-free.",
+    url: "https://www.propertyseller.com/",
+    siteName: "Property Seller",
+    images: [
+      {
+        url: "https://www.propertyseller.com/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Dubai Property - Property Seller",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Propertyseller UAE | Apartments, Villas, Townhouses, Penthouses",
+    description: "Explore premium off-plan properties and apartments for sale in Dubai.",
+    images: ["https://www.propertyseller.com/og-image.jpg"],
+    site: "@PropertySeller",
+  },
+  alternates: {
+    canonical: "https://www.propertyseller.com/",
+  },
 };
+
 
 export default function RootLayout({
   children,
@@ -25,6 +87,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="">
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <Script
           id="gtm-init"
           strategy="afterInteractive"
