@@ -341,14 +341,10 @@ export default function HomePage({ initialData }: { initialData: any }) {
 
 
     const [allProjects, setAllProjects] = useState<AllProjectsItems[]>();
-    const propertyTypesCondition = !((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'commercial') || (filters.projectType === 'off-plan-projects' && filters.propertyTypeSecond === 'commercial'));
-    const bedAndBathCondition = ((filters.projectType === 'off-plan-secondary' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-resale' && filters.propertyTypeSecond === 'residential'))
-    const furnishTypesCondition = (!((filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'residential') || (filters.projectType === 'off-plan-land' && filters.propertyTypeSecond === 'commercial')))
+    const propertyTypesCondition = !((filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'residential') || (filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'commercial') || (filters?.projectType === 'off-plan-secondary' && filters?.propertyTypeSecond === 'commercial') || (filters?.projectType === 'off-plan-resale' && filters?.propertyTypeSecond === 'commercial') || (filters?.projectType === 'off-plan-projects' && filters?.propertyTypeSecond === 'commercial'));
+    const furnishTypesCondition = (!((filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'residential') || (filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'commercial')))
 
-    const handleFilterChanges = (item: AllProjectsItems[]) => {
-        setAllProjects(item);
-    }
-
+  
     useEffect(() => {
         if (projects?.data) {
             setAllProjects(projects?.data);
@@ -356,12 +352,10 @@ export default function HomePage({ initialData }: { initialData: any }) {
     }, [projects]);
 
 
-    const [currentPage, setCurrentPage] = useState(1); // Let's say 2 is active
 
     const [defaultEmirate, setDefaultEmirate] = useState<string>('');
     const [defaultCities, setDefaultCities] = useState<any>('');
     const [defaultPropertyType, setDefaultPropertyType] = useState<string>('');
-    const [defaultPropertyTypeStatus, setDefaultPropertyTypeStatus] = useState<boolean>(false);
     const [defaultProjectStage, setDefaultProjectStage] = useState<string>('');
     const [defaultCompletionType, setDefaultCompletionType] = useState<string>('');
 
@@ -408,9 +402,6 @@ export default function HomePage({ initialData }: { initialData: any }) {
         )
     }
 
-    {
-        console.log(allProjects, 'sss')
-    }
     return (
 
         <>
@@ -679,25 +670,25 @@ export default function HomePage({ initialData }: { initialData: any }) {
                                     }, {
                                         value: "villa",
                                         label: "Villa",
-                                        count: allCounts?.data.propertyTypes.find(item => item?.propertyType === 'villa')?.count || 0,
+                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'villa')?.count || 0,
 
                                     },
                                     {
                                         value: "apartment",
                                         label: "Apartment",
-                                        count: allCounts?.data.propertyTypes.find(item => item?.propertyType === 'apartment')?.count || 0,
+                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'apartment')?.count || 0,
 
                                     },
                                     {
                                         value: "penthouse",
                                         label: "Penthouse",
-                                        count: allCounts?.data.propertyTypes.find(item => item?.propertyType === 'penthouse')?.count || 0,
+                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'penthouse')?.count || 0,
 
                                     },
                                     {
                                         value: "townhouse",
                                         label: "Townhouse",
-                                        count: allCounts?.data.propertyTypes.find(item => item?.propertyType === 'townhouse')?.count || 0,
+                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'townhouse')?.count || 0,
 
                                     }]}
                                     onSelect={(e) => {
@@ -827,12 +818,12 @@ export default function HomePage({ initialData }: { initialData: any }) {
                                     {
                                         value: "with-discount",
                                         label: "With Discount",
-                                        count: allCounts?.data.discount.find(item => item?.discount === 'with-discount')?.count || 0,
+                                        count: allCounts?.data?.discount.find(item => item?.discount === 'with-discount')?.count || 0,
                                     },
                                     {
                                         value: "without-discount",
                                         label: "Without Discount",
-                                        count: allCounts?.data.discount.find(item => item?.discount === 'without-discount')?.count || 0,
+                                        count: allCounts?.data?.discount.find(item => item?.discount === 'without-discount')?.count || 0,
 
                                     },]}
                                     onSelect={handleSelect.discount}
