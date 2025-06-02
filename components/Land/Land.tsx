@@ -34,6 +34,7 @@ import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import MobileFilterOption from '@/app/home/MobileFilterOption';
 import { FiltersState } from '../types';
 import { useForceScrollRestore } from '@/hooks/useScrollRestoration';
+import { parsePrice } from '@/utils/parsePrice';
 
 
 function Land() {

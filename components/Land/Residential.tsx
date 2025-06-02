@@ -34,6 +34,7 @@ import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal';
 import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import { FiltersState } from '../types';
 import { useForceScrollRestore } from '@/hooks/useScrollRestoration';
+import { parsePrice } from '@/utils/parsePrice';
 
 
 
