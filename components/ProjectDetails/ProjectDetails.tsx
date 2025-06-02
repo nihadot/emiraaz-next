@@ -53,7 +53,7 @@ import SidePanel from './SidePanel';
 import { IoMdClose } from 'react-icons/io';
 import { GoHeart, GoHeartFill } from 'react-icons/go';
 import { handleShare } from '@/utils/shareOption';
-import { PiNotePencil, PiShareFat } from 'react-icons/pi';
+import { PiNotePencil, PiNotePencilLight, PiShareFat } from 'react-icons/pi';
 import { parsePrice } from '@/utils/parsePrice';
 import ModalForm from '../EnquiryForm/ModalForm';
 import RegistrationSuccess from '../EnquiryForm/RegistrationSuccess';
@@ -63,6 +63,7 @@ import MapContainer from './MapContainer';
 import MobileBreadcrumbNavigation from './MobileBreadcrumbNavigation';
 import StickyScrollHeader from './StickyScrollHeader';
 import Header from '../Header';
+import { TfiLocationPin } from 'react-icons/tfi';
 
 
 interface UserData {
@@ -456,7 +457,7 @@ function ProjectDetails({ id }: { id: string }) {
                   handleGalleryModal()
                   handleGallerySelect('map')
                 }} className="absolute hidden sm:flex bottom-[24.75px] left-[24.75px] items-center gap-2 p-2 rounded-[3.75px] z-40 bg-black/[77%]">
-                  <IoLocationOutline size={17.25} color="white" />
+                     <TfiLocationPin size={20} color='#333333' />
                   <span className="text-white font-poppins text-[12px] font-normal">Map</span>
                 </div>
               </div>
@@ -483,6 +484,7 @@ function ProjectDetails({ id }: { id: string }) {
                 baths={data?.data?.numberOfBath || ''}
                 currency={currency}
                 value={value}
+                totalFloors={data?.data?.totalFloors || ''}
                 squareFeet={data?.data?.squareFeet || ''}
               />
 
@@ -710,7 +712,11 @@ function ProjectDetails({ id }: { id: string }) {
 
                 >
                   <div className="flex items-center gap-2">
-                    <Image src={enquiry_icon} alt="share icon" width={21} />
+                        <div className="relative w-[20px] h-[20px]">
+                    
+                                            <PiNotePencilLight size={20} color='white' />
+                                            </div>
+                    {/* <Image src={enquiry_icon} alt="share icon" width={21} /> */}
                     <label className="text-sm font-medium text-white font-poppins">Enquire Now </label>
                   </div>
                 </PrimaryButton>
@@ -749,10 +755,10 @@ function ProjectDetails({ id }: { id: string }) {
 
 
 
-        <NewModal
+      <NewModal
           onClose={handleGalleryModal}
           isOpen={galleryModal}
-          contentClassName="flex  rounded-[6px] max-w-[1200px]  flex-col bg-white p-0 w-full h-screen "
+          contentClassName="flex  rounded-[6px] max-w-[1200px]  flex-col bg-white p-0 w-full h-screen  sm:max-h-fit"
 
         >
 

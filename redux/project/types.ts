@@ -92,6 +92,12 @@ export type AllNamesViewByIdResponse = {
   success: boolean;
   data: { projectTitle: string; _id: string }[];
 }
+
+
+export type AllProjectCountResponse = {
+  success: boolean;
+  data:ProjectCountItem[];
+}
 type Pagination = {
   currentPage: number;
   perPage: number;
@@ -110,3 +116,12 @@ export type ViewProjectResponse = {
   data: AllProjectsItems[];
   pagination: Pagination;
 }
+
+
+type ProjectCountItem = {
+  _id: string;
+  count: number;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+  __v: number;
+};

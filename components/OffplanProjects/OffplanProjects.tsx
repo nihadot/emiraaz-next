@@ -1,7 +1,8 @@
+'use client'
 import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
 import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
 import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi';
-import { useFetchAllProjectsQuery } from '@/redux/project/projectApi';
+import { useFetchAllProjectsCountQuery, useFetchAllProjectsQuery } from '@/redux/project/projectApi';
 import { AllProjectsItems } from '@/redux/project/types';
 import { shuffle } from '@/utils/shuffle';
 import { useDeviceType } from '@/utils/useDeviceType';
@@ -11,7 +12,7 @@ import Header from '../Header';
 import Container from '../atom/Container/Container';
 import SearchNew from '../SearchField/SearchNew';
 import SelectLatest from '../SelectOption/SelectLatest';
-import { CompletionTypes, DiscountType, FurnishTypes, PaymentPlan, productTypeOptionFirstItems, PropertyTypes, propertyTypeSecond } from '@/data';
+import { CompletionTypes, FurnishTypes, productTypeOptionFirstItems, PropertyTypes, propertyTypeSecond } from '@/data';
 import { SwitchSelector } from '../SelectOption';
 import { HiOutlineAdjustmentsHorizontal } from 'react-icons/hi2';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
@@ -35,9 +36,11 @@ import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import MobileFilterOption from '@/app/home/MobileFilterOption';
 import { FiltersState } from '../types';
 import { useViewAllCountsQuery } from '@/redux/news/newsApi';
+import { useForceScrollRestore } from '@/hooks/useScrollRestoration';
 
 function OffplanProjects() {
 
+    useForceScrollRestore(); // Default key is "scroll-position"
 
     const router = useRouter()
     const pathname = usePathname();
@@ -114,7 +117,7 @@ function OffplanProjects() {
 
     const { data: emiratesData } = useFetchAllEmirateNamesQuery();
     const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
-    const { data: projects } = useFetchAllProjectsQuery(queryParams);
+    const { data: projects } = useFetchAllProjectsQuery({ ...queryParams });
     const { data: allCounts } = useViewAllCountsQuery();
 
 
@@ -212,6 +215,7 @@ function OffplanProjects() {
 
         return () => clearTimeout(handler);
     }, [filters.search]);
+    const { data: allProjectsCounts } = useFetchAllProjectsCountQuery();
 
 
     const handleFilterModal = useCallback(() => {
@@ -253,6 +257,15 @@ function OffplanProjects() {
     const shuffledImages = useMemo(() => shuffle(banners), [banners]);
 
 
+       useEffect(() => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const page = urlParams.get('page');
+    
+            if (page) {
+                setFilters(prev => ({ ...prev, page: parseInt(page) }))
+            }
+        }, [filters.page]);
+    
 
     const shuffleArray = (arr: any[]) => {
         const copy = [...arr];
@@ -354,11 +367,9 @@ function OffplanProjects() {
                                     }
 
                                     switch (e) {
-                                        case 'all':
-                                            path = '/';
-                                            break;
+                                    
                                         case 'off-plan-resale':
-                                            path = '/off-plan-resale';
+                                            path = '/';
                                             break;
                                         case 'off-plan-secondary':
                                             path = '/secondary';
@@ -372,7 +383,7 @@ function OffplanProjects() {
 
 
                                 }}
-                                defaultValue={productTypeOptionFirstItems[1].value}
+                                defaultValue={productTypeOptionFirstItems?.[1]?.value}
                                 options={productTypeOptionFirstItems}
 
                             />
@@ -654,7 +665,7 @@ function OffplanProjects() {
                                         }
                                     ]}
                                 />
-                                <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>130 Properties Available</p>
+                                    <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Properties Available</p>
                             </div>
 
 
@@ -664,10 +675,12 @@ function OffplanProjects() {
                             >
                                 <LocationTags
 
-                                    data={[{ location: 'Dubai', count: 100 }, { location: 'Abu Dhabi', count: 200 },
-                                    { location: 'Sharjah', count: 300 },
-                                    { location: 'Sharjah', count: 300 }
-                                    ]}
+                                     data={
+                                            cities?.data?.slice(0, 4).map((item) => ({
+                                                location: item.name,
+                                                count: item.count,
+                                            })) || []
+                                        }
                                 />
                             </SpaceWrapper>
 
@@ -723,21 +736,27 @@ function OffplanProjects() {
 
 
 
-                <Container>
+                     <Container>
 
                     <div className="mt-[23.25px]">
 
                         <PaginationNew
                             currentPage={filters.page || 1}
                             totalPages={totalPages}
-                            onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
+                            onPageChange={(newPage) => {
+                                const url = new URL(window.location.href);
+                                url.searchParams.set('page', newPage.toString());
+                                window.history.pushState({}, '', url);
+                                setFilters(prev => ({ ...prev, page: newPage }))
+                            }}
                             maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />
 
 
 
-                        <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">1 To 24 of 23,567 Listings</div>
+                        <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">{filters.page} To {totalPages} of {allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Listings</div>
                     </div>
                 </Container>
+
 
 
 

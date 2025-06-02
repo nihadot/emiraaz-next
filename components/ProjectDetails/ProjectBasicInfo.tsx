@@ -11,6 +11,7 @@ import { handleShare } from "@/utils/shareOption";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { GoHeart, GoHeartFill, GoScreenFull } from "react-icons/go";
+import { HiOutlineBuildingOffice } from "react-icons/hi2";
 import { LiaBedSolid } from "react-icons/lia";
 import { PiShareFat } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +22,7 @@ interface UserData {
 
 
 const ProjectBasicInfo = ({ projectId,type,
-  title, address, propertyType, beds, baths, currency, value, squareFeet, projectType,discount
+  title, address, propertyType, beds, baths, currency, value, squareFeet, projectType,discount,totalFloors
 }: {
   projectType?: string;
   title?: string,
@@ -35,6 +36,7 @@ const ProjectBasicInfo = ({ projectId,type,
   projectId: string
   discount:string
   type:string
+  totalFloors?:string
 }) => {
 
   const [toggleWishlist] = useToggleWishlistItemMutation();
@@ -170,16 +172,16 @@ const ProjectBasicInfo = ({ projectId,type,
 
             <div className="flex items-center gap-2">
               {/* <Image src={bath_icon} alt="bath icon" width={20} height={20} className="object-cover" /> */}
-            <GoScreenFull
+          <HiOutlineBuildingOffice
                                        color='#333'
-                                       className='w-[20px] h-[20px]'
-                                       />
+                                     className='w-[18px] h-[18px]'
+                                     />
               {/* <p className="text-sm font-light font-poppins">{item.squareFeet} </p> */}
               <Typography
                 tag='p'
 
                 className='text-[12px] font-light font-poppins'
-                text={`${squareFeet} sqft`}
+                                text={`${totalFloors || 0} floors`}
               />
             </div>
           </div>

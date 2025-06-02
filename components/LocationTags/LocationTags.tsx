@@ -9,13 +9,13 @@ type Props = {
 
 function LocationTags({ data }: Props) {
     return (
-        <div className="outline px-4 outline-[#DEDEDE] grid grid-cols-2 md:grid-cols-none md:flex bg-slate-100 items-center justify-between rounded-[3px] w-full">
+        <div className="outline px-4 outline-[#DEDEDE] grid grid-cols-2 md:grid-cols-none md:flex bg-white items-center justify-between rounded-[3px] w-full">
             {
                 data.map((item,index) => {
                     return (
-                        <div key={index} className="flex justify-start w-full items-center py-2">
-                            <p className='font-poppins font-normal text-[12px] text-black'>{item.location}</p>
-                            <p className='font-poppins font-normal text-[12px] text-[#333333]'>({item.count})</p>
+                        <div key={index} className="flex justify-start w-full items-center p-2">
+                            <p className='font-poppins font-normal text-[12px] me-1 text-black'>{item.location} </p>
+                            <p className='font-poppins font-normal text-[10px] text-[#333333]'>({item.count})</p>
                         </div>
                     )
                 })

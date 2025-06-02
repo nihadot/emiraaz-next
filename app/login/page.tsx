@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { loginFailure, loginLoading, loginSuccess } from "@/redux/userSlice/userSlice";
 import { errorToast, successToast } from "@/components/Toast";
 import SectionDivider from "@/components/atom/SectionDivider/SectionDivider";
+import Link from "next/link";
 
 const LoginSchema = Yup.object().shape({
     email: Yup.string()
@@ -101,9 +102,9 @@ const AdminLogin = () => {
                                 {/* <label htmlFor="email" className="block font-normal text-black">Email</label> */}
                                 {/* <Field type="email" id="email" name="email" placeholder="Enter your email" className="mt-1.5 p-2 px-4 rounded border-slate-200 placeholder:text-xs border w-full bg-[#F7F7F7] focus:ring-[#FF1645] focus:border-[#FF1645]" disabled={isSubmitting} /> */}
                                 <ErrorMessage name="email" component="div" className="text-red-500 mt-1" />
-                                </div>
+                            </div>
 
-                            <div className="mb-6 relative">
+                            <div className="mb-3 relative">
                                 <LabelFields
                                     title='Password'
                                     htmlFor='password'
@@ -119,7 +120,7 @@ const AdminLogin = () => {
                                 {/* <label htmlFor="password" className="block font-normal text-black">Password</label> */}
                                 {/* <Field type={togglePassword} id="password" name="password" placeholder="Enter your password" className="mt-1.5 p-2 px-4 rounded border-slate-200 placeholder:text-xs border w-full bg-[#F7F7F7] focus:ring-[#FF1645] focus:border-[#FF1645]" disabled={isSubmitting} /> */}
                                 {/* <ErrorMessage name="password" component="div" className="text-red-500 mt-1" /> */}
-                    <ErrorMessage name="password" component="div" className="text-red-500 mt-1" />
+                                <ErrorMessage name="password" component="div" className="text-red-500 mt-1" />
 
                                 <div className="absolute top-10 right-4">
                                     {togglePassword === 'password' ? (
@@ -128,6 +129,12 @@ const AdminLogin = () => {
                                         <FaEyeSlash onClick={() => setTogglePassword("password")} size={20} className={isSubmitting ? "cursor-not-allowed opacity-50" : "cursor-pointer"} />
                                     )}
                                 </div>
+
+
+                                <p className="text-[12px] font-poppins font-normal pt-3 text-[#333333]">Don’t Have an Account? 
+
+                                    <Link className="text-black ms-1 font-poppins text-[12px]" href={'/registration'}>Sign Up</Link>
+                                </p>
                             </div>
 
                             <button type="submit" disabled={isSubmitting} className="w-full bg-[#FF1645] text-white p-2 rounded-md hover:bg-[#D8133A] transition flex items-center justify-center">

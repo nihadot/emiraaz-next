@@ -1,7 +1,7 @@
 import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
 import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
 import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi';
-import { useFetchAllProjectsQuery } from '@/redux/project/projectApi';
+import { useFetchAllProjectsCountQuery, useFetchAllProjectsQuery } from '@/redux/project/projectApi';
 import { AllProjectsItems } from '@/redux/project/types';
 import { shuffle } from '@/utils/shuffle';
 import { useDeviceType } from '@/utils/useDeviceType';
@@ -36,13 +36,14 @@ import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import MobileFilterOption from '@/app/home/MobileFilterOption';
 import { FiltersState } from '../types';
 import { useViewAllCountsQuery } from '@/redux/news/newsApi';
+import { parsePrice } from '@/utils/parsePrice';
 
 
 function Residential() {
 
+    useForceScrollRestore(); // Default key is "scroll-position"
 
     const router = useRouter()
-    const pathname = usePathname();
     const [defaultPropertyType, setDefaultPropertyType] = useState<string>('');
     const [defaultCompletionType, setDefaultCompletionType] = useState<string>('');
 
@@ -52,8 +53,6 @@ function Residential() {
     const [filterModel, setFilterModel] = useState(false);
     const [debouncedSearch, setDebouncedSearch] = useState<any>("");
     const [EnquiryForm, setEnquiryForm] = useState({ status: false, id: '', count: 0 });
-    const [rangeCalculator, setRangeCalculator] = useState(false);
-    const [areaRange, setShowAreaRange] = useState(false);
 
    const [filters, setFilters] = useState<FiltersState>({
               page: 1,
@@ -69,7 +68,7 @@ function Residential() {
               furnishType: "",
               discount: "",
               projectTypeFirst: 'off-plan-projects',
-              projectTypeLast: 'all',
+              projectTypeLast: 'residential',
               bedAndBath: "",
               minPrice: '',
               maxPrice: '',
@@ -85,6 +84,8 @@ function Residential() {
         setFilters(prev => ({ ...prev, search: event.target.value }));
     }, []);
 
+        const { data: allProjectsCounts } = useFetchAllProjectsCountQuery();
+    
      // Data fetching with memoized query params
             const queryParams = useMemo(() => ({
                 limit: 20,
@@ -173,6 +174,14 @@ function Residential() {
             }), []);
         
    
+                useEffect(() => {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const page = urlParams.get('page');
+            
+                    if (page) {
+                        setFilters(prev => ({ ...prev, page: parseInt(page) }))
+                    }
+                }, [filters.page]);
 
 
     useEffect(() => {
@@ -362,10 +371,7 @@ function Residential() {
                                     }
 
                                     switch (e) {
-                                        case 'all':
-                                            path = '/';
-                                            break;
-
+                                       
                                         case 'off-plan-resale':
                                             path = '/off-plan-resale';
                                             break;
@@ -381,7 +387,7 @@ function Residential() {
 
                                     handleSelect.productTypeOptionFirst(e);
                                 }}
-                                defaultValue={productTypeOptionFirstItems[1].value}
+                                defaultValue={productTypeOptionFirstItems?.[0]?.value}
                                 options={productTypeOptionFirstItems}
 
                             />
@@ -405,7 +411,7 @@ function Residential() {
                                     switch (e) {
 
                                         case 'all':
-                                            path = '/off-plan-projects';
+                                            path = '/';
                                             break;
                                         case 'commercial':
                                             path = '/off-plan-projects/commercial';
@@ -425,14 +431,7 @@ function Residential() {
                                 options={propertyTypeSecond}
                             />
                             <button onClick={handleFilterModal} className="bg-red-600/10 rounded flex justify-center items-center  border-none w-[55px] lg:hidden h-full">
-                                {/* <Image
-                                                    src={filter_icon}
-                                                    className=" object-cover"
-                                                    alt="filter"
-                                                    width={18}
-                                                    height={18}
-            
-                                                /> */}
+                             
                                 <HiOutlineAdjustmentsHorizontal
                                     className="w-[22px] h-[22px]"
                                     color='red'
@@ -451,7 +450,7 @@ function Residential() {
                     <section className=" lg:flex gap-2 justify-between  mt-2  hidden">
 
 
-                        <div className={clsx(`h-[33px]`, true ? 'w-[150px]' : 'flex-[8%]')}>
+                        <div className={clsx(`h-[48px]`, true ? 'w-[150px]' : 'flex-[8%]')}>
 
                             <SelectLatest
                                 label="Property Types"
@@ -504,7 +503,7 @@ function Residential() {
 
 
 
-                        <div className="lg:flex-[30%] h-[33px]">
+                        <div className="lg:flex-[30%] h-[48px]">
                             <SwitchSelector
                                 defaultValue={defaultCompletionType}
                                 onSelect={(e) => {
@@ -527,7 +526,7 @@ function Residential() {
                         </div>
 
 
-                        <div className="flex-[8%] h-[33px]">
+                        <div className="flex-[8%] h-[48px]">
 
                             <ExpandableComponentDropdown
                                 isOpen={showYearSelector}
@@ -561,7 +560,7 @@ function Residential() {
 
 
 
-                        <div className="flex-[10%] h-[33px]">
+                        <div className="flex-[10%] h-[48px]">
 
                             <SelectNew
                                 clearSelection={clear}
@@ -584,7 +583,7 @@ function Residential() {
                             />
                         </div>
 
-                        <div className={clsx("h-[33px]", true ? 'w-[140px]' : 'flex-[8%]')}>
+                        <div className={clsx("h-[48px]", true ? 'w-[140px]' : 'flex-[8%]')}>
 
                             <SelectNew
                                 clearSelection={clear}
@@ -598,7 +597,7 @@ function Residential() {
 
 
 
-                        <div className="flex-[7%]  h-[33px]">
+                        <div className="flex-[7%]  h-[48px]">
 
                             <SelectNew
                                 clearSelection={clear}
@@ -626,7 +625,7 @@ function Residential() {
 
 
 
-                        <div onClick={() => handleClear()} className="flex cursor-pointer max-w-[120px] h-[33px] items-center gap-2">
+                        <div onClick={() => handleClear()} className="flex cursor-pointer max-w-[120px] h-[48px] items-center gap-2">
                             <label className="text-[12px] cursor-pointer">Clear Filters</label>
                             <div className="bg-black cursor-pointer w-[14px] rounded-full h-[14px] flex justify-center items-center">
                                 <IoCloseOutline size={12} color="white" />
@@ -667,7 +666,7 @@ function Residential() {
                                         }
                                     ]}
                                 />
-                                <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>130 Properties Available</p>
+                                    <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Properties Available</p>
                             </div>
 
 
@@ -677,10 +676,12 @@ function Residential() {
                             >
                                 <LocationTags
 
-                                    data={[{ location: 'Dubai', count: 100 }, { location: 'Abu Dhabi', count: 200 },
-                                    { location: 'Sharjah', count: 300 },
-                                    { location: 'Sharjah', count: 300 }
-                                    ]}
+                                   data={
+                                            cities?.data?.slice(0, 4).map((item) => ({
+                                                location: item.name,
+                                                count: item.count,
+                                            })) || []
+                                        }
                                 />
                             </SpaceWrapper>
 
@@ -735,22 +736,27 @@ function Residential() {
 
 
 
-
-                <Container>
+ <Container>
 
                     <div className="mt-[23.25px]">
 
                         <PaginationNew
                             currentPage={filters.page || 1}
                             totalPages={totalPages}
-                            onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
+                            onPageChange={(newPage) => {
+                                const url = new URL(window.location.href);
+                                url.searchParams.set('page', newPage.toString());
+                                window.history.pushState({}, '', url);
+                                setFilters(prev => ({ ...prev, page: newPage }))
+                            }}
                             maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />
 
 
 
-                        <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">1 To 24 of 23,567 Listings</div>
+                        <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">{filters.page} To {totalPages} of {allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Listings</div>
                     </div>
                 </Container>
+
 
 
 

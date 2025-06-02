@@ -29,7 +29,7 @@ function Header() {
     { name: 'Property Talks', link: '/talks' },
     { name: 'Rental Income', link: '/rental-income' },
     { name: 'Developers', link: '/developers' },
-    { name: 'Donations', link: '/donations' },
+    { name: 'Donation', link: '/donations' },
   ];
 
   const dispatch = useDispatch();

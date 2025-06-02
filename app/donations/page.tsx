@@ -7,6 +7,12 @@ function page() {
     return (
         <main>
             <Header />
+
+
+      <div className="">
+        <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
+      </div>
+      
             <Container>
 
                 <section className='mt-20 mb-40'>
@@ -20,7 +26,7 @@ function page() {
 
 
                     <div className="m-auto mt-4 sm:mt-[66px] rounded-[9px] border-[#DEDEDE] max-w-[618px] border flex justify-center items-center w-full h-[85.25px]">
-                        <p className='font-poppins flex items-center sm:flex-row flex-col justify-center gap-2 font-normal text-[14px] md:text-[18.75px]'>Total Donations as of Now: <span className='text-[#FF1645] lg:text-[33.75px] md:text-[28px] text-[18px] sm:text-[34px] font-normal font-poppins'>AED 50,000</span></p>
+                        <p className='font-poppins flex items-center sm:flex-row flex-col justify-center gap-2 font-normal text-[14px] md:text-[18.75px]'>Total Donations as of Now: <span className='text-[#FF1645] lg:text-[33.75px] md:text-[28px] text-[18px] sm:text-[34px] font-normal font-poppins'>AED 0</span></p>
                     </div>
 
                     <div className="mt-4 sm:mt-[66px]">

@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseUrl, createBaseQueryWithReAuth } from '../../api';
 import { prepareAuthHeaders } from '@/api/authHeader';
-import { AllNamesViewByIdResponse, PayloadByIdResponse, ViewByIdResponse, ViewProjectResponse } from './types';
+import { AllNamesViewByIdResponse, AllProjectCountResponse, PayloadByIdResponse, ViewByIdResponse, ViewProjectResponse } from './types';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${baseUrl}/projects/`,
@@ -22,7 +22,7 @@ const baseQueryWithReAuth = createBaseQueryWithReAuth(baseQuery, refreshTokenBas
 export const projectApi = createApi({
   reducerPath: "projectApi",
   baseQuery: baseQueryWithReAuth,
-  tagTypes: ["Projects", "AllNames", "Project"],
+  tagTypes: ["Projects", "AllNames", "Project", "AllProjectsCount"],
   endpoints: (builder) => ({
     fetchAllProjects: builder.query<ViewProjectResponse, {
       page?: number,
@@ -89,6 +89,14 @@ export const projectApi = createApi({
       providesTags: ["AllNames"],
     }),
 
+    fetchAllProjectsCount: builder.query<AllProjectCountResponse, void>({
+      query: () => ({
+        url: `/counts/all-projects`,
+        method: "GET",
+      }),
+      providesTags: ["AllProjectsCount"],
+    }),
+
   }),
 });
 
@@ -96,6 +104,7 @@ export const {
   useFetchAllProjectsQuery,
   useLazyFetchAllProjectsQuery,
   useFetchAllProjectNamesQuery,
-  useFetchProjectByIdQuery
+  useFetchProjectByIdQuery,
+  useFetchAllProjectsCountQuery,
 } = projectApi;
 

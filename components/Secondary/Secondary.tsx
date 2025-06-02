@@ -1,7 +1,7 @@
 import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
 import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
 import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi';
-import { useFetchAllProjectsQuery } from '@/redux/project/projectApi';
+import { useFetchAllProjectsCountQuery, useFetchAllProjectsQuery } from '@/redux/project/projectApi';
 import { AllProjectsItems } from '@/redux/project/types';
 import { shuffle } from '@/utils/shuffle';
 import { useDeviceType } from '@/utils/useDeviceType';
@@ -34,9 +34,13 @@ import { IoCloseOutline } from 'react-icons/io5';
 import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import MobileFilterOption from '@/app/home/MobileFilterOption';
 import { FiltersState } from '../types';
+import { useForceScrollRestore } from '@/hooks/useScrollRestoration';
+import { parsePrice } from '@/utils/parsePrice';
 
 function Secondary() {
 
+        useForceScrollRestore(); // Default key is "scroll-position"
+    
 
     const router = useRouter()
     const pathname = usePathname();
@@ -203,6 +207,8 @@ function Secondary() {
         return () => clearTimeout(handler);
     }, [filters.search]);
 
+    const { data: allProjectsCounts } = useFetchAllProjectsCountQuery();
+
 
     const handleFilterModal = useCallback(() => {
         setFilterModel(prev => !prev);
@@ -261,6 +267,14 @@ function Secondary() {
 
     const totalPages = projects?.pagination?.totalPages || 1;
 
+        useEffect(() => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const page = urlParams.get('page');
+    
+            if (page) {
+                setFilters(prev => ({ ...prev, page: parseInt(page) }))
+            }
+        }, [filters.page]);
 
     return (
         <main>
@@ -349,11 +363,9 @@ function Secondary() {
                                     }
 
                                     switch (e) {
-                                        case 'all':
-                                            path = '/';
-                                            break;
+
                                         case 'off-plan-projects':
-                                            path = '/off-plan-projects';
+                                            path = '/';
                                             break;
                                         case 'off-plan-resale':
                                             path = '/off-plan-resale';
@@ -367,7 +379,7 @@ function Secondary() {
 
 
                                 }}
-                                defaultValue={productTypeOptionFirstItems[3].value}
+                                defaultValue={productTypeOptionFirstItems?.[2]?.value}
                                 options={productTypeOptionFirstItems}
 
                             />
@@ -387,9 +399,6 @@ function Secondary() {
                                     if (e === 'all') {
                                         return;
                                     }
-
-                                    console.log(e, 'event ---')
-                                    console.log(pathname, 'pathname')
 
                                     switch (e) {
                                         case 'residential':
@@ -419,7 +428,7 @@ function Secondary() {
                                 options={propertyTypeSecond}
                             />
                             <button onClick={handleFilterModal} className="bg-red-600/10 rounded flex justify-center items-center  border-none w-[55px] lg:hidden h-full">
-                             
+
                                 <HiOutlineAdjustmentsHorizontal
                                     className="w-[22px] h-[22px]"
                                     color='red'
@@ -532,7 +541,7 @@ function Secondary() {
                                         }
                                     ]}
                                 />
-                                <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>130 Properties Available</p>
+                                    <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Properties Available</p>
                             </div>
 
 
@@ -542,10 +551,12 @@ function Secondary() {
                             >
                                 <LocationTags
 
-                                    data={[{ location: 'Dubai', count: 100 }, { location: 'Abu Dhabi', count: 200 },
-                                    { location: 'Sharjah', count: 300 },
-                                    { location: 'Sharjah', count: 300 }
-                                    ]}
+                                       data={
+                                            cities?.data?.slice(0, 4).map((item) => ({
+                                                location: item.name,
+                                                count: item.count,
+                                            })) || []
+                                        }
                                 />
                             </SpaceWrapper>
 
@@ -583,9 +594,9 @@ function Secondary() {
                         <div className="w-full xl:block hidden max-w-[301.5px]">
 
 
+                                <Recommendations />
                             <div className="sticky top-3 left-0">
 
-                                <Recommendations />
                                 <CustomSliderUi
                                     shuffledImages={shuffledImages}
                                 />
@@ -608,12 +619,17 @@ function Secondary() {
                         <PaginationNew
                             currentPage={filters.page || 1}
                             totalPages={totalPages}
-                            onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
+                            onPageChange={(newPage) => {
+                                const url = new URL(window.location.href);
+                                url.searchParams.set('page', newPage.toString());
+                                window.history.pushState({}, '', url);
+                                setFilters(prev => ({ ...prev, page: newPage }))
+                            }}
                             maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />
 
 
 
-                        <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">1 To 24 of 23,567 Listings</div>
+                        <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">{filters.page} To {totalPages} of {allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Listings</div>
                     </div>
                 </Container>
 

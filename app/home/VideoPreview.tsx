@@ -226,6 +226,511 @@
 
 
 
+// import Image from "next/image";
+// import React, { useEffect, useRef, useState } from "react";
+// import { FaPause, FaPlay, FaVolumeDown, FaVolumeUp } from "react-icons/fa";
+// import clsx from "clsx";
+// import { motion, AnimatePresence } from "framer-motion";
+// import { MdOutlineReplay } from "react-icons/md";
+// import { BsArrowsFullscreen, BsFullscreenExit } from "react-icons/bs";
+// import { useRouter } from "next/navigation";
+// import Link from "next/link";
+
+// type VideoPreviewProps = {
+//   src: string;
+//   width?: string;
+//   height?: string;
+//   dimOpacity?: number;
+//   projectId?:string;
+//   projectSlug?:string;
+// };
+
+// const VideoPreview: React.FC<VideoPreviewProps> = ({
+//   src,
+//   dimOpacity = 0.5,
+//   projectSlug,
+// }) => {
+//   const videoRef = useRef<HTMLVideoElement>(null);
+//   const [isPlaying, setIsPlaying] = useState(false);
+//   const [isMuted, setIsMuted] = useState(true);
+//   const [isFullscreen, setIsFullscreen] = useState(false);
+//   const [showControls, setShowControls] = useState(true);
+//   const [showReplay, setShowReplay] = useState(false);
+//   const [currentTime, setCurrentTime] = useState(0);
+//   const [duration, setDuration] = useState(0);
+//   const hideTimeout = useRef<any>(null);
+
+//   const togglePlay = () => {
+//     const video = videoRef.current;
+//     if (!video) return;
+
+//     if (video.paused || video.ended) {
+//       video.play();
+//       setIsPlaying(true);
+//       setShowReplay(false);
+//     } else {
+//       video.pause();
+//       setIsPlaying(false);
+//     }
+//   };
+
+//   const toggleMute = () => {
+//     const video = videoRef.current;
+//     if (video) {
+//       video.muted = !video.muted;
+//       setIsMuted(video.muted);
+//     }
+//   };
+
+//   const toggleFullscreen = () => {
+//     setIsFullscreen((prev) => !prev);
+//   };
+
+//   const resetHideTimer = () => {
+//     setShowControls(true);
+//     if (hideTimeout.current) clearTimeout(hideTimeout.current);
+
+//     hideTimeout.current = setTimeout(() => {
+//       setShowControls(false);
+//     }, 700);
+//   };
+
+//   useEffect(() => {
+//     const handleMouseMove = () => resetHideTimer();
+
+//     window.addEventListener("mousemove", handleMouseMove);
+//     resetHideTimer();
+
+//     return () => {
+//       window.removeEventListener("mousemove", handleMouseMove);
+//       if (hideTimeout.current) clearTimeout(hideTimeout.current);
+//     };
+//   }, []);
+
+//   useEffect(() => {
+//     const video = videoRef.current;
+//     if (video) {
+//       const updateTime = () => {
+//         setCurrentTime(video.currentTime);
+//         setDuration(video.duration);
+//       };
+//       video.addEventListener("timeupdate", updateTime);
+//       video.addEventListener("loadedmetadata", () => setDuration(video.duration));
+//       return () => {
+//         video.removeEventListener("timeupdate", updateTime);
+//         video.removeEventListener("loadedmetadata", () => {});
+//       };
+//     }
+//   }, []);
+
+//   useEffect(() => {
+//     const video = videoRef.current;
+//     if (video) {
+//       const playPromise = video.play();
+//       if (playPromise !== undefined) {
+//         playPromise
+//           .then(() => {
+//             setIsPlaying(true);
+//           })
+//           .catch((error) => {
+//             console.error("Auto-play blocked or failed:", error);
+//           });
+//       }
+//     }
+//   }, []);
+
+//   const router = useRouter();
+//   return (
+//       <AnimatePresence>
+//     <motion.div
+//   layout
+//   initial={{
+//     width: isFullscreen ? 0 : "100%",
+//     height: isFullscreen ? 0 : "250px",
+//     top: isFullscreen ? "50%" : "auto",
+//     left: isFullscreen ? "50%" : "auto",
+//     transform: isFullscreen ? "translate(-50%, -50%)" : "none",
+//     position: isFullscreen ? "fixed" : "relative",
+//     zIndex: isFullscreen ? 50 : "auto",
+//     backgroundColor: isFullscreen ? "transparent" : "transparent",
+//   }}
+//   animate={{
+//     width: isFullscreen ? "1000px" : "100%",
+//     height: isFullscreen ? "620px" : "250px",
+//     top: isFullscreen ? "50%" : "auto",
+//     left: isFullscreen ? "50%" : "auto",
+//     transform: isFullscreen ? "translate(-50%, -50%)" : "none",
+//     position: isFullscreen ? "fixed" : "relative",
+//     zIndex: isFullscreen ? 50 : "auto",
+//     backgroundColor: isFullscreen ? "transparent" : "transparent",
+//   }}
+//   transition={{ type: "spring", stiffness: 300, damping: 30 }}
+//   className={clsx("flex flex-col")}
+// >
+//         <div
+//           className={clsx(
+//             "relative flex h-full m-auto",
+//             isFullscreen ? "items-center justify-center w-full" : ""
+//           )}
+//         >
+//           <video
+//             ref={videoRef}
+//             src={src}
+//             muted={isMuted}
+//             autoPlay
+//             style={{
+//               filter: `brightness(${1 - dimOpacity})`,
+//               objectFit: isFullscreen ? "contain" : "cover",
+//               width: isFullscreen ? "100%" : "100%",
+//               height: isFullscreen ? "100%" : "100%",
+//               maxHeight: isFullscreen ? "100%" : "250px",
+//             }}
+//             onEnded={() => {
+//               setIsPlaying(false);
+//               setShowReplay(true);
+//             }}
+//             className="mx-auto"
+//           />
+
+//           {/* Center Controls */}
+//           <div
+//             className={clsx(
+//               "w-full flex justify-center items-center absolute top-0 left-0 z-30 h-full transition-opacity duration-300",
+//               showControls ? "opacity-100 bg-black/5" : "opacity-0 pointer-events-none"
+//             )}
+//             onClick={togglePlay}
+//           >
+//             {!showReplay ? (
+//               <div className="cursor-pointer p-3 rounded-full">
+//                 {isPlaying ? (
+//                   <FaPause color="white" size={24} />
+//                 ) : (
+//                   <FaPlay width={21.75} height={21.75} color="white" size={24} />
+//                 )}
+//               </div>
+//             ) : (
+//               <button className="px-3 py-1 text-xs rounded">
+//                 <MdOutlineReplay size={24} color="white" />
+//               </button>
+//             )}
+//           </div>
+
+//           {/* Bottom Controls */}
+//           <div
+//             className={clsx(
+//               "w-[98%] px-[10px] flex justify-between absolute h-[15px] z-40 transition-opacity duration-300",
+//               showControls ? "opacity-100" : "opacity-0 pointer-events-none",
+//               isFullscreen ? ' bottom-3' : 'bottom-3'
+//             )}
+//           >
+//             <div onClick={toggleMute} className="cursor-pointer">
+//               {!isMuted ? (
+//                 <FaVolumeUp color="white" size={14} />
+//               ) : (
+//                 <FaVolumeDown color="white" size={14} />
+//               )}
+//             </div>
+//             <div onClick={toggleFullscreen} className="cursor-pointer">
+//               {isFullscreen ? (
+//                 <BsFullscreenExit color="white" size={14} />
+//               ) : (
+//                 <BsArrowsFullscreen color="white" size={14} />
+//               )}
+//             </div>
+//           </div>
+
+//         </div>
+
+//         {/* Know More */}
+//         {/* {!isFullscreen && ( */}
+//           <Link href={`/projects/${projectSlug}`} className="bg-[#F5F5F5] h-[70px] flex justify-center items-center w-full">
+//             <button className="font-poppins text-[9px] w-[97px] h-[25px] flex justify-center items-center bg-[#333333] rounded-[3px] text-white font-medium">
+//               Know More
+//             </button>
+//           </Link>
+//         {/* )} */}
+//       </motion.div>
+//     </AnimatePresence>
+//   );
+// };
+
+// export default VideoPreview;
+
+
+
+
+
+
+// import Image from "next/image";
+// import React, { useEffect, useRef, useState } from "react";
+// import { FaPause, FaPlay, FaVolumeDown, FaVolumeUp } from "react-icons/fa";
+// import clsx from "clsx";
+// import { motion, AnimatePresence } from "framer-motion";
+// import { MdOutlineReplay } from "react-icons/md";
+// import { BsArrowsFullscreen, BsFullscreenExit } from "react-icons/bs";
+// import { useRouter } from "next/navigation";
+// import Link from "next/link";
+
+// type VideoPreviewProps = {
+//   src: string;
+//   width?: string;
+//   height?: string;
+//   dimOpacity?: number;
+//   projectId?: string;
+//   projectSlug?: string;
+// };
+
+// const VideoPreview: React.FC<VideoPreviewProps> = ({
+//   src,
+//   dimOpacity = 0.5,
+//   projectSlug,
+// }) => {
+//   const videoRef = useRef<HTMLVideoElement>(null);
+//   const [isPlaying, setIsPlaying] = useState(false);
+//   const [isMuted, setIsMuted] = useState(true);
+//   const [isFullscreen, setIsFullscreen] = useState(false);
+//   const [showControls, setShowControls] = useState(true);
+//   const [showReplay, setShowReplay] = useState(false);
+//   const [currentTime, setCurrentTime] = useState(0);
+//   const [duration, setDuration] = useState(0);
+//   const hideTimeout = useRef<any>(null);
+
+//   const togglePlay = () => {
+//     const video = videoRef.current;
+//     if (!video) return;
+
+//     if (video.paused || video.ended) {
+//       video.play();
+//       setIsPlaying(true);
+//       setShowReplay(false);
+//     } else {
+//       video.pause();
+//       setIsPlaying(false);
+//     }
+//   };
+
+//   const toggleMute = () => {
+//     const video = videoRef.current;
+//     if (video) {
+//       video.muted = !video.muted;
+//       setIsMuted(video.muted);
+//     }
+//   };
+
+//   const toggleFullscreen = () => {
+//     setIsFullscreen((prev) => !prev);
+//   };
+
+//   const resetHideTimer = () => {
+//     setShowControls(true);
+//     if (hideTimeout.current) clearTimeout(hideTimeout.current);
+
+//     hideTimeout.current = setTimeout(() => {
+//       setShowControls(false);
+//     }, 700);
+//   };
+
+//   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+//     const video = videoRef.current;
+//     if (!video) return;
+
+//     const rect = e.currentTarget.getBoundingClientRect();
+//     const clickPosition = e.clientX - rect.left;
+//     const progressWidth = rect.width;
+//     const seekTime = (clickPosition / progressWidth) * duration;
+//     video.currentTime = seekTime;
+//     setCurrentTime(seekTime);
+//   };
+
+//   const formatTime = (time: number) => {
+//     const minutes = Math.floor(time / 60);
+//     const seconds = Math.floor(time % 60);
+//     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+//   };
+
+//   useEffect(() => {
+//     const handleMouseMove = () => resetHideTimer();
+
+//     window.addEventListener("mousemove", handleMouseMove);
+//     resetHideTimer();
+
+//     return () => {
+//       window.removeEventListener("mousemove", handleMouseMove);
+//       if (hideTimeout.current) clearTimeout(hideTimeout.current);
+//     };
+//   }, []);
+
+//   useEffect(() => {
+//     const video = videoRef.current;
+//     if (video) {
+//       const updateTime = () => {
+//         setCurrentTime(video.currentTime);
+//         setDuration(video.duration);
+//       };
+//       video.addEventListener("timeupdate", updateTime);
+//       video.addEventListener("loadedmetadata", () => setDuration(video.duration));
+//       return () => {
+//         video.removeEventListener("timeupdate", updateTime);
+//         video.removeEventListener("loadedmetadata", () => {});
+//       };
+//     }
+//   }, []);
+
+//   useEffect(() => {
+//     const video = videoRef.current;
+//     if (video) {
+//       const playPromise = video.play();
+//       if (playPromise !== undefined) {
+//         playPromise
+//           .then(() => {
+//             setIsPlaying(true);
+//           })
+//           .catch((error) => {
+//             console.error("Auto-play blocked or failed:", error);
+//           });
+//       }
+//     }
+//   }, []);
+
+//   const router = useRouter();
+//   return (
+//     <AnimatePresence>
+//       <motion.div
+//         layout
+//         initial={{
+//           width: isFullscreen ? 0 : "100%",
+//           height: isFullscreen ? 0 : "250px",
+//           top: isFullscreen ? "50%" : "auto",
+//           left: isFullscreen ? "50%" : "auto",
+//           transform: isFullscreen ? "translate(-50%, -50%)" : "none",
+//           position: isFullscreen ? "fixed" : "relative",
+//           zIndex: isFullscreen ? 50 : "auto",
+//           backgroundColor: isFullscreen ? "transparent" : "transparent",
+//         }}
+//         animate={{
+//           width: isFullscreen ? "1000px" : "100%",
+//           height: isFullscreen ? "620px" : "250px",
+//           top: isFullscreen ? "50%" : "auto",
+//           left: isFullscreen ? "50%" : "auto",
+//           transform: isFullscreen ? "translate(-50%, -50%)" : "none",
+//           position: isFullscreen ? "fixed" : "relative",
+//           zIndex: isFullscreen ? 50 : "auto",
+//           backgroundColor: isFullscreen ? "transparent" : "transparent",
+//         }}
+//         transition={{ type: "spring", stiffness: 300, damping: 30 }}
+//         className={clsx("flex flex-col")}
+//       >
+//         <div
+//           className={clsx(
+//             "relative flex h-full m-auto",
+//             isFullscreen ? "items-center justify-center w-full" : ""
+//           )}
+//         >
+//           <video
+//             ref={videoRef}
+//             src={src}
+//             muted={isMuted}
+//             autoPlay
+//             style={{
+//               filter: `brightness(${1 - dimOpacity})`,
+//               objectFit: isFullscreen ? "contain" : "cover",
+//               width: isFullscreen ? "100%" : "100%",
+//               height: isFullscreen ? "100%" : "100%",
+//               maxHeight: isFullscreen ? "100%" : "250px",
+//             }}
+//             onEnded={() => {
+//               setIsPlaying(false);
+//               setShowReplay(true);
+//             }}
+//             className="mx-auto"
+//           />
+
+//           {/* Center Controls */}
+//           <div
+//             className={clsx(
+//               "w-full flex justify-center items-center absolute top-0 left-0 z-30 h-full transition-opacity duration-300",
+//               showControls ? "opacity-100 bg-black/5" : "opacity-0 pointer-events-none"
+//             )}
+//             onClick={togglePlay}
+//           >
+//             {!showReplay ? (
+//               <div className="cursor-pointer p-3 rounded-full">
+//                 {isPlaying ? (
+//                   <FaPause color="white" size={24} />
+//                 ) : (
+//                   <FaPlay width={21.75} height={21.75} color="white" size={24} />
+//                 )}
+//               </div>
+//             ) : (
+//               <button className="px-3 py-1 text-xs rounded">
+//                 <MdOutlineReplay size={24} color="white" />
+//               </button>
+//             )}
+//           </div>
+
+//           {/* Bottom Controls */}
+//           <div
+//             className={clsx(
+//               "w-[98%] px-[10px] flex justify-between items-center absolute h-[30px] z-40 transition-opacity duration-300",
+//               showControls ? "opacity-100" : "opacity-0 pointer-events-none",
+//               isFullscreen ? "bottom-3" : "bottom-3"
+//             )}
+//           >
+//             <div onClick={toggleMute} className="cursor-pointer">
+//               {!isMuted ? (
+//                 <FaVolumeUp color="white" size={14} />
+//               ) : (
+//                 <FaVolumeDown color="white" size={14} />
+//               )}
+//             </div>
+
+//             {/* Progress Bar */}
+//             { isFullscreen && <div
+//               className="flex-1 mx-4 h-1 bg-gray-400 rounded-full cursor-pointer relative"
+//               onClick={handleProgressClick}
+//             >
+//               <div
+//                 className="h-full bg-white rounded-full"
+//                 style={{
+//                   width: `${(currentTime / duration) * 100}%`,
+//                 }}
+//               >
+//                 {/* <div className="absolute -right-2 -top-2 w-4 h-4 bg-white rounded-full" /> */}
+//               </div>
+//               {/* <span className="absolute -top-6 left-0 text-white text-xs">
+//                 {formatTime(currentTime)} / {formatTime(duration)}
+//               </span> */}
+//             </div>}
+
+//             <div onClick={toggleFullscreen} className="cursor-pointer">
+//               {isFullscreen ? (
+//                 <BsFullscreenExit color="white" size={14} />
+//               ) : (
+//                 <BsArrowsFullscreen color="white" size={14} />
+//               )}
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* Know More */}
+//         <Link
+//           href={`/projects/${projectSlug}`}
+//           className="bg-[#F5F5F5] h-[70px] flex justify-center items-center w-full"
+//         >
+//           <button className="font-poppins text-[9px] w-[97px] h-[25px] flex justify-center items-center bg-[#333333] rounded-[3px] text-white font-medium">
+//             Know More
+//           </button>
+//         </Link>
+//       </motion.div>
+//     </AnimatePresence>
+//   );
+// };
+
+// export default VideoPreview;
+
+
+
+
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { FaPause, FaPlay, FaVolumeDown, FaVolumeUp } from "react-icons/fa";
@@ -241,8 +746,8 @@ type VideoPreviewProps = {
   width?: string;
   height?: string;
   dimOpacity?: number;
-  projectId?:string;
-  projectSlug?:string;
+  projectId?: string;
+  projectSlug?: string;
 };
 
 const VideoPreview: React.FC<VideoPreviewProps> = ({
@@ -258,7 +763,18 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   const [showReplay, setShowReplay] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const hideTimeout = useRef<any>(null);
+
+  // Detect mobile device based on window width
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768); // Adjust threshold as needed
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -283,7 +799,10 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   };
 
   const toggleFullscreen = () => {
-    setIsFullscreen((prev) => !prev);
+    if (!isMobile) {
+      // Only allow full-screen toggle on non-mobile devices
+      setIsFullscreen((prev) => !prev);
+    }
   };
 
   const resetHideTimer = () => {
@@ -293,6 +812,24 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
     hideTimeout.current = setTimeout(() => {
       setShowControls(false);
     }, 700);
+  };
+
+  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickPosition = e.clientX - rect.left;
+    const progressWidth = rect.width;
+    const seekTime = (clickPosition / progressWidth) * duration;
+    video.currentTime = seekTime;
+    setCurrentTime(seekTime);
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
   useEffect(() => {
@@ -341,36 +878,36 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
 
   const router = useRouter();
   return (
-      <AnimatePresence>
-    <motion.div
-  layout
-  initial={{
-    width: isFullscreen ? 0 : "100%",
-    height: isFullscreen ? 0 : "250px",
-    top: isFullscreen ? "50%" : "auto",
-    left: isFullscreen ? "50%" : "auto",
-    transform: isFullscreen ? "translate(-50%, -50%)" : "none",
-    position: isFullscreen ? "fixed" : "relative",
-    zIndex: isFullscreen ? 50 : "auto",
-    backgroundColor: isFullscreen ? "transparent" : "transparent",
-  }}
-  animate={{
-    width: isFullscreen ? "1000px" : "100%",
-    height: isFullscreen ? "620px" : "250px",
-    top: isFullscreen ? "50%" : "auto",
-    left: isFullscreen ? "50%" : "auto",
-    transform: isFullscreen ? "translate(-50%, -50%)" : "none",
-    position: isFullscreen ? "fixed" : "relative",
-    zIndex: isFullscreen ? 50 : "auto",
-    backgroundColor: isFullscreen ? "transparent" : "transparent",
-  }}
-  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-  className={clsx("flex flex-col")}
->
+    <AnimatePresence>
+      <motion.div
+        layout
+        initial={{
+          width: isFullscreen && !isMobile ? 0 : "100%", // Prevent full-screen on mobile
+          height: isFullscreen && !isMobile ? 0 : "250px",
+          top: isFullscreen && !isMobile ? "50%" : "auto",
+          left: isFullscreen && !isMobile ? "50%" : "auto",
+          transform: isFullscreen && !isMobile ? "translate(-50%, -50%)" : "none",
+          position: isFullscreen && !isMobile ? "fixed" : "relative",
+          zIndex: isFullscreen && !isMobile ? 50 : "auto",
+          backgroundColor: isFullscreen && !isMobile ? "transparent" : "transparent",
+        }}
+        animate={{
+          width: isFullscreen && !isMobile ? "1000px" : "100%",
+          height: isFullscreen && !isMobile ? "620px" : "250px",
+          top: isFullscreen && !isMobile ? "50%" : "auto",
+          left: isFullscreen && !isMobile ? "50%" : "auto",
+          transform: isFullscreen && !isMobile ? "translate(-50%, -50%)" : "none",
+          position: isFullscreen && !isMobile ? "fixed" : "relative",
+          zIndex: isFullscreen && !isMobile ? 50 : "auto",
+          backgroundColor: isFullscreen && !isMobile ? "transparent" : "transparent",
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        className={clsx("flex flex-col")}
+      >
         <div
           className={clsx(
             "relative flex h-full m-auto",
-            isFullscreen ? "items-center justify-center w-full" : ""
+            isFullscreen && !isMobile ? "items-center justify-center w-full" : ""
           )}
         >
           <video
@@ -380,10 +917,10 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
             autoPlay
             style={{
               filter: `brightness(${1 - dimOpacity})`,
-              objectFit: isFullscreen ? "contain" : "cover",
-              width: isFullscreen ? "100%" : "100%",
-              height: isFullscreen ? "100%" : "100%",
-              maxHeight: isFullscreen ? "100%" : "250px",
+              objectFit: isFullscreen && !isMobile ? "contain" : "cover",
+              width: isFullscreen && !isMobile ? "100%" : "100%",
+              height: isFullscreen && !isMobile ? "100%" : "100%",
+              maxHeight: isFullscreen && !isMobile ? "100%" : "250px",
             }}
             onEnded={() => {
               setIsPlaying(false);
@@ -418,9 +955,9 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
           {/* Bottom Controls */}
           <div
             className={clsx(
-              "w-[98%] px-[10px] flex justify-between absolute h-[15px] z-40 transition-opacity duration-300",
+              "w-[98%] px-[10px] flex justify-between items-center absolute h-[30px] z-40 transition-opacity duration-300",
               showControls ? "opacity-100" : "opacity-0 pointer-events-none",
-              isFullscreen ? ' bottom-3' : 'bottom-3'
+              isFullscreen && !isMobile ? "bottom-3" : "bottom-3"
             )}
           >
             <div onClick={toggleMute} className="cursor-pointer">
@@ -430,38 +967,50 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
                 <FaVolumeDown color="white" size={14} />
               )}
             </div>
-            <div onClick={toggleFullscreen} className="cursor-pointer">
-              {isFullscreen ? (
-                <BsFullscreenExit color="white" size={14} />
-              ) : (
-                <BsArrowsFullscreen color="white" size={14} />
-              )}
-            </div>
-          </div>
 
+            {/* Progress Bar */}
+            {isFullscreen && !isMobile && (
+              <div
+                className="flex-1 mx-4 h-1 bg-gray-400 rounded-full cursor-pointer relative"
+                onClick={handleProgressClick}
+              >
+                <div
+                  className="h-full bg-white rounded-full"
+                  style={{
+                    width: `${(currentTime / duration) * 100}%`,
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Only show fullscreen button on non-mobile devices */}
+            {!isMobile && (
+              <div onClick={toggleFullscreen} className="cursor-pointer">
+                {isFullscreen ? (
+                  <BsFullscreenExit color="white" size={14} />
+                ) : (
+                  <BsArrowsFullscreen color="white" size={14} />
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Know More */}
-        {/* {!isFullscreen && ( */}
-          <Link href={`/projects/${projectSlug}`} className="bg-[#F5F5F5] h-[70px] flex justify-center items-center w-full">
-            <button className="font-poppins text-[9px] w-[97px] h-[25px] flex justify-center items-center bg-[#333333] rounded-[3px] text-white font-medium">
-              Know More
-            </button>
-          </Link>
-        {/* )} */}
+        <Link
+          href={`/projects/${projectSlug}`}
+          className="bg-[#F5F5F5] h-[70px] flex justify-center items-center w-full"
+        >
+          <button className="font-poppins text-[9px] w-[97px] h-[25px] flex justify-center items-center bg-[#333333] rounded-[3px] text-white font-medium">
+            Know More
+          </button>
+        </Link>
       </motion.div>
     </AnimatePresence>
   );
 };
 
 export default VideoPreview;
-
-
-
-
-
-
-
 
 // import React, { useEffect, useRef, useState } from "react";
 // import { FaPause, FaPlay, FaVolumeDown, FaVolumeUp } from "react-icons/fa";

@@ -68,3 +68,6 @@ export { default as propertySellerWhiteLogo_icon } from "./PropertysellerWhiteLo
 export {default as logoWebP} from "./logo.webp"
 export {default as mobileAppIcon} from "./mobile-menu-app-icon.png"
 export {default as ps_logo} from "./PropertysellerBlackLogo-new.png"
+// export {default as details_icon} from "./details_icon.svg"
+
+

@@ -1,26 +1,20 @@
 import React from 'react';
 import Image from 'next/image';
 import {
-    details_icon,
     location_icon,
-    notes_icon,
 } from '@/app/assets';
 import { BsStars } from "react-icons/bs";
-import { PiNotePencilThin } from "react-icons/pi";
-import { IoIosListBox } from "react-icons/io";
-import { RiFileList2Line } from "react-icons/ri";
 
-// import { LiaBedSolid } from "react-icons/lia";
-import { GoScreenFull } from "react-icons/go";
-import { FaRegBuilding } from "react-icons/fa";
+import { RiFileList2Line } from "react-icons/ri";
 
 import { AllProjectsItems } from '@/redux/project/types';
 import { formatCurrencyParts } from '@/utils/formateAmount';
+import { TfiLocationPin } from "react-icons/tfi";
 
 import PrimaryButton from '../Buttons';
 import FavoriteIcon from './FavoriteIcon';
 import ProjectImageSlider from './ProjectImageSlider';
-
+import details_icon from "@/app/assets/details_icon.svg";
 import 'swiper/css';
 import 'swiper/css/pagination';
 import Typography from '../atom/typography/Typography';
@@ -28,6 +22,7 @@ import { getDaysAgo } from '../atom/button/getDaysAgo';
 import { LiaBedSolid } from "react-icons/lia";
 import { HiOutlineBuildingOffice } from 'react-icons/hi2';
 import { PiNotePencilLight } from "react-icons/pi";
+import { CiViewList } from 'react-icons/ci';
 
 type Props = {
     item: AllProjectsItems;
@@ -207,7 +202,10 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
 
 
                 <div className="flex items-center mt-[8px] sm:mt-[10.5px] gap-2">
-                    <Image src={location_icon} alt="location icon" width={15} height={15} className="object-cover" />
+                   <div className="">
+                     <TfiLocationPin size={20} color='#333333' />
+                   </div>
+                    {/* <Image src={location_icon} alt="location icon" width={15} height={15} className="object-cover" /> */}
                     {/* <p className="text-xs font-light font-poppins capitalize">{item.address || 'Jumeirah Village Circle, Dubai'}</p> */}
                     <Typography
                         tag='p'
@@ -222,7 +220,9 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
 
                 <div className="flex items-center mt-[9px] rounded-[3.75px] bg-[#FFE7EC] gap-1 px-3  text-[#FF1645]">
                     {/* <Image src={christmas__icon_star} alt="authenticity icon" width={20} height={20} className="object-cover py-1" /> */}
-                   <BsStars size={20}/>
+                   <div className=" ">
+                    <BsStars size={16}/>
+                   </div>
                     <div className="text-[12px] font-light bg-[#FFE7EC] text-ellipsis line-clamp-1 py-1">
                         This listing was newly introduced {getDaysAgo(item.createdAt)}
                     </div>
@@ -238,10 +238,12 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                             className="flex w-full sm:w-[106.5px] h-[35px] items-center gap-2 rounded border-none bg-[#FF1645]"
                         >
                               <div className="relative w-[20px] h-[20px]">
+{/* {console.log(details_icon,'details_icon')} */}
+{/* import { CiViewList } from "react-icons/ci"; */}
 
-                        <RiFileList2Line size={20} color='white' />
+                        <CiViewList size={20} color='white' />
                         </div>
-
+{/* <img src={details_icon.src} alt="details icon" width={16.5} height={16.5} /> */}
                             {/* <Image src={details_icon} alt="details icon" width={16.5} height={16.5} /> */}
                             <span className="text-[14px] text-white">Details</span>
                         </PrimaryButton>

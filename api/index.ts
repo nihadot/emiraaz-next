@@ -1,5 +1,4 @@
 // import { LOCAL_STORAGE_KEYS } from "../utils/storage";
-import { store } from "../redux/store";
 import { LOCAL_STORAGE_KEYS } from "./storage";
 import { logoutStart, logoutSuccess } from "@/redux/userSlice/userSlice";
 // import { logoutStart, logoutSuccess } from "../features/adminSlice/adminSlice";
@@ -11,12 +10,6 @@ export const placeHolderLink = 'https://placehold.co/300x468'
 
 export const CLOUDINARY_PERSISTENT = 'demo_purpose';
 export const CLOUDINARY_NAME = 'dknxmloqh';
-
-
-
-
-
-
 
 export const createBaseQueryWithReAuth = (
     baseQuery: any,

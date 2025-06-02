@@ -18,7 +18,7 @@ const CustomSliderComponent = ({
   images,
   containerClassName = '',
   imageClassName = '',
-  autoSlideInterval = 5000,
+  autoSlideInterval = 10000,
 }: CustomSliderProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 

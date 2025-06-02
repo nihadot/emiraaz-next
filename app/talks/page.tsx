@@ -41,9 +41,12 @@ function Talk() {
             <Header />
 
 
+      <div className="">
+        <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
+      </div>
             <Container>
 
-                <div className="gap-[31px] grid-cols-1 grid sm:grid-cols-2 md:grid-cols-3">
+                <div className="gap-[31px] mt-4 grid-cols-1 grid sm:grid-cols-2 md:grid-cols-3">
 
 
                     {

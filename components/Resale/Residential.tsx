@@ -365,12 +365,9 @@ function Residential() {
                                     }
 
                                     switch (e) {
-                                        case 'all':
-                                            path = '/';
-                                            break;
-
+                                       
                                         case 'off-plan-projects':
-                                            path = '/off-plan-projects';
+                                            path = '/';
                                             break;
                                         case 'off-plan-secondary':
                                             path = '/secondary';
@@ -384,7 +381,7 @@ function Residential() {
 
                                     handleSelect.productTypeOptionFirst(e);
                                 }}
-                                defaultValue={productTypeOptionFirstItems[2].value}
+                                defaultValue={productTypeOptionFirstItems?.[1]?.value}
                                 options={productTypeOptionFirstItems}
 
                             />
@@ -744,9 +741,9 @@ function Residential() {
                         <div className="w-full xl:block hidden max-w-[301.5px]">
 
 
+                                <Recommendations />
                             <div className="sticky top-3 left-0">
 
-                                <Recommendations />
                                 <CustomSliderUi
                                     shuffledImages={shuffledImages}
                                 />

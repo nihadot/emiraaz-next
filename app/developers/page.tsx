@@ -203,7 +203,7 @@ function Card({ item }: CardProps) {
                 <div className="flex overflow-hidden justify-center items-center border px-3 py-1 w-[100px] h-[80px] border-[#DEDEDE] rounded-[3px] ">
                     <Image src={item?.image?.secure_url || ''} alt="bed icon" width={100} height={80} className="object-cover flex justify-center items-center" />
                 </div>
-                <div className="flex w-full items-center justify-start pe-4 gap-2">
+                <div className="flex w-full items-center justify-between pe-4 gap-2">
 
                     <p className='text-[18px] line-clamp-2 font-medium font-poppins'>{item.name}</p>
                     {/* <Image src={top_arrow_icon || ''} alt="bed icon" width={12} height={12} className="object-contain flex justify-center items-center" /> */}

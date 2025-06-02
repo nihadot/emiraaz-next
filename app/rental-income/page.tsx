@@ -239,9 +239,9 @@ function Card({ item, title, name }: CardProps) {
     return (
         <div className='border flex-1 font-poppins h-[180px] w-full  rounded-md border-[#DEDEDE] p-[17px]'>
             <div className="flex w-full items-center">
-                <p className='text-[17px] font-medium font-poppins text-nowrap line-clamp-1'>{title}</p>
-                <div className="border  flex justify-center ms-2 text-black/40 h-[20px] items-center text-[11px] gap-1 p-1 px-2 border-black/20 rounded-md">
-                    <p className='capitalize line-clamp-1'>{item.cityDetails.name}</p>
+                <p className='text-[17px] mr-[4px] font-medium font-poppins text-nowrap line-clamp-1'>{title}</p>
+                <div className="border   flex justify-center text-black/40 h-[20px] items-center text-[11px] gap-1 p-1 px-2 border-black/20 rounded-md">
+                    <p className='capitalize text-nowrap line-clamp-1 '>{item.cityDetails.name}</p>
                     <div className="w-[1px] h-[12px] bg-black/40"></div>
                     <p className='capitalize line-clamp-1'>{item.emirateDetails.name}</p>
                 </div>

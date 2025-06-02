@@ -3,7 +3,7 @@ import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
 import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
 import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi';
-import { useFetchAllProjectsQuery } from '@/redux/project/projectApi';
+import { useFetchAllProjectsCountQuery, useFetchAllProjectsQuery } from '@/redux/project/projectApi';
 import { AllProjectsItems } from '@/redux/project/types';
 import { useViewAllSmallVideosQuery } from '@/redux/smallVideo/smallViewApi';
 import { AllSmallVideoItems } from '@/redux/smallVideo/types';
@@ -12,7 +12,7 @@ import { useViewAllWishlistsQuery } from '@/redux/wishlist/wishlistApi';
 import { setWishlist } from '@/redux/wishlistSlice/wishlistSlice';
 import { shuffle } from '@/utils/shuffle';
 import { useDeviceType } from '@/utils/useDeviceType';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import Header from '../Header';
@@ -20,15 +20,12 @@ import Container from '../atom/Container/Container';
 import SearchNew from '../SearchField/SearchNew';
 import SelectLatest from '../SelectOption/SelectLatest';
 import SelectNew from '../SelectOption/SelectNew';
-import SelectNewMultiple from '../SelectOption/SelectNewMultiple';
 import { SwitchSelector } from '../SelectOption';
-import { CompletionTypes, DiscountType, FurnishTypes, PaymentPlan, productTypeOptionFirstItems, PropertyTypes, propertyTypeSecond } from '@/data';
+import { CompletionTypes, FurnishTypes, productTypeOptionFirstItems, PropertyTypes, propertyTypeSecond } from '@/data';
 import { HiOutlineAdjustmentsHorizontal } from 'react-icons/hi2';
 import ExpandableComponentDropdown from '../ExpandableComponent/ExpandableComponent';
-import AreaRangeInput from '@/app/home/RangeArea';
 import clsx from 'clsx';
 import { SelectHandoverDate } from '../SelectHandoverDate';
-import BedBathSelector from '@/app/home/BedBathSelector';
 import { IoCloseOutline } from 'react-icons/io5';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
 import ProjectCard from '../ProjectCard/ProjectCard';
@@ -44,11 +41,15 @@ import MobileFilterOption from '@/app/home/MobileFilterOption';
 import { Footer } from '../Footer';
 import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal';
 import PaginationNew from '../PaginationNew/PaginationNew';
-import RangeCalculator from '@/app/home/RangeCalculator';
 import { FiltersState } from '../types';
 import Image from 'next/image';
 import { big_white_logo_icon } from '@/app/assets';
 import { useViewAllCountsQuery } from '@/redux/news/newsApi';
+import { parsePrice } from '@/utils/parsePrice';
+import { useForceScrollRestore } from '@/hooks/useScrollRestoration';
+import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
+import LocationTags from '../LocationTags/LocationTags';
+import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 
 type PaymentPlan = {
     label?: string;
@@ -63,6 +64,9 @@ interface UserData {
 
 
 export default function HomePage({ initialData }: { initialData: any }) {
+
+    useForceScrollRestore(); // Default key is "scroll-position"
+
     const [loading, setLoading] = useState(false)
 
 
@@ -101,6 +105,7 @@ export default function HomePage({ initialData }: { initialData: any }) {
     const dispatch = useDispatch();
 
 
+    //   useScrollRestoration('home-scroll');
 
 
     useEffect(() => {
@@ -145,7 +150,7 @@ export default function HomePage({ initialData }: { initialData: any }) {
         paymentPlan: undefined,
         furnishType: "",
         discount: "",
-        projectTypeFirst: 'all',
+        projectTypeFirst: 'off-plan-projects',
         projectTypeLast: 'all',
         bedAndBath: "",
         minPrice: '',
@@ -202,6 +207,7 @@ export default function HomePage({ initialData }: { initialData: any }) {
 
 
     const { data: allCounts } = useViewAllCountsQuery();
+    const { data: allProjectsCounts } = useFetchAllProjectsCountQuery();
     const { data: emiratesData } = useFetchAllEmirateNamesQuery();
     const { data: portraitBannerData } = useFetchAllPortraitBannersQuery({});
     const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
@@ -287,10 +293,11 @@ export default function HomePage({ initialData }: { initialData: any }) {
     }), []);
 
 
-    const [showBedBath, setShowBedBath] = useState(false);
     const totalPages = projects?.pagination?.totalPages || 1;
 
     const handleClick = (item: AllProjectsItems) => {
+        sessionStorage.setItem('scroll-position', window.scrollY.toString());
+
         router.push(`/projects/${item.slug}`);
     }
 
@@ -344,7 +351,7 @@ export default function HomePage({ initialData }: { initialData: any }) {
     const propertyTypesCondition = !((filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'residential') || (filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'commercial') || (filters?.projectType === 'off-plan-secondary' && filters?.propertyTypeSecond === 'commercial') || (filters?.projectType === 'off-plan-resale' && filters?.propertyTypeSecond === 'commercial') || (filters?.projectType === 'off-plan-projects' && filters?.propertyTypeSecond === 'commercial'));
     const furnishTypesCondition = (!((filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'residential') || (filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'commercial')))
 
-  
+
     useEffect(() => {
         if (projects?.data) {
             setAllProjects(projects?.data);
@@ -361,11 +368,21 @@ export default function HomePage({ initialData }: { initialData: any }) {
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
+        const page = urlParams.get('page');
+
+        if (page) {
+            setFilters(prev => ({ ...prev, page: parseInt(page) }))
+        }
+    }, [filters.page]);
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
         const propertyType = urlParams.get('property-type');
         const emirate = urlParams.get('emirate');
         const cities = urlParams.get('cities');
         const toConvertedCitiesParams = cities?.split(',')
         const completionType = urlParams.get('completion-type') ? urlParams.get('completion-type') : 'all';
+
 
 
         if (propertyType) {
@@ -385,6 +402,7 @@ export default function HomePage({ initialData }: { initialData: any }) {
 
     }, []);
 
+ 
     useEffect(() => {
         if (pathname === '/') {
             setDefaultProjectStage('all')
@@ -401,6 +419,8 @@ export default function HomePage({ initialData }: { initialData: any }) {
             </div>
         )
     }
+
+
 
     return (
 
@@ -560,14 +580,11 @@ export default function HomePage({ initialData }: { initialData: any }) {
 
                                         let path = '/';
 
-                                        if (e === 'all') {
+                                        if (e === 'off-plan-projects') {
                                             return;
                                         }
 
                                         switch (e) {
-                                            case 'off-plan-projects':
-                                                path = '/off-plan-projects';
-                                                break;
                                             case 'off-plan-resale':
                                                 path = '/off-plan-resale';
                                                 break;
@@ -585,7 +602,7 @@ export default function HomePage({ initialData }: { initialData: any }) {
 
 
                                     }}
-                                    defaultValue={defaultProjectStage}
+                                    defaultValue={productTypeOptionFirstItems?.[0]?.value}
                                     options={productTypeOptionFirstItems}
 
                                 />
@@ -656,9 +673,10 @@ export default function HomePage({ initialData }: { initialData: any }) {
 
 
 
-                            {/* Done */}
 
-                            <div className={clsx(`h-[48px]`, propertyTypesCondition ? 'w-[150px]' : 'flex-[8%]')}>
+                            <div className={clsx(``, propertyTypesCondition ? 'w-[150px]' : 'flex-[8%]',
+                                filters?.page && filters?.page > 1 ? 'h-[33px]' : 'h-[48px]'
+                            )}>
 
                                 <SelectLatest
                                     label="Property Types"
@@ -712,11 +730,15 @@ export default function HomePage({ initialData }: { initialData: any }) {
 
 
 
-                            <div className="lg:flex-[30%] h-[48px]">
+                            <div className={clsx("lg:flex-[30%]",
+
+                                filters?.page && filters?.page > 1 ? 'h-[33px]' : 'h-[48px]'
+
+                            )}>
                                 <SwitchSelector
                                     defaultValue={defaultCompletionType}
                                     onSelect={(e) => {
-                                         
+
 
                                         const url = new URL(window.location.href);
                                         if (e == 'all') {
@@ -735,7 +757,11 @@ export default function HomePage({ initialData }: { initialData: any }) {
                             </div>
 
 
-                            <div className="flex-[8%] h-[48px]">
+                            <div className={clsx("flex-[8%]",
+
+                                filters?.page && filters?.page > 1 ? 'h-[33px]' : 'h-[48px]'
+
+                            )}>
 
                                 <ExpandableComponentDropdown
                                     isOpen={showYearSelector}
@@ -778,7 +804,11 @@ export default function HomePage({ initialData }: { initialData: any }) {
 
 
 
-                            <div className="flex-[10%] h-[48px]">
+                            <div className={clsx("flex-[10%]",
+                                filters?.page && filters?.page > 1 ? 'h-[33px]' : 'h-[48px]'
+
+
+                            )}>
 
                                 <SelectNew
                                     clearSelection={clear}
@@ -805,7 +835,11 @@ export default function HomePage({ initialData }: { initialData: any }) {
 
 
 
-                            <div className="flex-[7%]  h-[48px]">
+                            <div className={clsx("flex-[7%]",
+
+                                filters?.page && filters?.page > 1 ? 'h-[33px]' : 'h-[48px]'
+
+                            )}>
 
                                 <SelectNew
                                     clearSelection={clear}
@@ -832,7 +866,11 @@ export default function HomePage({ initialData }: { initialData: any }) {
 
 
 
-                            <div className={clsx("h-[48px]", furnishTypesCondition ? 'w-[140px]' : 'flex-[8%]')}>
+                            <div className={clsx("", furnishTypesCondition ? 'w-[140px]' : 'flex-[8%]',
+
+                                filters?.page && filters?.page > 1 ? 'h-[33px]' : 'h-[48px]'
+
+                            )}>
 
                                 <SelectNew
                                     clearSelection={clear}
@@ -856,16 +894,60 @@ export default function HomePage({ initialData }: { initialData: any }) {
                     </Container>
 
                     <SectionDivider
-                        containerClassName="mt-[10.5px] mb-[12px]"
+                        containerClassName={clsx("mb-[12px]", filters?.page && filters?.page > 1 ? 'mt-[0px]' : 'mt-[10.5px]')}
                         lineClassName="h-[1px] w-full bg-[#DEDEDE]"
                     />
 
 
+
                     {/* Projects Section */}
                     <Container>
+                        <SpaceWrapper
+                        className='pt-[10px]'
+                        >
 
                         <div className="mb-4 flex gap-2">
                             <div className="flex-1 h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+
+                                {/* Breadcrumbs navigation link */}
+                                <div className={clsx("flex flex-col md:flex-row flex-1 items-start md:items-center w-full",filters?.page && filters?.page > 1 ? '':'hidden')}>
+
+                                    <BreadcampNavigation
+                                        title='Offplan Projects :'
+                                        items={[
+                                            {
+                                                title: filters?.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
+
+                                            },
+                                            {
+                                                title: 'Off plan Project Residential & Commercial',
+                                            }
+                                        ]}
+                                    />
+                                    <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Properties Available</p>
+                                </div>
+
+
+                                {/* Location link */}
+                              <div className={clsx("pt-[24px]",filters?.page && filters?.page > 1 ? '':'hidden')}>
+
+                                    <LocationTags
+
+                                        // data={[{ location: 'Dubai', count: 100 }, { location: 'Abu Dhabi', count: 200 },
+                                        // { location: 'Sharjah', count: 300 },
+                                        // { location: 'Sharjah', count: 300 }
+                                        // ]}
+                                        
+                                        data={
+                                            cities?.data?.slice(0, 4).map((item) => ({
+                                                location: item.name,
+                                                count: item.count,
+                                            })) || []
+                                        }
+                                    />
+                              
+                              </div>
+
 
                                 {/* projects */}
                                 {allProjects ? (
@@ -897,10 +979,11 @@ export default function HomePage({ initialData }: { initialData: any }) {
                                 )}
                             </div>
 
-                            <div className="w-full md:block hidden max-w-[301.5px]">
+                            <div className={"w-full md:block hidden max-w-[301.5px]"}>
 
                                 {smallVideoAds && smallVideoAds.length > 0 ?
-                                    <div className="w-full mb-[12px] flex relative">
+                                    <div className={clsx("w-full mb-[12px] relative flex")}>
+                                    {/* <div className={clsx("w-full mb-[12px] relative",filters?.page && filters?.page > 1 ? 'hidden':'flex')}> */}
                                         <VideoPreview
                                             projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
                                             src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
@@ -921,6 +1004,7 @@ export default function HomePage({ initialData }: { initialData: any }) {
 
                             </div>
                         </div>
+                        </SpaceWrapper>
                     </Container>
 
 
@@ -940,12 +1024,17 @@ export default function HomePage({ initialData }: { initialData: any }) {
                         <PaginationNew
                             currentPage={filters.page || 1}
                             totalPages={totalPages}
-                            onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
+                            onPageChange={(newPage) => {
+                                const url = new URL(window.location.href);
+                                url.searchParams.set('page', newPage.toString());
+                                window.history.pushState({}, '', url);
+                                setFilters(prev => ({ ...prev, page: newPage }))
+                            }}
                             maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />
 
 
 
-                        <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">1 To 24 of 23,567 Listings</div>
+                        <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">{filters.page} To {totalPages} of {allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Listings</div>
                     </div>
                 </Container>
 
