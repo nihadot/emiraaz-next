@@ -37,6 +37,7 @@ import MobileFilterOption from '@/app/home/MobileFilterOption';
 import { FiltersState } from '../types';
 import { useViewAllCountsQuery } from '@/redux/news/newsApi';
 import { parsePrice } from '@/utils/parsePrice';
+import { useForceScrollRestore } from '@/hooks/useScrollRestoration';
 
 
 function Residential() {
