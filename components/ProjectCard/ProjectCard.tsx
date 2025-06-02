@@ -201,9 +201,9 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                 </div>
 
 
-                <div className="flex items-center mt-[8px] sm:mt-[10.5px] gap-2">
+                <div className="flex items-center mt-[8px] sm:mt-[10.5px] gap-1">
                    <div className="">
-                     <TfiLocationPin size={20} color='#333333' />
+                     <TfiLocationPin size={18} color='#333333' />
                    </div>
                     {/* <Image src={location_icon} alt="location icon" width={15} height={15} className="object-cover" /> */}
                     {/* <p className="text-xs font-light font-poppins capitalize">{item.address || 'Jumeirah Village Circle, Dubai'}</p> */}
