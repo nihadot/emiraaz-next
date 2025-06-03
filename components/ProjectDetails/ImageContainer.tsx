@@ -58,7 +58,7 @@ function ImageContainer({ images,close }: Props) {
             </div>
             <button
               onClick={() => setPreviewIndex(null)}
-              className="absolute flex items-center justify-center bg-[#FFE8ED] -top-14 -left-0 sm:-left-14 text-[#FF1645] w-[152.25px] h-[35.25px] rounded-[3.5px]"
+              className="absolute flex items-center justify-center bg-[#FFE8ED]  -top-4 sm:-top-14 -left-0 sm:-left-14 text-[#FF1645] w-[152.25px] h-[35.25px] rounded-[3.5px]"
             >
               <FaChevronLeft size={12} color='' />
               <span className=' text-[10px] sm:text-[14.25px] font-medium font-poppins ms-[12px]'>Back to Gallery</span>

@@ -11,7 +11,7 @@ import Header from '../Header';
 import Container from '../atom/Container/Container';
 import SearchNew from '../SearchField/SearchNew';
 import SelectLatest from '../SelectOption/SelectLatest';
-import { FurnishTypes, PaymentPlan, productTypeOptionFirstItems, propertyTypeSecond } from '@/data';
+import { FurnishTypes, productTypeOptionFirstItems, propertyTypeSecond } from '@/data';
 import { SwitchSelector } from '../SelectOption';
 import { HiOutlineAdjustmentsHorizontal } from 'react-icons/hi2';
 import ExpandableComponentDropdown from '../ExpandableComponent/ExpandableComponent';
@@ -19,13 +19,11 @@ import RangeCalculator from '@/app/home/RangeCalculator';
 import AreaRangeInput from '@/app/home/RangeArea';
 import { IoCloseOutline } from 'react-icons/io5';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
-import Breadcamps from '../Breadcamps/Breadcamps';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import LocationTags from '../LocationTags/LocationTags';
 import ProjectCard from '../ProjectCard/ProjectCard';
 import CustomSlider from '../CustomSlider/CustomSlider';
 import ProjectCardSkelton from '../ProjectCard/ProjectCardSkelton';
-import Recommendations from '@/app/home/Recommendations';
 import CustomSliderUi from '@/app/home/CustomSliderUi';
 import PaginationNew from '../PaginationNew/PaginationNew';
 import BottomBanner from '@/app/home/BottomBanner';
@@ -50,7 +48,6 @@ function Commercial() {
 useScrollToTopOnRefresh();
 
     const router = useRouter()
-    const pathname = usePathname();
 
     const [clear, setClear] = useState(false);
     const [defaultEmirate, setDefaultEmirate] = useState<string>('');

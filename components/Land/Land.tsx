@@ -21,7 +21,6 @@ import ProjectCard from '../ProjectCard/ProjectCard';
 import CustomSlider from '../CustomSlider/CustomSlider';
 import ProjectCardSkelton from '../ProjectCard/ProjectCardSkelton';
 import CustomSliderUi from '@/app/home/CustomSliderUi';
-import Recommendations from '@/app/home/Recommendations';
 import BottomBanner from '@/app/home/BottomBanner';
 import { Footer } from '../Footer';
 import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal';
@@ -575,8 +574,8 @@ useScrollToTopOnRefresh();
 
 
                             {/* projects */}
-                            {projects ? (
-                                projects.data.map((item, index) => (
+                            {allProjects ? (
+                                allProjects.map((item, index) => (
                                     <React.Fragment key={index}>
                                         <ProjectCard
                                             navigateDetailsButton={true}
@@ -701,6 +700,7 @@ useScrollToTopOnRefresh();
             />
 
             <MobileFilterOption
+                bathroomsRange={ filters.page && filters.page > 1 ? true : false}
 
                 resultProjects={() => {
                     setAllProjects(projects?.data);

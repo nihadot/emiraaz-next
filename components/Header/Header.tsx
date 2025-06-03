@@ -79,7 +79,11 @@ function Header() {
 
 
         {/* Logo */}
-        <div onClick={() => router.push("/")} className="w-[140px] cursor-pointer sm:w-[138.75px] ms-7 sm:ms-0 h-[50px] sm:h-[32.25px] relative ">
+        <div onClick={() => {
+                sessionStorage.removeItem('scroll-position');
+
+          router.push("/")
+        }} className="w-[140px] cursor-pointer sm:w-[138.75px] ms-7 sm:ms-0 h-[50px] sm:h-[32.25px] relative ">
           <Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />
 
         </div>

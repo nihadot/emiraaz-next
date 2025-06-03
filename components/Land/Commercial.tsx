@@ -19,7 +19,6 @@ import RangeCalculator from '@/app/home/RangeCalculator';
 import AreaRangeInput from '@/app/home/RangeArea';
 import { IoCloseOutline } from 'react-icons/io5';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
-import Breadcamps from '../Breadcamps/Breadcamps';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import LocationTags from '../LocationTags/LocationTags';
 import ProjectCard from '../ProjectCard/ProjectCard';
@@ -44,7 +43,6 @@ function Commercial() {
     useForceScrollRestore(); // Default key is "scroll-position"
 useScrollToTopOnRefresh();
     const router = useRouter()
-    const pathname = usePathname();
 
     const [clear, setClear] = useState(false);
     const [defaultEmirate, setDefaultEmirate] = useState<string>('');
@@ -562,8 +560,8 @@ useScrollToTopOnRefresh();
 
 
                             {/* projects */}
-                            {projects ? (
-                                projects.data.map((item, index) => (
+                            {allProjects ? (
+                                allProjects?.map((item, index) => (
                                     <React.Fragment key={index}>
                                         <ProjectCard
                                             navigateDetailsButton={true}

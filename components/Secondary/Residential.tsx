@@ -669,8 +669,8 @@ useScrollToTopOnRefresh();
 
 
                             {/* projects */}
-                            {projects ? (
-                                projects.data.map((item, index) => (
+                            {allProjects ? (
+                                allProjects?.map((item, index) => (
                                     <React.Fragment key={index}>
                                         <ProjectCard
                                             navigateDetailsButton={true}

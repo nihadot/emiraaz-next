@@ -790,7 +790,7 @@ useScrollToTopOnRefresh();
 
 
             <MobileFilterOption
-
+                bathroomsRange={ filters.page && filters.page > 1 ? true : false}
                 resultProjects={() => {
                     setAllProjects(projects?.data);
                 }}

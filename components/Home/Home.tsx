@@ -676,6 +676,7 @@ const [paginationHappened, setPaginationHappened] = useState(false)
 
                         </section>
                     </Container>
+                    
 
 
 
@@ -1087,7 +1088,7 @@ const [paginationHappened, setPaginationHappened] = useState(false)
                                 setPaginationHappened(pre => !pre)
                                 setFilters(prev => ({ ...prev, page: newPage }))
                             }}
-                            maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />
+                            maxVisiblePages={deviceType === 'mobile' ? 4 : 8} />
 
 
 
@@ -1107,10 +1108,12 @@ const [paginationHappened, setPaginationHappened] = useState(false)
                 <BottomBanner />
 
                 {/* Video ad son mobile */}
-                {smallVideoAds && smallVideoAds.length > 0 &&
+                { filters.page && filters.page <= 1 && smallVideoAds && smallVideoAds.length > 0 &&
                     <Container>
                         <div className="w-full mb-[35px] relative flex sm:hidden">
                             <VideoPreview
+                                                projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
+
                                 src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
                             />
                         </div>
@@ -1138,6 +1141,7 @@ const [paginationHappened, setPaginationHappened] = useState(false)
 
 
                 <MobileFilterOption
+                bathroomsRange={ filters.page && filters.page > 1 ? true : false}
 
                     resultProjects={() => {
                         setAllProjects(projects?.data);

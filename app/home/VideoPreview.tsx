@@ -755,6 +755,8 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   dimOpacity = 0.5,
   projectSlug,
 }) => {
+
+  console.log(projectSlug,'projectSlug')
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);

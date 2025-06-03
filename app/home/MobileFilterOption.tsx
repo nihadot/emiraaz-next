@@ -11,9 +11,6 @@ import BedBathSelector from './BedBathSelector';
 import clsx from 'clsx';
 import { AllProjectsItems } from '@/redux/project/types';
 import SelectLatest from '@/components/SelectOption/SelectLatest';
-import { PiBuildingApartmentLight, PiBuildingOffice, PiBuildingOfficeLight } from "react-icons/pi";
-import { GiVillage } from "react-icons/gi";
-import { PiBuildingsLight } from "react-icons/pi";
 import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
 import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
 import { useFetchAllProjectsQuery } from '@/redux/project/projectApi';
@@ -245,8 +242,6 @@ function MobileFilterOption({
         maxSqft: filters.maxSqft,
         beds: filters.beds,
         bath: filters.bath,
-        // productTypeOptionFirst: filters.productTypeOptionFirst,
-        // productTypeOptionLast: filters.productTypeOptionLast,
     }), [filters]);
 
 
@@ -255,16 +250,10 @@ function MobileFilterOption({
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
-        // const propertyType = urlParams.get('property-type');
         const emirate = urlParams.get('emirate');
         const cities = urlParams.get('cities');
         const toConvertedCitiesParams = cities?.split(',')
-        // const completionType = urlParams.get('completion-type') ? urlParams.get('completion-type') : 'all';
 
-
-        // if (propertyType) {
-        //     setDefaultPropertyType(propertyType)
-        // }
         if (emirate) {
             setDefaultEmirate(emirate)
         }
@@ -272,14 +261,10 @@ function MobileFilterOption({
             setDefaultCities(toConvertedCitiesParams)
         }
 
-        // if (completionType) {
-        //     setDefaultCompletionType(completionType)
-        // }
-
 
     }, []);
 
-  
+
     return (
         <AnimatePresence>
             {show && (
@@ -409,10 +394,7 @@ function MobileFilterOption({
                                             onClick={() => handleSelect.propertyType({ label: PropertyTypes[2].label, value: PropertyTypes[2].value })}
 
                                             className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[2].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
-                                            {/* <PiBuildingOfficeLight
-                                                size={30}
-                                                color={filters?.propertyType?.includes(PropertyTypes[2].value) ? 'red' : ''}
-                                            /> */}
+                                         
                                             <Image className='bg-transparent' src={apartment_icon} alt="apartment icon" width={30} height={30} />
                                         </div>
                                         <p className='text-[10px]  font-medium font-poppins text-center'>Apartment</p>
@@ -425,10 +407,7 @@ function MobileFilterOption({
                                             onClick={() => handleSelect.propertyType({ label: PropertyTypes[3].label, value: PropertyTypes[3].value })}
 
                                             className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[3].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
-                                            {/* <PiBuildingApartmentLight
-                                                size={30}
-                                                color={filters?.propertyType?.includes(PropertyTypes[3].value) ? 'red' : ''}
-                                            /> */}
+                                            
                                             <Image className='bg-transparent' src={penthouse_icon} alt="penthouse icon" width={30} height={30} />
 
                                         </div>
@@ -444,11 +423,8 @@ function MobileFilterOption({
                                             onClick={() => handleSelect.propertyType({ label: PropertyTypes[4].label, value: PropertyTypes[4].value })}
 
                                             className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[4].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
-                                            {/* <PiBuildingsLight
-                                                size={30}
-                                                color={filters?.propertyType?.includes(PropertyTypes[4].value) ? 'red' : ''}
-                                            /> */}
-                                                                                        <Image className='bg-transparent' src={townhouse_icon} alt="townhouse icon" width={30} height={30} />
+                                      
+                                            <Image className='bg-transparent' src={townhouse_icon} alt="townhouse icon" width={30} height={30} />
 
                                         </div>
                                         <p className='text-[10px]  font-medium font-poppins text-center'>Townhouse</p>
@@ -461,11 +437,8 @@ function MobileFilterOption({
                                             onClick={() => handleSelect.propertyType({ label: PropertyTypes[1].label, value: PropertyTypes[1].value })}
 
                                             className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[1].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
-                                            {/* <GiVillage
-                                                size={30}
-                                                color={filters?.propertyType?.includes(PropertyTypes[1].value) ? 'red' : ''}
-                                            /> */}
-                                                                                        <Image className='bg-transparent' src={villa_icon} alt="villa icon" width={30} height={30} />
+                                           
+                                            <Image className='bg-transparent' src={villa_icon} alt="villa icon" width={30} height={30} />
 
                                         </div>
                                         <p className='text-[10px]  font-medium font-poppins text-center'>Villa</p>
@@ -501,10 +474,7 @@ function MobileFilterOption({
                                     onDone={(year, quarter) => {
                                         handleSelect.handoverDate({ quarter, year })
                                     }}
-                                    // onClose={() => setShowYearSelector(false)}
-                                    // reset={() => console.log("Reset triggered")}
                                     onChange={(year, quarter) => {
-                                        // console.log('first')
                                         handleSelect.handoverDate({ quarter, year })
                                     }}
                                 />

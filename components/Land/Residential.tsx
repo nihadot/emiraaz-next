@@ -19,7 +19,6 @@ import RangeCalculator from '@/app/home/RangeCalculator';
 import AreaRangeInput from '@/app/home/RangeArea';
 import { IoCloseOutline } from 'react-icons/io5';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
-import Breadcamps from '../Breadcamps/Breadcamps';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import LocationTags from '../LocationTags/LocationTags';
 import ProjectCard from '../ProjectCard/ProjectCard';
@@ -35,6 +34,7 @@ import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import { FiltersState } from '../types';
 import { useForceScrollRestore, useScrollToTopOnRefresh } from '@/hooks/useScrollRestoration';
 import { parsePrice } from '@/utils/parsePrice';
+import MobileFilterOption from '@/app/home/MobileFilterOption';
 
 
 
@@ -53,6 +53,7 @@ useScrollToTopOnRefresh();
     const [debouncedSearch, setDebouncedSearch] = useState<any>("");
     const [EnquiryForm, setEnquiryForm] = useState({ status: false, id: '', count: 0 });
     const [rangeCalculator, setRangeCalculator] = useState(false);
+    const [allProjects, setAllProjects] = useState<AllProjectsItems[]>();
 
     const [areaRange, setShowAreaRange] = useState(false);
 
@@ -559,8 +560,8 @@ useScrollToTopOnRefresh();
 
 
                             {/* projects */}
-                            {projects ? (
-                                projects.data.map((item, index) => (
+                            {allProjects ? (
+                                allProjects?.map((item, index) => (
                                     <React.Fragment key={index}>
                                         <ProjectCard
                                             navigateDetailsButton={true}
@@ -652,6 +653,21 @@ useScrollToTopOnRefresh();
                 EnquiryForm={EnquiryForm}
                 setEnquiryForm={setEnquiryForm}
             />
+
+
+                        <MobileFilterOption
+                            bathroomsRange={ filters.page && filters.page > 1 ? true : false}
+            
+                            resultProjects={() => {
+                                setAllProjects(projects?.data);
+                            }}
+                            setFiltersHandler={setFilters}
+                            onClose={() => setFilterModel(false)}
+                            show={filterModel}
+                        />
+            
+            
+
         </main>
     )
 }

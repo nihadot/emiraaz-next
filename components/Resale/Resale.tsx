@@ -11,18 +11,16 @@ import Header from '../Header';
 import Container from '../atom/Container/Container';
 import SearchNew from '../SearchField/SearchNew';
 import SelectLatest from '../SelectOption/SelectLatest';
-import { FurnishTypes, PaymentPlan, productTypeOptionFirstItems, propertyTypeSecond } from '@/data';
+import { FurnishTypes, productTypeOptionFirstItems, propertyTypeSecond } from '@/data';
 import { SwitchSelector } from '../SelectOption';
 import { HiOutlineAdjustmentsHorizontal } from 'react-icons/hi2';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
-import Breadcamps from '../Breadcamps/Breadcamps';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import LocationTags from '../LocationTags/LocationTags';
 import ProjectCard from '../ProjectCard/ProjectCard';
 import CustomSlider from '../CustomSlider/CustomSlider';
 import ProjectCardSkelton from '../ProjectCard/ProjectCardSkelton';
 import CustomSliderUi from '@/app/home/CustomSliderUi';
-import Recommendations from '@/app/home/Recommendations';
 import BottomBanner from '@/app/home/BottomBanner';
 import { Footer } from '../Footer';
 import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal';
@@ -649,8 +647,8 @@ useScrollToTopOnRefresh();
 
 
                             {/* projects */}
-                            {projects ? (
-                                projects.data.map((item, index) => (
+                            {allProjects ? (
+                                allProjects?.map((item, index) => (
                                     <React.Fragment key={index}>
                                         <ProjectCard
                                             navigateDetailsButton={true}

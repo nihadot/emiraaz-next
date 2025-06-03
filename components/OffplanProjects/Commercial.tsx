@@ -11,13 +11,10 @@ import Header from '../Header';
 import Container from '../atom/Container/Container';
 import SearchNew from '../SearchField/SearchNew';
 import SelectLatest from '../SelectOption/SelectLatest';
-import { CompletionTypes, DiscountType, FurnishTypes, PaymentPlan, productTypeOptionFirstItems, PropertyTypes, propertyTypeSecond } from '@/data';
+import { CompletionTypes, FurnishTypes, productTypeOptionFirstItems, PropertyTypes, propertyTypeSecond } from '@/data';
 import { SwitchSelector } from '../SelectOption';
 import { HiOutlineAdjustmentsHorizontal } from 'react-icons/hi2';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
-import Breadcamps from '../Breadcamps/Breadcamps';
-import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
-import LocationTags from '../LocationTags/LocationTags';
 import ProjectCard from '../ProjectCard/ProjectCard';
 import CustomSlider from '../CustomSlider/CustomSlider';
 import ProjectCardSkelton from '../ProjectCard/ProjectCardSkelton';
@@ -650,45 +647,10 @@ useScrollToTopOnRefresh();
                     <div className="mb-4 flex gap-2">
                         <div className="w-full h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
 
-                          {/* Breadcrumbs navigation link */}
-                            {/* <div className="flex justify-between flex-col md:flex-row flex-1 items-start md:items-center w-full py-3">
-
-                                <BreadcampNavigation
-                                    title='Offplan Projects :'
-                                    items={[
-                                        {
-                                            title:  filters?.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
-                                             
-                                        },
-                                        {
-                                            title: 'Off plan Project Residential & Commercial',
-                                        }
-                                    ]}
-                                />
-                                    <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Properties Available</p>
-                            </div> */}
-
-
-                            {/* Location link */}
-                            {/* <SpaceWrapper
-                                className='pb-3'
-                            >
-                                <LocationTags
-
-                                    
-                                        data={
-                                            cities?.data?.slice(0, 4).map((item) => ({
-                                                location: item.name,
-                                                count: item.count,
-                                            })) || []
-                                        }
-                                />
-                            </SpaceWrapper> */}
-
-
+                        
                             {/* projects */}
-                            {projects ? (
-                                projects.data.map((item, index) => (
+                            {allProjects ? (
+                                allProjects.map((item, index) => (
                                     <React.Fragment key={index}>
                                         <ProjectCard
                                             navigateDetailsButton={true}
@@ -794,7 +756,8 @@ useScrollToTopOnRefresh();
 
 
                          <MobileFilterOption
-                                        
+                                                      bathroomsRange={ filters.page && filters.page > 1 ? true : false}
+  
                                         resultProjects={()=>{
                                             setAllProjects(projects?.data);
                                         }}

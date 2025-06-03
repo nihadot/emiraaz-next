@@ -19,13 +19,11 @@ import RangeCalculator from '@/app/home/RangeCalculator';
 import AreaRangeInput from '@/app/home/RangeArea';
 import { IoCloseOutline } from 'react-icons/io5';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
-import Breadcamps from '../Breadcamps/Breadcamps';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import LocationTags from '../LocationTags/LocationTags';
 import ProjectCard from '../ProjectCard/ProjectCard';
 import CustomSlider from '../CustomSlider/CustomSlider';
 import ProjectCardSkelton from '../ProjectCard/ProjectCardSkelton';
-import Recommendations from '@/app/home/Recommendations';
 import CustomSliderUi from '@/app/home/CustomSliderUi';
 import PaginationNew from '../PaginationNew/PaginationNew';
 import BottomBanner from '@/app/home/BottomBanner';
@@ -47,7 +45,6 @@ function Commercial() {
     useForceScrollRestore(); // Default key is "scroll-position"
 
     const router = useRouter()
-    const pathname = usePathname();
 useScrollToTopOnRefresh();
 
     const [clear, setClear] = useState(false);
@@ -583,8 +580,8 @@ useScrollToTopOnRefresh();
 
 
                             {/* projects */}
-                            {projects ? (
-                                projects.data.map((item, index) => (
+                            {allProjects ? (
+                                allProjects?.map((item, index) => (
                                     <React.Fragment key={index}>
                                         <ProjectCard
                                             navigateDetailsButton={true}

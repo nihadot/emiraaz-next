@@ -1,5 +1,5 @@
 'use client'
-import { close_icon, enquiry_icon, floor_plan, location_icon, notes_red_edit, save_icon, share_button_icon } from '@/app/assets';
+import { close_icon, floor_plan, notes_red_edit, save_icon, share_button_icon } from '@/app/assets';
 import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi';
 import { useFetchAllProjectsQuery, useFetchProjectByIdQuery } from '@/redux/project/projectApi';
 import { useViewAllProjectAdsCardsQuery } from '@/redux/projectAdsCard/projectAdsCardApi';
@@ -25,7 +25,7 @@ import PrimaryButton from '../Buttons';
 import MortgageCalculator from './LoanCalculator';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
-import { IoCloseOutline, IoLocationOutline } from 'react-icons/io5';
+import { IoCloseOutline } from 'react-icons/io5';
 import ProjectHeader from './ProjectHeader';
 import { Footer } from '../Footer';
 import TextareaField from '../TextareaField/TextareaField';
@@ -138,7 +138,7 @@ function ProjectDetails({ id }: { id: string }) {
     {
       label: 'Floor Plans & Layouts',
       value: 'floor-plans-layouts',
-      icon:      <TfiLocationPin size={17.25} color='#333333' />
+      icon: <TfiLocationPin size={17.25} color='#333333' />
 
     }
   ]
@@ -156,13 +156,7 @@ function ProjectDetails({ id }: { id: string }) {
 
   const handleGallerySelect = (value: string) => {
     setGallerySelected(value);
-    // onSelect(value);
   };
-
-  // const handleGalleryModal = (value: any) => {
-  //   setSelected(value)
-  //   setGalleryModal(prev => !prev);
-  // }
 
   const initialValues = {
     loanAmount: 0,
@@ -457,20 +451,16 @@ function ProjectDetails({ id }: { id: string }) {
                   handleGalleryModal()
                   handleGallerySelect('map')
                 }} className="absolute hidden sm:flex bottom-[24.75px] left-[24.75px] items-center gap-2 p-2 rounded-[3.75px] z-40 bg-black/[77%]">
-                       <TfiLocationPin size={18} color='#fff' />
+                  <TfiLocationPin size={18} color='#fff' />
                   <span className="text-white font-poppins text-[12px] font-normal">Map</span>
                 </div>
               </div>
 
 
               <ModalViewButtons
-
                 handleGalleryModal={handleGalleryModal}
                 handleGallerySelect={handleGallerySelect}
               />
-              {/* handleGalleryModal()
-              handleGallerySelect('images') */}
-
 
               <ProjectBasicInfo
                 type={data?.data?.type || ''}
@@ -712,10 +702,10 @@ function ProjectDetails({ id }: { id: string }) {
 
                 >
                   <div className="flex items-center gap-2">
-                        <div className="relative w-[20px] h-[20px]">
-                    
-                                            <PiNotePencilLight size={20} color='white' />
-                                            </div>
+                    <div className="relative w-[20px] h-[20px]">
+
+                      <PiNotePencilLight size={20} color='white' />
+                    </div>
                     {/* <Image src={enquiry_icon} alt="share icon" width={21} /> */}
                     <label className="text-sm font-medium text-white font-poppins">Enquire Now </label>
                   </div>
@@ -755,19 +745,21 @@ function ProjectDetails({ id }: { id: string }) {
 
 
 
-      <NewModal
+        <NewModal
           onClose={handleGalleryModal}
           isOpen={galleryModal}
-          contentClassName="flex  rounded-[6px] max-w-[1200px]  flex-col bg-white p-0 w-full h-screen  sm:max-h-fit"
+          contentClassName="flex rounded-[6px] max-w-[1200px]  flex-col bg-white p-0 w-full h-[100%] sm:h-[80vh]"
 
         >
 
 
 
 
-          <Container>
+          <Container
+          className='h-full'
+          >
 
-            <div className="w-full sm:px-5 flex flex-col bg-white pb-4 pt-3 sm:py-[20px] rounded-[6px] h-screen sm:h-[80vh]">
+            <div className="w-full sm:px-5 flex flex-col bg-white pb-3 pt-3 sm:py-[20px] rounded-[6px] h-full sm:h-[80vh]">
 
               <div className=" justify-end  sm:flex hidden items-end" onClick={handleGalleryModal}>
                 <IoMdClose
@@ -778,11 +770,11 @@ function ProjectDetails({ id }: { id: string }) {
 
 
 
-              <div className=" w-full flex h-[48px] sm:py-2 px-1  sm:border-[#DEDEDE] sm:border mb-2 sm:my-2 items-center  text-sm gap-[4px] sm:gap-[7.5px] rounded-md  ">
+              <div className=" w-full flex h-[48px] sm:py-2 px-1  sm:border-[#DEDEDE] bg-white sm:border mb-2 sm:my-2 items-center  text-sm gap-[4px] sm:gap-[7.5px] rounded-[3px]  ">
                 {options.map((item) => (
                   <button
                     key={item.value}
-                    className={` font-normal gap-[4px] sm:gap-[7.5px] font-poppins sm:text-[14px] rounded-[3px] sm:rounded-[5px] px-2 sm:px-4 py-0 sm:py-1 h-[34px] sm:h-[40px] flex items-center   justify-center transition-all w-full duration-200 ${gallerySelected === item.value
+                    className={` font-normal gap-[4px] sm:gap-[7.5px] font-poppins sm:text-[14px] rounded-[3px] sm:rounded-[3px] px-2 sm:px-4 py-0 sm:py-1 h-[34px] sm:h-[40px] flex items-center   justify-center transition-all w-full duration-200 ${gallerySelected === item.value
                       ? 'bg-red-600/10 text-red-600'
                       : 'bg-white text-[#767676] hover:text-red-600 hover:bg-red-100'
                       }`}
@@ -818,7 +810,7 @@ function ProjectDetails({ id }: { id: string }) {
               />}
 
 
-              <div className="flex mt-[15px] gap-1 sm:gap-[7.5px] items-center sm:justify-end">
+              <div className="flex bg-white mt-[15px] gap-1 sm:gap-[7.5px] items-center sm:justify-end">
                 <PrimaryButton
                   type="button"
                   className="bg-[#FFE7EC] !px-3 sm:!px-4 !py-2 sm:!py-[9px] !w-full sm:!w-fit  border-none text-[#FF1645] font-poppins rounded "
@@ -847,7 +839,6 @@ function ProjectDetails({ id }: { id: string }) {
                         color='#FF1645'
                         size={20}
                       />
-                      {/* <Image src={share_button_icon} alt="share icon" fill /> */}
                     </div>
                     <label className="text-[12px] sm:text-[14.25px] text-nowrap text-[#FF1645] font-medium font-poppins">Share </label>
                   </div>
@@ -864,7 +855,6 @@ function ProjectDetails({ id }: { id: string }) {
                     onClick={() => setEnquiryForm({ status: true, id: data?.data?._id || '', count: 1 })}
                     className="flex items-center gap-2 w-fit h-[25px] sm:h-[28px] justify-center">
                     <div className="w-[18px] sm:w-[21px] h-[18px] sm:h-[21px] relative">
-                      {/* <Image src={notes_red_edit} alt="share icon" fill /> */}
                       <PiNotePencil
                         className="w-[25px] h-[22px]"
                         color="#FF1645"
