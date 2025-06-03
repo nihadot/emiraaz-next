@@ -36,13 +36,22 @@ import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import MobileFilterOption from '@/app/home/MobileFilterOption';
 import { FiltersState } from '../types';
 import { useViewAllCountsQuery } from '@/redux/news/newsApi';
-import { useForceScrollRestore } from '@/hooks/useScrollRestoration';
+import { useForceScrollRestore, useScrollToTopOnRefresh } from '@/hooks/useScrollRestoration';
 import { parsePrice } from '@/utils/parsePrice';
+import VideoPreview from '@/app/home/VideoPreview';
+import { AllSmallVideoItems } from '@/redux/smallVideo/types';
+import { useViewAllSmallVideosQuery } from '@/redux/smallVideo/smallViewApi';
+import { useViewAllWishlistsQuery } from '@/redux/wishlist/wishlistApi';
+import { LOCAL_STORAGE_KEYS } from '@/api/storage';
+import { AllWishlistItems } from '@/redux/wishlist/types';
+import { setWishlist } from '@/redux/wishlistSlice/wishlistSlice';
+import { useDispatch } from 'react-redux';
 
 
 function Commercial() {
 
     useForceScrollRestore(); // Default key is "scroll-position"
+useScrollToTopOnRefresh();
 
     const router = useRouter()
     const pathname = usePathname();
@@ -116,13 +125,50 @@ function Commercial() {
                 productTypeOptionLast: filters.productTypeOptionLast,
             }), [filters, debouncedSearch]);
         
+               const userDataString = useMemo(() => {
+                    return typeof window !== "undefined" ? localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA) : null;
+                }, []);
+
+            const userId = useMemo(() => {
+                    if (!userDataString) return null;
+                    try {
+                        const parsed = JSON.parse(userDataString);
+                        return parsed?._id || null;
+                    } catch (err) {
+                        return null;
+                    }
+                }, [userDataString]);
+            
+
+
+                const { data: smallVideoAdsResponse } = useViewAllSmallVideosQuery({});
+             const { data: wishlistDataItem } = useViewAllWishlistsQuery(
+                    { userId },
+                    { skip: !userId } // <- only call if userId is available
+                );
+            
 
     const { data: emiratesData } = useFetchAllEmirateNamesQuery();
     const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
     const { data: projects } = useFetchAllProjectsQuery(queryParams);
     const { data: allCounts } = useViewAllCountsQuery();
     const { data: allProjectsCounts } = useFetchAllProjectsCountQuery();
+    const [wishlistData, setWishlistData] = useState<AllWishlistItems[]>();
+    const dispatch = useDispatch();
 
+
+      useEffect(() => {
+            if (wishlistDataItem?.data) {
+                dispatch(setWishlist(wishlistDataItem?.data))
+                setWishlistData(wishlistDataItem?.data)
+            }
+    
+            if (smallVideoAdsResponse?.data) {
+                // console.log(smallVideoAdsResponse?.data, 'smallVideoAdsResponse')
+                setSmallVideoAds(smallVideoAdsResponse?.data);
+            }
+        }, [wishlistDataItem, smallVideoAdsResponse]);
+    
 
     const emirateOptions = useMemo(() => {
         const mappedOptions = emiratesData?.data.map((item) => ({
@@ -243,6 +289,7 @@ function Commercial() {
         setClear(true);
         setTimeout(() => setClear(false), 100);
     }, []);
+    const [smallVideoAds, setSmallVideoAds] = useState<AllSmallVideoItems[]>();
 
 
     const handleClick = (item: AllProjectsItems) => {
@@ -256,13 +303,19 @@ function Commercial() {
             count: 1,
         });
     }, []);
-
+    
     const [showYearSelector, setShowYearSelector] = useState(false);
-
+    
     const { data: portraitBannerData } = useFetchAllPortraitBannersQuery({});
-
+    
     const banners = portraitBannerData?.data || [];
     const shuffledImages = useMemo(() => shuffle(banners), [banners]);
+    
+    const [paginationHappened, setPaginationHappened] = useState(false)
+    useEffect(()=>{
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    },[paginationHappened]);
 
 
 
@@ -598,7 +651,7 @@ function Commercial() {
                         <div className="w-full h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
 
                           {/* Breadcrumbs navigation link */}
-                            <div className="flex justify-between flex-col md:flex-row flex-1 items-start md:items-center w-full py-3">
+                            {/* <div className="flex justify-between flex-col md:flex-row flex-1 items-start md:items-center w-full py-3">
 
                                 <BreadcampNavigation
                                     title='Offplan Projects :'
@@ -613,11 +666,11 @@ function Commercial() {
                                     ]}
                                 />
                                     <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Properties Available</p>
-                            </div>
+                            </div> */}
 
 
                             {/* Location link */}
-                            <SpaceWrapper
+                            {/* <SpaceWrapper
                                 className='pb-3'
                             >
                                 <LocationTags
@@ -630,7 +683,7 @@ function Commercial() {
                                             })) || []
                                         }
                                 />
-                            </SpaceWrapper>
+                            </SpaceWrapper> */}
 
 
                             {/* projects */}
@@ -663,21 +716,30 @@ function Commercial() {
                             )}
                         </div>
 
-                        <div className="w-full xl:block hidden max-w-[301.5px]">
-
-
-                            <div className="sticky top-3 left-0">
-
-                                <Recommendations />
-                                <CustomSliderUi
-                                    shuffledImages={shuffledImages}
-                                />
-                            </div>
-
-
-
-
-                        </div>
+                      <div className={"w-full md:block hidden max-w-[301.5px]"}>
+                     
+                                                     {smallVideoAds && smallVideoAds.length > 0 ?
+                                                         <div className={clsx("w-full mb-[12px] relative flex")}>
+                                                         {/* <div className={clsx("w-full mb-[12px] relative",filters?.page && filters?.page > 1 ? 'hidden':'flex')}> */}
+                                                             <VideoPreview
+                                                                 projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
+                                                                 src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                                                             />
+                                                         </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>
+                                                     }
+                     
+                                                     <div className="sticky top-3 left-0">
+                     
+                                                         <CustomSliderUi
+                                                             shuffledImages={shuffledImages}
+                                                         />
+                                                         <Recommendations />
+                                                     </div>
+                     
+                     
+                     
+                     
+                                                 </div>
                     </div>
                 </Container>
 
@@ -694,7 +756,8 @@ function Commercial() {
                             onPageChange={(newPage) => {
                                 const url = new URL(window.location.href);
                                 url.searchParams.set('page', newPage.toString());
-                                window.history.pushState({}, '', url);
+                                  window.history.pushState({}, '', url);
+                                setPaginationHappened(pre => !pre)
                                 setFilters(prev => ({ ...prev, page: newPage }))
                             }}
                             maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />

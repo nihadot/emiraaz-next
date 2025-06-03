@@ -43,3 +43,35 @@ export function useForceScrollRestore(key: string = 'scroll-position') {
     }
   }, [key]);
 }
+
+
+
+export function useScrollToTopOnRefresh() {
+  useEffect(() => {
+    // Ensure browser doesn't restore scroll automatically
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    // Detect if page load is from a reload (F5, Cmd+R, Ctrl+R)
+    const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+    const isReload = navEntry?.type === 'reload';
+
+    if (isReload) {
+      // Wait until DOM is ready before scrolling
+      const scrollToTop = () => {
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      };
+
+      // In case rendering delays, ensure we scroll after full load
+      if (document.readyState === 'complete') {
+        scrollToTop();
+      } else {
+        window.addEventListener('load', scrollToTop);
+        return () => window.removeEventListener('load', scrollToTop);
+      }
+    }
+  }, []);
+}

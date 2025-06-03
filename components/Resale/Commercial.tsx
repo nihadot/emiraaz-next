@@ -38,14 +38,16 @@ import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import MobileFilterOption from '@/app/home/MobileFilterOption';
 import { FiltersState } from '../types';
 import { useViewAllCountsQuery } from '@/redux/news/newsApi';
-import { useForceScrollRestore } from '@/hooks/useScrollRestoration';
+import { useForceScrollRestore, useScrollToTopOnRefresh } from '@/hooks/useScrollRestoration';
 import { parsePrice } from '@/utils/parsePrice';
+import RecommendedText from '../RecomendedText/RecommendedText';
 
 
 
 function Commercial() {
 
     useForceScrollRestore(); // Default key is "scroll-position"
+useScrollToTopOnRefresh();
 
     const router = useRouter()
     const pathname = usePathname();
@@ -280,6 +282,12 @@ function Commercial() {
         }
         return copy;
     };
+   
+    const [paginationHappened, setPaginationHappened] = useState(false)
+    useEffect(()=>{
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    },[paginationHappened]);
 
     const totalPages = projects?.pagination?.totalPages || 1;
 
@@ -664,21 +672,54 @@ function Commercial() {
                             )}
                         </div>
 
-                        <div className="w-full xl:block hidden max-w-[301.5px]">
+                       <div className="w-full xl:block hidden max-w-[301.5px]">
+                      
+                      
+                      
+                                                  <RecommendedText
+                                                      title="Recommended For You"
+                                                      items={[
+                                                          'Studio Properties For Sale in Dubai',
+                                                          '1 BHK Flats in Downtown',
+                                                          'Luxury Villas in Palm Jumeirah',
+                                                          'Affordable Apartments in JVC',
+                                                          'Beachfront Homes in Dubai Marina',
+                                                      ]}
+                                                  />
+                                                  <div className="sticky top-3 left-0">
+                      
+                                                      <CustomSliderUi
+                                                          shuffledImages={shuffledImages}
+                                                      />
+                      
+                                                        <RecommendedText
+                                                      title="Recommended For You"
+                                                      items={[
+                                                          'Studio Properties For Sale in Dubai',
+                                                          '1 BHK Flats in Downtown',
+                                                          'Luxury Villas in Palm Jumeirah',
+                                                          'Affordable Apartments in JVC',
+                                                          'Beachfront Homes in Dubai Marina',
+                                                      ]}
+                                                  />
+                                                  <RecommendedText
+                                                      title="Popular Searches"
+                                                      items={[
+                                                          'Off-plan Projects in Dubai',
+                                                          'Ready to Move Villas',
+                                                          'High ROI Areas in UAE',
+                                                          'Townhouses in Arabian Ranches',
+                                                          'Gated Communities in Sharjah',
+                                                      ]}
+                                                  />
+                      
+                                                  </div>
+                      
+                                                
+                      
+                      
+                                              </div>
 
-
-                                <Recommendations />
-                            <div className="sticky top-3 left-0">
-
-                                <CustomSliderUi
-                                    shuffledImages={shuffledImages}
-                                />
-                            </div>
-
-
-
-
-                        </div>
                     </div>
                 </Container>
 
@@ -695,7 +736,8 @@ function Commercial() {
                             onPageChange={(newPage) => {
                                 const url = new URL(window.location.href);
                                 url.searchParams.set('page', newPage.toString());
-                                window.history.pushState({}, '', url);
+                                  window.history.pushState({}, '', url);
+                                setPaginationHappened(pre => !pre)
                                 setFilters(prev => ({ ...prev, page: newPage }))
                             }}
                             maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />

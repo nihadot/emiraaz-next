@@ -1,7 +1,6 @@
 export const formatCustomDate = (isoDateString: string): string => {
   const date = new Date(isoDateString);
 
-  console.log(date,'date')
   const day = date.getDate();
   const year = date.getFullYear();
 

@@ -55,14 +55,14 @@ const PaginationNew: React.FC<PaginationNewProps> = ({
     }
   };
 
-  // 🟨 Here's the useEffect that reacts to currentPage changes
-  useEffect(() => {
-    // Example: Scroll to top smoothly on page change
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  // // 🟨 Here's the useEffect that reacts to currentPage changes
+  // useEffect(() => {
+  //   // Example: Scroll to top smoothly on page change
+  //   // window.scrollTo({ top: 0, behavior: "smooth" });
 
-    // You could also use this to store page state to session/localStorage
-    // sessionStorage.setItem('current-page', currentPage.toString());
-  }, [currentPage]); // 👈 Dependency added here
+  //   // You could also use this to store page state to session/localStorage
+  //   // sessionStorage.setItem('current-page', currentPage.toString());
+  // }, [currentPage]); // 👈 Dependency added here
 
   const visiblePages = getVisiblePages();
 

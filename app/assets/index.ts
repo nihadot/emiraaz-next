@@ -46,13 +46,13 @@ export { default as floor_plan } from "./floor_plan.png";
 export { default as play_store_footer_icon } from "./google-store.svg";
 export { default as app_store_icon } from "./app-store.svg";
 export { default as why_dubai_icon } from "./architecture-ancient-monument-world-heritage-day-celebration.webp";
-export { default as high_roi_icon } from "./high_roi_icon.svg";
-export { default as no_tax } from "./no-tax.svg";
+export { default as high_roi_icon } from "./high_roi_icon.png";
+export { default as no_tax } from "./no-tax.png";
 export { default as propertySellerWhiteLogo } from "./PropertysellerBlackLogo.png";
-export { default as apartment_icon } from "./apartment.svg";
-export { default as penthouse_icon } from "./penthouse.svg";
-export { default as townhouse_icon } from "./townhouse.svg";
-export { default as villa_icon } from "./villa.svg";
+export { default as apartment_icon } from "./apartment.png";
+export { default as penthouse_icon } from "./penthouse.png";
+export { default as townhouse_icon } from "./townhouse.png";
+export { default as villa_icon } from "./villa.png";
 export { default as ownership_icon } from "./ownership.svg"
 export { default as economy_icon } from "./economy.svg"
 export { default as tourism_icon } from "./tourism.svg"
@@ -68,6 +68,7 @@ export { default as propertySellerWhiteLogo_icon } from "./PropertysellerWhiteLo
 export {default as logoWebP} from "./logo.webp"
 export {default as mobileAppIcon} from "./mobile-menu-app-icon.png"
 export {default as ps_logo} from "./PropertysellerBlackLogo-new.png"
-// export {default as details_icon} from "./details_icon.svg"
+export {default as trademark} from "./trademark.png";
+export {default as byEmiraaz} from "./backed-by.png"
 
 

@@ -36,12 +36,13 @@ import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import MobileFilterOption from '@/app/home/MobileFilterOption';
 import { FiltersState } from '../types';
 import { useViewAllCountsQuery } from '@/redux/news/newsApi';
-import { useForceScrollRestore } from '@/hooks/useScrollRestoration';
+import { useForceScrollRestore, useScrollToTopOnRefresh } from '@/hooks/useScrollRestoration';
 import { parsePrice } from '@/utils/parsePrice';
 
 function OffplanProjects() {
 
     useForceScrollRestore(); // Default key is "scroll-position"
+useScrollToTopOnRefresh();
 
     const router = useRouter()
     const pathname = usePathname();
@@ -148,6 +149,8 @@ function OffplanProjects() {
         ];
     }, [cities]);
 
+        const [paginationHappened, setPaginationHappened] = useState(false)
+    
     const deviceType = useDeviceType();
 
     const handleSelect = useMemo(() => ({
@@ -747,7 +750,8 @@ function OffplanProjects() {
                             onPageChange={(newPage) => {
                                 const url = new URL(window.location.href);
                                 url.searchParams.set('page', newPage.toString());
-                                window.history.pushState({}, '', url);
+                                  window.history.pushState({}, '', url);
+                                setPaginationHappened(pre => !pre)
                                 setFilters(prev => ({ ...prev, page: newPage }))
                             }}
                             maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />

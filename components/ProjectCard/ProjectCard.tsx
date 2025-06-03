@@ -40,8 +40,8 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
             : item.furnishing === 'semi-furnished'
                 ? 'Semi Furnish'
                 : item.furnishing === 'un-furnishing'
-                    ? 'Under Furnish'
-                    : item.furnishing ? item.furnishing : 'Not available';
+                    ? 'Un Furnish'
+                    : item.furnishing ? item.furnishing : 'NOT SELECTED';
 
 
     return (

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import React from "react";
 import { ColorsTypes } from "./InfoCardRight";
 import clsx from "clsx";
@@ -6,7 +6,7 @@ import clsx from "clsx";
 type InfoCardProps = {
   children: React.ReactNode;
   description: string;
-  icon: string;
+  icon: StaticImageData;
   color:ColorsTypes
 };
 

@@ -18,6 +18,8 @@ import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
 import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
 import { useFetchAllProjectsQuery } from '@/redux/project/projectApi';
 import { FiltersState } from '@/components/types';
+import { apartment_icon, penthouse_icon, townhouse_icon, villa_icon } from '../assets';
+import Image from 'next/image';
 
 type Props = {
     show: boolean;
@@ -277,9 +279,7 @@ function MobileFilterOption({
 
     }, []);
 
-    console.log(filters, 'filter')
-
-
+  
     return (
         <AnimatePresence>
             {show && (
@@ -409,10 +409,11 @@ function MobileFilterOption({
                                             onClick={() => handleSelect.propertyType({ label: PropertyTypes[2].label, value: PropertyTypes[2].value })}
 
                                             className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[2].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
-                                            <PiBuildingOfficeLight
+                                            {/* <PiBuildingOfficeLight
                                                 size={30}
                                                 color={filters?.propertyType?.includes(PropertyTypes[2].value) ? 'red' : ''}
-                                            />
+                                            /> */}
+                                            <Image className='bg-transparent' src={apartment_icon} alt="apartment icon" width={30} height={30} />
                                         </div>
                                         <p className='text-[10px]  font-medium font-poppins text-center'>Apartment</p>
 
@@ -424,10 +425,12 @@ function MobileFilterOption({
                                             onClick={() => handleSelect.propertyType({ label: PropertyTypes[3].label, value: PropertyTypes[3].value })}
 
                                             className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[3].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
-                                            <PiBuildingApartmentLight
+                                            {/* <PiBuildingApartmentLight
                                                 size={30}
                                                 color={filters?.propertyType?.includes(PropertyTypes[3].value) ? 'red' : ''}
-                                            />
+                                            /> */}
+                                            <Image className='bg-transparent' src={penthouse_icon} alt="penthouse icon" width={30} height={30} />
+
                                         </div>
                                         <p className='text-[10px]  font-medium font-poppins text-center'>Penthouse</p>
 
@@ -441,10 +444,12 @@ function MobileFilterOption({
                                             onClick={() => handleSelect.propertyType({ label: PropertyTypes[4].label, value: PropertyTypes[4].value })}
 
                                             className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[4].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
-                                            <PiBuildingsLight
+                                            {/* <PiBuildingsLight
                                                 size={30}
                                                 color={filters?.propertyType?.includes(PropertyTypes[4].value) ? 'red' : ''}
-                                            />
+                                            /> */}
+                                                                                        <Image className='bg-transparent' src={townhouse_icon} alt="townhouse icon" width={30} height={30} />
+
                                         </div>
                                         <p className='text-[10px]  font-medium font-poppins text-center'>Townhouse</p>
 
@@ -456,10 +461,12 @@ function MobileFilterOption({
                                             onClick={() => handleSelect.propertyType({ label: PropertyTypes[1].label, value: PropertyTypes[1].value })}
 
                                             className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[1].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
-                                            <GiVillage
+                                            {/* <GiVillage
                                                 size={30}
                                                 color={filters?.propertyType?.includes(PropertyTypes[1].value) ? 'red' : ''}
-                                            />
+                                            /> */}
+                                                                                        <Image className='bg-transparent' src={villa_icon} alt="villa icon" width={30} height={30} />
+
                                         </div>
                                         <p className='text-[10px]  font-medium font-poppins text-center'>Villa</p>
 

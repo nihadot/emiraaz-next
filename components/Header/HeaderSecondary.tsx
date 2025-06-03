@@ -1,7 +1,5 @@
 "use client";
-import { FaAngleDown, FaAnglesDown } from "react-icons/fa6";
-
-import { drop_down_icon, logo, menu_icon, propertySellerWhiteLogo, user_icon } from '@/app/assets';
+import { menu_icon, mobileAppIcon, propertySellerWhiteLogo, user_icon } from '@/app/assets';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import NavMenu from './NavMenu';
@@ -10,12 +8,14 @@ import { clsx } from 'clsx';
 import PrimaryButton from '../Buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { loginFailure, logoutFailure, logoutStart, logoutSuccess } from '@/redux/userSlice/userSlice';
+import { logoutFailure, logoutStart, logoutSuccess } from '@/redux/userSlice/userSlice';
 import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import { useRouter } from 'next/navigation';
 import { errorToast } from '../Toast';
 import Container from '../atom/Container/Container';
-import { FaCaretDown, FaChevronDown, FaDownload, FaRegUserCircle, FaUser } from 'react-icons/fa';
+import { FaChevronDown, FaRegUserCircle, FaUser } from 'react-icons/fa';
+import { IoChevronDown, IoCloseSharp, IoMenuOutline } from "react-icons/io5";
+import SpaceWrapper from "../atom/SpaceWrapper/SpaceWrapper";
 
 function HeaderSecondary() {
   const [isOpen, setIsOpen] = useState(false);
@@ -72,13 +72,14 @@ function HeaderSecondary() {
           )}
           onClick={toggleMenu}
         >
-          <Image src={menu_icon} alt='menu icon' width={30} />
+          <IoMenuOutline size={30} color='#fff' />
+          {/* <Image src={menu_icon} alt='menu icon' width={30} /> */}
         </button>
 
 
         {/* Logo */}
-        <div onClick={() => router.push("/")} className="w-[140px] cursor-pointer sm:w-[138.75px] ms-8 sm:ms-0 h-[50px] sm:h-[32.25px] relative ">
-          <Image src={propertySellerWhiteLogo} alt='logo' fill className='bg-cover' />
+        <div onClick={() => router.push("/")} className="w-[140px] cursor-pointer sm:w-[138.75px] ms-7 sm:ms-0 h-[50px] sm:h-[32.25px] relative ">
+          <Image src={propertySellerWhiteLogo} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />
 
         </div>
         <PrimaryButton
@@ -86,8 +87,11 @@ function HeaderSecondary() {
           className='flex !rounded-[2.5px] md:hidden w-[66.75px] items-center gap-1'
         >
           <>
-            <label htmlFor="" className='text-[11px] font-normal  font-poppins'>AED</label>
-            {/* <Image src={drop_down_icon} alt='menu icon' width={9} height={9} /> */}
+            <label htmlFor="" className='text-[11px] text-white font-normal  font-poppins'>AED</label>
+            <div className="w-[28px] flex justify-center items-center h-[20px] relative">
+              <IoChevronDown size={14} color='#fff' />
+            </div>
+
           </>
 
 
@@ -99,25 +103,11 @@ function HeaderSecondary() {
 
           {/* Desktop Nav */}
           <div className='hidden me-3 min-laptop:block'>
-            <NavMenu items={menuItems} />
+            <NavMenu
+              linkItemClassName="!text-white"
+              items={menuItems} />
           </div>
 
-
-          {/* <div className="min-laptop:block hidden">
-            <PrimaryButton
-
-              type='button'
-              className='flex border-white text-white items-center gap-1'
-
-            >
-
-              <>
-                <Image src={user_icon} alt='menu icon' width={12} />
-                <label htmlFor="">Logout</label>
-              </>
-
-            </PrimaryButton>
-          </div> */}
 
 
           {isAuthentication ?
@@ -143,7 +133,7 @@ function HeaderSecondary() {
               >
                 <>
                   <Image src={user_icon} alt='menu icon' width={20} />
-                  <label htmlFor="">Lgout</label>
+                  <label htmlFor="">Logout</label>
                 </>
 
 
@@ -188,14 +178,44 @@ function HeaderSecondary() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className='fixed top-0 left-0 h-full w-[30%] bg-white z-10 p-6 shadow-lg flex flex-col gap-6'
+              className='fixed top-0 left-0 h-full w-[300px] bg-white z-50 p-3 shadow-lg flex flex-col gap-2'
             >
               <div className='flex justify-start'>
-                <button onClick={toggleMenu} className='text-black text-xl font-bold'>
-                  ✕
-                </button>
+
+                <SpaceWrapper
+                  className='mt-5'
+                >
+                  <div className="p-1.5 sm:hidden  z-40 bg-[#FFE7EC] rounded-[3px] w-fit">
+                    <IoCloseSharp
+                      onClick={toggleMenu}
+                      size={17} color='#333333' />
+                  </div>
+                </SpaceWrapper>
+
+
+
+
+
               </div>
+
+              <PrimaryButton
+                type="submit"
+                className=" bg-[#FF1645] disabled:!bg-[#FFE7EC]/60 !py-1 !px-2 w-full text-white h-[35px] border-none "
+              >
+                <div className="flex justify-center items-center gap-2">
+                  <label className=" text-nowrap font-medium text-white text-[10.5px] font-poppins">{'Signup/ Login'}</label>
+                </div>
+              </PrimaryButton>
+
               <NavMenu items={menuItems} />
+
+              <p className='text-[12px] font-medium  font-poppins mt-5'>Download PropertySeller App</p>
+
+              <Image
+                src={mobileAppIcon}
+                alt='app icon'
+                className='mt-1'
+              />
             </motion.div>
           )}
         </AnimatePresence>

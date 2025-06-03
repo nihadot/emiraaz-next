@@ -32,21 +32,30 @@ import { IoCloseOutline } from 'react-icons/io5';
 import SelectNew from '../SelectOption/SelectNew';
 import clsx from 'clsx';
 import { SelectHandoverDate } from '../SelectHandoverDate';
-import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import MobileFilterOption from '@/app/home/MobileFilterOption';
 import { FiltersState } from '../types';
 import { useViewAllCountsQuery } from '@/redux/news/newsApi';
 import { parsePrice } from '@/utils/parsePrice';
-import { useForceScrollRestore } from '@/hooks/useScrollRestoration';
+import { useForceScrollRestore, useScrollToTopOnRefresh } from '@/hooks/useScrollRestoration';
+import { AllSmallVideoItems } from '@/redux/smallVideo/types';
+import VideoPreview from '@/app/home/VideoPreview';
+import { useViewAllWishlistsQuery } from '@/redux/wishlist/wishlistApi';
+import { useDispatch } from 'react-redux';
+import { setWishlist } from '@/redux/wishlistSlice/wishlistSlice';
+import { AllWishlistItems } from '@/redux/wishlist/types';
+import { useViewAllSmallVideosQuery } from '@/redux/smallVideo/smallViewApi';
+import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 
 
 function Residential() {
 
     useForceScrollRestore(); // Default key is "scroll-position"
+useScrollToTopOnRefresh();
 
     const router = useRouter()
     const [defaultPropertyType, setDefaultPropertyType] = useState<string>('');
     const [defaultCompletionType, setDefaultCompletionType] = useState<string>('');
+    const [smallVideoAds, setSmallVideoAds] = useState<AllSmallVideoItems[]>();
 
     const [clear, setClear] = useState(false);
     const [defaultEmirate, setDefaultEmirate] = useState<string>('');
@@ -55,67 +64,67 @@ function Residential() {
     const [debouncedSearch, setDebouncedSearch] = useState<any>("");
     const [EnquiryForm, setEnquiryForm] = useState({ status: false, id: '', count: 0 });
 
-   const [filters, setFilters] = useState<FiltersState>({
-              page: 1,
-              search: "",
-              cities: [],
-              developers: [],
-              facilities: [],
-              propertyTypeSecond: "all",
-              emirate: "",
-              completionType: "",
-              handoverDate: undefined,
-              paymentPlan: undefined,
-              furnishType: "",
-              discount: "",
-              projectTypeFirst: 'off-plan-projects',
-              projectTypeLast: 'residential',
-              bedAndBath: "",
-              minPrice: '',
-              maxPrice: '',
-              minSqft: "",
-              maxSqft: "",
-              beds: "",
-              bath: "",
-          });
-  
+    const [filters, setFilters] = useState<FiltersState>({
+        page: 1,
+        search: "",
+        cities: [],
+        developers: [],
+        facilities: [],
+        propertyTypeSecond: "all",
+        emirate: "",
+        completionType: "",
+        handoverDate: undefined,
+        paymentPlan: undefined,
+        furnishType: "",
+        discount: "",
+        projectTypeFirst: 'off-plan-projects',
+        projectTypeLast: 'residential',
+        bedAndBath: "",
+        minPrice: '',
+        maxPrice: '',
+        minSqft: "",
+        maxSqft: "",
+        beds: "",
+        bath: "",
+    });
+
 
     // Event Handlers
     const handleChangeSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setFilters(prev => ({ ...prev, search: event.target.value }));
     }, []);
 
-        const { data: allProjectsCounts } = useFetchAllProjectsCountQuery();
-    
-     // Data fetching with memoized query params
-            const queryParams = useMemo(() => ({
-                limit: 20,
-                page: filters.page,
-                search: debouncedSearch,
-                cities: filters.cities,
-                developers: filters.developers,
-                facilities: filters.facilities,
-                propertyType: filters.propertyType,
-                completionType: filters.completionType,
-                paymentPlan: filters.paymentPlan,
-                year: filters.handoverDate?.year,
-                qtr: filters.handoverDate?.quarter,
-                discount: filters.discount,
-                projectTypeFirst: filters.projectTypeFirst,
-                projectTypeLast: filters.projectTypeLast,
-                furnishing: filters.furnishType,
-                emirate: filters.emirate,
-                maxPrice: filters.maxPrice,
-                minPrice: filters.minPrice,
-                minSqft: filters.minSqft,
-                maxSqft: filters.maxSqft,
-                beds: filters.beds,
-                bath: filters.bath,
-                productTypeOptionFirst: filters.productTypeOptionFirst,
-                productTypeOptionLast: filters.productTypeOptionLast,
-            }), [filters, debouncedSearch]);
-        
-   
+    const { data: allProjectsCounts } = useFetchAllProjectsCountQuery();
+
+    // Data fetching with memoized query params
+    const queryParams = useMemo(() => ({
+        limit: 20,
+        page: filters.page,
+        search: debouncedSearch,
+        cities: filters.cities,
+        developers: filters.developers,
+        facilities: filters.facilities,
+        propertyType: filters.propertyType,
+        completionType: filters.completionType,
+        paymentPlan: filters.paymentPlan,
+        year: filters.handoverDate?.year,
+        qtr: filters.handoverDate?.quarter,
+        discount: filters.discount,
+        projectTypeFirst: filters.projectTypeFirst,
+        projectTypeLast: filters.projectTypeLast,
+        furnishing: filters.furnishType,
+        emirate: filters.emirate,
+        maxPrice: filters.maxPrice,
+        minPrice: filters.minPrice,
+        minSqft: filters.minSqft,
+        maxSqft: filters.maxSqft,
+        beds: filters.beds,
+        bath: filters.bath,
+        productTypeOptionFirst: filters.productTypeOptionFirst,
+        productTypeOptionLast: filters.productTypeOptionLast,
+    }), [filters, debouncedSearch]);
+
+
 
     const { data: emiratesData } = useFetchAllEmirateNamesQuery();
     const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
@@ -152,38 +161,58 @@ function Residential() {
     const deviceType = useDeviceType();
 
     const handleSelect = useMemo(() => ({
-                emirate: (option: any) => setFilters(prev => ({ ...prev, emirate: option?.value || '' })),
-                propertyType: (option: any) => setFilters(prev => ({ ...prev, propertyType: option?.value || '' })),
-                propertyTypeSecond: (option: any) => setFilters(prev => ({ ...prev, propertyTypeSecond: option })),
-                completionType: (option: any) => setFilters(prev => ({ ...prev, completionType: option })),
-                productTypeOptionFirst: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionFirst: option })),
-                projectTypeFirst: (option: any) => setFilters(prev => ({ ...prev, projectTypeFirst: option })),
-                projectTypeLast: (option: any) => setFilters(prev => ({ ...prev, projectTypeLast: option })),
-                productTypeOptionLast: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionLast: option })),
-                handoverDate: (data: any) => setFilters(prev => ({ ...prev, handoverDate: data })),
-                projectType: (option: any) => setFilters(prev => ({ ...prev, projectType: option })),
-                paymentPlan: (option: any) => setFilters(prev => ({ ...prev, paymentPlan: option?.value || '' })),
-                furnishType: (option: any) => setFilters(prev => ({ ...prev, furnishType: option?.value || '' })),
-                discount: (option: any) => setFilters(prev => ({ ...prev, discount: option?.value || '' })),
-                bedAndBath: (option: any) => setFilters(prev => ({ ...prev, bedAndBath: option?.value || '' })),
-                maxPrice: (option: any) => setFilters(prev => ({ ...prev, maxPrice: option || '' })),
-                minSqft: (option: any) => setFilters(prev => ({ ...prev, minSqft: option || '' })),
-                maxSqft: (option: any) => setFilters(prev => ({ ...prev, maxSqft: option || '' })),
-                minPrice: (option: any) => setFilters(prev => ({ ...prev, minPrice: option || '' })),
-                beds: (option: any) => setFilters(prev => ({ ...prev, beds: option || '' })),
-                bath: (option: any) => setFilters(prev => ({ ...prev, bath: option || '' })),
-            }), []);
-        
-   
-                useEffect(() => {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const page = urlParams.get('page');
-            
-                    if (page) {
-                        setFilters(prev => ({ ...prev, page: parseInt(page) }))
-                    }
-                }, [filters.page]);
+        emirate: (option: any) => setFilters(prev => ({ ...prev, emirate: option?.value || '' })),
+        propertyType: (option: any) => setFilters(prev => ({ ...prev, propertyType: option?.value || '' })),
+        propertyTypeSecond: (option: any) => setFilters(prev => ({ ...prev, propertyTypeSecond: option })),
+        completionType: (option: any) => setFilters(prev => ({ ...prev, completionType: option })),
+        productTypeOptionFirst: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionFirst: option })),
+        projectTypeFirst: (option: any) => setFilters(prev => ({ ...prev, projectTypeFirst: option })),
+        projectTypeLast: (option: any) => setFilters(prev => ({ ...prev, projectTypeLast: option })),
+        productTypeOptionLast: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionLast: option })),
+        handoverDate: (data: any) => setFilters(prev => ({ ...prev, handoverDate: data })),
+        projectType: (option: any) => setFilters(prev => ({ ...prev, projectType: option })),
+        paymentPlan: (option: any) => setFilters(prev => ({ ...prev, paymentPlan: option?.value || '' })),
+        furnishType: (option: any) => setFilters(prev => ({ ...prev, furnishType: option?.value || '' })),
+        discount: (option: any) => setFilters(prev => ({ ...prev, discount: option?.value || '' })),
+        bedAndBath: (option: any) => setFilters(prev => ({ ...prev, bedAndBath: option?.value || '' })),
+        maxPrice: (option: any) => setFilters(prev => ({ ...prev, maxPrice: option || '' })),
+        minSqft: (option: any) => setFilters(prev => ({ ...prev, minSqft: option || '' })),
+        maxSqft: (option: any) => setFilters(prev => ({ ...prev, maxSqft: option || '' })),
+        minPrice: (option: any) => setFilters(prev => ({ ...prev, minPrice: option || '' })),
+        beds: (option: any) => setFilters(prev => ({ ...prev, beds: option || '' })),
+        bath: (option: any) => setFilters(prev => ({ ...prev, bath: option || '' })),
+    }), []);
 
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const page = urlParams.get('page');
+
+        if (page) {
+            setFilters(prev => ({ ...prev, page: parseInt(page) }))
+        }
+    }, [filters.page]);
+
+    const userDataString = useMemo(() => {
+        return typeof window !== "undefined" ? localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA) : null;
+    }, []);
+
+
+    const userId = useMemo(() => {
+        if (!userDataString) return null;
+        try {
+            const parsed = JSON.parse(userDataString);
+            return parsed?._id || null;
+        } catch (err) {
+            return null;
+        }
+    }, [userDataString]);
+
+
+    const { data: wishlistDataItem } = useViewAllWishlistsQuery(
+        { userId },
+        { skip: !userId } // <- only call if userId is available
+    );
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -203,6 +232,15 @@ function Residential() {
 
     }, []);
 
+    const dispatch = useDispatch();
+
+   
+    const [paginationHappened, setPaginationHappened] = useState(false)
+    useEffect(()=>{
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    },[paginationHappened]);
+
     const handleChangeCities = useCallback((option: any[]) => {
         if (option.length === 0) {
             setFilters(prev => ({ ...prev, cities: [] }));
@@ -210,6 +248,21 @@ function Residential() {
         }
         setFilters(prev => ({ ...prev, cities: option.map((item) => item.value) }));
     }, []);
+
+    const [wishlistData, setWishlistData] = useState<AllWishlistItems[]>();
+    const { data: smallVideoAdsResponse } = useViewAllSmallVideosQuery({});
+
+    useEffect(() => {
+        if (wishlistDataItem?.data) {
+            dispatch(setWishlist(wishlistDataItem?.data))
+            setWishlistData(wishlistDataItem?.data)
+        }
+
+        if (smallVideoAdsResponse?.data) {
+            // console.log(smallVideoAdsResponse?.data, 'smallVideoAdsResponse')
+            setSmallVideoAds(smallVideoAdsResponse?.data);
+        }
+    }, [wishlistDataItem, smallVideoAdsResponse]);
 
 
 
@@ -372,7 +425,7 @@ function Residential() {
                                     }
 
                                     switch (e) {
-                                       
+
                                         case 'off-plan-resale':
                                             path = '/off-plan-resale';
                                             break;
@@ -401,7 +454,7 @@ function Residential() {
                                 onSelect={(e) => {
                                     const url = new URL(window.location.href);
                                     const searchParams = url.search;
-                                     
+
                                     handleSelect.projectTypeLast(e);
                                     let path = '/';
 
@@ -432,7 +485,7 @@ function Residential() {
                                 options={propertyTypeSecond}
                             />
                             <button onClick={handleFilterModal} className="bg-red-600/10 rounded flex justify-center items-center  border-none w-[55px] lg:hidden h-full">
-                             
+
                                 <HiOutlineAdjustmentsHorizontal
                                     className="w-[22px] h-[22px]"
                                     color='red'
@@ -455,35 +508,35 @@ function Residential() {
 
                             <SelectLatest
                                 label="Property Types"
-                               options={[{
-                                        value: "all",
-                                        label: "All",
-                                        count: 0,
+                                options={[{
+                                    value: "all",
+                                    label: "All",
+                                    count: 0,
 
-                                    }, {
-                                        value: "villa",
-                                        label: "Villa",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'villa')?.count || 0,
+                                }, {
+                                    value: "villa",
+                                    label: "Villa",
+                                    count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'villa')?.count || 0,
 
-                                    },
-                                    {
-                                        value: "apartment",
-                                        label: "Apartment",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'apartment')?.count || 0,
+                                },
+                                {
+                                    value: "apartment",
+                                    label: "Apartment",
+                                    count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'apartment')?.count || 0,
 
-                                    },
-                                    {
-                                        value: "penthouse",
-                                        label: "Penthouse",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'penthouse')?.count || 0,
+                                },
+                                {
+                                    value: "penthouse",
+                                    label: "Penthouse",
+                                    count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'penthouse')?.count || 0,
 
-                                    },
-                                    {
-                                        value: "townhouse",
-                                        label: "Townhouse",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'townhouse')?.count || 0,
+                                },
+                                {
+                                    value: "townhouse",
+                                    label: "Townhouse",
+                                    count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'townhouse')?.count || 0,
 
-                                    }]}
+                                }]}
                                 onSelect={(e) => {
                                     const url = new URL(window.location.href);
                                     if (e?.value) {
@@ -508,7 +561,7 @@ function Residential() {
                             <SwitchSelector
                                 defaultValue={defaultCompletionType}
                                 onSelect={(e) => {
-                                     
+
 
                                     const url = new URL(window.location.href);
                                     if (e == 'all') {
@@ -567,19 +620,19 @@ function Residential() {
                                 clearSelection={clear}
                                 className="w-[200px]"
                                 label="Payment Plan"
-                                 options={[{
-                                        value: "all",
-                                        label: "All",
-                                    }, {
-                                        value: "on-handover",
-                                        label: "On Handover",
-                                        count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'on-handover')?.count || 0,
-                                    },
-                                    {
-                                        value: "post-handover",
-                                        label: "Post Handover",
-                                        count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'post-handover')?.count || 0,
-                                    },]}
+                                options={[{
+                                    value: "all",
+                                    label: "All",
+                                }, {
+                                    value: "on-handover",
+                                    label: "On Handover",
+                                    count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'on-handover')?.count || 0,
+                                },
+                                {
+                                    value: "post-handover",
+                                    label: "Post Handover",
+                                    count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'post-handover')?.count || 0,
+                                },]}
                                 onSelect={handleSelect.paymentPlan}
                             />
                         </div>
@@ -605,20 +658,20 @@ function Residential() {
                                 className="w-[200px] "
                                 label="Discount"
                                 options={[{
-                                        value: "all",
-                                        label: "All",
-                                    },
-                                    {
-                                        value: "with-discount",
-                                        label: "With Discount",
-                                        count:  allCounts?.data?.discount?.find(item => item?.discount === 'with-discount')?.count || 0,
-                                    },
-                                    {
-                                        value: "without-discount",
-                                        label: "Without Discount",
-                                        count:  allCounts?.data?.discount?.find(item => item?.discount === 'without-discount')?.count || 0,
+                                    value: "all",
+                                    label: "All",
+                                },
+                                {
+                                    value: "with-discount",
+                                    label: "With Discount",
+                                    count: allCounts?.data?.discount?.find(item => item?.discount === 'with-discount')?.count || 0,
+                                },
+                                {
+                                    value: "without-discount",
+                                    label: "Without Discount",
+                                    count: allCounts?.data?.discount?.find(item => item?.discount === 'without-discount')?.count || 0,
 
-                                    },]}
+                                },]}
                                 onSelect={handleSelect.discount}
                             />
                         </div>
@@ -653,7 +706,7 @@ function Residential() {
                         <div className="w-full h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
 
                             {/* Breadcrumbs navigation link */}
-                            <div className="flex justify-between flex-col md:flex-row flex-1 items-start md:items-center w-full py-3">
+                            {/* <div className="flex justify-between flex-col md:flex-row flex-1 items-start md:items-center w-full py-3">
 
                                 <BreadcampNavigation
                                     title='Offplan Projects :'
@@ -668,11 +721,11 @@ function Residential() {
                                     ]}
                                 />
                                     <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Properties Available</p>
-                            </div>
+                            </div> */}
 
 
                             {/* Location link */}
-                            <SpaceWrapper
+                            {/* <SpaceWrapper
                                 className='pb-3'
                             >
                                 <LocationTags
@@ -684,7 +737,7 @@ function Residential() {
                                             })) || []
                                         }
                                 />
-                            </SpaceWrapper>
+                            </SpaceWrapper> */}
 
 
                             {/* projects */}
@@ -717,27 +770,37 @@ function Residential() {
                             )}
                         </div>
 
-                        <div className="w-full xl:block hidden max-w-[301.5px]">
+                        <div className={"w-full md:block hidden max-w-[301.5px]"}>
 
+                            {smallVideoAds && smallVideoAds.length > 0 ?
+                                <div className={clsx("w-full mb-[12px] relative flex")}>
+                                    {/* <div className={clsx("w-full mb-[12px] relative",filters?.page && filters?.page > 1 ? 'hidden':'flex')}> */}
+                                    <VideoPreview
+                                        projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
+                                        src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                                    />
+                                </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>
+                            }
 
                             <div className="sticky top-3 left-0">
 
-                                <Recommendations />
                                 <CustomSliderUi
                                     shuffledImages={shuffledImages}
                                 />
+                                <Recommendations />
                             </div>
 
 
 
 
                         </div>
+
                     </div>
                 </Container>
 
 
 
- <Container>
+                <Container>
 
                     <div className="mt-[23.25px]">
 
@@ -747,7 +810,8 @@ function Residential() {
                             onPageChange={(newPage) => {
                                 const url = new URL(window.location.href);
                                 url.searchParams.set('page', newPage.toString());
-                                window.history.pushState({}, '', url);
+                                  window.history.pushState({}, '', url);
+                                setPaginationHappened(pre => !pre)
                                 setFilters(prev => ({ ...prev, page: newPage }))
                             }}
                             maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />

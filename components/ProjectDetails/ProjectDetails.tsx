@@ -138,7 +138,7 @@ function ProjectDetails({ id }: { id: string }) {
     {
       label: 'Floor Plans & Layouts',
       value: 'floor-plans-layouts',
-      icon: location_icon
+      icon:      <TfiLocationPin size={17.25} color='#333333' />
 
     }
   ]
@@ -457,7 +457,7 @@ function ProjectDetails({ id }: { id: string }) {
                   handleGalleryModal()
                   handleGallerySelect('map')
                 }} className="absolute hidden sm:flex bottom-[24.75px] left-[24.75px] items-center gap-2 p-2 rounded-[3.75px] z-40 bg-black/[77%]">
-                     <TfiLocationPin size={20} color='#333333' />
+                       <TfiLocationPin size={18} color='#fff' />
                   <span className="text-white font-poppins text-[12px] font-normal">Map</span>
                 </div>
               </div>

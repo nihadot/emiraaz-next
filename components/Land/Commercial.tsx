@@ -34,7 +34,7 @@ import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal';
 import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import MobileFilterOption from '@/app/home/MobileFilterOption';
 import { FiltersState } from '../types';
-import { useForceScrollRestore } from '@/hooks/useScrollRestoration';
+import { useForceScrollRestore, useScrollToTopOnRefresh } from '@/hooks/useScrollRestoration';
 import { parsePrice } from '@/utils/parsePrice';
 
 
@@ -42,7 +42,7 @@ import { parsePrice } from '@/utils/parsePrice';
 function Commercial() {
 
     useForceScrollRestore(); // Default key is "scroll-position"
-
+useScrollToTopOnRefresh();
     const router = useRouter()
     const pathname = usePathname();
 
@@ -216,6 +216,12 @@ function Commercial() {
 
         return () => clearTimeout(handler);
     }, [filters.search]);
+   
+    const [paginationHappened, setPaginationHappened] = useState(false)
+    useEffect(()=>{
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    },[paginationHappened]);
 
 
     const handleFilterModal = useCallback(() => {
@@ -616,7 +622,8 @@ function Commercial() {
                             onPageChange={(newPage) => {
                                 const url = new URL(window.location.href);
                                 url.searchParams.set('page', newPage.toString());
-                                window.history.pushState({}, '', url);
+                                  window.history.pushState({}, '', url);
+                                setPaginationHappened(pre => !pre)
                                 setFilters(prev => ({ ...prev, page: newPage }))
                             }}
                             maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />

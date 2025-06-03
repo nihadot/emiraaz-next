@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import React from "react";
 
 export enum ColorsTypes {
@@ -21,7 +21,7 @@ export enum ColorsTypes {
 type InfoCardProps = {
   children: React.ReactNode;
   description: string;
-  icon: string;
+  icon: StaticImageData;
   color: ColorsTypes
 };
 

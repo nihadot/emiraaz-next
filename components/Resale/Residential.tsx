@@ -1,7 +1,7 @@
 import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
 import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
 import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi';
-import { useFetchAllProjectsQuery } from '@/redux/project/projectApi';
+import { useFetchAllProjectsCountQuery, useFetchAllProjectsQuery } from '@/redux/project/projectApi';
 import { AllProjectsItems } from '@/redux/project/types';
 import { shuffle } from '@/utils/shuffle';
 import { useDeviceType } from '@/utils/useDeviceType';
@@ -39,6 +39,8 @@ import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import MobileFilterOption from '@/app/home/MobileFilterOption';
 import { FiltersState } from '../types';
 import { useViewAllCountsQuery } from '@/redux/news/newsApi';
+import RecommendedText from '../RecomendedText/RecommendedText';
+import { parsePrice } from '@/utils/parsePrice';
 
 
 function Residential() {
@@ -62,61 +64,61 @@ function Residential() {
     const [areaRange, setShowAreaRange] = useState(false);
 
     const [filters, setFilters] = useState<FiltersState>({
-              page: 1,
-              search: "",
-              cities: [],
-              developers: [],
-              facilities: [],
-              propertyTypeSecond: "all",
-              emirate: "",
-              completionType: "",
-              handoverDate: undefined,
-              paymentPlan: undefined,
-              furnishType: "",
-              discount: "",
-              projectTypeFirst: 'off-plan-resale',
-              projectTypeLast: 'residential',
-              bedAndBath: "",
-              minPrice: '',
-              maxPrice: '',
-              minSqft: "",
-              maxSqft: "",
-              beds: "",
-              bath: "",
-          });
+        page: 1,
+        search: "",
+        cities: [],
+        developers: [],
+        facilities: [],
+        propertyTypeSecond: "all",
+        emirate: "",
+        completionType: "",
+        handoverDate: undefined,
+        paymentPlan: undefined,
+        furnishType: "",
+        discount: "",
+        projectTypeFirst: 'off-plan-resale',
+        projectTypeLast: 'residential',
+        bedAndBath: "",
+        minPrice: '',
+        maxPrice: '',
+        minSqft: "",
+        maxSqft: "",
+        beds: "",
+        bath: "",
+    });
     // Event Handlers
     const handleChangeSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setFilters(prev => ({ ...prev, search: event.target.value }));
     }, []);
 
-  // Data fetching with memoized query params
-         const queryParams = useMemo(() => ({
-             limit: 20,
-             page: filters.page,
-             search: debouncedSearch,
-             cities: filters.cities,
-             developers: filters.developers,
-             facilities: filters.facilities,
-             propertyType: filters.propertyType,
-             completionType: filters.completionType,
-             paymentPlan: filters.paymentPlan,
-             year: filters.handoverDate?.year,
-             qtr: filters.handoverDate?.quarter,
-             discount: filters.discount,
-             projectTypeFirst: filters.projectTypeFirst,
-             projectTypeLast: filters.projectTypeLast,
-             furnishing: filters.furnishType,
-             emirate: filters.emirate,
-             maxPrice: filters.maxPrice,
-             minPrice: filters.minPrice,
-             minSqft: filters.minSqft,
-             maxSqft: filters.maxSqft,
-             beds: filters.beds,
-             bath: filters.bath,
-             productTypeOptionFirst: filters.productTypeOptionFirst,
-             productTypeOptionLast: filters.productTypeOptionLast,
-         }), [filters, debouncedSearch]);
-     
+    // Data fetching with memoized query params
+    const queryParams = useMemo(() => ({
+        limit: 20,
+        page: filters.page,
+        search: debouncedSearch,
+        cities: filters.cities,
+        developers: filters.developers,
+        facilities: filters.facilities,
+        propertyType: filters.propertyType,
+        completionType: filters.completionType,
+        paymentPlan: filters.paymentPlan,
+        year: filters.handoverDate?.year,
+        qtr: filters.handoverDate?.quarter,
+        discount: filters.discount,
+        projectTypeFirst: filters.projectTypeFirst,
+        projectTypeLast: filters.projectTypeLast,
+        furnishing: filters.furnishType,
+        emirate: filters.emirate,
+        maxPrice: filters.maxPrice,
+        minPrice: filters.minPrice,
+        minSqft: filters.minSqft,
+        maxSqft: filters.maxSqft,
+        beds: filters.beds,
+        bath: filters.bath,
+        productTypeOptionFirst: filters.productTypeOptionFirst,
+        productTypeOptionLast: filters.productTypeOptionLast,
+    }), [filters, debouncedSearch]);
+
 
     const { data: emiratesData } = useFetchAllEmirateNamesQuery();
     const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
@@ -152,29 +154,30 @@ function Residential() {
 
     const deviceType = useDeviceType();
 
-     const handleSelect = useMemo(() => ({
-            emirate: (option: any) => setFilters(prev => ({ ...prev, emirate: option?.value || '' })),
-            propertyType: (option: any) => setFilters(prev => ({ ...prev, propertyType: option?.value || '' })),
-            propertyTypeSecond: (option: any) => setFilters(prev => ({ ...prev, propertyTypeSecond: option })),
-            completionType: (option: any) => setFilters(prev => ({ ...prev, completionType: option })),
-            productTypeOptionFirst: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionFirst: option })),
-            projectTypeFirst: (option: any) => setFilters(prev => ({ ...prev, projectTypeFirst: option })),
-            projectTypeLast: (option: any) => setFilters(prev => ({ ...prev, projectTypeLast: option })),
-            productTypeOptionLast: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionLast: option })),
-            handoverDate: (data: any) => setFilters(prev => ({ ...prev, handoverDate: data })),
-            projectType: (option: any) => setFilters(prev => ({ ...prev, projectType: option })),
-            paymentPlan: (option: any) => setFilters(prev => ({ ...prev, paymentPlan: option?.value || '' })),
-            furnishType: (option: any) => setFilters(prev => ({ ...prev, furnishType: option?.value || '' })),
-            discount: (option: any) => setFilters(prev => ({ ...prev, discount: option?.value || '' })),
-            bedAndBath: (option: any) => setFilters(prev => ({ ...prev, bedAndBath: option?.value || '' })),
-            maxPrice: (option: any) => setFilters(prev => ({ ...prev, maxPrice: option || '' })),
-            minSqft: (option: any) => setFilters(prev => ({ ...prev, minSqft: option || '' })),
-            maxSqft: (option: any) => setFilters(prev => ({ ...prev, maxSqft: option || '' })),
-            minPrice: (option: any) => setFilters(prev => ({ ...prev, minPrice: option || '' })),
-            beds: (option: any) => setFilters(prev => ({ ...prev, beds: option || '' })),
-            bath: (option: any) => setFilters(prev => ({ ...prev, bath: option || '' })),
-        }), []);
-    
+    const handleSelect = useMemo(() => ({
+        emirate: (option: any) => setFilters(prev => ({ ...prev, emirate: option?.value || '' })),
+        propertyType: (option: any) => setFilters(prev => ({ ...prev, propertyType: option?.value || '' })),
+        propertyTypeSecond: (option: any) => setFilters(prev => ({ ...prev, propertyTypeSecond: option })),
+        completionType: (option: any) => setFilters(prev => ({ ...prev, completionType: option })),
+        productTypeOptionFirst: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionFirst: option })),
+        projectTypeFirst: (option: any) => setFilters(prev => ({ ...prev, projectTypeFirst: option })),
+        projectTypeLast: (option: any) => setFilters(prev => ({ ...prev, projectTypeLast: option })),
+        productTypeOptionLast: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionLast: option })),
+        handoverDate: (data: any) => setFilters(prev => ({ ...prev, handoverDate: data })),
+        projectType: (option: any) => setFilters(prev => ({ ...prev, projectType: option })),
+        paymentPlan: (option: any) => setFilters(prev => ({ ...prev, paymentPlan: option?.value || '' })),
+        furnishType: (option: any) => setFilters(prev => ({ ...prev, furnishType: option?.value || '' })),
+        discount: (option: any) => setFilters(prev => ({ ...prev, discount: option?.value || '' })),
+        bedAndBath: (option: any) => setFilters(prev => ({ ...prev, bedAndBath: option?.value || '' })),
+        maxPrice: (option: any) => setFilters(prev => ({ ...prev, maxPrice: option || '' })),
+        minSqft: (option: any) => setFilters(prev => ({ ...prev, minSqft: option || '' })),
+        maxSqft: (option: any) => setFilters(prev => ({ ...prev, maxSqft: option || '' })),
+        minPrice: (option: any) => setFilters(prev => ({ ...prev, minPrice: option || '' })),
+        beds: (option: any) => setFilters(prev => ({ ...prev, beds: option || '' })),
+        bath: (option: any) => setFilters(prev => ({ ...prev, bath: option || '' })),
+    }), []);
+    const { data: allProjectsCounts } = useFetchAllProjectsCountQuery();
+
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -276,6 +279,12 @@ function Residential() {
         }
     }, [projects]);
 
+    const [paginationHappened, setPaginationHappened] = useState(false)
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    }, [paginationHappened]);
+
 
     return (
         <main>
@@ -365,7 +374,7 @@ function Residential() {
                                     }
 
                                     switch (e) {
-                                       
+
                                         case 'off-plan-projects':
                                             path = '/';
                                             break;
@@ -394,7 +403,7 @@ function Residential() {
                                 onSelect={(e) => {
                                     const url = new URL(window.location.href);
                                     const searchParams = url.search;
-                                     
+
                                     handleSelect.projectTypeLast(e);
                                     let path = '/';
 
@@ -425,7 +434,7 @@ function Residential() {
                                 options={propertyTypeSecond}
                             />
                             <button onClick={handleFilterModal} className="bg-red-600/10 rounded flex justify-center items-center  border-none w-[55px] lg:hidden h-full">
-                             
+
                                 <HiOutlineAdjustmentsHorizontal
                                     className="w-[22px] h-[22px]"
                                     color='red'
@@ -478,7 +487,6 @@ function Residential() {
 
                                     }]}
                                     onSelect={(e) => {
-                                        console.log(e, '33333')
                                         const url = new URL(window.location.href);
                                         if (e?.value) {
                                             url.searchParams.set('property-type', e?.label ?? '');
@@ -629,7 +637,7 @@ function Residential() {
                                     clearSelection={clear}
                                     className="w-[200px]"
                                     label="Payment Plan"
-                                      options={[{
+                                    options={[{
                                         value: "all",
                                         label: "All",
                                     }, {
@@ -741,12 +749,44 @@ function Residential() {
                         <div className="w-full xl:block hidden max-w-[301.5px]">
 
 
-                                <Recommendations />
+
+                            <RecommendedText
+                                title="Recommended For You"
+                                items={[
+                                    'Studio Properties For Sale in Dubai',
+                                    '1 BHK Flats in Downtown',
+                                    'Luxury Villas in Palm Jumeirah',
+                                    'Affordable Apartments in JVC',
+                                    'Beachfront Homes in Dubai Marina',
+                                ]}
+                            />
                             <div className="sticky top-3 left-0">
 
                                 <CustomSliderUi
                                     shuffledImages={shuffledImages}
                                 />
+
+                                <RecommendedText
+                                    title="Recommended For You"
+                                    items={[
+                                        'Studio Properties For Sale in Dubai',
+                                        '1 BHK Flats in Downtown',
+                                        'Luxury Villas in Palm Jumeirah',
+                                        'Affordable Apartments in JVC',
+                                        'Beachfront Homes in Dubai Marina',
+                                    ]}
+                                />
+                                <RecommendedText
+                                    title="Popular Searches"
+                                    items={[
+                                        'Off-plan Projects in Dubai',
+                                        'Ready to Move Villas',
+                                        'High ROI Areas in UAE',
+                                        'Townhouses in Arabian Ranches',
+                                        'Gated Communities in Sharjah',
+                                    ]}
+                                />
+
                             </div>
 
 
@@ -766,12 +806,18 @@ function Residential() {
                         <PaginationNew
                             currentPage={filters.page || 1}
                             totalPages={totalPages}
-                            onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
+                            onPageChange={(newPage) => {
+                                const url = new URL(window.location.href);
+                                url.searchParams.set('page', newPage.toString());
+                                window.history.pushState({}, '', url);
+                                setPaginationHappened(pre => !pre)
+                                setFilters(prev => ({ ...prev, page: newPage }))
+                            }}
                             maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />
 
 
 
-                        <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">1 To 24 of 23,567 Listings</div>
+                        <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">{filters.page} To {totalPages} of {allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Listings</div>
                     </div>
                 </Container>
 

@@ -24,7 +24,8 @@ function FacilitiesAndAmenities({data,heading}: Props) {
                                           
                                             src={item?.image?.secure_url}
                                             alt={`Thumbnail ${index}`}
-                                            fill
+                                            width={40}
+                                            height={40}
                                             className={`cursor-pointer object-cover`}
                                         />
                                         </div>

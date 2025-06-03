@@ -32,8 +32,8 @@ function FeaturesAndAmenities({ headerTitle, data,handleModal }: Props) {
                     visibleData.slice(0,limit).map((item, index) => (
                         <div key={index} className="rounded-[3px] gap-[8.25px] flex items-center justify-center flex-col w-[99px] h-[99px] p-4 bg-[#F5F5F5] border-[#DEDEDE]">
                             <Image
-                                height={25.5}
-                                width={25.5}
+                                height={32}
+                                width={32}
                                 src={item.icon}
                                 alt={`Thumbnail ${index}`}
                                 className={`cursor-pointer object-cover`}

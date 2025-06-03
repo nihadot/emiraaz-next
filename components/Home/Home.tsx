@@ -46,11 +46,11 @@ import Image from 'next/image';
 import { big_white_logo_icon } from '@/app/assets';
 import { useViewAllCountsQuery } from '@/redux/news/newsApi';
 import { parsePrice } from '@/utils/parsePrice';
-import { useForceScrollRestore } from '@/hooks/useScrollRestoration';
+import { useForceScrollRestore, useScrollToTopOnRefresh } from '@/hooks/useScrollRestoration';
 import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import LocationTags from '../LocationTags/LocationTags';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
-
+import pIcon from "@/app/assets/p-icon.png";
 type PaymentPlan = {
     label?: string;
     value?: string;
@@ -66,10 +66,10 @@ interface UserData {
 export default function HomePage({ initialData }: { initialData: any }) {
 
     useForceScrollRestore(); // Default key is "scroll-position"
-
+useScrollToTopOnRefresh();
     const [loading, setLoading] = useState(false)
 
-
+const [paginationHappened, setPaginationHappened] = useState(false)
     const deviceType = useDeviceType();
 
     const router = useRouter();
@@ -160,6 +160,14 @@ export default function HomePage({ initialData }: { initialData: any }) {
         beds: "",
         bath: "",
     });
+
+    useEffect(()=>{
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    },[paginationHappened]);
+
+
+    
 
     const [debouncedSearch, setDebouncedSearch] = useState<any>("");
     const [clear, setClear] = useState(false);
@@ -295,11 +303,10 @@ export default function HomePage({ initialData }: { initialData: any }) {
 
     const totalPages = projects?.pagination?.totalPages || 1;
 
-    const handleClick = (item: AllProjectsItems) => {
-        sessionStorage.setItem('scroll-position', window.scrollY.toString());
-
-        router.push(`/projects/${item.slug}`);
-    }
+  const handleClick = (item: AllProjectsItems) => {
+  sessionStorage.setItem('scroll-position', window.scrollY.toString());
+  router.push(`/projects/${item.slug}`);
+};
 
     const handleEnquiryFormClick = useCallback((item: any) => {
         setEnquiryForm({
@@ -402,7 +409,7 @@ export default function HomePage({ initialData }: { initialData: any }) {
 
     }, []);
 
- 
+
     useEffect(() => {
         if (pathname === '/') {
             setDefaultProjectStage('all')
@@ -413,8 +420,13 @@ export default function HomePage({ initialData }: { initialData: any }) {
     if (loading) {
         return (
             <div className="flex items-center justify-center h-screen bg-black">
-                <div className="relative w-full max-w-[320px] sm:max-w-[420px] md:max-w-[500px] lg:max-w-[580.5px] aspect-[574.5/140.5] p-4 sm:p-0">
-                    <Image width={574} height={133.5} src={big_white_logo_icon} alt="logo" />
+                <div className="relative animate-pulse sm:block hidden w-full max-w-[320px] sm:max-w-[420px] md:max-w-[500px] lg:max-w-[580.5px] aspect-[574.5/140.5] p-4 sm:p-0">
+                    <Image width={590} height={140} src={big_white_logo_icon} alt="logo" />
+                </div>
+
+
+                    <div className="relative animate-pulse block sm:hidden w-full max-w-[320px] sm:max-w-[420px] md:max-w-[500px] lg:max-w-[580.5px] aspect-[574.5/140.5] p-4 sm:p-0">
+                    <Image width={300} height={140} src={pIcon} alt="property seller logo" />
                 </div>
             </div>
         )
@@ -894,7 +906,7 @@ export default function HomePage({ initialData }: { initialData: any }) {
                     </Container>
 
                     <SectionDivider
-                        containerClassName={clsx("mb-[12px]", filters?.page && filters?.page > 1 ? 'mt-[0px]' : 'mt-[10.5px]')}
+                        containerClassName={clsx("mb-[12px]", filters?.page && filters?.page >= 1 ? 'mt-[12px]' : 'mt-[10.5px]')}
                         lineClassName="h-[1px] w-full bg-[#DEDEDE]"
                     />
 
@@ -903,107 +915,151 @@ export default function HomePage({ initialData }: { initialData: any }) {
                     {/* Projects Section */}
                     <Container>
                         <SpaceWrapper
-                        className='pt-[10px]'
+                            className={filters.page && filters.page > 1 ? 'pt-[10px]' : 'pt-[0px]'}
                         >
 
-                        <div className="mb-4 flex gap-2">
-                            <div className="flex-1 h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                            <div className="mb-4 flex gap-2">
+                                <div className="flex-1 h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
 
-                                {/* Breadcrumbs navigation link */}
-                                <div className={clsx("flex flex-col md:flex-row flex-1 items-start md:items-center w-full",filters?.page && filters?.page > 1 ? '':'hidden')}>
+                                    {/* Breadcrumbs navigation link */}
+                                   { filters.page && filters.page > 1 &&  <div className={clsx("flex flex-col md:flex-row flex-1 items-start md:items-center w-full", filters?.page && filters?.page >= 1 ? '' : 'hidden')}>
 
-                                    <BreadcampNavigation
-                                        title='Offplan Projects :'
-                                        items={[
-                                            {
-                                                title: filters?.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
+                                        <BreadcampNavigation
+                                            title='Offplan Projects :'
+                                            items={[
+                                                {
+                                                    title: filters?.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
 
-                                            },
-                                            {
-                                                title: 'Off plan Project Residential & Commercial',
-                                            }
-                                        ]}
-                                    />
-                                    <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Properties Available</p>
-                                </div>
-
-
-                                {/* Location link */}
-                              <div className={clsx("pt-[24px]",filters?.page && filters?.page > 1 ? '':'hidden')}>
-
-                                    <LocationTags
-
-                                        // data={[{ location: 'Dubai', count: 100 }, { location: 'Abu Dhabi', count: 200 },
-                                        // { location: 'Sharjah', count: 300 },
-                                        // { location: 'Sharjah', count: 300 }
-                                        // ]}
-                                        
-                                        data={
-                                            cities?.data?.slice(0, 4).map((item) => ({
-                                                location: item.name,
-                                                count: item.count,
-                                            })) || []
-                                        }
-                                    />
-                              
-                              </div>
-
-
-                                {/* projects */}
-                                {allProjects ? (
-                                    allProjects?.map((item, index) => (
-                                        <React.Fragment key={index}>
-                                            <ProjectCard
-                                                navigateDetailsButton={true}
-                                                item={item}
-                                                handleClick={handleClick}
-                                                handleEnquiryFormClick={handleEnquiryFormClick}
-                                            />
-
-                                            {/* Add separator after every 5 items */}
-                                            {(index + 1) % 5 === 0 && (
-                                                <>
-                                                    <div className=" flex sm:hidden mt:mt-0">
-                                                        <CustomSlider
-                                                            images={shuffleArray(shuffledImages)}
-                                                            containerClassName="!h-[95px] border border-[#DEDEDE] "
-                                                        />
-                                                    </div></>
-                                            )}
-                                        </React.Fragment>
-                                    ))
-                                ) : (
-                                    Array.from({ length: 10 }).map((_, index) => (
-                                        <ProjectCardSkelton key={index} />
-                                    ))
-                                )}
-                            </div>
-
-                            <div className={"w-full md:block hidden max-w-[301.5px]"}>
-
-                                {smallVideoAds && smallVideoAds.length > 0 ?
-                                    <div className={clsx("w-full mb-[12px] relative flex")}>
-                                    {/* <div className={clsx("w-full mb-[12px] relative",filters?.page && filters?.page > 1 ? 'hidden':'flex')}> */}
-                                        <VideoPreview
-                                            projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
-                                            src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                                                },
+                                                {
+                                                    title: 'Off plan Project Residential & Commercial',
+                                                }
+                                            ]}
                                         />
-                                    </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>
-                                }
+                                        <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Properties Available</p>
+                                    </div>}
 
-                                <div className="sticky top-3 left-0">
 
-                                    <CustomSliderUi
-                                        shuffledImages={shuffledImages}
-                                    />
-                                    <Recommendations />
+                                    {/* Location link */}
+                                   {  filters.page && filters.page > 1 &&  <div className={clsx("pt-[24px]", filters?.page && filters?.page >= 1 ? '' : 'hidden')}>
+
+                                        <LocationTags
+
+                                            // data={[{ location: 'Dubai', count: 100 }, { location: 'Abu Dhabi', count: 200 },
+                                            // { location: 'Sharjah', count: 300 },
+                                            // { location: 'Sharjah', count: 300 }
+                                            // ]}
+
+                                            data={
+                                                cities?.data?.slice(0, 4).map((item) => ({
+                                                    location: item.name,
+                                                    count: item.count,
+                                                })) || []
+                                            }
+                                        />
+
+                                    </div>}
+
+
+                                    {/* projects */}
+                                    {allProjects ? (
+                                        allProjects?.map((item, index) => (
+                                            <React.Fragment key={index}>
+                                                <ProjectCard
+                                                    navigateDetailsButton={true}
+                                                    item={item}
+                                                    handleClick={handleClick}
+                                                    handleEnquiryFormClick={handleEnquiryFormClick}
+                                                />
+
+                                                {/* Add separator after every 5 items */}
+                                                {(index + 1) % 5 === 0 && (
+                                                    <>
+                                                        <div className=" flex sm:hidden mt:mt-0">
+                                                            <CustomSlider
+                                                                images={shuffleArray(shuffledImages)}
+                                                                containerClassName="!h-[95px] border border-[#DEDEDE] "
+                                                            />
+                                                        </div></>
+                                                )}
+                                            </React.Fragment>
+                                        ))
+                                    ) : (
+                                        Array.from({ length: 10 }).map((_, index) => (
+                                            <ProjectCardSkelton key={index} />
+                                        ))
+                                    )}
                                 </div>
+                                
+
+                                <div className={"w-full md:block hidden max-w-[301.5px]"}>
+
+                                    { filters.page && filters.page <= 1 && (smallVideoAds && smallVideoAds.length > 0 ?
+                                        <div className={clsx("w-full mb-[12px] relative flex")}>
+                                            {/* <div className={clsx("w-full mb-[12px] relative",filters?.page && filters?.page > 1 ? 'hidden':'flex')}> */}
+                                            <VideoPreview
+                                                projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
+                                                src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                                            />
+                                        </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>)
+                                    }
+
+
+
+                                   {filters.page && filters.page > 1 && <RecommendedText
+                                        title="Recommended For You"
+                                        items={[
+                                            'Studio Properties For Sale in Dubai',
+                                            '1 BHK Flats in Downtown',
+                                            'Luxury Villas in Palm Jumeirah',
+                                            'Affordable Apartments in JVC',
+                                            'Beachfront Homes in Dubai Marina',
+                                        ]}
+                                    />}
+
+                                        <div className="sticky top-3 left-0">
+
+                                            <CustomSliderUi
+                                                shuffledImages={shuffledImages}
+                                            />
+                                            {filters.page && filters.page === 1 && <Recommendations />}
+
+
+                                            {filters.page && filters.page > 1 && <>
+                                                <RecommendedText
+                                                    title="Recommended For You"
+                                                    items={[
+                                                        'Studio Properties For Sale in Dubai',
+                                                        '1 BHK Flats in Downtown',
+                                                        'Luxury Villas in Palm Jumeirah',
+                                                        'Affordable Apartments in JVC',
+                                                        'Beachfront Homes in Dubai Marina',
+                                                    ]}
+                                                />
+                                                <RecommendedText
+                                                    title="Popular Searches"
+                                                    items={[
+                                                        'Off-plan Projects in Dubai',
+                                                        'Ready to Move Villas',
+                                                        'High ROI Areas in UAE',
+                                                        'Townhouses in Arabian Ranches',
+                                                        'Gated Communities in Sharjah',
+                                                    ]}
+                                                />
+                                            </>}
+
+
+
+                                        </div>
 
 
 
 
-                            </div>
-                        </div>
+                               
+
+
+                                </div>
+                                </div>
                         </SpaceWrapper>
                     </Container>
 
@@ -1028,6 +1084,7 @@ export default function HomePage({ initialData }: { initialData: any }) {
                                 const url = new URL(window.location.href);
                                 url.searchParams.set('page', newPage.toString());
                                 window.history.pushState({}, '', url);
+                                setPaginationHappened(pre => !pre)
                                 setFilters(prev => ({ ...prev, page: newPage }))
                             }}
                             maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />
@@ -1049,6 +1106,7 @@ export default function HomePage({ initialData }: { initialData: any }) {
 
                 <BottomBanner />
 
+                {/* Video ad son mobile */}
                 {smallVideoAds && smallVideoAds.length > 0 &&
                     <Container>
                         <div className="w-full mb-[35px] relative flex sm:hidden">

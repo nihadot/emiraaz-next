@@ -5,7 +5,7 @@ import { useFetchAllProjectsCountQuery, useFetchAllProjectsQuery } from '@/redux
 import { AllProjectsItems } from '@/redux/project/types';
 import { shuffle } from '@/utils/shuffle';
 import { useDeviceType } from '@/utils/useDeviceType';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Header from '../Header';
 import Container from '../atom/Container/Container';
@@ -33,7 +33,7 @@ import { Footer } from '../Footer';
 import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal';
 import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import { FiltersState } from '../types';
-import { useForceScrollRestore } from '@/hooks/useScrollRestoration';
+import { useForceScrollRestore, useScrollToTopOnRefresh } from '@/hooks/useScrollRestoration';
 import { parsePrice } from '@/utils/parsePrice';
 
 
@@ -43,9 +43,8 @@ import { parsePrice } from '@/utils/parsePrice';
 function Residential() {
 
     useForceScrollRestore(); // Default key is "scroll-position"
-
+useScrollToTopOnRefresh();
     const router = useRouter()
-    const pathname = usePathname();
 
     const [clear, setClear] = useState(false);
     const [defaultEmirate, setDefaultEmirate] = useState<string>('');
@@ -269,7 +268,13 @@ function Residential() {
 
     const totalPages = projects?.pagination?.totalPages || 1;
 
-    console.log(filters, 'filters')
+      
+       const [paginationHappened, setPaginationHappened] = useState(false)
+       useEffect(()=>{
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+   
+       },[paginationHappened]);
+   
     return (
         <main>
             <div className=" min-h-screen  w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
@@ -614,7 +619,8 @@ function Residential() {
                             onPageChange={(newPage) => {
                                 const url = new URL(window.location.href);
                                 url.searchParams.set('page', newPage.toString());
-                                window.history.pushState({}, '', url);
+                                  window.history.pushState({}, '', url);
+                                setPaginationHappened(pre => !pre)
                                 setFilters(prev => ({ ...prev, page: newPage }))
                             }}
                             maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />

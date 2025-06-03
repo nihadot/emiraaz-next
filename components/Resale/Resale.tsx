@@ -38,13 +38,15 @@ import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import MobileFilterOption from '@/app/home/MobileFilterOption';
 import { FiltersState } from '../types';
 import { useViewAllCountsQuery } from '@/redux/news/newsApi';
-import { useForceScrollRestore } from '@/hooks/useScrollRestoration';
+import { useForceScrollRestore, useScrollToTopOnRefresh } from '@/hooks/useScrollRestoration';
 import { parsePrice } from '@/utils/parsePrice';
+import RecommendedText from '../RecomendedText/RecommendedText';
 
 
 function Resale() {
 
     useForceScrollRestore(); // Default key is "scroll-position"
+useScrollToTopOnRefresh();
 
     const router = useRouter()
     const pathname = usePathname();
@@ -59,28 +61,28 @@ function Resale() {
     const [areaRange, setShowAreaRange] = useState(false);
 
     const [filters, setFilters] = useState<FiltersState>({
-           page: 1,
-           search: "",
-           cities: [],
-           developers: [],
-           facilities: [],
-           propertyTypeSecond: "all",
-           emirate: "",
-           completionType: "",
-           handoverDate: undefined,
-           paymentPlan: undefined,
-           furnishType: "",
-           discount: "",
-           projectTypeFirst: 'off-plan-resale',
-           projectTypeLast: 'all',
-           bedAndBath: "",
-           minPrice: '',
-           maxPrice: '',
-           minSqft: "",
-           maxSqft: "",
-           beds: "",
-           bath: "",
-       });
+        page: 1,
+        search: "",
+        cities: [],
+        developers: [],
+        facilities: [],
+        propertyTypeSecond: "all",
+        emirate: "",
+        completionType: "",
+        handoverDate: undefined,
+        paymentPlan: undefined,
+        furnishType: "",
+        discount: "",
+        projectTypeFirst: 'off-plan-resale',
+        projectTypeLast: 'all',
+        bedAndBath: "",
+        minPrice: '',
+        maxPrice: '',
+        minSqft: "",
+        maxSqft: "",
+        beds: "",
+        bath: "",
+    });
 
     // Event Handlers
     const handleChangeSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,33 +90,33 @@ function Resale() {
     }, []);
 
     // Data fetching with memoized query params
-       const queryParams = useMemo(() => ({
-           limit: 20,
-           page: filters.page,
-           search: debouncedSearch,
-           cities: filters.cities,
-           developers: filters.developers,
-           facilities: filters.facilities,
-           propertyType: filters.propertyType,
-           completionType: filters.completionType,
-           paymentPlan: filters.paymentPlan,
-           year: filters.handoverDate?.year,
-           qtr: filters.handoverDate?.quarter,
-           discount: filters.discount,
-           projectTypeFirst: filters.projectTypeFirst,
-           projectTypeLast: filters.projectTypeLast,
-           furnishing: filters.furnishType,
-           emirate: filters.emirate,
-           maxPrice: filters.maxPrice,
-           minPrice: filters.minPrice,
-           minSqft: filters.minSqft,
-           maxSqft: filters.maxSqft,
-           beds: filters.beds,
-           bath: filters.bath,
-           productTypeOptionFirst: filters.productTypeOptionFirst,
-           productTypeOptionLast: filters.productTypeOptionLast,
-       }), [filters, debouncedSearch]);
-   
+    const queryParams = useMemo(() => ({
+        limit: 20,
+        page: filters.page,
+        search: debouncedSearch,
+        cities: filters.cities,
+        developers: filters.developers,
+        facilities: filters.facilities,
+        propertyType: filters.propertyType,
+        completionType: filters.completionType,
+        paymentPlan: filters.paymentPlan,
+        year: filters.handoverDate?.year,
+        qtr: filters.handoverDate?.quarter,
+        discount: filters.discount,
+        projectTypeFirst: filters.projectTypeFirst,
+        projectTypeLast: filters.projectTypeLast,
+        furnishing: filters.furnishType,
+        emirate: filters.emirate,
+        maxPrice: filters.maxPrice,
+        minPrice: filters.minPrice,
+        minSqft: filters.minSqft,
+        maxSqft: filters.maxSqft,
+        beds: filters.beds,
+        bath: filters.bath,
+        productTypeOptionFirst: filters.productTypeOptionFirst,
+        productTypeOptionLast: filters.productTypeOptionLast,
+    }), [filters, debouncedSearch]);
+
 
     const { data: emiratesData } = useFetchAllEmirateNamesQuery();
     const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
@@ -150,29 +152,29 @@ function Resale() {
 
     const deviceType = useDeviceType();
 
-   const handleSelect = useMemo(() => ({
-          emirate: (option: any) => setFilters(prev => ({ ...prev, emirate: option?.value || '' })),
-          propertyType: (option: any) => setFilters(prev => ({ ...prev, propertyType: option?.value || '' })),
-          propertyTypeSecond: (option: any) => setFilters(prev => ({ ...prev, propertyTypeSecond: option })),
-          completionType: (option: any) => setFilters(prev => ({ ...prev, completionType: option })),
-          productTypeOptionFirst: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionFirst: option })),
-          projectTypeFirst: (option: any) => setFilters(prev => ({ ...prev, projectTypeFirst: option })),
-          projectTypeLast: (option: any) => setFilters(prev => ({ ...prev, projectTypeLast: option })),
-          productTypeOptionLast: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionLast: option })),
-          handoverDate: (data: any) => setFilters(prev => ({ ...prev, handoverDate: data })),
-          projectType: (option: any) => setFilters(prev => ({ ...prev, projectType: option })),
-          paymentPlan: (option: any) => setFilters(prev => ({ ...prev, paymentPlan: option?.value || '' })),
-          furnishType: (option: any) => setFilters(prev => ({ ...prev, furnishType: option?.value || '' })),
-          discount: (option: any) => setFilters(prev => ({ ...prev, discount: option?.value || '' })),
-          bedAndBath: (option: any) => setFilters(prev => ({ ...prev, bedAndBath: option?.value || '' })),
-          maxPrice: (option: any) => setFilters(prev => ({ ...prev, maxPrice: option || '' })),
-          minSqft: (option: any) => setFilters(prev => ({ ...prev, minSqft: option || '' })),
-          maxSqft: (option: any) => setFilters(prev => ({ ...prev, maxSqft: option || '' })),
-          minPrice: (option: any) => setFilters(prev => ({ ...prev, minPrice: option || '' })),
-          beds: (option: any) => setFilters(prev => ({ ...prev, beds: option || '' })),
-          bath: (option: any) => setFilters(prev => ({ ...prev, bath: option || '' })),
-      }), []);
-  
+    const handleSelect = useMemo(() => ({
+        emirate: (option: any) => setFilters(prev => ({ ...prev, emirate: option?.value || '' })),
+        propertyType: (option: any) => setFilters(prev => ({ ...prev, propertyType: option?.value || '' })),
+        propertyTypeSecond: (option: any) => setFilters(prev => ({ ...prev, propertyTypeSecond: option })),
+        completionType: (option: any) => setFilters(prev => ({ ...prev, completionType: option })),
+        productTypeOptionFirst: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionFirst: option })),
+        projectTypeFirst: (option: any) => setFilters(prev => ({ ...prev, projectTypeFirst: option })),
+        projectTypeLast: (option: any) => setFilters(prev => ({ ...prev, projectTypeLast: option })),
+        productTypeOptionLast: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionLast: option })),
+        handoverDate: (data: any) => setFilters(prev => ({ ...prev, handoverDate: data })),
+        projectType: (option: any) => setFilters(prev => ({ ...prev, projectType: option })),
+        paymentPlan: (option: any) => setFilters(prev => ({ ...prev, paymentPlan: option?.value || '' })),
+        furnishType: (option: any) => setFilters(prev => ({ ...prev, furnishType: option?.value || '' })),
+        discount: (option: any) => setFilters(prev => ({ ...prev, discount: option?.value || '' })),
+        bedAndBath: (option: any) => setFilters(prev => ({ ...prev, bedAndBath: option?.value || '' })),
+        maxPrice: (option: any) => setFilters(prev => ({ ...prev, maxPrice: option || '' })),
+        minSqft: (option: any) => setFilters(prev => ({ ...prev, minSqft: option || '' })),
+        maxSqft: (option: any) => setFilters(prev => ({ ...prev, maxSqft: option || '' })),
+        minPrice: (option: any) => setFilters(prev => ({ ...prev, minPrice: option || '' })),
+        beds: (option: any) => setFilters(prev => ({ ...prev, beds: option || '' })),
+        bath: (option: any) => setFilters(prev => ({ ...prev, bath: option || '' })),
+    }), []);
+
 
 
     useEffect(() => {
@@ -275,13 +277,19 @@ function Resale() {
 
     const totalPages = projects?.pagination?.totalPages || 1;
 
-        const [allProjects, setAllProjects] = useState<AllProjectsItems[]>();
-    
-       useEffect(() => {
-            if (projects?.data) {
-                setAllProjects(projects?.data);
-            }
-        }, [projects]);
+    const [allProjects, setAllProjects] = useState<AllProjectsItems[]>();
+
+    useEffect(() => {
+        if (projects?.data) {
+            setAllProjects(projects?.data);
+        }
+    }, [projects]);
+   
+    const [paginationHappened, setPaginationHappened] = useState(false)
+    useEffect(()=>{
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    },[paginationHappened]);
 
     return (
         <main>
@@ -371,7 +379,7 @@ function Resale() {
                                     }
 
                                     switch (e) {
-                                      
+
                                         case 'off-plan-projects':
                                             path = '/';
                                             break;
@@ -408,7 +416,7 @@ function Resale() {
                                         return;
                                     }
 
-                                  
+
                                     switch (e) {
                                         case 'residential':
                                             if (pathname === '/off-plan-resale') {
@@ -437,7 +445,7 @@ function Resale() {
                                 options={propertyTypeSecond}
                             />
                             <button onClick={handleFilterModal} className="bg-red-600/10 rounded flex justify-center items-center  border-none w-[55px] lg:hidden h-full">
-                        
+
                                 <HiOutlineAdjustmentsHorizontal
                                     className="w-[22px] h-[22px]"
                                     color='red'
@@ -620,7 +628,7 @@ function Resale() {
                                         }
                                     ]}
                                 />
-                                    <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Properties Available</p>
+                                <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Properties Available</p>
                             </div>
 
 
@@ -631,11 +639,11 @@ function Resale() {
                                 <LocationTags
 
                                     data={
-                                            cities?.data?.slice(0, 4).map((item) => ({
-                                                location: item.name,
-                                                count: item.count,
-                                            })) || []
-                                        }
+                                        cities?.data?.slice(0, 4).map((item) => ({
+                                            location: item.name,
+                                            count: item.count,
+                                        })) || []
+                                    }
                                 />
                             </SpaceWrapper>
 
@@ -651,7 +659,7 @@ function Resale() {
                                             handleEnquiryFormClick={handleEnquiryFormClick}
                                         />
 
-                                     
+
 
                                         {/* Add separator after every 5 items */}
                                         {(index + 1) % 5 === 0 && (
@@ -675,15 +683,47 @@ function Resale() {
                         <div className="w-full xl:block hidden max-w-[301.5px]">
 
 
-                                <Recommendations />
+
+                            <RecommendedText
+                                title="Recommended For You"
+                                items={[
+                                    'Studio Properties For Sale in Dubai',
+                                    '1 BHK Flats in Downtown',
+                                    'Luxury Villas in Palm Jumeirah',
+                                    'Affordable Apartments in JVC',
+                                    'Beachfront Homes in Dubai Marina',
+                                ]}
+                            />
                             <div className="sticky top-3 left-0">
 
                                 <CustomSliderUi
                                     shuffledImages={shuffledImages}
                                 />
+
+                                  <RecommendedText
+                                title="Recommended For You"
+                                items={[
+                                    'Studio Properties For Sale in Dubai',
+                                    '1 BHK Flats in Downtown',
+                                    'Luxury Villas in Palm Jumeirah',
+                                    'Affordable Apartments in JVC',
+                                    'Beachfront Homes in Dubai Marina',
+                                ]}
+                            />
+                            <RecommendedText
+                                title="Popular Searches"
+                                items={[
+                                    'Off-plan Projects in Dubai',
+                                    'Ready to Move Villas',
+                                    'High ROI Areas in UAE',
+                                    'Townhouses in Arabian Ranches',
+                                    'Gated Communities in Sharjah',
+                                ]}
+                            />
+
                             </div>
 
-
+                          
 
 
                         </div>
@@ -692,7 +732,7 @@ function Resale() {
 
 
 
-   <Container>
+                <Container>
 
                     <div className="mt-[23.25px]">
 
@@ -702,7 +742,8 @@ function Resale() {
                             onPageChange={(newPage) => {
                                 const url = new URL(window.location.href);
                                 url.searchParams.set('page', newPage.toString());
-                                window.history.pushState({}, '', url);
+                                  window.history.pushState({}, '', url);
+                                setPaginationHappened(pre => !pre)
                                 setFilters(prev => ({ ...prev, page: newPage }))
                             }}
                             maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />
@@ -736,15 +777,15 @@ function Resale() {
             />
 
 
-                        <MobileFilterOption
-            
-                            resultProjects={() => {
-                                setAllProjects(projects?.data);
-                            }}
-                            setFiltersHandler={setFilters}
-                            onClose={() => setFilterModel(false)}
-                            show={filterModel}
-                        />
+            <MobileFilterOption
+
+                resultProjects={() => {
+                    setAllProjects(projects?.data);
+                }}
+                setFiltersHandler={setFilters}
+                onClose={() => setFilterModel(false)}
+                show={filterModel}
+            />
         </main>
     )
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { drop_down_icon, logo, logo_footer_black, menu_icon, mobileAppIcon, propertySellerWhiteLogo, ps_logo, user_icon } from '@/app/assets';
+import { menu_icon, mobileAppIcon, ps_logo, user_icon } from '@/app/assets';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import NavMenu from './NavMenu';
@@ -14,9 +14,7 @@ import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import { useRouter } from 'next/navigation';
 import { errorToast } from '../Toast';
 import Container from '../atom/Container/Container';
-import { PiUserCircleThin } from "react-icons/pi";
-import { IoCloseOutline, IoCloseSharp } from 'react-icons/io5';
-import { IoMdClose } from 'react-icons/io';
+import { IoCloseSharp } from 'react-icons/io5';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import { IoChevronDown } from "react-icons/io5";
 import { PiUserCircle } from "react-icons/pi";
@@ -26,9 +24,9 @@ function Header() {
 
   const menuItems = [
     { name: 'About', link: '/about' },
+    { name: 'Why Dubai', link: '/why-dubai' },
     { name: 'Property Talks', link: '/talks' },
     { name: 'Rental Income', link: '/rental-income' },
-    { name: 'Developers', link: '/developers' },
     { name: 'Donation', link: '/donations' },
   ];
 
@@ -82,8 +80,7 @@ function Header() {
 
         {/* Logo */}
         <div onClick={() => router.push("/")} className="w-[140px] cursor-pointer sm:w-[138.75px] ms-7 sm:ms-0 h-[50px] sm:h-[32.25px] relative ">
-          {/* <Image src={logo_footer_black} alt='logo' fill className='bg-cover' /> */}
-          <Image src={ps_logo.src} alt="" width={140} height={50}  className='object-contain h-full  max-w-[200px] w-full' />
+          <Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />
 
         </div>
         <PrimaryButton
@@ -92,10 +89,10 @@ function Header() {
         >
           <>
             <label htmlFor="" className='text-[11px] font-normal  font-poppins'>AED</label>
-         <div className="w-[28px] flex justify-center items-center h-[20px] relative">
-           <IoChevronDown size={14}  />
-         </div>
-        
+            <div className="w-[28px] flex justify-center items-center h-[20px] relative">
+              <IoChevronDown size={14} />
+            </div>
+
           </>
 
 
@@ -164,9 +161,9 @@ function Header() {
               >
                 <>
                   <label htmlFor="" className='text-[12px] font-normal  font-poppins'>AED</label>
-                    <div className="w-[28px] flex justify-center  items-center h-[10px] relative">
-           <IoChevronDown size={14}  />
-         </div>
+                  <div className="w-[28px] flex justify-center  items-center h-[10px] relative">
+                    <IoChevronDown size={14} />
+                  </div>
                 </>
 
 
@@ -182,7 +179,7 @@ function Header() {
                   <div className="w-4 h-4 relative flex justify-center items-center">
                     <PiUserCircle size={18} />
                   </div>
-                
+
                   <label htmlFor="" className='text-[12px] font-normal  font-poppins'>Login</label>
                 </>
 
@@ -240,9 +237,9 @@ function Header() {
               <p className='text-[12px] font-medium  font-poppins mt-5'>Download PropertySeller App</p>
 
               <Image
-              src={mobileAppIcon}
-              alt='app icon'
-              className='mt-1'
+                src={mobileAppIcon}
+                alt='app icon'
+                className='mt-1'
               />
             </motion.div>
           )}

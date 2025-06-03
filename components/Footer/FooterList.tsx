@@ -8,7 +8,7 @@ type FooterListProps = {
 
 const FooterList: React.FC<FooterListProps> = ({ title, items }) => {
   return (
-    <ul className="flex py-4 flex-col items-start font-poppins text-white">
+    <ul className="flex pt-4 sm:py-4 flex-col items-start font-poppins text-white">
       <li className="text-white font-medium text-[14px] py-1">{title}</li>
       {items.map((item, index) => (
         <Link href={item.link} key={index} className="text-white/60 py-1 text-[13px]">
