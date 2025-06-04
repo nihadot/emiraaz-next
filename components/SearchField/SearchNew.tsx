@@ -21,7 +21,9 @@ const SearchNew: React.FC<SearchInputProps> = ({
             className={`flex flex-1   gap-3 h-full w-full text-[13px] items-center outline rounded-[3px] px-3 py-3   outline-[#DEDEDE] text-sm ${className}`}
         >
             {/* <Image src={search_icon} alt='menu icon' width={17.25} className="object-cover" height={17.25} /> */}
-            <FaSearch color="#FF1645" className="text-[11px] w-[17px] h-[17px]" />
+           <div className="w-[17px] h-[17px]">
+             <FaSearch color="#FF1645" className="text-[11px] w-[17px] h-[17px]" />
+           </div>
             <input
                 type="text"
                 value={value}

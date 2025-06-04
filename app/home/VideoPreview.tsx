@@ -918,7 +918,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
             muted={isMuted}
             autoPlay
             style={{
-              filter: `brightness(${1 - dimOpacity})`,
+              // filter: `brightness(${1 - dimOpacity})`,
               objectFit: isFullscreen && !isMobile ? "contain" : "cover",
               width: isFullscreen && !isMobile ? "100%" : "100%",
               height: isFullscreen && !isMobile ? "100%" : "100%",

@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     siteName: "Property Seller",
     images: [
       {
-        url: "https://www.propertyseller.com/og-image.jpg",
+        url: "https://res.cloudinary.com/dknxmloqh/image/upload/v1748991060/favicon-DBW5gi7l_j0cjdz.png",
         width: 1200,
         height: 630,
         alt: "Dubai Property - Property Seller",
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Propertyseller UAE | Apartments, Villas, Townhouses, Penthouses",
     description: "Explore premium off-plan properties and apartments for sale in Dubai.",
-    images: ["https://www.propertyseller.com/og-image.jpg"],
+    images: ["https://res.cloudinary.com/dknxmloqh/image/upload/v1748991060/favicon-DBW5gi7l_j0cjdz.png"],
     site: "@PropertySeller",
   },
   alternates: {

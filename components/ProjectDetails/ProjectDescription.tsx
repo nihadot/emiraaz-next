@@ -125,6 +125,7 @@ const ProjectDescription: React.FC<ProjectDescriptionProps> = ({
       <NewModal
         onClose={() => setModalOpen(false)}
         isOpen={modalOpen}
+        wrapperClassName='!z-[60]'
         contentClassName="flex rounded-[6px] flex-col bg-white p-0 max-w-[1200px] m-auto w-full h-screen  sm:max-h-fit"
 
       >
@@ -175,61 +176,61 @@ const ProjectDescription: React.FC<ProjectDescriptionProps> = ({
           </div>
 
 
+     <div className="flex bg-white mt-[15px] gap-1 sm:gap-[7.5px] items-center sm:justify-end">
+                <PrimaryButton
+                  type="button"
+                  className="bg-[#FFE7EC] !px-3 sm:!px-4 !py-2 sm:!py-[9px] !w-full sm:!w-fit  border-none text-[#FF1645] font-poppins rounded "
 
-          <div className="flex mt-[17.25px] gap-[7.5px] items-center sm:justify-end">
-            <PrimaryButton
-              type="button"
-              className="bg-[#FFE7EC] border-none text-[#FF1645] font-poppins rounded "
+                >
+                  <div className="flex items-center h-[26px] justify-center gap-2">
+                    {isWishlist ? (
+                      <GoHeartFill onClick={toggleWishlistItem} color="red" className="w-[18px] h-[18px] sm:w-[20px] sm:h-[20px]" />
+                    ) : (
+                      <GoHeart onClick={toggleWishlistItem} color="red" className="w-[18px] h-[18px] sm:w-[20px] sm:h-[20px]" />
+                    )}
+                    <label className="text-[12px] sm:text-[14.25px] text-[#FF1645] font-medium font-poppins">Save</label>
+                  </div>
+                </PrimaryButton>
 
-            >
-              <div className="flex items-center w-[80px] h-[35.25px] justify-center gap-2">
-               {isWishlist ? (
-                                     <GoHeartFill onClick={toggleWishlistItem} color="red" className="w-[20px] h-[20px]" />
-                                   ) : (
-                                     <GoHeart onClick={toggleWishlistItem} color="red" className="w-[20px] h-[20px]" />
-                                   )}
-                <label className="text-[14.25px] text-[#FF1645] font-medium font-poppins">Save</label>
-              </div>
-            </PrimaryButton>
+                <PrimaryButton
+                  type="button"
+                  className="bg-[#FFE7EC] !px-3 sm:!px-4 !w-full sm:!w-fit  border-none text-[#FF1645] font-poppins rounded "
 
-            <PrimaryButton
-              type="button"
-              className="bg-[#FFE7EC] border-none text-[#FF1645] font-poppins rounded "
-
-            >
-              <div
+                >
+                  <div className="flex items-center gap-2 w-fit h-[25px]  sm:h-[28px] justify-center">
+                    <div
                 onClick={() => handleShare(projectTitle || '')}
+                      className="w-[18px] sm:w-[21px] h-[18px] sm:h-[21px] relative">
+                      <PiShareFat
+                        color='#FF1645'
+                        size={20}
+                      />
+                    </div>
+                    <label className="text-[12px] sm:text-[14.25px] text-nowrap text-[#FF1645] font-medium font-poppins">Share </label>
+                  </div>
+                </PrimaryButton>
 
-                className="flex items-center gap-2 w-[80px] h-[35.25px] justify-center">
-                <PiShareFat
-                  color='#FF1645'
-                  className='w-[25px] h-[25px]'
-                />
-                <label className="text-[14.25px] text-[#FF1645] font-medium font-poppins">Share </label>
+
+                <PrimaryButton
+                  type="button"
+                  className="bg-[#FFE7EC] !px-4  !w-full sm:!w-fit border-none text-[#FF1645] font-poppins rounded "
+
+                >
+                  <div
+
+                    onClick={() => setEnquiryForm({ status: true, id: projectId || '', count: 1 })}
+                    className="flex items-center gap-2 w-fit h-[25px] sm:h-[28px] justify-center">
+                    <div className="w-[18px] sm:w-[21px] h-[18px] sm:h-[21px] relative">
+                      <PiNotePencil
+                        className="w-[25px] h-[22px]"
+                        color="#FF1645"
+                      />
+                    </div>
+                    <label className="text-[12px] sm:text-[14.25px] text-nowrap text-[#FF1645] font-medium font-poppins">Enquire Now </label>
+                  </div>
+                </PrimaryButton>
+
               </div>
-            </PrimaryButton>
-
-
-            <PrimaryButton
-              type="button"
-              className="bg-[#FFE7EC] border-none text-[#FF1645] font-poppins rounded "
-
-            >
-              <div
-                                  onClick={() => setEnquiryForm({ status: true, id: projectId || '', count: 1 })}
-
-              className="flex items-center gap-2 w-[147.75px] h-[35.25px] justify-center">
-                {/* <Image src={notes_red_edit} alt="share icon" width={21.75} height={21.75} /> */}
-                <PiNotePencil
-                  className="w-[25px] h-[25px]"
-                  color="#FF1645"
-                />
-                <label className="text-[14.25px] text-[#FF1645] font-medium font-poppins">Enquire Now </label>
-              </div>
-            </PrimaryButton>
-
-          </div>
-
         </div>
 
       </NewModal>

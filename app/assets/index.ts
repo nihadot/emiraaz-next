@@ -25,7 +25,7 @@ export { default as report_icon } from "./report_icon.svg";
 export { default as registration_success } from "./registration_success.svg"
 export { default as logo_footer_black } from "./PropertysellerBlackLogo.svg";
 export { default as youtube_icon_footer } from "./youtube.svg";
-export { default as filter_icon } from "./filter.svg";
+export { default as filter_icon } from "./filter.png";
 export { default as instagram_icon } from "./instagram.svg";
 export { default as facebook_icon } from "./facebook.svg";
 export { default as share_black_icon } from "./share_black.svg";
@@ -69,6 +69,8 @@ export {default as logoWebP} from "./logo.webp"
 export {default as mobileAppIcon} from "./mobile-menu-app-icon.png"
 export {default as ps_logo} from "./PropertysellerBlackLogo-new.png"
 export {default as trademark} from "./trademark.png";
-export {default as byEmiraaz} from "./backed-by.png"
+export {default as byEmiraaz} from "./backed-by.png";
+export {default as calender} from "./calendar.png";
+export {default as citiesBackIcon} from "./cities-back-btn.png";
 
 

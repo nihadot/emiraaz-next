@@ -14,6 +14,7 @@ import { GoHeart, GoHeartFill, GoScreenFull } from "react-icons/go";
 import { HiOutlineBuildingOffice } from "react-icons/hi2";
 import { LiaBedSolid } from "react-icons/lia";
 import { PiShareFat } from "react-icons/pi";
+import { TfiLocationPin } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
 
 interface UserData {
@@ -112,13 +113,15 @@ const ProjectBasicInfo = ({ projectId,type,
         {/* Price */}
 
         {(projectType === 'commercial-residential' || projectType === 'project-residential' || projectType === 'project-commercial') ? <h4>
-          {/* <span className='text-[12px] sm:text-[17.75px] mt-[4.5px] font-semibold font-poppins '>{currency}</span> */}
+         
+          { (value && currency) ? <>
           <span className='text-[12px] sm:text-[24px] mt-[4.5px] font-semibold font-poppins'>Starting From</span>
 
           <span className='font-poppins sm:text-[33.75px] text-[30px] ms-1 font-semibold '>
             {value}
           </span>
           <span className='text-[11.928px] sm:text-[24px] font-semibold mt-[4.5px] font-poppins '>{currency}</span>
+          </> : <div className=" w-full h-[40px] bg-gray-50"></div> }
 
         </h4> :
           <h4>
@@ -134,7 +137,9 @@ const ProjectBasicInfo = ({ projectId,type,
 
         {/* Location place */}
         <div className="flex items-center mt-[7.6px] m:mt-[13.5px] gap-1">
-          <Image src={location_icon} alt="location" width={15} height={15} />
+          <div className="">
+                              <TfiLocationPin size={18} color='#333333' />
+                            </div> {/* <Image src={location_icon} alt="location" width={15} height={15} /> */}
           <p className="capitalize text-[12px] font-normal font-poppins line-clamp-2">{address || 'Lum1nar Tower 3, Lum1nar Towers, JVT District 2, Jumeirah Village Triangle (JVT), Dubai'}</p>
         </div>
 

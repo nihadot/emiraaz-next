@@ -375,7 +375,7 @@ function MobileFilterOption({
 
 
                                 {/* Property Type First */}
-                                <div className="h-[120px]">
+                                <div className="h-[80px]">
                                     <SwitchSelectorMobile
                                         clearSelection={clear}
                                         onSelect={handleSelect.projectType}

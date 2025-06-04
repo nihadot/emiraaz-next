@@ -110,7 +110,7 @@ export const PaymentPlan: { count?: number, value: string; label: string }[] = [
 
 
 export const propertyTypeFirst = [
-    { label: "All", value: "all" },
+    // { label: "All", value: "all" },
     { label: "Off-Plan projects", value: "off-plan-projects" },
     { label: "Off-Plan Resale", value: "off-plan-resale" },
     { label: "Secondary ", value: "off-plan-secondary" },

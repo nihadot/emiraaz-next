@@ -410,22 +410,32 @@ const [paginationHappened, setPaginationHappened] = useState(false)
     }, []);
 
 
+   
+
     useEffect(() => {
         if (pathname === '/') {
             setDefaultProjectStage('all')
         }
+ function setRealVH() {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+        window.addEventListener('resize', setRealVH);
+
     }, []);
+
+
 
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center h-screen bg-black">
+            <div className="flex items-center justify-center h-full bg-black" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
                 <div className="relative animate-pulse sm:block hidden w-full max-w-[320px] sm:max-w-[420px] md:max-w-[500px] lg:max-w-[580.5px] aspect-[574.5/140.5] p-4 sm:p-0">
                     <Image width={590} height={140} src={big_white_logo_icon} alt="logo" />
                 </div>
 
 
-                    <div className="relative animate-pulse block sm:hidden w-full max-w-[320px] sm:max-w-[420px] md:max-w-[500px] lg:max-w-[580.5px] aspect-[574.5/140.5] p-4 sm:p-0">
+                    <div className="relative animate-pulse block sm:hidden w-full max-w-[320px] sm:max-w-[420px]  p-4 sm:p-0">
                     <Image width={300} height={140} src={pIcon} alt="property seller logo" />
                 </div>
             </div>
@@ -450,6 +460,7 @@ const [paginationHappened, setPaginationHappened] = useState(false)
 
                             <div className="md:h-[48px] h-[40px]">
                                 <SearchNew
+                                
                                     value={filters?.search || ''}
                                     onChange={handleChangeSearch}
                                     placeholder="Search..."

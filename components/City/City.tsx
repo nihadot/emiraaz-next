@@ -11,6 +11,7 @@ import PaginationNew from '../PaginationNew/PaginationNew';
 import { Footer } from '../Footer';
 import { CityItem } from '@/redux/cities/types';
 import Image from 'next/image';
+import { citiesBackIcon } from '@/app/assets';
 
 
 
@@ -198,7 +199,7 @@ function Card({ item }: CardProps) {
         <div className='border border-[#DEDEDE] flex-1 font-poppins h-[240px] w-full p-[13px] rounded-md'>
             <div className="flex gap-0 w-full items-center">
 
-                <div className="flex flex-col w-full  gap-1">
+                <div className="flex relative flex-col w-full  gap-1">
                     {item?.image && item?.name ?
                         <div className="w-full h-[124.5px] relative" >
                             <Image
@@ -222,6 +223,16 @@ function Card({ item }: CardProps) {
                     <p className='font-poppins px-2 w-fit py-1 rounded text-[9px] font-medium border border-[#DEDEDE]'>Offplan Resale - 10  </p>
                     <p className='font-poppins px-2 w-fit py-1 rounded text-[9px] font-medium border border-[#DEDEDE]'>Offplan Resale - 10  </p>
                     <p className='font-poppins px-2 w-fit py-1 rounded text-[9px] font-medium border border-[#DEDEDE]'>Land - 10  </p>
+                    </div>
+
+                    <div className="absolute right-0 bottom-0">
+                        <Image
+                        src={citiesBackIcon}
+                        alt="back icon"
+                        width={20}
+                        height={20}
+                        className="object-cover"
+                        />
                     </div>
 
                 </div>
