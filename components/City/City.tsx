@@ -140,10 +140,11 @@ function City() {
                     </section>
                 </Container>
 
+                    <div className="w-full h-[1px] bg-gray-200 my-4"></div>
+
                 <Container>
 
 
-                    <div className="w-full h-[1px] bg-gray-200 my-4"></div>
 
 
                     <section className='h-full pb-20 grid-cols-1 w-full gap-3 grid lg:grid-cols-4' >
@@ -220,7 +221,7 @@ function Card({ item }: CardProps) {
                     <div className="flex flex-wrap gap-2 ">
 
                     <p className='font-poppins px-2 w-fit py-1 rounded text-[9px] font-medium border border-[#DEDEDE]'>Offplan Projects - 10 </p>
-                    <p className='font-poppins px-2 w-fit py-1 rounded text-[9px] font-medium border border-[#DEDEDE]'>Offplan Resale - 10  </p>
+                    <p className='font-poppins px-2 w-fit py-1 rounded text-[9px] font-medium border border-[#DEDEDE]'>Resale - 10  </p>
                     <p className='font-poppins px-2 w-fit py-1 rounded text-[9px] font-medium border border-[#DEDEDE]'>Offplan Resale - 10  </p>
                     <p className='font-poppins px-2 w-fit py-1 rounded text-[9px] font-medium border border-[#DEDEDE]'>Land - 10  </p>
                     </div>

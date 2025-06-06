@@ -17,7 +17,7 @@ function page() {
             <section className='bg-white text-black'>
 
                 <Container>
-                    <h2 className=' font-poppins  font-medium text-[10px] sm:text-[12px] text-center py-[10px]'>About Us</h2>
+                    <h2 className=' font-poppins  font-medium text-[12px] sm:text-[16px] text-center py-[10px]'>About Us</h2>
                     <h1 className=' font-poppins font-medium text-[19.5px] sm:text-[37.5px] text-center pb-[10px]'>Story Of PropertySeller.</h1>
                     <Paragraph
                         content='At PropertySeller, we are not just a marketplace—we are the bridge that connects buyers with the best off-plan property opportunities. Our journey began with a clear vision: to simplify the real estate process, eliminate complexities, and bring transparency to every transaction.
@@ -34,7 +34,7 @@ We saw a gap in the market where buyers struggled to find reliable information, 
                     <div className='flex pb-10 flex-col sm:flex-row gap-[38px] mt-4 sm:mt-[97px] items-center justify-between'>
 
 
-                        <div className="h-[329px] sm:h-[450px] w-[346px] border-[#DEDEDE] rounded-[9px] border-[4px]"></div>
+                        {/* <div className="h-[329px] sm:h-[450px] w-[346px] border-[#DEDEDE] rounded-[9px] border-[4px]"></div> */}
                         <div className="flex-1">
                             <h3 className=' font-poppins  font-medium text-[19.5px] pb-3 sm:text-[37.5px] text-center'>Meet the Founder – Ashiq Emiraaz</h3>
 
@@ -68,7 +68,7 @@ function Paragraph({
     className?: string
 }) {
     return (
-        <p className={clsx('font-poppins font-normal text-[10.5px] sm:text-[12px] text-black', className)}>
+        <p className={clsx('font-poppins font-normal text-[14px] sm:text-[16px] text-black', className)}>
             {content}
         </p>
     )

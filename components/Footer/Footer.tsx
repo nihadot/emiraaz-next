@@ -33,26 +33,7 @@ function Footer() {
                             </div>
 
 
-                          <div className="flex pt-5 sm:pt-0 pb-3 sm:pb-0  sm:hidden items-center w-full justify-between">
-                        <div className="flex w-[130px] items-center gap-2">
-                            <Image
-                                className='w-[28.5px] h-[28.5px] object-cover'
-                                src={trademark}
-                                alt='trademark'
-                            />
-                            <p className='text-[10.5px] font-poppins font-medium text-white break-words'>Trademark Registered</p>
-                        </div>
-
-                     
-                        <div className="flex items-center gap-2">
-                            <Image
-                                className='w-[115px] h-[50px] object-cover'
-                                src={byEmiraaz}
-                                alt='trademark'
-
-                            />
-                        </div>
-                    </div>
+                         
 
 
                             <div className="sm:flex hidden mt-[15px] justify-start items-start gap-3">
@@ -109,7 +90,7 @@ function Footer() {
                             </div>
                         </section>
 
-                        <section className='grid grid-cols-2 md:grid-cols-6  xl justify-between w-full'>
+                        <section className='grid grid-cols-[60%_1fr] md:grid-cols-6  xl justify-between w-full'>
 
                             <FooterList
                                 title="Explore"
@@ -153,6 +134,7 @@ function Footer() {
                                 ]}
                             />
                             <FooterList
+                            ulContainerClassName={''}
                                 title="Residential"
                                 items={[
                                     {
@@ -197,11 +179,19 @@ function Footer() {
                             <FooterList
                                 title="Emirates"
                                 items={[{
+                                    title: "Dubai",
+                                    link: "/"
+                                },{
                                     title: "Abu Dhabi",
                                     link: "/"
                                 },
+                             
                                 {
                                     title: "Sharjah",
+                                    link: "/"
+                                },
+                                    {
+                                    title: "Ras Al Khaimah",
                                     link: "/"
                                 },
                                 {
@@ -213,10 +203,7 @@ function Footer() {
                                     title: "Umm Al-Quwain",
                                     link: "/"
                                 },
-                                {
-                                    title: "Ras Al Khaimah",
-                                    link: "/"
-                                },
+                               
                                 ]}
                             />
                             <FooterList
@@ -266,6 +253,28 @@ function Footer() {
                                 ]}
                             />
                         </section>
+
+
+                         <div className="flex pt-5 sm:pt-0 pb-3 sm:pb-0  sm:hidden items-center w-full justify-between">
+                        <div className="flex w-[130px] items-center gap-2">
+                            <Image
+                                className='w-[28.5px] h-[28.5px] object-cover'
+                                src={trademark}
+                                alt='trademark'
+                            />
+                            <p className='text-[10.5px] font-poppins font-medium text-white break-words'>Trademark Registered</p>
+                        </div>
+
+                     
+                        <div className="flex items-center gap-2">
+                            <Image
+                                className='w-[115px] h-[50px] object-cover'
+                                src={byEmiraaz}
+                                alt='trademark'
+
+                            />
+                        </div>
+                    </div>
 
 
                         <div className="sm:hidden flex  justify-center mt-4 sm:mt-0 items-start gap-3">
