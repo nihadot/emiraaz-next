@@ -22,7 +22,7 @@ const baseQueryWithReAuth = createBaseQueryWithReAuth(baseQuery, refreshTokenBas
 export const projectApi = createApi({
   reducerPath: "projectApi",
   baseQuery: baseQueryWithReAuth,
-  tagTypes: ["Projects", "AllNames", "Project", "AllProjectsCount"],
+  tagTypes: ["Projects", "AllNames","FeatruedProjects", "Project", "AllProjectsCount"],
   endpoints: (builder) => ({
     fetchAllProjects: builder.query<ViewProjectResponse, {
       page?: number,
@@ -97,6 +97,14 @@ export const projectApi = createApi({
       providesTags: ["AllProjectsCount"],
     }),
 
+      fetchFeaturedProjects: builder.query<ViewProjectResponse, void>({
+      query: () => ({
+        url: `/featured-projects`,
+        method: "GET",
+      }),
+      providesTags: ["FeatruedProjects"],
+    }),
+
   }),
 });
 
@@ -106,5 +114,7 @@ export const {
   useFetchAllProjectNamesQuery,
   useFetchProjectByIdQuery,
   useFetchAllProjectsCountQuery,
+  useFetchFeaturedProjectsQuery,
 } = projectApi;
+
 

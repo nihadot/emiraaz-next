@@ -660,7 +660,7 @@ function ProjectDetails({ id }: { id: string }) {
                   data={[
                     {
                       label: 'Permit Number',
-                      value: '889359955004'
+                      value: data?.data?.permitNumber || '-'
                     },
                     {
                       label: 'DED',

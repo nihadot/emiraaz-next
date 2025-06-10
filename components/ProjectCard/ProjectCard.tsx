@@ -235,7 +235,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                         <PrimaryButton
                             onClick={() => handleClick(item)}
                             type="button"
-                            className="!px-0 sm:!px-4 flex w-full sm:w-[106.5px] h-[35px] items-center gap-2 rounded border-none bg-[#FF1645]"
+                            className="!px-0 cursor-pointer sm:!px-4 flex w-full sm:w-[106.5px] h-[35px] items-center gap-2 rounded border-none bg-[#FF1645]"
                         >
                               <div className="relative w-[20px] h-[20px]">
 
@@ -250,7 +250,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                     <PrimaryButton
                         onClick={() => handleEnquiryFormClick(item)}
                         type="button"
-                        className="flex !px-0 sm:!px-4 w-full sm:w-[140.5px] h-[35px] items-center gap-2 rounded border-none bg-[#FF1645]"
+                        className="flex cursor-pointer !px-0 sm:!px-4 w-full sm:w-[140.5px] h-[35px] items-center gap-2 rounded border-none bg-[#FF1645]"
                     >
                         <div className="relative w-[20px] h-[20px]">
 

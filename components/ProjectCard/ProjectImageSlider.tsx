@@ -126,7 +126,7 @@ function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
 
             <button
                 ref={prevRef}
-                className="absolute left-2 top-1/2 z-10 transform -translate-y-1/2 h-[20px] w-[20px] bg-white/75 text-red-500 rounded-[4.5px] justify-center items-center hover:opacity-80 transition-opacity duration-200 group-hover:flex"
+                className="absolute cursor-pointer left-2 top-1/2 z-10 transform -translate-y-1/2 h-[20px] w-[20px] bg-white/75 text-red-500 rounded-[4.5px] justify-center items-center hover:opacity-80 transition-opacity duration-200 group-hover:flex"
             >
                 <div className="flex justify-center items-center w-full h-full">
                     {/* <Image
@@ -142,7 +142,7 @@ function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
 
             <button
                 ref={nextRef}
-                className="absolute right-2 top-1/2 z-10 transform -translate-y-1/2 h-[20px] justify-center items-center w-[20px] bg-white/75 text-red-500 rotate-180 rounded-[4.5px] hover:opacity-80 transition-opacity duration-200 group-hover:flex"
+                className="absolute cursor-pointer right-2 top-1/2 z-10 transform -translate-y-1/2 h-[20px] justify-center items-center w-[20px] bg-white/75 text-red-500 rotate-180 rounded-[4.5px] hover:opacity-80 transition-opacity duration-200 group-hover:flex"
             >
                 <div className="flex justify-center items-center w-full h-full">
                 <GrFormNext  color="black" className=' w-[15px] h-[15px] -rotate-180' />

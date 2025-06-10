@@ -24,8 +24,8 @@ function Header() {
 
   const menuItems = [
     { name: 'About', link: '/about' },
-    { name: 'Why Dubai', link: '/why-dubai' },
-    { name: 'Property Talks', link: '/talks' },
+    { name: 'Featured Projects', link: '/featured-projects' },
+    { name: 'Ai Agent', link: '/ai-agent' },
     { name: 'Rental Income', link: '/rental-income' },
     { name: 'Donation', link: '/donations' },
   ];
