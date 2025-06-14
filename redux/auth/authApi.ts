@@ -54,7 +54,15 @@ export const authApi = createApi({
         body: data,
         headers: { "Content-Type": "application/json" },
       }),
-      invalidatesTags: ["Auth"],
+    }),
+
+     signUpForgotPassword: builder.mutation<SignupForgotPasswordResponse, SignUpForgotPasswordPayload>({
+      query: (data) => ({
+        url: "/forgot-password", 
+        method: "POST",
+        body: data,
+        headers: { "Content-Type": "application/json" },
+      }),
     }),
 
     signUp: builder.mutation<AuthResponse, SignUpCredentials>({
@@ -107,6 +115,14 @@ export const authApi = createApi({
       }),
       invalidatesTags: ["Auth"],
     }),
+    forgotNewPassword: builder.mutation<forgotNewPasswordRequestResponse, ForgotNewPasswordPayload>({
+      query: (credentials) => ({
+        url: "/forgot-password/reset-password",
+        method: "POST",
+        body: credentials,
+        headers: { "Content-Type": "application/json" },
+      }),
+    }),
   }),
 });
 
@@ -120,6 +136,8 @@ export const {
   useVerifyPasswordChangeMutation,
   useOtpSignUpMutation,
   useSignUpReSentOTPMutation,
+  useSignUpForgotPasswordMutation,
+  useForgotNewPasswordMutation,
 } = authApi;
 
 export interface EditProfileResponse {
@@ -141,7 +159,10 @@ export interface SignupOTPResponse {
   message: string;
   token: string;
 }
-
+export interface SignupForgotPasswordResponse {
+  success: boolean;
+  message: string;
+}
 export interface SignupOTPResponse {
  success: boolean;
   message: string;
@@ -159,6 +180,11 @@ export interface VerifyPasswordChangePayload {
   otp: string;
 }
 export interface ChangePasswordRequestResponse {
+  success: boolean;
+  message: string;
+  token: string;
+}
+export interface forgotNewPasswordRequestResponse {
   success: boolean;
   message: string;
   token: string;
@@ -198,6 +224,10 @@ export interface SignUpResentOTPPayload {
   email:string
 }
 
+export interface SignUpForgotPasswordPayload {
+  email:string;
+}
+
 type ImageItem = {
   asset_id: string;
   secure_url: string;
@@ -209,4 +239,8 @@ type ImageItem = {
 export interface SignUpOTPPayload {
   otp: string;
   token:string;
+}
+export interface ForgotNewPasswordPayload {
+  email:string;
+  password:string;
 }

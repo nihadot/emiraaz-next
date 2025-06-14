@@ -16,41 +16,23 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Propertyseller UAE | Apartments, Villas, Townhouses, Penthouses",
   description: "PropertySeller is your partner for the latest off-plan projects and new developments across the UAE. If you're a investor or homebuyer all in one place with reliable and hassle-free.",
- keywords: [
-    "New Developments",
-    "Off Plan",
-    "New Developments in Dubai",
-    "Off Plan Projects",
-    "Offplan Projects",
-    "Off Plan in Dubai",
-    "Buy Apartments in Dubai",
-    "Buy Villas in Dubai",
-    "Buy Townhouses in Dubai",
-    "Sale Apartments in Dubai",
-    "Sale Villas in Dubai",
-    "Sale Townhouses in Dubai",
-    "Tanami Properties",
-    "Properties in Dubai",
-    "Rent Properties in Dubai",
-    "Rent in Dubai",
-    "New Off Plan Project",
-    "Upcoming Off Plan Properties",
-    "New Launch Off-Plan Properties",
-    "Dubai Properties Projects",
-    "Dubai Real Estate",
-    "Real Estate Projects in Dubai",
-    "Real Estate Projects in UAE",
-    "Tanami Real Estate",
-    "Real Estate Information",
-    "Dubai Developers",
-    "Dubai Communities",
-    "New Launches",
-    "Under Constructions",
-    "Ready to Move",
-    "Apartment",
-    "Villa",
-    "Townhouses"
-  ],  openGraph: {
+  keywords: [
+    "propertyseller",
+    "property seller",
+    "appartments for sale",
+    "villas for sale",
+    "townhouses for sale",
+    "penthouses for sale",
+    "apartments for sale",
+    "property for sale",
+    "property for sale in dubai",
+    "property for sale in uae",
+    "property for sale in abu dhabi",
+    "property for sale in sharjah",
+    "property for sale in ras al khimah",
+    "property for sale in al marjan island",
+
+  ], openGraph: {
     title: "Propertyseller UAE | Apartments, Villas, Townhouses, Penthouses",
     description: "PropertySeller is your partner for the latest off-plan projects and new developments across the UAE. If you're a investor or homebuyer all in one place with reliable and hassle-free.",
     url: "https://www.propertyseller.com/",
@@ -87,7 +69,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="">
       <head>
-        
+
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <Script
           id="gtm-init"

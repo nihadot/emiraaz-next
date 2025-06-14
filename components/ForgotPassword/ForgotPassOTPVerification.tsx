@@ -3,22 +3,32 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import { errorToast, successToast } from '@/components/Toast';
-import OTPVerification from './OTPVerification';
 import { useOtpSignUpMutation, useSignUpReSentOTPMutation } from '@/redux/auth/authApi';
 import { handleApiError } from '@/utils/handleApiError';
+import OTPVerification from '../OTPVerification/OTPVerification';
 
 
 const OTP_LENGTH = 6;
 
-function SignupOtpPage() {
+function ForgotPassOTPVerification() {
     const [email, setEmail] = useState<string>('');
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const token = localStorage.getItem(LOCAL_STORAGE_KEYS.SIGNUP_OTP_TOKEN);
-            const mailId = localStorage.getItem(LOCAL_STORAGE_KEYS.SIGNUP_TEM_DATA);
-            if (!token && !mailId) {
-                router.push('/registration');
+            const status = localStorage.getItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD);
+            const mailId = localStorage.getItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_EMAIL);
+            if (!status && !mailId) {
+                router.push('/forgot-password');
+                return;
+            }
+
+            if(!status){
+                router.push('/forgot-password');
+                return;
+            }
+
+            if(!mailId){
+                router.push('/forgot-password');
                 return;
             }
             if (mailId) {
@@ -37,20 +47,19 @@ function SignupOtpPage() {
     const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(''));
 
     const handleSubmit = async () => {
-        const token = localStorage.getItem(LOCAL_STORAGE_KEYS.SIGNUP_OTP_TOKEN);
+        const status = localStorage.getItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD);
 
         try {
             setIsSubmitting(true);
             const enteredOtp = otp.join('');
-            console.log(OTP_LENGTH, 'OTP_LENGTH', enteredOtp, 'enteredOtp')
             if (enteredOtp.length !== OTP_LENGTH) {
                 errorToast('Please enter all 6 digits.');
                 return;
             }
 
-            if (!token) {
+            if (!status) {
                 errorToast('Invalid or expired token. Please try again.');
-                router.push('/registration');
+                router.push('/forgot-password');
                 return;
             }
 
@@ -106,4 +115,4 @@ function SignupOtpPage() {
     )
 }
 
-export default SignupOtpPage
+export default ForgotPassOTPVerification
