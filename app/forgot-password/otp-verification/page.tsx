@@ -1,7 +1,4 @@
-
-type Props = {}
-
-function page({}: Props) {
+function page() {
   return (
 //    <ForgotPassOTPVerification/>
 ''

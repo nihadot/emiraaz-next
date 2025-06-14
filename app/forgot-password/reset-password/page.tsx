@@ -1,9 +1,7 @@
 import ResetPassword from '@/components/ResetPassword/ResetPasswordPage'
 import React from 'react'
 
-type Props = {}
-
-function page({}: Props) {
+function page() {
   return (
    <ResetPassword/>
   )
