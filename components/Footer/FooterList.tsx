@@ -15,7 +15,7 @@ const FooterList: React.FC<FooterListProps> = ({ title, items,ulContainerClassNa
     <ul className={clsx("flex pt-4 sm:py-4 flex-col items-start font-poppins text-white",ulContainerClassName)}>
       <li className={clsx("text-white font-medium text-[14px] py-1",liContainerClassName)}>{title}</li>
       {items.map((item, index) => (
-        <Link  href={item.link} key={index} className={clsx("text-white/60 py-1 text-[13px]",LinkItemClassName)}>
+        <Link prefetch href={item.link} key={index} className={clsx("text-white/60 py-1 text-[13px]",LinkItemClassName)}>
           {item.title}
         </Link>
       ))}

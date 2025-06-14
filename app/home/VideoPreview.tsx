@@ -731,14 +731,297 @@
 
 
 
-import Image from "next/image";
+// import React, { useEffect, useRef, useState } from "react";
+// import { FaPause, FaPlay, FaVolumeDown, FaVolumeUp } from "react-icons/fa";
+// import clsx from "clsx";
+// import { motion, AnimatePresence } from "framer-motion";
+// import { MdOutlineReplay } from "react-icons/md";
+// import { BsArrowsFullscreen, BsFullscreenExit } from "react-icons/bs";
+// import Link from "next/link";
+
+// type VideoPreviewProps = {
+//   src: string;
+//   width?: string;
+//   height?: string;
+//   dimOpacity?: number;
+//   projectId?: string;
+//   projectSlug?: string;
+// };
+
+// const VideoPreview: React.FC<VideoPreviewProps> = ({
+//   src,
+//   dimOpacity = 0.5,
+//   projectSlug,
+// }) => {
+// console.log(new Date().getTime())
+// console.log('count++')
+//   const videoRef = useRef<HTMLVideoElement>(null);
+//   const [isPlaying, setIsPlaying] = useState(false);
+//   const [isMuted, setIsMuted] = useState(true);
+//   const [isFullscreen, setIsFullscreen] = useState(false);
+//   const [showControls, setShowControls] = useState(true);
+//   const [showReplay, setShowReplay] = useState(false);
+//   const [currentTime, setCurrentTime] = useState(0);
+//   const [duration, setDuration] = useState(0);
+//   const [isMobile, setIsMobile] = useState(false);
+//   const hideTimeout = useRef<any>(null);
+
+//   // Detect mobile device based on window width
+//   useEffect(() => {
+//     const checkMobile = () => {
+//       setIsMobile(window.innerWidth <= 768); // Adjust threshold as needed
+//     };
+//     checkMobile();
+//     window.addEventListener("resize", checkMobile);
+//     return () => window.removeEventListener("resize", checkMobile);
+//   }, []);
+
+//   const togglePlay = () => {
+//     const video = videoRef.current;
+//     if (!video) return;
+
+//     if (video.paused || video.ended) {
+//       video.play();
+//       setIsPlaying(true);
+//       setShowReplay(false);
+//     } else {
+//       video.pause();
+//       setIsPlaying(false);
+//     }
+//   };
+
+//   const toggleMute = () => {
+//     const video = videoRef.current;
+//     if (video) {
+//       video.muted = !video.muted;
+//       setIsMuted(video.muted);
+//     }
+//   };
+
+//   const toggleFullscreen = () => {
+//     if (!isMobile) {
+//       // Only allow full-screen toggle on non-mobile devices
+//       setIsFullscreen((prev) => !prev);
+//     }
+//   };
+
+//   const resetHideTimer = () => {
+//     setShowControls(true);
+//     if (hideTimeout.current) clearTimeout(hideTimeout.current);
+
+//     hideTimeout.current = setTimeout(() => {
+//       setShowControls(false);
+//     }, 700);
+//   };
+
+//   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+//     const video = videoRef.current;
+//     if (!video) return;
+
+//     const rect = e.currentTarget.getBoundingClientRect();
+//     const clickPosition = e.clientX - rect.left;
+//     const progressWidth = rect.width;
+//     const seekTime = (clickPosition / progressWidth) * duration;
+//     video.currentTime = seekTime;
+//     setCurrentTime(seekTime);
+//   };
+
+//   const formatTime = (time: number) => {
+//     const minutes = Math.floor(time / 60);
+//     const seconds = Math.floor(time % 60);
+//     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+//   };
+
+//   useEffect(() => {
+//     const handleMouseMove = () => resetHideTimer();
+
+//     window.addEventListener("mousemove", handleMouseMove);
+//     resetHideTimer();
+
+//     return () => {
+//       window.removeEventListener("mousemove", handleMouseMove);
+//       if (hideTimeout.current) clearTimeout(hideTimeout.current);
+//     };
+//   }, []);
+
+// useEffect(() => {
+//   const video = videoRef.current;
+//   if (video) {
+//     const updateTime = () => {
+//       setCurrentTime(video.currentTime); // Only update currentTime
+//     };
+//     const updateDuration = () => {
+//       setDuration(video.duration); // Set duration once metadata is loaded
+//     };
+    
+//     video.addEventListener("timeupdate", updateTime);
+//     video.addEventListener("loadedmetadata", updateDuration);
+//     return () => {
+//       video.removeEventListener("timeupdate", updateTime);
+//       video.removeEventListener("loadedmetadata", updateDuration);
+//     };
+//   }
+// }, []);
+
+//   useEffect(() => {
+//     const video = videoRef.current;
+//     if (video) {
+//       const playPromise = video.play();
+//       if (playPromise !== undefined) {
+//         playPromise
+//           .then(() => {
+//             setIsPlaying(true);
+//           })
+//           .catch((error) => {
+//             console.error("Auto-play blocked or failed:", error);
+//           });
+//       }
+//     }
+//   }, []);
+
+//   return (
+//     <AnimatePresence>
+//       <motion.div
+//         layout
+//         initial={{
+//           width: isFullscreen && !isMobile ? 0 : "100%", // Prevent full-screen on mobile
+//           height: isFullscreen && !isMobile ? 0 : "250px",
+//           top: isFullscreen && !isMobile ? "50%" : "auto",
+//           left: isFullscreen && !isMobile ? "50%" : "auto",
+//           transform: isFullscreen && !isMobile ? "translate(-50%, -50%)" : "none",
+//           position: isFullscreen && !isMobile ? "fixed" : "relative",
+//           zIndex: isFullscreen && !isMobile ? 50 : "auto",
+//           backgroundColor: isFullscreen && !isMobile ? "transparent" : "transparent",
+//         }}
+//         animate={{
+//           width: isFullscreen && !isMobile ? "1000px" : "100%",
+//           height: isFullscreen && !isMobile ? "620px" : "250px",
+//           top: isFullscreen && !isMobile ? "50%" : "auto",
+//           left: isFullscreen && !isMobile ? "50%" : "auto",
+//           transform: isFullscreen && !isMobile ? "translate(-50%, -50%)" : "none",
+//           position: isFullscreen && !isMobile ? "fixed" : "relative",
+//           zIndex: isFullscreen && !isMobile ? 50 : "auto",
+//           backgroundColor: isFullscreen && !isMobile ? "transparent" : "transparent",
+//         }}
+//         transition={{ type: "spring", stiffness: 300, damping: 30 }}
+//         className={clsx("flex flex-col")}
+//       >
+//         <div
+//           className={clsx(
+//             "relative flex h-full m-auto",
+//             isFullscreen && !isMobile ? "items-center justify-center w-full" : ""
+//           )}
+//         >
+//           <video
+//             ref={videoRef}
+//             src={src}
+//             muted={isMuted}
+//             autoPlay
+//             style={{
+//               // filter: `brightness(${1 - dimOpacity})`,
+//               objectFit: isFullscreen && !isMobile ? "contain" : "cover",
+//               width: isFullscreen && !isMobile ? "100%" : "100%",
+//               height: isFullscreen && !isMobile ? "100%" : "100%",
+//               maxHeight: isFullscreen && !isMobile ? "100%" : "250px",
+//             }}
+//             onEnded={() => {
+//               setIsPlaying(false);
+//               setShowReplay(true);
+//             }}
+//             className="mx-auto"
+//           />
+
+//           {/* Center Controls */}
+//           <div
+//             className={clsx(
+//               "w-full flex justify-center items-center absolute top-0 left-0 z-30 h-full transition-opacity duration-300",
+//               showControls ? "opacity-100 bg-black/5" : "opacity-0 pointer-events-none"
+//             )}
+//             onClick={togglePlay}
+//           >
+//             {!showReplay ? (
+//               <div className="cursor-pointer p-3 rounded-full">
+//                 {isPlaying ? (
+//                   <FaPause color="white" size={24} />
+//                 ) : (
+//                   <FaPlay width={21.75} height={21.75} color="white" size={24} />
+//                 )}
+//               </div>
+//             ) : (
+//               <button className="px-3 py-1 text-xs rounded">
+//                 <MdOutlineReplay size={24} color="white" />
+//               </button>
+//             )}
+//           </div>
+
+//           {/* Bottom Controls */}
+//           <div
+//             className={clsx(
+//               "w-[98%] px-[10px] flex justify-between items-center absolute h-[30px] z-40 transition-opacity duration-300",
+//               showControls ? "opacity-100" : "opacity-0 pointer-events-none",
+//               isFullscreen && !isMobile ? "bottom-3" : "bottom-3"
+//             )}
+//           >
+//             <div onClick={toggleMute} className="cursor-pointer">
+//               {!isMuted ? (
+//                 <FaVolumeUp color="white" size={14} />
+//               ) : (
+//                 <FaVolumeDown color="white" size={14} />
+//               )}
+//             </div>
+
+//             {/* Progress Bar */}
+//             {isFullscreen && !isMobile && (
+//               <div
+//                 className="flex-1 mx-4 h-1 bg-gray-400 rounded-full cursor-pointer relative"
+//                 onClick={handleProgressClick}
+//               >
+//                 <div
+//                   className="h-full bg-white rounded-full"
+//                   style={{
+//                     width: `${(currentTime / duration) * 100}%`,
+//                   }}
+//                 />
+//               </div>
+//             )}
+
+//             {/* Only show fullscreen button on non-mobile devices */}
+//             {!isMobile && (
+//               <div onClick={toggleFullscreen} className="cursor-pointer">
+//                 {isFullscreen ? (
+//                   <BsFullscreenExit color="white" size={14} />
+//                 ) : (
+//                   <BsArrowsFullscreen color="white" size={14} />
+//                 )}
+//               </div>
+//             )}
+//           </div>
+//         </div>
+
+//         {/* Know More */}
+//         <Link
+//           href={`/projects/${projectSlug}`}
+//           className="bg-[#F5F5F5] h-[70px] flex justify-center items-center w-full"
+//         >
+//           <button className="font-poppins text-[9px] w-[97px] h-[25px] flex justify-center items-center bg-[#333333] rounded-[3px] text-white font-medium">
+//             Know More
+//           </button>
+//         </Link>
+//       </motion.div>
+//     </AnimatePresence>
+//   );
+// };
+
+// export default VideoPreview;
+
+
+
 import React, { useEffect, useRef, useState } from "react";
 import { FaPause, FaPlay, FaVolumeDown, FaVolumeUp } from "react-icons/fa";
 import clsx from "clsx";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdOutlineReplay } from "react-icons/md";
 import { BsArrowsFullscreen, BsFullscreenExit } from "react-icons/bs";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 type VideoPreviewProps = {
@@ -750,269 +1033,275 @@ type VideoPreviewProps = {
   projectSlug?: string;
 };
 
-const VideoPreview: React.FC<VideoPreviewProps> = ({
-  src,
-  dimOpacity = 0.5,
-  projectSlug,
-}) => {
+const VideoPreview: React.FC<VideoPreviewProps> =
+  ({ src, dimOpacity = 0.5, projectSlug }) => {
 
-  console.log(projectSlug,'projectSlug')
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [showControls, setShowControls] = useState(true);
-  const [showReplay, setShowReplay] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-  const hideTimeout = useRef<any>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [isMuted, setIsMuted] = useState(true);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+    const [showControls, setShowControls] = useState(true);
+    const [showReplay, setShowReplay] = useState(false);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const [isMobile, setIsMobile] = useState(false);
+    const hideTimeout = useRef<any>(null);
 
-  // Detect mobile device based on window width
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768); // Adjust threshold as needed
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  const togglePlay = () => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (video.paused || video.ended) {
-      video.play();
-      setIsPlaying(true);
-      setShowReplay(false);
-    } else {
-      video.pause();
-      setIsPlaying(false);
-    }
-  };
-
-  const toggleMute = () => {
-    const video = videoRef.current;
-    if (video) {
-      video.muted = !video.muted;
-      setIsMuted(video.muted);
-    }
-  };
-
-  const toggleFullscreen = () => {
-    if (!isMobile) {
-      // Only allow full-screen toggle on non-mobile devices
-      setIsFullscreen((prev) => !prev);
-    }
-  };
-
-  const resetHideTimer = () => {
-    setShowControls(true);
-    if (hideTimeout.current) clearTimeout(hideTimeout.current);
-
-    hideTimeout.current = setTimeout(() => {
-      setShowControls(false);
-    }, 700);
-  };
-
-  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const clickPosition = e.clientX - rect.left;
-    const progressWidth = rect.width;
-    const seekTime = (clickPosition / progressWidth) * duration;
-    video.currentTime = seekTime;
-    setCurrentTime(seekTime);
-  };
-
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-  };
-
-  useEffect(() => {
-    const handleMouseMove = () => resetHideTimer();
-
-    window.addEventListener("mousemove", handleMouseMove);
-    resetHideTimer();
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      if (hideTimeout.current) clearTimeout(hideTimeout.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (video) {
-      const updateTime = () => {
-        setCurrentTime(video.currentTime);
-        setDuration(video.duration);
+    // Detect mobile device based on window width
+    useEffect(() => {
+      const checkMobile = () => {
+        setIsMobile(window.innerWidth <= 768); // Adjust threshold as needed
       };
-      video.addEventListener("timeupdate", updateTime);
-      video.addEventListener("loadedmetadata", () => setDuration(video.duration));
-      return () => {
-        video.removeEventListener("timeupdate", updateTime);
-        video.removeEventListener("loadedmetadata", () => {});
-      };
-    }
-  }, []);
+      checkMobile();
+      window.addEventListener("resize", checkMobile);
+      return () => window.removeEventListener("resize", checkMobile);
+    }, []);
 
-  useEffect(() => {
-    const video = videoRef.current;
-    if (video) {
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlaying(true);
-          })
-          .catch((error) => {
-            console.error("Auto-play blocked or failed:", error);
-          });
+    const togglePlay = () => {
+      const video = videoRef.current;
+      if (!video) return;
+
+      if (video.paused || video.ended) {
+        video.play();
+        setIsPlaying(true);
+        setShowReplay(false);
+      } else {
+        video.pause();
+        setIsPlaying(false);
       }
-    }
-  }, []);
+    };
 
-  const router = useRouter();
-  return (
-    <AnimatePresence>
-      <motion.div
-        layout
-        initial={{
-          width: isFullscreen && !isMobile ? 0 : "100%", // Prevent full-screen on mobile
-          height: isFullscreen && !isMobile ? 0 : "250px",
-          top: isFullscreen && !isMobile ? "50%" : "auto",
-          left: isFullscreen && !isMobile ? "50%" : "auto",
-          transform: isFullscreen && !isMobile ? "translate(-50%, -50%)" : "none",
-          position: isFullscreen && !isMobile ? "fixed" : "relative",
-          zIndex: isFullscreen && !isMobile ? 50 : "auto",
-          backgroundColor: isFullscreen && !isMobile ? "transparent" : "transparent",
-        }}
-        animate={{
-          width: isFullscreen && !isMobile ? "1000px" : "100%",
-          height: isFullscreen && !isMobile ? "620px" : "250px",
-          top: isFullscreen && !isMobile ? "50%" : "auto",
-          left: isFullscreen && !isMobile ? "50%" : "auto",
-          transform: isFullscreen && !isMobile ? "translate(-50%, -50%)" : "none",
-          position: isFullscreen && !isMobile ? "fixed" : "relative",
-          zIndex: isFullscreen && !isMobile ? 50 : "auto",
-          backgroundColor: isFullscreen && !isMobile ? "transparent" : "transparent",
-        }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className={clsx("flex flex-col")}
-      >
-        <div
-          className={clsx(
-            "relative flex h-full m-auto",
-            isFullscreen && !isMobile ? "items-center justify-center w-full" : ""
-          )}
+    const toggleMute = () => {
+      const video = videoRef.current;
+      if (video) {
+        video.muted = !video.muted;
+        setIsMuted(video.muted);
+      }
+    };
+
+    const toggleFullscreen = () => {
+      if (!isMobile) {
+        // Only allow full-screen toggle on non-mobile devices
+        setIsFullscreen((prev) => !prev);
+      }
+    };
+
+    const resetHideTimer = () => {
+      setShowControls(true);
+      if (hideTimeout.current) clearTimeout(hideTimeout.current);
+
+      hideTimeout.current = setTimeout(() => {
+        setShowControls(false);
+      }, 700);
+    };
+
+    const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+      const video = videoRef.current;
+      if (!video) return;
+
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickPosition = e.clientX - rect.left;
+      const progressWidth = rect.width;
+      const seekTime = (clickPosition / progressWidth) * duration;
+      video.currentTime = seekTime;
+      setCurrentTime(seekTime);
+    };
+
+
+    useEffect(() => {
+      const handleMouseMove = () => resetHideTimer();
+
+      window.addEventListener("mousemove", handleMouseMove);
+      resetHideTimer();
+
+      return () => {
+        window.removeEventListener("mousemove", handleMouseMove);
+        if (hideTimeout.current) clearTimeout(hideTimeout.current);
+      };
+    }, []);
+
+    useEffect(() => {
+      const video = videoRef.current;
+      if (video) {
+        const updateTime = () => {
+          setCurrentTime(video.currentTime); // Only update currentTime
+        };
+        const updateDuration = () => {
+          setDuration(video.duration); // Set duration once metadata is loaded
+        };
+
+        video.addEventListener("timeupdate", updateTime);
+        video.addEventListener("loadedmetadata", updateDuration);
+        return () => {
+          video.removeEventListener("timeupdate", updateTime);
+          video.removeEventListener("loadedmetadata", updateDuration);
+        };
+      }
+    }, []);
+
+    useEffect(() => {
+      const video = videoRef.current;
+      if (video) {
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlaying(true);
+            })
+            .catch((error) => {
+              console.error("Auto-play blocked or failed:", error);
+            });
+        }
+      }
+    }, []);
+
+    return (
+      <AnimatePresence>
+        <motion.div
+          layout
+          initial={{
+            width: isFullscreen && !isMobile ? 0 : "100%", // Prevent full-screen on mobile
+            height: isFullscreen && !isMobile ? 0 : "250px",
+            top: isFullscreen && !isMobile ? "50%" : "auto",
+            left: isFullscreen && !isMobile ? "50%" : "auto",
+            transform: isFullscreen && !isMobile ? "translate(-50%, -50%)" : "none",
+            position: isFullscreen && !isMobile ? "fixed" : "relative",
+            zIndex: isFullscreen && !isMobile ? 50 : "auto",
+            backgroundColor: isFullscreen && !isMobile ? "transparent" : "transparent",
+          }}
+          animate={{
+            width: isFullscreen && !isMobile ? "1000px" : "100%",
+            height: isFullscreen && !isMobile ? "620px" : "250px",
+            top: isFullscreen && !isMobile ? "50%" : "auto",
+            left: isFullscreen && !isMobile ? "50%" : "auto",
+            transform: isFullscreen && !isMobile ? "translate(-50%, -50%)" : "none",
+            position: isFullscreen && !isMobile ? "fixed" : "relative",
+            zIndex: isFullscreen && !isMobile ? 50 : "auto",
+            backgroundColor: isFullscreen && !isMobile ? "transparent" : "transparent",
+          }}
+          transition={{
+            type: "tween", // Changed to tween for smoother flow
+            ease: "easeInOut", // Smooth easing function
+            duration: 0.6, // Slightly longer duration for gradual transition
+          }}
+          className={clsx("flex flex-col")}
         >
-          <video
-            ref={videoRef}
-            src={src}
-            muted={isMuted}
-            autoPlay
-            style={{
-              // filter: `brightness(${1 - dimOpacity})`,
-              objectFit: isFullscreen && !isMobile ? "contain" : "cover",
-              width: isFullscreen && !isMobile ? "100%" : "100%",
-              height: isFullscreen && !isMobile ? "100%" : "100%",
-              maxHeight: isFullscreen && !isMobile ? "100%" : "250px",
-            }}
-            onEnded={() => {
-              setIsPlaying(false);
-              setShowReplay(true);
-            }}
-            className="mx-auto"
-          />
-
-          {/* Center Controls */}
           <div
             className={clsx(
-              "w-full flex justify-center items-center absolute top-0 left-0 z-30 h-full transition-opacity duration-300",
-              showControls ? "opacity-100 bg-black/5" : "opacity-0 pointer-events-none"
+              "relative flex h-full m-auto",
+              isFullscreen && !isMobile ? "items-center justify-center w-full" : ""
             )}
-            onClick={togglePlay}
           >
-            {!showReplay ? (
-              <div className="cursor-pointer p-3 rounded-full">
-                {isPlaying ? (
-                  <FaPause color="white" size={24} />
-                ) : (
-                  <FaPlay width={21.75} height={21.75} color="white" size={24} />
-                )}
-              </div>
-            ) : (
-              <button className="px-3 py-1 text-xs rounded">
-                <MdOutlineReplay size={24} color="white" />
-              </button>
-            )}
-          </div>
+            <video
+              ref={videoRef}
+              src={src}
+              muted={isMuted}
+              autoPlay
+              style={{
+                // filter: `brightness(${1 - dimOpacity})`,
+                objectFit: isFullscreen && !isMobile ? "contain" : "cover",
+                width: isFullscreen && !isMobile ? "100%" : "100%",
+                height: isFullscreen && !isMobile ? "100%" : "100%",
+                maxHeight: isFullscreen && !isMobile ? "100%" : "250px",
+              }}
+              onEnded={() => {
+                setIsPlaying(false);
+                setShowReplay(true);
+              }}
+              className="mx-auto"
+            />
 
-          {/* Bottom Controls */}
-          <div
-            className={clsx(
-              "w-[98%] px-[10px] flex justify-between items-center absolute h-[30px] z-40 transition-opacity duration-300",
-              showControls ? "opacity-100" : "opacity-0 pointer-events-none",
-              isFullscreen && !isMobile ? "bottom-3" : "bottom-3"
-            )}
-          >
-            <div onClick={toggleMute} className="cursor-pointer">
-              {!isMuted ? (
-                <FaVolumeUp color="white" size={14} />
-              ) : (
-                <FaVolumeDown color="white" size={14} />
+            {/* Center Controls */}
+            <motion.div
+              className={clsx(
+                "w-full flex justify-center items-center absolute top-0 left-0 z-30 h-full",
+                showControls ? "bg-black/5" : "pointer-events-none"
               )}
-            </div>
+              onClick={togglePlay}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: showControls ? 1 : 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }} // Smoother fade transition
+            >
+              {!showReplay ? (
+                <div className="cursor-pointer p-3 rounded-full">
+                  {isPlaying ? (
+                    <FaPause color="white" size={24} />
+                  ) : (
+                    <FaPlay width={21.75} height={21.75} color="white" size={24} />
+                  )}
+                </div>
+              ) : (
+                <button className="px-3 py-1 text-xs rounded">
+                  <MdOutlineReplay size={24} color="white" />
+                </button>
+              )}
+            </motion.div>
 
-            {/* Progress Bar */}
-            {isFullscreen && !isMobile && (
-              <div
-                className="flex-1 mx-4 h-1 bg-gray-400 rounded-full cursor-pointer relative"
-                onClick={handleProgressClick}
-              >
-                <div
-                  className="h-full bg-white rounded-full"
-                  style={{
-                    width: `${(currentTime / duration) * 100}%`,
-                  }}
-                />
-              </div>
-            )}
-
-            {/* Only show fullscreen button on non-mobile devices */}
-            {!isMobile && (
-              <div onClick={toggleFullscreen} className="cursor-pointer">
-                {isFullscreen ? (
-                  <BsFullscreenExit color="white" size={14} />
+            {/* Bottom Controls */}
+            <motion.div
+              className={clsx(
+                "w-[98%] px-[10px] flex justify-between items-center absolute h-[30px] z-40",
+                isFullscreen && !isMobile ? "bottom-3" : "bottom-3"
+              )}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: showControls ? 1 : 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }} // Smoother fade transition
+            >
+              <div onClick={toggleMute} className="cursor-pointer">
+                {!isMuted ? (
+                  <FaVolumeUp color="white" size={14} />
                 ) : (
-                  <BsArrowsFullscreen color="white" size={14} />
+                  <FaVolumeDown color="white" size={14} />
                 )}
               </div>
-            )}
+
+              {/* Progress Bar */}
+              {isFullscreen && !isMobile && (
+                <div
+                  className="flex-1 mx-4 h-1 bg-gray-400 rounded-full cursor-pointer relative"
+                  onClick={handleProgressClick}
+                >
+                  <motion.div
+                    className="h-full bg-white rounded-full"
+                    style={{
+                      width: `${(currentTime / duration) * 100}%`,
+                    }}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(currentTime / duration) * 100}%` }}
+                    transition={{ duration: 0.2, ease: "easeOut" }} // Smooth progress bar update
+                  />
+                </div>
+              )}
+
+              {/* Only show fullscreen button on non-mobile devices */}
+              {!isMobile && (
+                <div onClick={toggleFullscreen} className="cursor-pointer">
+                  {isFullscreen ? (
+                    <BsFullscreenExit color="white" size={14} />
+                  ) : (
+                    <BsArrowsFullscreen color="white" size={14} />
+                  )}
+                </div>
+              )}
+            </motion.div>
           </div>
-        </div>
 
-        {/* Know More */}
-        <Link
-          href={`/projects/${projectSlug}`}
-          className="bg-[#F5F5F5] h-[70px] flex justify-center items-center w-full"
-        >
-          <button className="font-poppins text-[9px] w-[97px] h-[25px] flex justify-center items-center bg-[#333333] rounded-[3px] text-white font-medium">
-            Know More
-          </button>
-        </Link>
-      </motion.div>
-    </AnimatePresence>
-  );
-};
-
+          {/* Know More */}
+          <Link
+            href={`/projects/${projectSlug}`}
+            className="bg-[#F5F5F5] h-[70px] flex justify-center items-center w-full"
+          >
+            <button className="font-poppins text-[9px] w-[97px] h-[25px] flex justify-center items-center bg-[#333333] rounded-[3px] text-white font-medium">
+              Know More
+            </button>
+          </Link>
+        </motion.div>
+      </AnimatePresence>
+    );
+  }
+  
 export default VideoPreview;
+
 
 // import React, { useEffect, useRef, useState } from "react";
 // import { FaPause, FaPlay, FaVolumeDown, FaVolumeUp } from "react-icons/fa";

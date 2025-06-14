@@ -6,6 +6,18 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
+
+// ✅ Static Paths for Pre-rendering (e.g., top 10 projects)
+export async function generateStaticParams() {
+  const res = await fetch(`${baseUrl}/projects?limit=200`);
+  const data = await res.json();
+
+  return data.data.map((project: any) => ({
+    id: project.slug,
+  }));
+}
+
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params; // Await the params Promise
   const res = await fetch(`${baseUrl}/projects/${id}`, {

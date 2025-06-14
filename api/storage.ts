@@ -6,6 +6,8 @@ export const LOCAL_STORAGE_KEYS = {
   REFRESH_TOKEN: `${PROJECT_PREFIX}_refreshToken`,
   USER_DATA: `${PROJECT_PREFIX}_userData`,
   RESET_PASSWORD_TOKEN: `${PROJECT_PREFIX}_resetPasswordToken`,
+  SIGNUP_OTP_TOKEN: `${PROJECT_PREFIX}_otpToken`,
+  SIGNUP_TEM_DATA: `${PROJECT_PREFIX}_signupTemData`,
 };
 
 /**

@@ -64,6 +64,7 @@ import MobileBreadcrumbNavigation from './MobileBreadcrumbNavigation';
 import StickyScrollHeader from './StickyScrollHeader';
 import Header from '../Header';
 import { TfiLocationPin } from 'react-icons/tfi';
+import { useWindowSize } from '@/utils/useWindowSize';
 
 
 interface UserData {
@@ -369,6 +370,7 @@ function ProjectDetails({ id }: { id: string }) {
     }
   };
 
+  const { width, height } = useWindowSize();
 
   useEffect(() => {
     if (data && data?.data?.priceInAED) {
@@ -480,16 +482,19 @@ function ProjectDetails({ id }: { id: string }) {
 
               <div className="mt-[24.75px]">
 
-                <ProjectDescription
+                {(data?.data?.descriptionInArabic || data?.data?.descriptionInArabic) ? <ProjectDescription
                   userId={userId || ''}
                   setEnquiryForm={setEnquiryForm}
+                  EnquiryForm={EnquiryForm}
                   projectId={data?.data?._id || ''}
                   projectTitle={data?.data?.projectTitle || ''}
                   descriptionInArabic={data?.data?.descriptionInArabic || ''}
                   descriptionInEnglish={data?.data.description || ''}
                   // descriptionInRussian={data?.data.descriptionInRussian || ''}
                   title="Description"
-                />
+                /> :
+                  <div className="w-full h-[130px] rounded bg-gray-50"></div>
+                }
               </div>
 
 
@@ -498,81 +503,69 @@ function ProjectDetails({ id }: { id: string }) {
                 headerTitle="Project Information"
                 icon
                 data={[
-                  { title: 'Type', content: data?.data?.propertyTypes?.slice(0, 1).map(item => item) },
-                  { title: 'Furnishing', content: furnishing },
+                  { title: 'Type', content: data?.data?.propertyTypes?.slice(0, 1).map(item => item) || 'NOT SELECTED' },
+                  { title: 'Furnishing', content: furnishing || 'NOT SELECTED' },
                   // { title: 'Purpose', content: data?.data.purpose },
-                  { title: 'Added on', content: formatCustomDate(data?.data?.createdAt || '') },
+                  { title: 'Added on', content: data?.data?.createdAt && formatCustomDate(data?.data?.createdAt || '') },
                   // { title: 'Reference no', content: 'Bayut - NANCY102368-Um..' },
-                  { title: 'Handover Date', content: `${data?.data?.handOverQuarter} ${data?.data?.handOverYear}` },
-                  { title: 'Completion', content: data?.data?.completionType === 'all' ? 'All' : data?.data?.completionType === 'just-launched' ? 'Just Launched' : data?.data?.completionType === 'under-construction' ? 'Under Construction' : 'Ready' },
-                  { title: 'Developer', content: data?.data?.developerDetails?.name },
+                  { title: 'Handover Date', content: ((data?.data?.handOverQuarter && data?.data?.handOverYear) ? `${data?.data?.handOverQuarter} ${data?.data?.handOverYear}` : 'NOT SELECTED') },
+                  { title: 'Completion', content: data?.data?.completionType === 'all' ? 'All' : data?.data?.completionType === 'just-launched' ? 'Just Launched' : data?.data?.completionType === 'under-construction' ? 'Under Construction' : 'NOT SELECTED' },
+                  { title: 'Developer', content: data?.data?.developerDetails?.name || 'NOT ASSIGNED' },
                   // { title: 'Usage', content: data?.data?.usage },
-                  { title: 'Ownership', content: data?.data?.ownerShip },
+                  { title: 'Ownership', content: data?.data?.ownerShip || 'Freehold' },
                   // { title: 'Parking Availability', content: data?.data?.parkingAvailability },
-                  { title: 'Built-up Area', content: data?.data?.buildUpArea },
-                  { title: 'Total Parking Spaces', content: data?.data?.totalParkingSpaces },
-                  { title: 'Total Floors', content: data?.data?.totalFloors },
-                  { title: 'Total Building Area', content: data?.data?.totalBuildingArea },
-                  { title: 'Retail Centres', content: data?.data?.retailCenters },
-                  { title: 'Elevators', content: data?.data?.elevators },
-                  { title: 'Swimming Pools', content: data?.data?.swimmingPool },
-                  { title: 'Unique ID', content: data?.data?.uniqueId },
-                  { title: 'Project No', content: data?.data?.projectNumber },
+                  { title: 'Built-up Area', content: data?.data?.buildUpArea || 'NOT PROVIDED' },
+                  { title: 'Total Parking Spaces', content: data?.data?.totalParkingSpaces || 'NOT PROVIDED' },
+                  { title: 'Total Floors', content: data?.data?.totalFloors || 'NOT PROVIDED' },
+                  { title: 'Total Building Area', content: data?.data?.totalBuildingArea || 'NOT PROVIDED' },
+                  { title: 'Retail Centres', content: data?.data?.retailCenters || 'NOT PROVIDED' },
+                  { title: 'Elevators', content: data?.data?.elevators || 'NOT PROVIDED' },
+                  { title: 'Swimming Pools', content: data?.data?.swimmingPool || 'NOT PROVIDED' },
+                  { title: 'Unique ID', content: data?.data?.uniqueId || 'NOT PROVIDED' },
+                  { title: 'Project No', content: data?.data?.projectNumber || 'NOT PROVIDED' },
                 ]}
               />
 
 
-              {/* 
-              <div className="mt-[32.25px]">
-                <PropertyDetailsSection
-                  headerTitle="Validated Information"
-                  icon
-                  data={[
-                    { title: 'Type', content: data?.data.propertyTypes?.slice(0, 1).map(item => item) || 'Apartment' },
-                    { title: 'Bedrooms', content: data?.data.numberOfBeds || '3' },
-                    { title: 'Handover', content: data?.data.handOverQuarter || '2026' },
-                    { title: 'Area', content: data?.data.citiesDetails?.[0]?.name || 'Downtown Dubai' },
-
-                  ]}
-                />
-              </div> */}
-
-
-              {/* <div className="mt-[32.25px]">
-
-                <PropertyDetailsSection
-                  headerTitle="Building Information"
-                  icon
-                  data={[
-                    { title: 'Type', content: data?.data?.propertyTypes?.slice(0, 1).map(item => item) },
-                    { title: 'Furnishing', content: furnishing },
-                    { title: 'Purpose', content: data?.data.purpose },
-                    { title: 'Area', content: data?.data.citiesDetails?.[0]?.name || 'Downtown Dubai' },
-                    { title: 'Developer', content: data?.data?.developerDetails?.name || 'Emaar' },
-                    { title: 'Status', content: data?.data.projectStatus },
-                  ]}
-                />
-              </div> */}
-
 
               <div className="mt-[24.75px]">
 
-                <LayoutInformation
-                  images={layoutImages}
-                  handleGallerySelect={handleGallerySelect}
-                  handleGalleryModal={handleGalleryModal}
-                />
+                {
+                  layoutImages && layoutImages.length > 0 ? <LayoutInformation
+                    images={layoutImages}
+                    handleGallerySelect={handleGallerySelect}
+                    handleGalleryModal={handleGalleryModal}
+                  />
+                    :
+                    <div className="sm:flex grid grid-cols-1 gap-2  w-full ">
+
+                      {Array.from({ length: 3 }).map((_, i) => (
+                        <div key={i} className="w-full sm:w-[271px] h-[175px] rounded bg-gray-50"></div>
+                      ))}
+                    </div>
+                }
 
               </div>
 
 
               <div className="mt-[24.75px]">
 
-                <AreaNearBy
-                  headerTitle="Areas Nearby"
-                  sectionId="areas-near-by"
-                  data={data?.data.nearByAreas || []}
-                />
+                {
+                  data?.data.nearByAreas && data?.data.nearByAreas.length > 0 ?
+
+                    <AreaNearBy
+                      headerTitle="Areas Nearby"
+                      sectionId="areas-near-by"
+                      data={data?.data.nearByAreas || []}
+                    />
+                    :
+                    <div className="gap-2  grid sm:pe-10 mt-3 sm:mt-0 grid-cols-1 sm:grid-cols-2 ">
+
+                      {Array.from({ length: width < 640 ? 6 : 10 }).map((_, i) => (
+                        <div key={i} className="w-full h-[24px] rounded bg-gray-50"></div>
+                      ))}
+                    </div>
+                }
               </div>
 
 
@@ -580,16 +573,27 @@ function ProjectDetails({ id }: { id: string }) {
               <div className="mt-[24.75px]">
 
 
-                <FeaturesAndAmenities
-                  handleModal={handleAmenitiesModal}
-                  headerTitle="Features / Amenities"
-                  data={data?.data.facilitiesAmenitiesDetails.map((item) => {
-                    return {
-                      name: item.name,
-                      icon: item.image?.secure_url
-                    }
-                  }) || []}
-                />
+                {
+                  data?.data.facilitiesAmenitiesDetails && data?.data.facilitiesAmenitiesDetails.length > 0
+                    ?
+
+                    <FeaturesAndAmenities
+                      handleModal={handleAmenitiesModal}
+                      headerTitle="Features / Amenities"
+                      data={data?.data.facilitiesAmenitiesDetails.map((item) => {
+                        return {
+                          name: item.name,
+                          icon: item.image?.secure_url
+                        }
+                      }) || []}
+                    /> :
+                    <div className="gap-2 grid grid-cols-3 sm:flex ">
+                      {Array.from({ length: 7 }).map((_, i) => (
+                        <div key={i} className="sm:w-[99px] h-[99px] rounded bg-gray-50"></div>
+                      ))}
+                    </div>
+
+                }
 
 
               </div>
@@ -636,10 +640,21 @@ function ProjectDetails({ id }: { id: string }) {
               </div>}
 
               {/* {console.log(data?.data.paymentOptions,'data?.data.paymentPlan')} */}
-              {data?.data?.paymentOptions ? <PropertyDetailsSectionStringArray
-                headerTitle="Payment Plan"
-                data={data?.data?.paymentOptions}
-              /> : 'Payment Plan not available'}
+
+              {
+                data?.data?.paymentOptions ?
+                  <PropertyDetailsSectionStringArray
+                    headerTitle="Payment Plan"
+                    data={data?.data?.paymentOptions}
+                  />
+                  :
+                  <div className="gap-2 mt-4 sm:grid pe-0  grid-cols-1 sm:grid-cols-4 ">
+
+                    {Array.from({ length: width < 640 ? 6 : 24 }).map((_, i) => (
+                      <div key={i} className="w-full mt-2 sm:mt-0.5 h-[30px] sm:h-[26px] rounded bg-gray-50"></div>
+                    ))}
+                  </div>
+              }
 
 
               <div className="flex mt-[18px] sm:mt-[25.5px] justify-between items-center w-full">
@@ -660,7 +675,7 @@ function ProjectDetails({ id }: { id: string }) {
                   data={[
                     {
                       label: 'Permit Number',
-                      value: data?.data?.permitNumber || '-'
+                      value: data?.data?.permitNumber || ''
                     },
                     {
                       label: 'DED',
@@ -687,13 +702,26 @@ function ProjectDetails({ id }: { id: string }) {
 
               <div className="sm:mt-4">
 
-                <RecommendedProjects
-                  projects={projects?.data && data?.data._id && projects.data.filter(item => item._id !== data?.data?._id) || []}
-                />
+                {
+                  projects?.data && projects.data.length > 0 ?
+                    <RecommendedProjects
+                      projects={projects?.data && data?.data._id && projects.data.filter(item => item._id !== data?.data?._id) || []}
+                    /> :
+                    <div className="gap-3  grid sm:pe-10 grid-cols-2 sm:grid-cols-3 ">
+                      {Array.from({ length: width < 640 ? 8 : 9 }).map((_, i) => (
+                        <div className="" key={i}>
+                          <div className="h-[143px] w-full rounded bg-gray-50" />
+                          <div className="h-[20px] w-[90px] mt-1 rounded bg-gray-50" />
+                          <div className="h-[27px] w-full sm:w-[180px] mt-1 rounded bg-gray-50" />
+
+                        </div>
+                      ))}
+                    </div>
+                }
               </div>
 
 
-              <div className="sm:hidden rounded-[5.11px] z-50 px-[16.15px] flex bg-white left-0 fixed bottom-0 w-full justify-center items-center h-[85.2px]">
+              <div className="sm:hidden rounded-[5.11px] z-40 px-[16.15px] flex bg-white left-0 fixed bottom-0 w-full justify-center items-center h-[85.2px]">
 
                 <PrimaryButton
                   onClick={() => setEnquiryForm({ status: true, id: data?.data?._id || '', count: 1 })}
@@ -756,7 +784,7 @@ function ProjectDetails({ id }: { id: string }) {
 
 
           <Container
-          className='h-full'
+            className='h-full'
           >
 
             <div className="w-full sm:px-5 flex flex-col bg-white pb-3 pt-3 sm:py-[20px] rounded-[6px] h-full sm:h-[80vh]">

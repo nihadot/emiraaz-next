@@ -159,7 +159,7 @@ const StickyScrollHeader = ({ value, currency, title, projectId,projectType }: P
                         <PrimaryButton
                         onClick={()=>handleEnquiryFormClick()}
                             type="button"
-                            className="flex max-w-full w-[160px] h-[36px] items-center gap-2 rounded border-none bg-[#FF1645]"
+                            className="flex cursor-pointer max-w-full w-[160px] h-[36px] items-center gap-2 rounded border-none bg-[#FF1645]"
                         > <PiNotePencil
                                           className="w-[18px] h-[18px]"
                                           color="white"

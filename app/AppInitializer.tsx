@@ -1,7 +1,7 @@
 'use client'
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { isLogged, isUserLoad, setReady } from '@/redux/userSlice/userSlice';
+import {  loginSuccess } from '@/redux/userSlice/userSlice';
 import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 
 export default function AppInitializer() {
@@ -12,16 +12,17 @@ export default function AppInitializer() {
         const token = localStorage.getItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
         const userData = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA);
 
-        if (token) {
-            dispatch(isLogged({ logged: true }));
-        }
-
-        if (userData) {
+        if (token && userData) {
             const user = JSON.parse(userData);
-            dispatch(isUserLoad({ user }));
+
+            dispatch(loginSuccess({
+                user: user,
+                token: token,
+            }))
+
         }
 
-            dispatch(setReady());
+        console.log('first')
 
     }, []);
 

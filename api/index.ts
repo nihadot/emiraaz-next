@@ -1,4 +1,5 @@
 // import { LOCAL_STORAGE_KEYS } from "../utils/storage";
+import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 import { LOCAL_STORAGE_KEYS } from "./storage";
 import { logoutStart, logoutSuccess } from "@/redux/userSlice/userSlice";
 // import { logoutStart, logoutSuccess } from "../features/adminSlice/adminSlice";
@@ -7,7 +8,7 @@ export const baseUrl = `https://api.propertyseller.com/api/v1`
 // export const baseUrl = `http://192.168.196.6:4000/api/v1`
 // export const baseUrl = `http://192.168.196.227:4000/api/v1`
 // export const baseUrl = `http://192.168.1.7:4000/api/v1`
-// export const baseUrl = `http://localhost:4000/api/v1`
+// export const baseUrl = `http://127.0.0.1:4000/api/v1`
 // export const baseUrl = `https://ai-updations-api.onrender.com/api/v1`
 export const placeHolderLink = 'https://placehold.co/300x468'
 
@@ -25,7 +26,7 @@ export const createBaseQueryWithReAuth = (
         const refreshResult: any = await refreshTokenBaseQuery(
           {
             url: "refresh-token",
-            method: "POST",
+            headers: { "Content-Type": "application/json" },
           },
           api,
           extraOptions
@@ -49,3 +50,10 @@ export const createBaseQueryWithReAuth = (
     };
   };
   
+
+ export const refreshTokenBaseQuery = fetchBaseQuery({
+    baseUrl: `${baseUrl}/auth/user/`,
+    prepareHeaders: (headers) => {
+    headers.set('Authorization', `Bearer ${localStorage.getItem(LOCAL_STORAGE_KEYS.REFRESH_TOKEN)}`);
+    }
+  });

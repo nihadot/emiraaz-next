@@ -48,7 +48,8 @@ const PropertyDetailItem: React.FC<DetailItem> = ({ title, content }) => {
   return (
     <div className="flex font-poppins text-sm py-2 sm:py-3 items-center">
       <p className="flex-1 capitalize font-normal text-[13.5px] text-[#33333]">{title}</p>
-      <p className="flex-1 capitalize font-medium font-poppins text-[13.5px] text-black">{content}</p>
-    </div>
+{ content ?      <p className="flex-1 capitalize font-medium font-poppins text-[13.5px] text-black">{content}</p>:
+<div className="w-[100px] h-[25px] rounded bg-gray-50"></div>
+}    </div>
   )
 }

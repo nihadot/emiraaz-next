@@ -14,7 +14,7 @@ function Recommendations() {
     ]}
 />
 <RecommendedText
-    title="Recommended For You"
+    title="Tranding Areas"
     items={[
         'Studio Properties For Sale in Dubai',
         '1 BHK Flats in Downtown',

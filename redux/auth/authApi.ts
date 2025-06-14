@@ -38,6 +38,25 @@ export const authApi = createApi({
     }),
 
     // Sign-up endpoint
+    otpSignUp: builder.mutation<SignupOTPResponse, SignUpOTPPayload>({
+      query: (data) => ({
+        url: "/registration-otp", // Assuming '/signup' for registration endpoint.
+        method: "POST",
+        body: data,
+        headers: { "Content-Type": "application/json" },
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+    signUpReSentOTP: builder.mutation<SignupOTPResponse, SignUpResentOTPPayload>({
+      query: (data) => ({
+        url: "/registration/resent-otp", // Assuming '/signup' for registration endpoint.
+        method: "POST",
+        body: data,
+        headers: { "Content-Type": "application/json" },
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+
     signUp: builder.mutation<AuthResponse, SignUpCredentials>({
       query: (credentials) => ({
         url: "/registration", // Assuming '/signup' for registration endpoint.
@@ -47,7 +66,6 @@ export const authApi = createApi({
       }),
       invalidatesTags: ["Auth"],
     }),
-
     // Log-out endpoint
     logout: builder.mutation<{ message: string }, void>({
       query: () => ({ url: "/logout", method: "POST" }),
@@ -99,7 +117,9 @@ export const {
   useProtectRouteQuery,
   useEditProfileMutation,
   usePasswordChangeRequestMutation,
-  useVerifyPasswordChangeMutation
+  useVerifyPasswordChangeMutation,
+  useOtpSignUpMutation,
+  useSignUpReSentOTPMutation,
 } = authApi;
 
 export interface EditProfileResponse {
@@ -114,6 +134,17 @@ export interface EditProfilePayload {
   email?: string;
   number?: string;
   avatar?:ImageType;
+}
+
+export interface SignupOTPResponse {
+  success: boolean;
+  message: string;
+  token: string;
+}
+
+export interface SignupOTPResponse {
+ success: boolean;
+  message: string;
 }
 
 export interface VerifyPasswordChangeResponse {
@@ -142,6 +173,8 @@ export interface AuthResponse {
     avatar?: ImageItem;
   };
   accessToken: string;
+  refreshToken:string;
+  token:string;
 }
 
 export interface ChangePasswordRequestPayload {
@@ -159,9 +192,21 @@ export interface SignUpCredentials {
   password: string;
 }
 
+export interface SignUpResentOTPPayload {
+
+  token:string;
+  email:string
+}
+
 type ImageItem = {
   asset_id: string;
   secure_url: string;
   url: string;
   public_id: string;
 };
+
+
+export interface SignUpOTPPayload {
+  otp: string;
+  token:string;
+}

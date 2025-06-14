@@ -64,7 +64,7 @@ function Header() {
 
   return (
     <Container>
-      <header className='relative flex py-4 justify-between items-center w-full'>
+      <header className='relative flex pt-4 pb-3 justify-between items-center w-full'>
 
         {/* Mobile Menu Button */}
         <button
@@ -128,8 +128,61 @@ function Header() {
             </PrimaryButton>
           </div>
 
+          {
+            <div className="min-laptop:flex  gap-1 hidden">
+              <PrimaryButton
+                type='button'
+                className='flex w-[66.75px] !py-1 items-center gap-[4px]'
+              >
+                <>
+                  <label htmlFor="" className='text-[12px] font-normal  font-poppins'>AED</label>
+                  <div className="w-[28px] flex justify-center  items-center h-[10px] relative">
+                    <IoChevronDown size={14} />
+                  </div>
+                </>
 
-          {isAuthentication ?
+
+              </PrimaryButton>
+
+              { isAuthentication  ?  <PrimaryButton
+                onClick={() => router.push('/profile')}
+                type='button'
+                className='flex w-fit !px-2 h-[33px] cursor-pointer items-center'
+              >
+                <>
+
+                  <div className="w-4 h-4 relative flex cursor-pointer justify-center items-center">
+                    <PiUserCircle size={18} />
+                  </div>
+
+                  <label htmlFor="" className='text-[12px] cursor-pointer font-normal  font-poppins'>Profile</label>
+                </>
+
+
+              </PrimaryButton> : 
+               <PrimaryButton
+                onClick={() => router.push('/login')}
+                type='button'
+                className='flex w-fit cursor-pointer !px-2 h-[33px] items-center'
+              >
+                <>
+
+                  <div className="w-4 h-4  relative flex justify-center items-center">
+                    <PiUserCircle size={18} />
+                  </div>
+
+                  <label htmlFor="" className='text-[12px] font-normal  font-poppins'>Login</label>
+                </>
+
+
+              </PrimaryButton>
+              
+              }
+            </div>
+          }
+
+
+          {/* {isAuthentication ?
 
             <div className="min-laptop:flex  gap-1 hidden">
               <PrimaryButton
@@ -189,7 +242,7 @@ function Header() {
 
 
               </PrimaryButton>
-            </div>}
+            </div>} */}
         </div>
 
 

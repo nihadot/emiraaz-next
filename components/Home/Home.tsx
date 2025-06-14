@@ -51,6 +51,9 @@ import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import LocationTags from '../LocationTags/LocationTags';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import pIcon from "@/app/assets/p-icon.png";
+import { headers } from 'next/headers';
+import { useCountryCode } from '@/utils/useCountryCode';
+import dynamic from 'next/dynamic';
 type PaymentPlan = {
     label?: string;
     value?: string;
@@ -65,11 +68,12 @@ interface UserData {
 
 export default function HomePage({ initialData }: { initialData: any }) {
 
+
     useForceScrollRestore(); // Default key is "scroll-position"
-useScrollToTopOnRefresh();
+    useScrollToTopOnRefresh();
     const [loading, setLoading] = useState(false)
 
-const [paginationHappened, setPaginationHappened] = useState(false)
+    const [paginationHappened, setPaginationHappened] = useState(false)
     const deviceType = useDeviceType();
 
     const router = useRouter();
@@ -114,11 +118,15 @@ const [paginationHappened, setPaginationHappened] = useState(false)
             setWishlistData(wishlistDataItem?.data)
         }
 
+    }, [wishlistDataItem]);
+
+    useEffect(() => {
+
         if (smallVideoAdsResponse?.data) {
             // console.log(smallVideoAdsResponse?.data, 'smallVideoAdsResponse')
             setSmallVideoAds(smallVideoAdsResponse?.data);
         }
-    }, [wishlistDataItem, smallVideoAdsResponse]);
+    }, [smallVideoAdsResponse]);
 
 
     useEffect(() => {
@@ -161,13 +169,15 @@ const [paginationHappened, setPaginationHappened] = useState(false)
         bath: "",
     });
 
-    useEffect(()=>{
-             window.scrollTo({ top: 0, behavior: 'smooth' });
+    useEffect(() => {
+        // if(pathname.includes('/')){
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // }
 
-    },[paginationHappened]);
+    }, [paginationHappened]);
 
 
-    
+
 
     const [debouncedSearch, setDebouncedSearch] = useState<any>("");
     const [clear, setClear] = useState(false);
@@ -226,18 +236,49 @@ const [paginationHappened, setPaginationHappened] = useState(false)
     });
     // projects?.data
     // Memoized data mapping
+    // const emirateOptions = useMemo(() => {
+    //     const mappedOptions = emiratesData?.data.map((item) => ({
+    //         label: item.name,
+    //         value: item._id,
+    //         count: 100,
+    //     })) || [];
+
+    //     return [
+    //         { label: "All", value: "all" }, // <--- Add "All" option at the top
+    //         ...mappedOptions,
+    //     ];
+    // }, [emiratesData]);
+
     const emirateOptions = useMemo(() => {
+        const preferredOrder = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ras Al Khaimah', 'Ajman', 'Umm Al-Quwain'];
+
         const mappedOptions = emiratesData?.data.map((item) => ({
             label: item.name,
             value: item._id,
             count: 100,
         })) || [];
 
+        const sortedOptions = mappedOptions.sort((a, b) => {
+            const aIndex = preferredOrder.indexOf(a.label);
+            const bIndex = preferredOrder.indexOf(b.label);
+
+            // If both labels are in the preferredOrder list
+            if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+
+            // If only one is in the list, put it before the other
+            if (aIndex !== -1) return -1;
+            if (bIndex !== -1) return 1;
+
+            // If neither is in the list, sort alphabetically (optional)
+            return a.label.localeCompare(b.label);
+        });
+
         return [
-            { label: "All", value: "all" }, // <--- Add "All" option at the top
-            ...mappedOptions,
+            { label: "All", value: "all" }, // Always first
+            ...sortedOptions,
         ];
     }, [emiratesData]);
+
 
     const cityOptions = useMemo(() => {
         const mappedOptions = cities?.data.map((item) => ({
@@ -303,10 +344,10 @@ const [paginationHappened, setPaginationHappened] = useState(false)
 
     const totalPages = projects?.pagination?.totalPages || 1;
 
-  const handleClick = (item: AllProjectsItems) => {
-  sessionStorage.setItem('scroll-position', window.scrollY.toString());
-  router.push(`/projects/${item.slug}`);
-};
+    const handleClick = (item: AllProjectsItems) => {
+        sessionStorage.setItem('scroll-position', window.scrollY.toString());
+        router.push(`/projects/${item.slug}`);
+    };
 
     const handleEnquiryFormClick = useCallback((item: any) => {
         setEnquiryForm({
@@ -410,16 +451,16 @@ const [paginationHappened, setPaginationHappened] = useState(false)
     }, []);
 
 
-   
+
 
     useEffect(() => {
         if (pathname === '/') {
             setDefaultProjectStage('all')
         }
- function setRealVH() {
-  const vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty('--vh', `${vh}px`);
-}
+        function setRealVH() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
         window.addEventListener('resize', setRealVH);
 
     }, []);
@@ -435,7 +476,7 @@ const [paginationHappened, setPaginationHappened] = useState(false)
                 </div>
 
 
-                    <div className="relative animate-pulse block sm:hidden w-full max-w-[320px] sm:max-w-[420px]  p-4 sm:p-0">
+                <div className="relative animate-pulse block sm:hidden w-full max-w-[320px] sm:max-w-[420px]  p-4 sm:p-0">
                     <Image width={300} height={140} src={pIcon} alt="property seller logo" />
                 </div>
             </div>
@@ -443,11 +484,12 @@ const [paginationHappened, setPaginationHappened] = useState(false)
     }
 
 
-
     return (
 
         <>
             <main>
+
+
 
                 <div className=" min-h-screen  w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
                     <Header />
@@ -460,7 +502,7 @@ const [paginationHappened, setPaginationHappened] = useState(false)
 
                             <div className="md:h-[48px] h-[40px]">
                                 <SearchNew
-                                
+
                                     value={filters?.search || ''}
                                     onChange={handleChangeSearch}
                                     placeholder="Search..."
@@ -687,7 +729,7 @@ const [paginationHappened, setPaginationHappened] = useState(false)
 
                         </section>
                     </Container>
-                    
+
 
 
 
@@ -934,7 +976,7 @@ const [paginationHappened, setPaginationHappened] = useState(false)
                                 <div className="flex-1 h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
 
                                     {/* Breadcrumbs navigation link */}
-                                   { filters.page && filters.page > 1 &&  <div className={clsx("flex flex-col md:flex-row flex-1 items-start md:items-center w-full", filters?.page && filters?.page >= 1 ? '' : 'hidden')}>
+                                    {filters.page && filters.page > 1 && <div className={clsx("flex flex-col md:flex-row flex-1 items-start md:items-center w-full", filters?.page && filters?.page >= 1 ? '' : 'hidden')}>
 
                                         <BreadcampNavigation
                                             title='Offplan Projects :'
@@ -953,7 +995,7 @@ const [paginationHappened, setPaginationHappened] = useState(false)
 
 
                                     {/* Location link */}
-                                   {  filters.page && filters.page > 1 &&  <div className={clsx("pt-[24px]", filters?.page && filters?.page >= 1 ? '' : 'hidden')}>
+                                    {filters.page && filters.page > 1 && <div className={clsx("pt-[24px]", filters?.page && filters?.page >= 1 ? '' : 'hidden')}>
 
                                         <LocationTags
 
@@ -1002,11 +1044,11 @@ const [paginationHappened, setPaginationHappened] = useState(false)
                                         ))
                                     )}
                                 </div>
-                                
+
 
                                 <div className={"w-full md:block hidden max-w-[301.5px]"}>
 
-                                    { filters.page && filters.page <= 1 && (smallVideoAds && smallVideoAds.length > 0 ?
+                                    {filters.page && filters.page <= 1 && (smallVideoAds && smallVideoAds.length > 0 ?
                                         <div className={clsx("w-full mb-[12px] relative flex")}>
                                             {/* <div className={clsx("w-full mb-[12px] relative",filters?.page && filters?.page > 1 ? 'hidden':'flex')}> */}
                                             <VideoPreview
@@ -1018,7 +1060,7 @@ const [paginationHappened, setPaginationHappened] = useState(false)
 
 
 
-                                   {filters.page && filters.page > 1 && <RecommendedText
+                                    {filters.page && filters.page > 1 && <RecommendedText
                                         title="Recommended For You"
                                         items={[
                                             'Studio Properties For Sale in Dubai',
@@ -1029,49 +1071,49 @@ const [paginationHappened, setPaginationHappened] = useState(false)
                                         ]}
                                     />}
 
-                                        <div className="sticky top-3 left-0">
+                                    <div className="sticky top-3 left-0">
 
-                                            <CustomSliderUi
-                                                shuffledImages={shuffledImages}
+                                        <CustomSliderUi
+                                            shuffledImages={shuffledImages}
+                                        />
+                                        {filters.page && filters.page === 1 && <Recommendations />}
+
+
+                                        {filters.page && filters.page > 1 && <>
+                                            <RecommendedText
+                                                title="Recommended For You"
+                                                items={[
+                                                    'Studio Properties For Sale in Dubai',
+                                                    '1 BHK Flats in Downtown',
+                                                    'Luxury Villas in Palm Jumeirah',
+                                                    'Affordable Apartments in JVC',
+                                                    'Beachfront Homes in Dubai Marina',
+                                                ]}
                                             />
-                                            {filters.page && filters.page === 1 && <Recommendations />}
-
-
-                                            {filters.page && filters.page > 1 && <>
-                                                <RecommendedText
-                                                    title="Recommended For You"
-                                                    items={[
-                                                        'Studio Properties For Sale in Dubai',
-                                                        '1 BHK Flats in Downtown',
-                                                        'Luxury Villas in Palm Jumeirah',
-                                                        'Affordable Apartments in JVC',
-                                                        'Beachfront Homes in Dubai Marina',
-                                                    ]}
-                                                />
-                                                <RecommendedText
-                                                    title="Popular Searches"
-                                                    items={[
-                                                        'Off-plan Projects in Dubai',
-                                                        'Ready to Move Villas',
-                                                        'High ROI Areas in UAE',
-                                                        'Townhouses in Arabian Ranches',
-                                                        'Gated Communities in Sharjah',
-                                                    ]}
-                                                />
-                                            </>}
+                                            <RecommendedText
+                                                title="Popular Searches"
+                                                items={[
+                                                    'Off-plan Projects in Dubai',
+                                                    'Ready to Move Villas',
+                                                    'High ROI Areas in UAE',
+                                                    'Townhouses in Arabian Ranches',
+                                                    'Gated Communities in Sharjah',
+                                                ]}
+                                            />
+                                        </>}
 
 
 
-                                        </div>
+                                    </div>
 
 
 
 
-                               
+
 
 
                                 </div>
-                                </div>
+                            </div>
                         </SpaceWrapper>
                     </Container>
 
@@ -1119,11 +1161,11 @@ const [paginationHappened, setPaginationHappened] = useState(false)
                 <BottomBanner />
 
                 {/* Video ad son mobile */}
-                { filters.page && filters.page <= 1 && smallVideoAds && smallVideoAds.length > 0 &&
+                {filters.page && filters.page <= 1 && smallVideoAds && smallVideoAds.length > 0 &&
                     <Container>
                         <div className="w-full mb-[35px] relative flex sm:hidden">
                             <VideoPreview
-                                                projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
+                                projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
 
                                 src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
                             />
@@ -1152,7 +1194,7 @@ const [paginationHappened, setPaginationHappened] = useState(false)
 
 
                 <MobileFilterOption
-                bathroomsRange={ filters.page && filters.page > 1 ? true : false}
+                    bathroomsRange={filters.page && filters.page > 1 ? true : false}
 
                     resultProjects={() => {
                         setAllProjects(projects?.data);

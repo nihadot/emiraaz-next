@@ -9,14 +9,15 @@ import { GoScreenFull } from 'react-icons/go'
 
 type Props = {
   item: AllProjectsItems
+  handleClick: (item: AllProjectsItems) => void
 }
 
-function Card({ item }: Props) {
+function Card({ item,handleClick }: Props) {
   const { currency, value } = formatCurrencyParts(item.priceInAED || 0);
   const propertyType = item?.propertyTypes?.[0] ?? '';
 
   return (
-    <div className=' w-full h-[246.75px]'>
+    <div onClick={()=>handleClick(item)} className=' w-full cursor-pointer h-[246.75px]'>
       
       {/* Image Banner */}
       <div className="relative overflow-hidden rounded-[3.75px] sm:w-full h-[142.5px]">
@@ -45,7 +46,7 @@ function Card({ item }: Props) {
                                   <Typography
                                       tag='p'
                                       className='text-[12px] line-clamp-1 font-light font-poppins'
-                                      text={item.type}
+                                      text={item.type ?? '-'}
                                   />
                               </div>
       
@@ -62,7 +63,7 @@ function Card({ item }: Props) {
                                       tag='p'
       
                                       className='text-[12px] line-clamp-1 text-ellipsis font-light font-poppins'
-                                      text={`${item.squareFeet} sqft`}
+                                      text={`${item.squareFeet || 0} sqft`}
                                   />
                               </div>
                           </div>
@@ -78,7 +79,7 @@ function Card({ item }: Props) {
                         tag='p'
 
                         className='text-[12px] font-light font-poppins capitalize'
-                        text={item.address}
+                        text={item.address || '-'}
                     />
                 </div>
 

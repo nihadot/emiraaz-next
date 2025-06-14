@@ -35,6 +35,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         if (!res.ok || !result?.data) break;
 
         allProducts.push(...result.data);
+        
+        // console.log(allProducts,'allProducts')
 
         totalPages = result.pagination.totalPages;
         currentPage++;
@@ -42,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Dynamic product URLs
     const dynamicRoutes = allProducts.map((product: any) => ({
-        url: `${baseUrlAPI}/products/${product.slug}`,
+        url: `${baseUrlStatic}/projects/${product.slug}`,
         lastModified: product.updatedAt || new Date().toISOString(),
     }));
 

@@ -23,10 +23,11 @@ function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
         setIsEnd(swiper.isEnd);
     };
 
-    const handleSlideChange = (swiper: any) => {
-        setIsBeginning(swiper.isBeginning);
-        setIsEnd(swiper.isEnd);
-    };
+    // const handleSlideChange = (swiper: any) => {
+    //     setIsBeginning(swiper.isBeginning);
+    //     setIsEnd(swiper.isEnd);
+    // };
+    
     type ProjectType =
         | "commercial-residential"
         | "project-commercial"
@@ -95,7 +96,7 @@ function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
                 }}
                 modules={[Pagination, Navigation, Keyboard]}
 
-                onSlideChange={handleSlideChange}
+                // onSlideChange={handleSlideChange}
                 className="mySwiper relative w-full h-full"
             >
                 <div className="left-3 absolute z-[1000] top-3">

@@ -12,7 +12,7 @@ export default function BreadcrumbNavigation({backToFun}:Props) {
       {/* <Image src={back_red_icon} alt="Back" width={11.25} height={11.25} /> */}
                           <IoChevronBackOutline color='#FF1645' size={14} />
       
-      <p className="text-[#FF1645] text-[12px] ms-[9px] font-medium font-poppins">Back to Search</p>
+      <p className="text-[#FF1645] text-[12px] ms-[9px] cursor-pointer font-medium font-poppins">Back to Search</p>
     </div>
   );
 }

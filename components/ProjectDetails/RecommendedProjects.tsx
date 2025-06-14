@@ -9,83 +9,92 @@ import ModalForm from '@/components/EnquiryForm/ModalForm'
 import RegistrationSuccess from '@/components/EnquiryForm/RegistrationSuccess'
 import AlreadyEnquired from '@/components/EnquiryForm/AlreadyEnquired'
 import Container from '@/components/atom/Container/Container'
+import SmallCard from '../ProjectCard/SmallCard'
+import Link from 'next/link'
 
 type Props = { projects: AllProjectsItems[] }
 
-const containerVariants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { type: "spring", stiffness: 100, damping: 12 },
-  },
-};
 
 function RecommendedProjects({ projects }: Props) {
 
-    const router = useRouter();
-     const handleClick = useCallback((item: AllProjectsItems) => {
-            router.push(`/projects/${item.slug}`);
-        }, [router]);
-    const [EnquiryForm, setEnquiryForm] = useState({ status: false, id: '', count: 0 });
+  const router = useRouter();
+  const handleClick = useCallback((item: AllProjectsItems) => {
+    console.log(item,'iTem')
+    router.push(`/projects/${item.slug}`);
+  }, [router]);
+  const [EnquiryForm, setEnquiryForm] = useState({ status: false, id: '', count: 0 });
 
 
-        const handleEnquiryFormClick = useCallback((item: any) => {
-            setEnquiryForm({
-                status: true,
-                id: item._id,
-                count: 1,
-            });
-        }, []);
-    return (
-        <div className='py-5'>
-            <div className="pt-3">
+  const handleEnquiryFormClick = useCallback((item: any) => {
+    setEnquiryForm({
+      status: true,
+      id: item._id,
+      count: 1,
+    });
+  }, []);
+  return (
+    <div className='py-5'>
+      <div className="pt-3">
 
-                <ProjectHeader
-                contentClassName='font-medium mb-[16.5px] text-[17px] sm:text-[18.75px]'
-                    title='Recommended For You'
-                />
-            </div>
-
-            <div className="sm:grid hidden gap-[21px] my-2 md:grid-cols-3  w-full">
-                {projects && projects.map((item, index) => {
-                    return (
-                        <Card
-                        key={index}
-                        item={item}
-                    />
-                    )
-                })}
-            </div>
+        <ProjectHeader
+          contentClassName='font-medium mb-[16.5px] text-[17px] sm:text-[18.75px]'
+          title='Recommended For You'
+        />
+      </div>
 
 
+      <div className="sm:grid hidden gap-[21px] my-2 md:grid-cols-3  w-full">
+        {projects && projects.map((item, index) => {
+          return (
+            <Card
+                          handleClick={handleClick}
 
-            <div className="sm:hidden flex overflow-x-auto  gap-[21px] my-2  sm:w-full">
-                {projects && projects.map((item, index) => {
-                    return (
-                     
-                    <ProjectCard
-                    navigateDetailsButton={true}
-                    key={index}
-                    item={item}
-                    handleClick={handleClick}
-                    handleEnquiryFormClick={handleEnquiryFormClick}
-                />
-                    )
-                })}
-            </div>
+              key={index}
+              item={item}
+            />
+          )
+        })}
+      </div>
 
 
-               <Modal
+
+      {/* <div className="sm:hidden flex overflow-x-auto  gap-[21px] my-2  sm:w-full">
+        {projects && projects.map((item, index) => {
+          return (
+
+            <ProjectCard
+              navigateDetailsButton={true}
+              key={index}
+              item={item}
+              handleClick={handleClick}
+              handleEnquiryFormClick={handleEnquiryFormClick}
+            />
+          )
+        })}
+      </div> */}
+
+      <div className="sm:hidden grid grid-cols-2  gap-[12px] my-2  sm:w-full">
+        {projects && projects.map((item, index) => {
+          return (
+
+            <SmallCard
+            key={index}
+              // navigateDetailsButton={true}
+              // key={index}
+
+              handleClick={handleClick}
+
+              item={item}
+            // handleClick={handleClick}
+            // handleEnquiryFormClick={handleEnquiryFormClick}
+            />
+
+          )
+        })}
+      </div>
+
+
+      <Modal
         isOpen={EnquiryForm.status}
         onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
       >
@@ -112,8 +121,8 @@ function RecommendedProjects({ projects }: Props) {
           </div>
         </Container>
       </Modal>
-        </div>
-    )
+    </div>
+  )
 }
 
 export default RecommendedProjects

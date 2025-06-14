@@ -1,16 +1,18 @@
+'use client'
 import { byEmiraaz, propertySellerWhiteLogo, trademark } from '@/app/assets'
 import Image from 'next/image'
 import React from 'react'
 import FooterList from './FooterList'
 import Container from '../atom/Container/Container'
 import { PiInstagramLogoLight } from "react-icons/pi";
-import { SlSocialLinkedin } from "react-icons/sl";
+import { SlSocialFacebook, SlSocialLinkedin } from "react-icons/sl";
 import { RiTwitterXLine } from "react-icons/ri";
 import { PiYoutubeLogoThin } from "react-icons/pi";
-import { CiFacebook } from 'react-icons/ci'
-import { TiSocialFacebook } from "react-icons/ti";
-
 function Footer() {
+
+    const handleClick = (url: string | URL | undefined) => {
+        window.open(url, "_blank");
+    }
     return (
         <>
 
@@ -37,35 +39,35 @@ function Footer() {
 
 
                             <div className="sm:flex hidden mt-[15px] justify-start items-start gap-3">
-                                <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                                <div onClick={()=>handleClick('https://www.instagram.com/propertyselleruae/')} className="w-4 h-4 p-1 cursor-pointer rounded-full bg-white  flex justify-center items-center">
                                     <PiInstagramLogoLight
                                         className='w-full h-full' color='black'
                                     />
                                 </div>
 
-                                <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                                <div onClick={()=>handleClick('https://www.linkedin.com/company/propertyseller/')} className="w-4 h-4 p-1 cursor-pointer rounded-full bg-white  flex justify-center items-center">
                                     <SlSocialLinkedin
                                         className='w-full h-full' color='black'
                                     />
                                 </div>
 
 
-                                <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                                <div onClick={()=>handleClick('https://x.com/propertyselleru/')} className="w-4 h-4 p-1 rounded-full bg-white cursor-pointer  flex justify-center items-center">
                                     <RiTwitterXLine
                                         className='w-full h-full' color='black'
                                     />
                                 </div>
 
 
-                                <div className="w-4 h-4 p-[2px] rounded-full bg-white  flex justify-center items-center">
-                                    <TiSocialFacebook
+                                <div onClick={()=>handleClick('https://www.facebook.com/emiraazdubai/')} className="w-4 cursor-pointer h-4 p-[4px] rounded-full bg-white  flex justify-center items-center">
+                                    <SlSocialFacebook
                                     className='w-full h-full' color='black'
                                 
                                 />
                                 </div>
 
 
-                                <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                                <div onClick={()=>handleClick('https://www.youtube.com/@propertyselleruae')} className="w-4 cursor-pointer h-4 p-1 rounded-full bg-white flex justify-center items-center">
                                     <PiYoutubeLogoThin
                                         className='w-full h-full' color='black'
                                     />
@@ -266,7 +268,7 @@ function Footer() {
                         </div>
 
                      
-                        <div className="flex items-center gap-2">
+                        <div onClick={()=>handleClick('https://www.emiraaz.com/')} className="flex items-center gap-2 cursor-pointer">
                             <Image
                                 className='w-[115px] h-[50px] object-cover'
                                 src={byEmiraaz}
@@ -278,38 +280,38 @@ function Footer() {
 
 
                         <div className="sm:hidden flex  justify-center mt-4 sm:mt-0 items-start gap-3">
-                            <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                            <div onClick={()=>handleClick('https://www.instagram.com/propertyselleruae/')} className="w-4 h-4 p-1 cursor-pointer rounded-full bg-white  flex justify-center items-center">
                                 <PiInstagramLogoLight
                                     className='w-full h-full' color='black'
                                 />
                             </div>
 
-                            <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                            <div onClick={()=>handleClick('https://www.linkedin.com/company/propertyseller/')} className="w-4 h-4 p-1 cursor-pointer rounded-full bg-white  flex justify-center items-center">
                                 <SlSocialLinkedin
                                     className='w-full h-full' color='black'
                                 />
                             </div>
 
 
-                            <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                            <div onClick={()=>handleClick('https://x.com/propertyselleru/')} className="w-4 h-4 p-1 cursor-pointer rounded-full bg-white  flex justify-center items-center">
                                 <RiTwitterXLine
                                     className='w-full h-full' color='black'
                                 />
                             </div>
 
 
-                            <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                            <div onClick={()=>handleClick('https://www.facebook.com/emiraazdubai/')} className="w-4 cursor-pointer h-4 p-1 rounded-full bg-white  flex justify-center items-center">
                                 {/* <FaThreads
                                     className='w-full h-full' color='black'
                                 /> */}
-                                <CiFacebook
+                                <SlSocialFacebook
                                     className='w-full h-full' color='black'
                                 
                                 />
                             </div>
 
 
-                            <div className="w-4 h-4 p-1 rounded-full bg-white  flex justify-center items-center">
+                            <div onClick={()=>handleClick('https://www.youtube.com/@propertyselleruae')} className="w-4 cursor-pointer h-4 p-1 rounded-full bg-white  flex justify-center items-center">
                                 <PiYoutubeLogoThin
                                     className='w-full h-full' color='black'
                                 />

@@ -18,6 +18,7 @@ type Props = {
     onClose: () => void;
 };
 import { IoMdClose } from "react-icons/io";
+import { useCountryCode } from '@/utils/useCountryCode';
 
 interface UserData {
     _id: string;
@@ -103,6 +104,8 @@ function ModalForm({ item, setEnquiry, onClose }: Props) {
         }
     };
 
+        const countryCode = useCountryCode();
+ 
 
     return (
         <>
@@ -126,8 +129,11 @@ function ModalForm({ item, setEnquiry, onClose }: Props) {
                 />
 
                 <PhoneInput
-                    country={'in'}
-                    value={formData.number}
+                    // country={countryCode}
+                    // defa
+                    value={countryCode}
+                    // enableAreaCodes={true}
+                    // value={formData.number}
                     onChange={handlePhoneChange}
                     inputProps={{
                         name: 'phone',

@@ -1,26 +1,22 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { baseUrl, createBaseQueryWithReAuth } from '../../api';
+import { baseUrl, createBaseQueryWithReAuth, refreshTokenBaseQuery } from '../../api';
 import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import { Pagination } from '@/utils/types';
 import { AllWishlistItems } from './types';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${baseUrl}/wishlist/`,
-  credentials: "include",
-   prepareHeaders: (headers) => {
-        const token = localStorage.getItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN); // or get from Redux store
-        if (token) {
-          headers.set('Authorization', `Bearer ${token}`);
-        }
-        return headers;
-      }
+  prepareHeaders: (headers) => {
+    const token = localStorage.getItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
+    if (token) {
+      headers.set('Authorization', `Bearer ${token}`);
+    }
+    return headers;
+  },
 });
 
-// ✅ Separate Base Query for Refresh Token
-const refreshTokenBaseQuery = fetchBaseQuery({
-  baseUrl: `${baseUrl}/auth/user/`, // Different base URL for auth
-  credentials: "include",
-});
+
+
 
 const baseQueryWithReAuth = createBaseQueryWithReAuth(baseQuery, refreshTokenBaseQuery);
 
@@ -29,8 +25,6 @@ export const wishlistApi = createApi({
   baseQuery: baseQueryWithReAuth,
   tagTypes: ["AllWishlists"],
   endpoints: (builder) => ({
-
-
   toggleWishlistItem: builder.mutation<ViewToggleWishlistResponse, {userId: string, projectId: string}>({
     query: (credentials) => ({
       url: "/",

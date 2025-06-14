@@ -46,7 +46,7 @@ function RegulatoryInformation({ qrCodeUrl, icon, data, headerTitle, reportedPro
         </div>
         <div className="my-6 sm:my-0 relative h-[101.25px] w-[101.25px] ">
 
-          { qrCodeUrl ? <Image fill src={qrCodeUrl} alt={'QR code'} className="object-cover" /> : <div className="w-full h-[101.25px] bg-[#F5F5F5] rounded-[5px]"></div>}
+          { qrCodeUrl ? <Image fill src={qrCodeUrl} alt={'QR code'} className="object-cover" /> : <div className="w-full h-[101.25px] bg-gray-50 rounded-[5px]"></div>}
         </div>
 
 

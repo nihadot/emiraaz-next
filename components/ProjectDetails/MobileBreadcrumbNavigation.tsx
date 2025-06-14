@@ -21,7 +21,7 @@ function MobileBreadcrumbNavigation({projectTitle}:{projectTitle:string}) {
     }
   return (
     <div className="flex justify-between px-5  sm:hidden py-3 h-[64px] w-full items-center">
-                <div onClick={()=> goBack() } className=" p-0 w-fit rounded relative">
+                <div onClick={()=> goBack() } className=" p-0 w-fit cursor-pointer rounded relative">
                     {/* <Image
                     src={back_to_black_icon}
                     width={17}
@@ -32,7 +32,9 @@ function MobileBreadcrumbNavigation({projectTitle}:{projectTitle:string}) {
                     <IoChevronBackOutline color='black' size={22} />
                 </div>
 
-<div className="w-[120px]  ms-12 h-[30px] relative object-cover">
+<div 
+onClick={()=>window.location.href="/"}
+className="w-[120px]  ms-12 h-[30px] relative object-cover">
 
                   <Image
                     src={logoWebP}

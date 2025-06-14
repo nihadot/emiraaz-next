@@ -15,15 +15,17 @@ import { useToggleWishlistItemMutation } from '@/redux/wishlist/wishlistApi'
 import { errorToast } from '@/components/Toast'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal'
 
 interface ProjectDescriptionProps {
   title?: string
   descriptionInArabic: string
   descriptionInEnglish: string
   projectTitle: string;
-  projectId:string
-  setEnquiryForm:(item:any)=>void;
-  userId:string;
+  projectId: string
+  setEnquiryForm: (item: any) => void;
+  EnquiryForm: any;
+  userId: string;
 }
 
 const ProjectDescription: React.FC<ProjectDescriptionProps> = ({
@@ -33,7 +35,8 @@ const ProjectDescription: React.FC<ProjectDescriptionProps> = ({
   projectTitle,
   setEnquiryForm,
   projectId,
-  userId
+  userId,
+  EnquiryForm
 }) => {
   const options = [
     { label: 'English', value: 'english' },
@@ -47,10 +50,13 @@ const ProjectDescription: React.FC<ProjectDescriptionProps> = ({
   const [shortDescription, setShortDescription] = useState('')
 
   const getSelectedDescription = () => {
+    console.log(selected,'selected')
     switch (selected) {
       case 'arabic':
         return descriptionInArabic
       case 'english':
+        return descriptionInEnglish
+
       default:
         return descriptionInEnglish
     }
@@ -64,46 +70,49 @@ const ProjectDescription: React.FC<ProjectDescriptionProps> = ({
       setShortDescription(fullDescription)
       setIsTruncated(false)
     }
+  
   }, [selected, descriptionInArabic, descriptionInEnglish])
 
   const handleSelect = (value: string) => {
     setSelected(value)
   }
 
-    const [toggleWishlist] = useToggleWishlistItemMutation();
-  
+  const [toggleWishlist] = useToggleWishlistItemMutation();
+
   const wishlistItems = useSelector((state: RootState) => state.wishlist.items);
 
   const isWishlist = wishlistItems?.find(item => item?.propertyDetails?._id === projectId);
 
 
-    const toggleWishlistItem = async () => {
-  
-      if (!userId) {
-        errorToast("Please login to favorite this project");
-        return;
-      };
-  
-  
-  
-      if (!projectId) {
-        return errorToast('project not found');
-      }
-  
-  
-      const payload = {
-        projectId: projectId,
-        userId: userId
-      };
-  
-      try {
-        await toggleWishlist(payload).unwrap();
-      } catch (error: any) {
-        console.error("Failed to toggle wishlist item:", error);
-        errorToast(error?.response?.data?.message || error?.data?.message || error?.response?.message || error?.message || 'Error occurred, please try again later');
-  
-      }
+  const toggleWishlistItem = async () => {
+
+    if (!userId) {
+      errorToast("Please login to favorite this project");
+      return;
     };
+
+
+
+    if (!projectId) {
+      return errorToast('project not found');
+    }
+
+
+    const payload = {
+      projectId: projectId,
+      userId: userId
+    };
+
+    try {
+      await toggleWishlist(payload).unwrap();
+    } catch (error: any) {
+      console.error("Failed to toggle wishlist item:", error);
+      errorToast(error?.response?.data?.message || error?.data?.message || error?.response?.message || error?.message || 'Error occurred, please try again later');
+
+    }
+  };
+
+
 
   return (
     <div className="space-y-2 ">
@@ -123,20 +132,27 @@ const ProjectDescription: React.FC<ProjectDescriptionProps> = ({
 
 
       <NewModal
-        onClose={() => setModalOpen(false)}
+        onClose={() => {
+          setModalOpen(false)
+               setShortDescription(descriptionInEnglish.slice(0, 300) + '...')
+
+        }}
         isOpen={modalOpen}
-        wrapperClassName='!z-[60]'
         contentClassName="flex rounded-[6px] flex-col bg-white p-0 max-w-[1200px] m-auto w-full h-screen  sm:max-h-fit"
 
       >
 
 
-        <div className=" flex flex-col bg-white p-[15px] rounded-[6px] max-w-[1200px] w-full h-screen sm:h-[85vh]">
-          <div className=" flex justify-end  items-end" onClick={() => setModalOpen(false)}>
-             <IoMdClose
-                              className="w-[20px] h-[20px]"
-                              color="#333333"
-                            />
+        <div className=" flex flex-col  p-[15px] rounded-[6px] max-w-[1200px] w-full h-screen sm:h-[85vh]">
+          <div className=" flex  justify-end  items-end" onClick={() => {
+            setModalOpen(false)
+               setShortDescription(descriptionInEnglish.slice(0, 300) + '...')
+
+          }}>
+            <IoMdClose
+              className="w-[20px] h-[20px]"
+              color="#333333"
+            />
           </div>
 
 
@@ -165,7 +181,7 @@ const ProjectDescription: React.FC<ProjectDescriptionProps> = ({
           <div className=" flex-1 overflow-y-auto">
             {selected === 'arabic' && <Content
               title='وصف'
-              containerClassName='flex justify-end'
+              containerClassName='justify-end pe-3 text-right'
               description={descriptionInArabic}
             />}
 
@@ -176,65 +192,70 @@ const ProjectDescription: React.FC<ProjectDescriptionProps> = ({
           </div>
 
 
-     <div className="flex bg-white mt-[15px] gap-1 sm:gap-[7.5px] items-center sm:justify-end">
-                <PrimaryButton
-                  type="button"
-                  className="bg-[#FFE7EC] !px-3 sm:!px-4 !py-2 sm:!py-[9px] !w-full sm:!w-fit  border-none text-[#FF1645] font-poppins rounded "
+          <div className="flex z-[60px] bg-white mt-[15px] gap-1 sm:gap-[7.5px] items-center sm:justify-end">
+            <PrimaryButton
+              type="button"
+              className="bg-[#FFE7EC] !px-3 sm:!px-4 !py-2 sm:!py-[9px] !w-full sm:!w-fit  border-none text-[#FF1645] font-poppins rounded "
 
-                >
-                  <div className="flex items-center h-[26px] justify-center gap-2">
-                    {isWishlist ? (
-                      <GoHeartFill onClick={toggleWishlistItem} color="red" className="w-[18px] h-[18px] sm:w-[20px] sm:h-[20px]" />
-                    ) : (
-                      <GoHeart onClick={toggleWishlistItem} color="red" className="w-[18px] h-[18px] sm:w-[20px] sm:h-[20px]" />
-                    )}
-                    <label className="text-[12px] sm:text-[14.25px] text-[#FF1645] font-medium font-poppins">Save</label>
-                  </div>
-                </PrimaryButton>
-
-                <PrimaryButton
-                  type="button"
-                  className="bg-[#FFE7EC] !px-3 sm:!px-4 !w-full sm:!w-fit  border-none text-[#FF1645] font-poppins rounded "
-
-                >
-                  <div className="flex items-center gap-2 w-fit h-[25px]  sm:h-[28px] justify-center">
-                    <div
-                onClick={() => handleShare(projectTitle || '')}
-                      className="w-[18px] sm:w-[21px] h-[18px] sm:h-[21px] relative">
-                      <PiShareFat
-                        color='#FF1645'
-                        size={20}
-                      />
-                    </div>
-                    <label className="text-[12px] sm:text-[14.25px] text-nowrap text-[#FF1645] font-medium font-poppins">Share </label>
-                  </div>
-                </PrimaryButton>
-
-
-                <PrimaryButton
-                  type="button"
-                  className="bg-[#FFE7EC] !px-4  !w-full sm:!w-fit border-none text-[#FF1645] font-poppins rounded "
-
-                >
-                  <div
-
-                    onClick={() => setEnquiryForm({ status: true, id: projectId || '', count: 1 })}
-                    className="flex items-center gap-2 w-fit h-[25px] sm:h-[28px] justify-center">
-                    <div className="w-[18px] sm:w-[21px] h-[18px] sm:h-[21px] relative">
-                      <PiNotePencil
-                        className="w-[25px] h-[22px]"
-                        color="#FF1645"
-                      />
-                    </div>
-                    <label className="text-[12px] sm:text-[14.25px] text-nowrap text-[#FF1645] font-medium font-poppins">Enquire Now </label>
-                  </div>
-                </PrimaryButton>
-
+            >
+              <div className="flex items-center h-[26px] justify-center gap-2">
+                {isWishlist ? (
+                  <GoHeartFill onClick={toggleWishlistItem} color="red" className="w-[18px] h-[18px] sm:w-[20px] sm:h-[20px]" />
+                ) : (
+                  <GoHeart onClick={toggleWishlistItem} color="red" className="w-[18px] h-[18px] sm:w-[20px] sm:h-[20px]" />
+                )}
+                <label className="text-[12px] sm:text-[14.25px] text-[#FF1645] font-medium font-poppins">Save</label>
               </div>
+            </PrimaryButton>
+
+            <PrimaryButton
+              type="button"
+              className="bg-[#FFE7EC] !px-3 sm:!px-4 !w-full sm:!w-fit  border-none text-[#FF1645] font-poppins rounded "
+
+            >
+              <div className="flex items-center gap-2 w-fit h-[25px]  sm:h-[28px] justify-center">
+                <div
+                  onClick={() => handleShare(projectTitle || '')}
+                  className="w-[18px] sm:w-[21px] h-[18px] sm:h-[21px] relative">
+                  <PiShareFat
+                    color='#FF1645'
+                    size={20}
+                  />
+                </div>
+                <label className="text-[12px] sm:text-[14.25px] text-nowrap text-[#FF1645] font-medium font-poppins">Share </label>
+              </div>
+            </PrimaryButton>
+
+
+            <PrimaryButton
+              type="button"
+              className="bg-[#FFE7EC] !px-4  !w-full sm:!w-fit border-none text-[#FF1645] font-poppins rounded "
+
+            >
+              <div
+
+                onClick={() => setEnquiryForm({ status: true, id: projectId || '', count: 1 })}
+                className="flex items-center gap-2 w-fit h-[25px] sm:h-[28px] justify-center">
+                <div className="w-[18px] sm:w-[21px] h-[18px] sm:h-[21px] relative">
+                  <PiNotePencil
+                    className="w-[25px] h-[22px]"
+                    color="#FF1645"
+                  />
+                </div>
+                <label className="text-[12px] h-full flex justify-center items-center sm:text-[14.25px] text-nowrap text-[#FF1645] font-medium font-poppins">Enquire Now </label>
+              </div>
+            </PrimaryButton>
+
+          </div>
         </div>
 
       </NewModal>
 
+
+      {/* <EnquiryFormModal
+                EnquiryForm={EnquiryForm}
+                setEnquiryForm={setEnquiryForm}
+            /> */}
 
 
     </div>
