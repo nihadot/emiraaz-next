@@ -4,8 +4,8 @@ import { LOCAL_STORAGE_KEYS } from "./storage";
 import { logoutStart, logoutSuccess } from "@/redux/userSlice/userSlice";
 // import { logoutStart, logoutSuccess } from "../features/adminSlice/adminSlice";
 
-// export const baseUrl = `https://api.propertyseller.com/api/v1`
-export const baseUrl = `http://192.168.196.6:4000/api/v1`
+export const baseUrl = `https://api.propertyseller.com/api/v1`
+// export const baseUrl = `http://192.168.196.6:4000/api/v1`
 // export const baseUrl = `http://192.168.196.227:4000/api/v1`
 // export const baseUrl = `http://192.168.1.7:4000/api/v1`
 // export const baseUrl = `http://127.0.0.1:4000/api/v1`
