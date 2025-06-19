@@ -6,7 +6,6 @@ import { errorToast, successToast } from '@/components/Toast';
 import { useForgotPasswordOTPVerificationMutation, useOtpSignUpMutation, useSignUpReSentOTPMutation } from '@/redux/auth/authApi';
 import { handleApiError } from '@/utils/handleApiError';
 import OTPVerification from '../OTPVerification/OTPVerification';
-import { token } from 'morgan';
 
 
 const OTP_LENGTH = 6;
@@ -75,7 +74,7 @@ function ForgotPassOTPVerification() {
                 return;
             }
 
-            if (!token) {
+            if (!otpToken) {
                 errorToast('Invalid or expired token. Please try again.');
                 router.push('/forgot-password');
                 return;
