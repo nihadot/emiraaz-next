@@ -3,36 +3,48 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import { errorToast, successToast } from '@/components/Toast';
-import { useOtpSignUpMutation, useSignUpReSentOTPMutation } from '@/redux/auth/authApi';
+import { useForgotPasswordOTPVerificationMutation, useOtpSignUpMutation, useSignUpReSentOTPMutation } from '@/redux/auth/authApi';
 import { handleApiError } from '@/utils/handleApiError';
 import OTPVerification from '../OTPVerification/OTPVerification';
+import { token } from 'morgan';
 
 
 const OTP_LENGTH = 6;
 
 function ForgotPassOTPVerification() {
     const [email, setEmail] = useState<string>('');
+    const [otpToken, setOtpToken] = useState<string>('');
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const status = localStorage.getItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD);
+            const status = localStorage.getItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_OTP);
             const mailId = localStorage.getItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_EMAIL);
-            if (!status && !mailId) {
+            const otpToken = localStorage.getItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_OTP_TOKEN);
+            if (!status && !mailId && !otpToken) {
                 router.push('/forgot-password');
                 return;
             }
 
-            if(!status){
+            if (!status) {
                 router.push('/forgot-password');
                 return;
             }
 
-            if(!mailId){
+            if (!mailId) {
+                router.push('/forgot-password');
+                return;
+            }
+
+            if (!otpToken) {
                 router.push('/forgot-password');
                 return;
             }
             if (mailId) {
                 setEmail(mailId)
+            }
+
+            if (otpToken) {
+                setOtpToken(otpToken)
             }
         }
 
@@ -41,13 +53,13 @@ function ForgotPassOTPVerification() {
 
     const router = useRouter();
     const [resendOtp] = useSignUpReSentOTPMutation();
-    const [signup] = useOtpSignUpMutation();
+    const [verificationOTP] = useForgotPasswordOTPVerificationMutation();
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(''));
 
     const handleSubmit = async () => {
-        const status = localStorage.getItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD);
+        const status = localStorage.getItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_OTP);
 
         try {
             setIsSubmitting(true);
@@ -63,16 +75,25 @@ function ForgotPassOTPVerification() {
                 return;
             }
 
+            if (!token) {
+                errorToast('Invalid or expired token. Please try again.');
+                router.push('/forgot-password');
+                return;
+            }
+
             // const payload = { token: resetPasswordToken, otp: enteredOtp };
-            await signup({
+            await verificationOTP({
                 otp: enteredOtp,
-                token: localStorage.getItem(LOCAL_STORAGE_KEYS.SIGNUP_OTP_TOKEN) || ''
+                token: localStorage.getItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_OTP_TOKEN) || ''
             }).unwrap();
 
-            localStorage.removeItem(LOCAL_STORAGE_KEYS.RESET_PASSWORD_TOKEN);
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_PAGE_ACCESS);
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_OTP);
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_EMAIL);
+            localStorage.removeItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_OTP_TOKEN);
 
             successToast('OTP verified successfully');
-            router.push('/');
+            router.push('/login');
 
         } catch (error: any) {
             handleApiError(error);
@@ -92,13 +113,13 @@ function ForgotPassOTPVerification() {
             const token = localStorage.getItem(LOCAL_STORAGE_KEYS.SIGNUP_OTP_TOKEN);
             const mailId = localStorage.getItem(LOCAL_STORAGE_KEYS.SIGNUP_TEM_DATA);
             if (token && mailId) {
-                const payload = { token: token, email:mailId };
+                const payload = { token: token, email: mailId };
                 resendOtp(payload).unwrap();
             }
-            
+
         } catch (error) {
             handleApiError(error);
-        }finally{
+        } finally {
             setIsSubmitting(false);
         }
     }
@@ -106,7 +127,7 @@ function ForgotPassOTPVerification() {
 
     return (
         <OTPVerification
-        handleResentOTP={handleResentOTP}
+            handleResentOTP={handleResentOTP}
             email={email}
             handleSubmit={handleSubmit}
             loading={isSubmitting}

@@ -8,8 +8,11 @@ export const LOCAL_STORAGE_KEYS = {
   RESET_PASSWORD_TOKEN: `${PROJECT_PREFIX}_resetPasswordToken`,
   SIGNUP_OTP_TOKEN: `${PROJECT_PREFIX}_otpToken`,
   SIGNUP_TEM_DATA: `${PROJECT_PREFIX}_signupTemData`,
-  FORGOT_PASSWORD: `${PROJECT_PREFIX}_forgotPassword`,
+  FORGOT_PASSWORD_PAGE_ACCESS: `${PROJECT_PREFIX}_forgotPasswordPageAccess`,
   FORGOT_PASSWORD_EMAIL: `${PROJECT_PREFIX}_forgotPasswordEmail`,
+  FORGOT_PASSWORD_OTP: `${PROJECT_PREFIX}_forgotPasswordOtp`,
+  FORGOT_PASSWORD_OTP_TOKEN: `${PROJECT_PREFIX}_forgotPasswordOtpToken`,
+  CHANGE_PASSWORD_TOKEN: `${PROJECT_PREFIX}_changePasswordToken`,
 };
 
 /**

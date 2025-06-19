@@ -45,14 +45,21 @@ const SidePanel = ({
                     handleGallerySelect('images')
                 }} src={images?.[1]?.secure_url} alt="Next image" /> : <div className="h-[177.5px] w-full bg-gray-50"></div>
                }
-                {/* <ImageBlock wrapperClassName="h-[177.5px]" onClick={() => {
+               
+               { images?.[2]?.secure_url ? <>
+               
+               { videoLink ? <ImageBlock imageCount={images.length} wrapperClassName="h-[136.5px]" onClick={() => {
                     handleGalleryModal()
                     handleGallerySelect('images')
-                }} src={images?.[1]?.secure_url} alt="Next image" /> */}
-               { images?.[2]?.secure_url ?  <ImageBlock imageCount={images.length} wrapperClassName="h-[136.5px]" onClick={() => {
+                }} src={images?.[2]?.secure_url} alt="With Overlay" showOverlay /> :
+
+                <ImageBlock  wrapperClassName="h-[136.5px]" onClick={() => {
                     handleGalleryModal()
                     handleGallerySelect('images')
-                }} src={images?.[2]?.secure_url} alt="With Overlay" showOverlay />
+                }} src={images?.[2]?.secure_url} alt="With Overlay" />
+                
+                }
+               </>  
             
             :  <div className="h-[136.5px] w-full bg-gray-50"></div>
             
@@ -68,7 +75,10 @@ const SidePanel = ({
                         clickDisable
                         videoUrl={videoLink}
                     /> :
-                     <div className="h-[177.5px] w-full bg-gray-50"></div>
+                     <ImageBlock imageCount={images.length} wrapperClassName="h-[163.5px]" onClick={() => {
+                    handleGalleryModal()
+                    handleGallerySelect('images')
+                }} src={images?.[3]?.secure_url} alt="With Overlay" showOverlay />
                     
                     }
                 </div>

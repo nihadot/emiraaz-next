@@ -11,7 +11,7 @@ const initialState: AuthState = {
     loading: false,
     error: null,
     isAuthentication: false,
-    ready: false // NEW: indicates whether we checked auth
+    ready: false 
 
 };
 

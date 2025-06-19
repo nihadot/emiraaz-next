@@ -1,10 +1,10 @@
 import ProfilePage from '@/components/Profile/ProfilePage'
 import React from 'react'
 
-const pagee = () => {
+const page = () => {
   return (
     <ProfilePage/>
   )
 }
 
-export default pagee
+export default page

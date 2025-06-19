@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuthState, User } from './types';
-import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 
 
 
@@ -9,7 +8,7 @@ const initialState: AuthState = {
     token: null,
     loading: false,
     error: null,
-    isAuthentication: !!localStorage.getItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN)
+    isAuthentication: false
 };
 
 const adminSlice = createSlice({

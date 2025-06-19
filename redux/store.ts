@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { emirateApi } from '@/redux/emirates/emiratesApi';
+import { currencyApi } from '@/redux/currency/currencyApi';
 import { citiesApi } from './cities/citiesApi';
 import { projectApi } from './project/projectApi';
 import { portraitBannerAdApi } from './portraitBannerAd/portraitBannerAdApi';
@@ -35,6 +36,7 @@ export const store = configureStore({
     [carriersApi.reducerPath]: carriersApi.reducer,
     [openHouseApi.reducerPath]: openHouseApi.reducer,
     [videosApi.reducerPath]: videosApi.reducer,
+    [currencyApi.reducerPath]: currencyApi.reducer,
     user: userSlice,
     wishlist: wishlistSlice,
 
@@ -56,6 +58,7 @@ export const store = configureStore({
       carriersApi.middleware,
       openHouseApi.middleware,
       videosApi.middleware,
+      currencyApi.middleware,
     ),
 });
 

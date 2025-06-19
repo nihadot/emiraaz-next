@@ -1,3 +1,4 @@
+'use client'
 import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
 import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
 import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi';

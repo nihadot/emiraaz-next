@@ -1,3 +1,4 @@
+'use client';
 import Container from '@/components/atom/Container/Container'
 import SectionDivider from '@/components/atom/SectionDivider/SectionDivider'
 import SpaceWrapper from '@/components/atom/SpaceWrapper/SpaceWrapper'

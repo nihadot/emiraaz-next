@@ -28,7 +28,7 @@ function ForgotPassword() {
                 email: e.email,
             }).unwrap();
 
-            localStorage.setItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD, 'true');
+            localStorage.setItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_PAGE_ACCESS, 'true');
             localStorage.setItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_EMAIL, e.email);
 
             router.push('/forgot-password/reset-password');

@@ -1,21 +1,16 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { baseUrl, createBaseQueryWithReAuth } from '../../api';
+import { baseUrl, createBaseQueryWithReAuth, refreshTokenBaseQuery } from '../../api';
 import { prepareAuthHeaders } from '@/api/authHeader';
 import { User } from '../userSlice/types';
 import { ImageType } from '@/utils/types';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${baseUrl}/auth/user/`, // Assuming this is the endpoint for the registration.
-  credentials: "include",
     prepareHeaders: (headers) => {
       return prepareAuthHeaders(headers);
     }
 });
 
-const refreshTokenBaseQuery = fetchBaseQuery({
-  baseUrl: `${baseUrl}/auth/user/`,
-  credentials: "include",
-});
 
 
 const baseQueryWithReAuth = createBaseQueryWithReAuth(baseQuery, refreshTokenBaseQuery);
@@ -24,7 +19,7 @@ const baseQueryWithReAuth = createBaseQueryWithReAuth(baseQuery, refreshTokenBas
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: baseQueryWithReAuth,
-  tagTypes: ["Auth"],
+  tagTypes: ["Auth","EditProfile"],
   endpoints: (builder) => ({
     // Log-in endpoint
     login: builder.mutation<AuthResponse, LoginCredentials>({
@@ -92,7 +87,7 @@ export const authApi = createApi({
         body: credentials,
         headers: { "Content-Type": "application/json" },
       }),
-      invalidatesTags: ["Auth"],
+      invalidatesTags: ["EditProfile"],
     }),
 
 
@@ -121,9 +116,27 @@ export const authApi = createApi({
         method: "POST",
         body: credentials,
         headers: { "Content-Type": "application/json" },
-      }),
+      }), 
     }),
+
+     forgotPasswordOTPVerification: builder.mutation<forgotPasswordOTPVerficaitionResponse, ForgotPasswordOTPVerificationPayload>({
+      query: (credentials) => ({
+        url: "/forgot-password/verify",
+        method: "POST",
+        body: credentials,
+        headers: { "Content-Type": "application/json" },
+      }), 
+    }),
+      fetchUserProfileDetails: builder.query<fetchUserProfileDetailsResponse, void>({
+      query: () =>"/profile",
+      providesTags: ["EditProfile"],
+    }),
+
+    //     protectRoute: builder.query<{ success: boolean }, void>({
+    //   query: () => "/protect-route",
+    // }),
   }),
+  
 });
 
 export const {
@@ -138,6 +151,8 @@ export const {
   useSignUpReSentOTPMutation,
   useSignUpForgotPasswordMutation,
   useForgotNewPasswordMutation,
+  useForgotPasswordOTPVerificationMutation,
+  useFetchUserProfileDetailsQuery,
 } = authApi;
 
 export interface EditProfileResponse {
@@ -149,8 +164,6 @@ export interface EditProfileResponse {
 export interface EditProfilePayload {
   name?: string;
   nationality?: string;
-  email?: string;
-  number?: string;
   avatar?:ImageType;
 }
 
@@ -188,6 +201,24 @@ export interface forgotNewPasswordRequestResponse {
   success: boolean;
   message: string;
   token: string;
+}
+
+export interface forgotPasswordOTPVerficaitionResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface IUser {
+    name: string;
+    email: string;
+    avatar: ImageItem;
+    number: string;
+    nationality: string | undefined;
+    _id: string;
+}
+export interface fetchUserProfileDetailsResponse {
+  success: boolean;
+  user: IUser;
 }
 // Types
 export interface AuthResponse {
@@ -243,4 +274,8 @@ export interface SignUpOTPPayload {
 export interface ForgotNewPasswordPayload {
   email:string;
   password:string;
+}
+export interface ForgotPasswordOTPVerificationPayload {
+  otp:string;
+  token:string;
 }

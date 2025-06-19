@@ -57,14 +57,14 @@ const News = ({
     return (
         <main>
             <Header />
-            <div className="pb-[12.75px] sm:flex hidden">
+            <div className="pb-[12.75px] flex">
                 <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
             </div>
 
             <Container>
 
                 <section className='h-full w-full gap-[30px] pb-20 flex'>
-                   <div className="">
+                   <div className=" flex-1">
                      <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-[12px] sm:gap-[37px] ">
                         {data && data?.length > 0 ? data?.map((item, index) => {
                             return (

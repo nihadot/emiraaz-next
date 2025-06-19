@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Latest News | Property Seller",
     description: "Read the latest articles and updates in the real estate market.",
-    url: "https://www.propertyseller.com/news",
+    url: "https://www.propertyseller.com/allnews",
     siteName: "Property Seller",
     images: [
       {

@@ -72,5 +72,6 @@ export {default as trademark} from "./trademark.png";
 export {default as byEmiraaz} from "./backed-by.png";
 export {default as calender} from "./calendar.png";
 export {default as citiesBackIcon} from "./cities-back-btn.png";
+export {default as topArrowIcon} from "./top-arrow.png";
 
 

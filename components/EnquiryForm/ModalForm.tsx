@@ -113,7 +113,7 @@ function ModalForm({ item, setEnquiry, onClose }: Props) {
             <form className='sm:w-[436px] m-auto relative p-3 rounded-[5px] bg-white max-w-[400px] flex flex-col gap-2 w-full pt-[20px]' onSubmit={handleSubmit}>
                 <button
                     type='button'
-                    className="absolute top-2 right-2 text-gray-600 dark:text-gray-300 hover:text-red-500"
+                    className="absolute cursor-pointer top-2 right-2 text-gray-600 dark:text-gray-300 hover:text-red-500"
                     onClick={onClose}
                 >
                     <IoMdClose size={18} color='#333333' />
@@ -129,11 +129,8 @@ function ModalForm({ item, setEnquiry, onClose }: Props) {
                 />
 
                 <PhoneInput
-                    // country={countryCode}
-                    // defa
                     value={countryCode}
-                    // enableAreaCodes={true}
-                    // value={formData.number}
+                    placeholder='Your Phone Number'
                     onChange={handlePhoneChange}
                     inputProps={{
                         name: 'phone',
@@ -145,17 +142,18 @@ function ModalForm({ item, setEnquiry, onClose }: Props) {
                         borderRadius: '3.5px',
                         borderColor: '#ccc',
                     }}
+                    countryCodeEditable={false} 
                 />
 
                 <PrimaryButton
                     loading={loading}
                     type='submit'
-                    className='flex mt-1 justify-center bg-[#FF1645] rounded-[3.75px] border-none items-center gap-1'
+                    className='flex mt-1 cursor-pointer justify-center bg-[#FF1645] rounded-[3.75px] border-none items-center gap-1'
 
                 >
 
-                    <div className='justify-center flex items-center gap-2'>
-                        <label className='text-white text-[14.25px] font-poppins font-medium'>Submit</label>
+                    <div className='cursor-pointer justify-center flex items-center gap-2'>
+                        <label className='text-white text-[14.25px] font-poppins font-medium cursor-pointer'>Submit</label>
                     </div>
                 </PrimaryButton>
             </form>

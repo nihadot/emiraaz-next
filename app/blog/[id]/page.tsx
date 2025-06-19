@@ -28,13 +28,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: data?.data?.metaTitle || `${data?.data?.blogTitle} | Property Seller`,
     description: data?.data?.metaDescription || data?.data?.blogBody?.slice(0, 150),
     alternates: {
-      canonical: `https://www.propertyseller.com/news/${id}`,
+      canonical: `https://www.propertyseller.com/blog/${id}`,
     },
     keywords: data?.data?.metaKeywords,
     openGraph: {
       title: data?.data?.metaTitle || `${data?.data?.blogTitle} | Property Seller`,
       description: data?.data?.metaDescription || data?.data?.blogBody?.slice(0, 150),
-      url: `https://www.propertyseller.com/news/${id}`,
+      url: `https://www.propertyseller.com/blog/${id}`,
       type: "website",
       images: [
         {

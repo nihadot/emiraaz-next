@@ -12,7 +12,7 @@ function ResetPasswordPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const status = localStorage.getItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD);
+      const status = localStorage.getItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_PAGE_ACCESS);
       const mailId = localStorage.getItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_EMAIL);
       if (!status && !mailId) {
         router.push('/forgot-password');
@@ -46,15 +46,16 @@ function ResetPasswordPage() {
     try {
       setIsSubmitting(true);
 
-      await newPassword({
+      const response = await newPassword({
         email: email,
         password: e.password
       }).unwrap();
 
-      localStorage.setItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD, 'true');
-      localStorage.setItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_EMAIL, email);
 
-      router.push('/forgot-password/reset-password');
+      localStorage.setItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_OTP, 'true');
+      localStorage.setItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_OTP_TOKEN, response.token);
+
+      router.push('/forgot-password/otp-verification');
 
     } catch (error: any) {
       handleApiError(error);

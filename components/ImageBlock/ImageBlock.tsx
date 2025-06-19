@@ -12,7 +12,7 @@ interface ImageBlockProps {
   imageCount?:number;
 }
 
-const ImageBlock = ({ imageCount = 20,src = '', alt,wrapperClassName, showOverlay = false, onClick }: ImageBlockProps) => (
+const ImageBlock = ({ imageCount = 0,src = '', alt,wrapperClassName, showOverlay = false, onClick }: ImageBlockProps) => (
   <div
     className={clsx("h-[136.5px] rounded-md w-full relative cursor-pointer", wrapperClassName)}
     onClick={onClick}

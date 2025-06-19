@@ -8,7 +8,6 @@ import React from 'react'
 import { Footer } from "@/components/Footer";
 import Header from "@/components/Header";
 import { useSignUpMutation } from "@/redux/auth/authApi";
-import { errorToast } from "@/components/Toast";
 import SectionDivider from "@/components/atom/SectionDivider/SectionDivider";
 import Container from "../atom/Container/Container";
 import Link from "next/link";

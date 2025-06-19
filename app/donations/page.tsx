@@ -29,7 +29,7 @@ function page() {
                         <p className='font-poppins  flex items-center sm:flex-row flex-col justify-center gap-1 sm:gap-2 font-normal text-[14px] md:text-[18.75px]'>Total Donations as of Now: 
                             <span className='text-[#FF1645] gap-1 flex items-center lg:text-[33.75px] md:text-[28px] text-[18px] sm:text-[34px] font-normal font-poppins'>
                                 <span className='text-center block'>AED</span> 
-                                <span className='text-center pt-1 sm:pt-2.5 block '>****</span>
+                                <span className='text-center pt-1 sm:pt-2.5 block '>*****</span>
                             </span>
                         </p>
                     </div>

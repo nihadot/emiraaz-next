@@ -1,4 +1,4 @@
-'use client'
+
 import Resale from '@/components/Resale/Resale'
 import React from 'react'
 

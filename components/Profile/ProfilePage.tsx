@@ -1,12 +1,12 @@
 'use client'
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { RootState } from '@/redux/store'
 import Header from '@/components/Header'
 import { Footer } from '@/components/Footer'
-import { useEditProfileMutation } from '@/redux/auth/authApi'
+import { IUser, useEditProfileMutation, useFetchUserProfileDetailsQuery } from '@/redux/auth/authApi'
 import { useCloudinaryUpload } from '@/utils/cloudinary/useCloudinaryUpload'
 import { FolderName } from '@/redux/types'
 import { FaTrash } from 'react-icons/fa'
@@ -21,6 +21,8 @@ import { errorToast } from '@/components/Toast'
 import { isUserLoad } from '@/redux/userSlice/userSlice'
 import { logoutFailure, logoutStart, logoutSuccess } from '@/redux/slices/userSlice/userSlice'
 import { useUserLocalStorage } from '@/app/useUserLocalStorage'
+import useAuthRedirect from '@/hooks/useAuthRedirect'
+import { LOCAL_STORAGE_KEYS } from '@/api/storage'
 
 function ProfilePage() {
     const router = useRouter();
@@ -35,17 +37,16 @@ function ProfilePage() {
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [newAvatar, setNewAvatar] = useState<File | null>(null);
+    const [userData, setUserData] = useState<IUser | null>(null);
+    const { data: fectchedUserProfileDetails, isLoading: isFetchingUserProfileDetails } = useFetchUserProfileDetailsQuery();
+   // Inside your component
+useAuthRedirect();
 
-    // 🚀 Redirect on auth or missing local user
-    useEffect(() => {
-        if (ready && !isAuthentication) {
-            router.push('/login');
-        }
-
-        if (ready && !localUser) {
-            router.push('/login');
-        }
-    }, [ready, isAuthentication, localUser]);
+useEffect(() => {
+    if(fectchedUserProfileDetails){
+        setUserData(fectchedUserProfileDetails.user)
+    }
+},[fectchedUserProfileDetails])
 
     // 🖼 Preview image on file select
     useEffect(() => {
@@ -108,8 +109,13 @@ function ProfilePage() {
         try {
             dispatch(logoutStart());
             clearUserData();
+                 localStorage.removeItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
+                   localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA);
+                   localStorage.removeItem(LOCAL_STORAGE_KEYS.REFRESH_TOKEN);
+            sessionStorage.clear();
+
             dispatch(logoutSuccess());
-            router.push("/login");
+            window.location.href = "/login";
         } catch (error: any) {
             dispatch(logoutFailure(error));
             errorToast(
@@ -140,7 +146,7 @@ function ProfilePage() {
                             Your Profile
                         </p>
 
-                        <div className="bg-red-40 sm:flex-row flex-col  sm:gap-[19.5px] flex justify-center items-center w-[200px]">
+                        <div className="bg-red-40 sm:flex-row flex-col  sm:gap-[19.5px] flex justify-center items-center ">
 
 
                             <div className="flex flex-col relative items-center gap-2">
@@ -197,8 +203,8 @@ function ProfilePage() {
 
 
 
-                            <div className="flex flex-col mt-[9px] sm:mt-0 items-center h-full justify-center sm:items-start">
-                                <p className='font-poppins sm:text-[20.25px] text-[16px]'>Jhon Doe</p>
+                            <div className="flex cursor-pointer flex-col mt-[9px] sm:mt-0 items-center h-full  justify-center sm:items-start">
+                                <p className='font-poppins sm:text-[20.25px] text-[16px]'>{userData?.name}</p>
                                 <div onClick={handleLogout} className="flex text-[8px] sm:text-[12px] gap-[9px] font-medium font-poppins items-center justify-center mt-[1px]">
                                     <IoIosLogOut size={16} color='#FF1645' />
                                     <p>Logout</p>
@@ -212,10 +218,10 @@ function ProfilePage() {
                                 onClick={handleImageUpload}
                                 disabled={isUploading}
                                 type="button"
-                                className=" bg-[#FFE7EC] disabled:!bg-[#FFE7EC]/60 max-w-[200px] mt-3 h-[30px] w-full border-none "
+                                className="cursor-pointer bg-[#FFE7EC] disabled:!bg-[#FFE7EC]/60 max-w-[200px] mt-3 h-[30px] w-full border-none "
                             >
-                                <div className="flex justify-center items-center gap-2">
-                                    <label className=" text-nowrap font-medium text-[#FF1645] text-[13px] font-poppins">{isUploading ? 'Uploading...' : 'Update'}</label>
+                                <div className="cursor-pointer flex justify-center items-center gap-2">
+                                    <label className="cursor-pointer text-nowrap font-medium text-[#FF1645] text-[13px] font-poppins">{isUploading ? 'Uploading...' : 'Update'}</label>
                                 </div>
                             </PrimaryButton>
                         )}
@@ -252,7 +258,7 @@ function ProfilePage() {
                                 <div
                                     className="border w-full outline-none border-[#ede7e7] rounded-[3px] px-[16px] font-poppins text-[12px] sm:text-[13.5px] flex justify-start items-center font-normal bg-white text-black h-[45px]"
                                 >
-                                    {user?.name}
+                                    {userData?.name}
                                 </div>
                             </div>
 
@@ -262,7 +268,7 @@ function ProfilePage() {
                                 <div
                                     className="border w-full outline-none border-[#ede7e7] rounded-[3px] px-[16px] font-poppins text-[12px] sm:text-[13.5px] flex justify-start items-center font-normal bg-white text-black h-[45px]"
                                 >
-                                    {user?.email}
+                                    {userData?.email}
                                 </div>
                             </div>
 
@@ -277,18 +283,18 @@ function ProfilePage() {
                                 className=" bg-[#FFE7EC] cursor-pointer h-[38px] w-full border-none "
                             >
                                 <div className="flex justify-center cursor-pointer items-center gap-2">
-                                    <label className=" text-nowrap font-medium text-[#FF1645] text-[13px] font-poppins">Edit Profile Details</label>
+                                    <label className=" text-nowrap cursor-pointer font-medium text-[#FF1645] text-[13px] font-poppins">Edit Profile Details</label>
                                 </div>
                             </PrimaryButton>
 
 
                             <PrimaryButton
-                                onClick={() => router.push('/change-password')}
+                                onClick={() => router.push('/profile/change-password')}
                                 type="button"
                                 className="cursor-pointer bg-[#FFE7EC] h-[38px] w-full border-none "
                             >
                                 <div className="flex cursor-pointer justify-center items-center gap-2">
-                                    <label className="text-nowrap font-medium text-[#FF1645] text-[13px] font-poppins">Change Password</label>
+                                    <label className="text-nowrap cursor-pointer font-medium text-[#FF1645] text-[13px] font-poppins">Change Password</label>
                                 </div>
                             </PrimaryButton>
                         </div>

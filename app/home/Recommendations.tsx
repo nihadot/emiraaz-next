@@ -14,7 +14,7 @@ function Recommendations() {
     ]}
 />
 <RecommendedText
-    title="Tranding Areas"
+    title="Trending Areas"
     items={[
         'Studio Properties For Sale in Dubai',
         '1 BHK Flats in Downtown',

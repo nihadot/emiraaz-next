@@ -2,7 +2,7 @@
 
 import { menu_icon, mobileAppIcon, ps_logo, user_icon } from '@/app/assets';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavMenu from './NavMenu';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
@@ -18,6 +18,10 @@ import { IoCloseSharp } from 'react-icons/io5';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import { IoChevronDown } from "react-icons/io5";
 import { PiUserCircle } from "react-icons/pi";
+import currencyCodes from 'currency-codes';
+import CurrencySelect from './CurrencySelect';
+
+
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,8 +37,10 @@ function Header() {
   const dispatch = useDispatch();
   const router = useRouter();
 
+ 
+
   const toggleMenu = () => setIsOpen(prev => !prev);
-  const { isAuthentication } = useSelector((state: RootState) => state.user);
+  const { isAuthentication, user } = useSelector((state: RootState) => state.user);
   const handleLogout = async () => {
 
     if (!window.confirm('Logout?')) {
@@ -54,11 +60,20 @@ function Header() {
     } catch (error: any) {
       dispatch(logoutFailure(error))
       errorToast(error?.response?.data?.message || error?.data?.message || error?.response?.message || error?.message || 'Error occurred, please try again later');
-
-
-
     }
   };
+
+  const [currency, setCurrency] = useState<string>('');
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const currency = url.searchParams.get('currency');
+    if (currency) {
+      setCurrency(currency);
+    }else{
+      setCurrency('AED');
+    }
+  }, []);
 
 
 
@@ -80,14 +95,20 @@ function Header() {
 
         {/* Logo */}
         <div onClick={() => {
-                sessionStorage.removeItem('scroll-position');
+          sessionStorage.removeItem('scroll-position');
 
           router.push("/")
         }} className="w-[140px] cursor-pointer sm:w-[138.75px] ms-7 sm:ms-0 h-[50px] sm:h-[32.25px] relative ">
           <Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />
 
         </div>
-        <PrimaryButton
+        <div className="w-[66.75px] block md:hidden ">
+  <CurrencySelect
+               defaultCurrency={currency}
+          
+          />
+        </div>
+        {/* <PrimaryButton
           type='button'
           className='flex !rounded-[2.5px] md:hidden w-[66.75px] items-center gap-1'
         >
@@ -100,7 +121,8 @@ function Header() {
           </>
 
 
-        </PrimaryButton>
+        </PrimaryButton> */}
+        
 
 
         <div className="min-laptop:flex hidden items-center gap-4">
@@ -128,9 +150,11 @@ function Header() {
             </PrimaryButton>
           </div>
 
+         
+
           {
             <div className="min-laptop:flex  gap-1 hidden">
-              <PrimaryButton
+              {/* <PrimaryButton
                 type='button'
                 className='flex w-[66.75px] !py-1 items-center gap-[4px]'
               >
@@ -142,9 +166,13 @@ function Header() {
                 </>
 
 
-              </PrimaryButton>
+              </PrimaryButton> */}
+               <CurrencySelect
+               defaultCurrency={currency}
+          
+          />
 
-              { isAuthentication  ?  <PrimaryButton
+              {isAuthentication ? <PrimaryButton
                 onClick={() => router.push('/profile')}
                 type='button'
                 className='flex w-fit !px-2 h-[33px] cursor-pointer items-center'
@@ -155,28 +183,28 @@ function Header() {
                     <PiUserCircle size={18} />
                   </div>
 
-                  <label htmlFor="" className='text-[12px] cursor-pointer font-normal  font-poppins'>Profile</label>
+                  <label htmlFor="" className='text-[12px] cursor-pointer font-normal max-w-[80px] overflow-hidden font-poppins'>{user?.name}</label>
                 </>
 
 
-              </PrimaryButton> : 
-               <PrimaryButton
-                onClick={() => router.push('/login')}
-                type='button'
-                className='flex w-fit cursor-pointer !px-2 h-[33px] items-center'
-              >
-                <>
+              </PrimaryButton> :
+                <PrimaryButton
+                  onClick={() => router.push('/login')}
+                  type='button'
+                  className='flex w-fit cursor-pointer !px-2 h-[33px] items-center'
+                >
+                  <>
 
-                  <div className="w-4 h-4  relative flex justify-center items-center">
-                    <PiUserCircle size={18} />
-                  </div>
+                    <div className="w-4 h-4  relative flex justify-center items-center">
+                      <PiUserCircle size={18} />
+                    </div>
 
-                  <label htmlFor="" className='text-[12px] font-normal  font-poppins'>Login</label>
-                </>
+                    <label htmlFor="" className='text-[12px] font-normal  font-poppins'>Login</label>
+                  </>
 
 
-              </PrimaryButton>
-              
+                </PrimaryButton>
+
               }
             </div>
           }

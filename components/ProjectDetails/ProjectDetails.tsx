@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { close_icon, floor_plan, notes_red_edit, save_icon, share_button_icon } from '@/app/assets';
 import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi';
 import { useFetchAllProjectsQuery, useFetchProjectByIdQuery } from '@/redux/project/projectApi';
@@ -482,7 +482,7 @@ function ProjectDetails({ id }: { id: string }) {
 
               <div className="mt-[24.75px]">
 
-                {(data?.data?.descriptionInArabic || data?.data?.descriptionInArabic) ? <ProjectDescription
+                {(data?.data?.description || data?.data?.descriptionInArabic) ? <ProjectDescription
                   userId={userId || ''}
                   setEnquiryForm={setEnquiryForm}
                   EnquiryForm={EnquiryForm}

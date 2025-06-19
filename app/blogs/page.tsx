@@ -3,31 +3,33 @@ import Blog from '@/components/Blog/Blog'
 import { Metadata } from 'next';
 import React from 'react'
 
+
 export const metadata: Metadata = {
-  title: "How to Sell Your Property Fast in 2025 | Property Seller",
-  description: "Learn proven strategies to sell your property quickly in today's competitive real estate market.",
+  title: "Real Estate Blog | Property Seller - Off-Plan Insights & Investment Tips",
+  description: "Read expert real estate blogs from Property Seller. Explore off-plan property insights, market trends, buying guides, and investment strategies tailored for smart buyers.",
   openGraph: {
-    title: "How to Sell Your Property Fast in 2025 | Property Seller",
-    description: "Explore expert advice and actionable tips to speed up your property sale in 2025.",
-    url: "https://www.propertyseller.com/blog/how-to-sell-your-property-fast-2025",
+    title: "Real Estate Blog | Property Seller",
+    description: "Stay ahead in the property market with expert blogs from Property Seller. Learn about off-plan properties, developer updates, market trends, and real estate tips.",
+    url: "https://www.propertyseller.com/blogs",
     siteName: "Property Seller",
     images: [
       {
-        url: "https://res.cloudinary.com/dknxmloqh/image/upload/v1748991060/blog-how-to-sell-fast.png",
+        url: "https://res.cloudinary.com/dknxmloqh/image/upload/v1748991060/favicon-DBW5gi7l_j0cjdz.png",
         width: 1200,
         height: 630,
-        alt: "How to Sell Your Property Fast in 2025",
+        alt: "Property Seller Blog - Real Estate Insights & Off-Plan Trends",
       },
     ],
-    type: "article",
+    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "How to Sell Your Property Fast in 2025 | Property Seller",
-    description: "Quick and effective ways to close your property deal faster in 2025.",
-    images: ["https://res.cloudinary.com/dknxmloqh/image/upload/v1748991060/blog-how-to-sell-fast.png"],
+    title: "Real Estate Blog | Property Seller",
+    description: "Discover in-depth real estate articles, off-plan buying guides, and investment tips on the Property Seller blog—your source for smart property decisions.",
+    images: ["https://res.cloudinary.com/dknxmloqh/image/upload/v1748991060/favicon-DBW5gi7l_j0cjdz.png"],
   },
 };
+
 
 export default async function Page() {
        const res = await fetch(`${baseUrl}/blogs?limit=24`);

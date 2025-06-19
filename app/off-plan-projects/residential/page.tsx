@@ -1,4 +1,3 @@
-'use client'
 import Residential from '@/components/OffplanProjects/Residential'
 
 

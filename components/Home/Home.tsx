@@ -12,8 +12,8 @@ import { useViewAllWishlistsQuery } from '@/redux/wishlist/wishlistApi';
 import { setWishlist } from '@/redux/wishlistSlice/wishlistSlice';
 import { shuffle } from '@/utils/shuffle';
 import { useDeviceType } from '@/utils/useDeviceType';
-import { usePathname, useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import Header from '../Header';
 import Container from '../atom/Container/Container';
@@ -66,7 +66,7 @@ interface UserData {
 
 
 
-export default function HomePage({ initialData }: { initialData: any }) {
+function HomePageFunction({ initialData }: { initialData: any }) {
 
 
     useForceScrollRestore(); // Default key is "scroll-position"
@@ -344,9 +344,18 @@ export default function HomePage({ initialData }: { initialData: any }) {
 
     const totalPages = projects?.pagination?.totalPages || 1;
 
+    const searchParams = useSearchParams();
     const handleClick = (item: AllProjectsItems) => {
+
+        const currency = searchParams.get('currency');
+   
+        const slug = item.slug;
+
+        // Build query string with currency if available
+        const queryString = currency ? `?currency=${currency}` : '';
+
         sessionStorage.setItem('scroll-position', window.scrollY.toString());
-        router.push(`/projects/${item.slug}`);
+        router.push(`/projects/${slug}${queryString}`);
     };
 
     const handleEnquiryFormClick = useCallback((item: any) => {
@@ -1222,3 +1231,14 @@ export default function HomePage({ initialData }: { initialData: any }) {
         </>
     )
 }
+
+
+function HomePage(props: { initialData: any }) {
+  return (
+    <Suspense>
+      <HomePageFunction {...props} />
+    </Suspense>
+  );
+}
+
+export default HomePage;

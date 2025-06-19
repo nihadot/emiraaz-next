@@ -15,7 +15,7 @@ import { useViewAllSmallVideosQuery } from '@/redux/smallVideo/smallViewApi'
 import { useDispatch } from 'react-redux'
 import { setWishlist } from '@/redux/wishlistSlice/wishlistSlice'
 import { FiltersState } from '../types'
-import {  useFetchFeaturedProjectsQuery } from '@/redux/project/projectApi'
+import { useFetchFeaturedProjectsQuery } from '@/redux/project/projectApi'
 import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi'
 import { shuffle } from '@/utils/shuffle'
 import { AllProjectsItems } from '@/redux/project/types'
@@ -43,7 +43,7 @@ function FeaturedProjects() {
     const [loading, setLoading] = useState(false)
 
     const [paginationHappened, setPaginationHappened] = useState(false)
- 
+
     const router = useRouter();
 
     const pathname = usePathname();
@@ -157,7 +157,7 @@ function FeaturedProjects() {
 
     const { data: portraitBannerData } = useFetchAllPortraitBannersQuery({});
     const { data: projects } = useFetchFeaturedProjectsQuery();
-   
+
 
     const banners = portraitBannerData?.data || [];
     const shuffledImages = useMemo(() => shuffle(banners), [banners]);
@@ -172,7 +172,7 @@ function FeaturedProjects() {
     };
 
 
-   
+
     const handleClick = (item: AllProjectsItems) => {
         sessionStorage.setItem('scroll-position', window.scrollY.toString());
         router.push(`/projects/${item.slug}`);
@@ -186,12 +186,12 @@ function FeaturedProjects() {
         });
     }, []);
 
-   
+
 
     const [allProjects, setAllProjects] = useState<AllProjectsItems[]>();
- 
+
     useEffect(() => {
-        console.log(projects,'projects')
+        console.log(projects, 'projects')
         if (projects?.data) {
             setAllProjects(projects?.data);
         }
@@ -293,15 +293,25 @@ function FeaturedProjects() {
 
                                 <div className={"w-full md:block hidden max-w-[301.5px]"}>
 
-                                    {(smallVideoAds && smallVideoAds.length > 0 ?
+ <RecommendedText
+    title="Recommended For You"
+    items={[
+        'Studio Properties For Sale in Dubai',
+        '1 BHK Flats in Downtown',
+        'Luxury Villas in Palm Jumeirah',
+        'Affordable Apartments in JVC',
+        'Beachfront Homes in Dubai Marina',
+    ]}
+/>
+
+                                    {/* {(smallVideoAds && smallVideoAds.length > 0 ?
                                         <div className={clsx("w-full mb-[12px] relative flex")}>
-                                            {/* <div className={clsx("w-full mb-[12px] relative",filters?.page && filters?.page > 1 ? 'hidden':'flex')}> */}
                                             <VideoPreview
                                                 projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
                                                 src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
                                             />
                                         </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>)
-                                    }
+                                    } */}
 
 
 
@@ -311,10 +321,28 @@ function FeaturedProjects() {
                                         <CustomSliderUi
                                             shuffledImages={shuffledImages}
                                         />
-                                        {<Recommendations />}
+                                        <RecommendedText
+    title="Trending Areas"
+    items={[
+        'Studio Properties For Sale in Dubai',
+        '1 BHK Flats in Downtown',
+        'Luxury Villas in Palm Jumeirah',
+        'Affordable Apartments in JVC',
+        'Beachfront Homes in Dubai Marina',
+    ]}
+/>
+<RecommendedText
+    title="Popular Searches"
+    items={[
+        'Off-plan Projects in Dubai',
+        'Ready to Move Villas',
+        'High ROI Areas in UAE',
+        'Townhouses in Arabian Ranches',
+        'Gated Communities in Sharjah',
+    ]}
+/>
 
 
-                                      
 
                                     </div>
 
@@ -337,7 +365,7 @@ function FeaturedProjects() {
 
 
 
-                
+
 
 
 
@@ -351,7 +379,7 @@ function FeaturedProjects() {
                 <BottomBanner />
 
                 {/* Video ad son mobile */}
-                {filters.page && filters.page <= 1 && smallVideoAds && smallVideoAds.length > 0 &&
+                {/* {filters.page && filters.page <= 1 && smallVideoAds && smallVideoAds.length > 0 &&
                     <Container>
                         <div className="w-full mb-[35px] relative flex sm:hidden">
                             <VideoPreview
@@ -361,7 +389,7 @@ function FeaturedProjects() {
                             />
                         </div>
                     </Container>
-                }
+                } */}
 
 
                 {/* Mobile Footer Banner */}

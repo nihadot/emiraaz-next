@@ -52,13 +52,13 @@ function Blog({ initialData }: { initialData: any }) {
     return (
         <main>
             <Header />
-            <div className=" sm:flex hidden">
+            <div className="flex">
                 <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
             </div>
 
             <Container>
 
-                <h3 className='text-[37.5px] text-center py-[32px] hidden md:block font-medium font-poppins text-[#FF1645]'>Learn, Discover, Invest.</h3>
+                <h3 className='text-[26px] sm:text-[37.5px] text-center py-[32px] font-medium font-poppins text-[#FF1645]'>Learn, Discover, Invest.</h3>
 
                 <section className='m-auto gap-[30px] pb-20 flex items-start '>
                     <div className="w-full">

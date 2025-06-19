@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import {
     location_icon,
@@ -23,6 +23,8 @@ import { LiaBedSolid } from "react-icons/lia";
 import { HiOutlineBuildingOffice } from 'react-icons/hi2';
 import { PiNotePencilLight } from "react-icons/pi";
 import { CiViewList } from 'react-icons/ci';
+import { useFetchCurrencyQuery } from '@/redux/currency/currencyApi';
+import { formatCurrencyConversion } from '../atom/button/formatCurrencyConversion';
 
 type Props = {
     item: AllProjectsItems;
@@ -32,30 +34,45 @@ type Props = {
 };
 
 function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetailsButton }: Props) {
+    const [toggleCurrency, setToggleCurrency] = useState<string>('');
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        const currency = url.searchParams.get('currency');
+        if (currency) {
+            setToggleCurrency(currency);
+        } else {
+            setToggleCurrency('AED');
+        }
+    }, []);
+
+
+    const { data: currencyExchange } = useFetchCurrencyQuery({ currency: toggleCurrency });
+
     const { currency, value } = formatCurrencyParts(item.priceInAED);
+    console.log(currency, value, 'currency, value')
     const propertyType = item?.propertyTypes?.length > 0 ? item?.propertyTypes[0] : '';
     const furnishing =
         item.furnishing === 'fully-furnished'
-            ? 'Fully Furnish'
+            ? 'Fully Furnished'
             : item.furnishing === 'semi-furnished'
-                ? 'Semi Furnish'
+                ? 'Semi Furnished'
                 : item.furnishing === 'un-furnishing'
-                    ? 'Un Furnish'
+                    ? 'Un Furnishing'
                     : item.furnishing ? item.furnishing : 'NOT SELECTED';
 
 
     return (
         <div className="relative overflow-hidden w-full sm:w-full flex-none sm:h-[500px] lg:h-[260px] rounded lg:flex-row flex-col flex h-[410px] border border-[#DEDEDE]">
 
- {item.discount && (
-                            <span className="bg-[#44B842] font-medium font-poppins absolute sm:hidden z-40  right-5 top-3 rounded-[2px] text-white text-[10px] px-3 py-0.5 capitalize w-fit flex">
-                                {item.discount} Discount
-                            </span>
-                        )}
+            {item.discount && (
+                <span className="bg-[#44B842] font-medium font-poppins absolute sm:hidden z-40  right-5 top-3 rounded-[2px] text-white text-[10px] px-3 py-0.5 capitalize w-fit flex">
+                    {item.discount} Discount
+                </span>
+            )}
 
             <ProjectImageSlider item={item} />
 
-            <div className="flex font-poppins relative flex-col px-[10px] pt-[10px] pb-[3px] sm:p-[16.5px]">
+            <div className="flex font-poppins relative flex-col px-[10px] pt-[10px] pb-[3px] sm:p-[10px] lg:p-[16.5px]">
 
                 <div className="absolute flex top-0 sm:hidden right-0 z-20">
                     <FavoriteIcon projectId={item._id} />
@@ -97,9 +114,25 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                 {(item.projectType === 'commercial-residential' || item.projectType === 'project-residential' || item.projectType === 'project-commercial') ? <p>
                     <span className='text-[17px] font-semibold'>Starting From</span>
                     <span className='font-poppins text-[24.75px] ms-2 sm:ms-1 font-semibold '>
-                        {value}
+                        {/* {value} */}
+                        {
+                            (currencyExchange && currencyExchange.data && currencyExchange.data.rate && toggleCurrency !== 'AED') ?  
+                            (formatCurrencyConversion(value,currencyExchange.data.rate)) : value
+                        }
+                        {/* {
+                            (currencyExchange && currencyExchange.data && currencyExchange.data.rate) ? 
+                            (formatCurrencyConversion(value,currencyExchange.data.rate))
+                             :
+                                value
+
+
+                        } */}
                     </span>
-                    <span className='text-[11.928px] sm:text-[12.75px] font-semibold mt-[4.5px] font-poppins '>{currency}</span>
+                    <span className='text-[11.928px] sm:text-[12.75px] ms-[2px] sm:ms-0 font-semibold mt-[4.5px] font-poppins '>{
+                (currencyExchange && currencyExchange.data && currencyExchange.data.rate) ?
+                currencyExchange.data.currency
+                :  currency
+                }</span>
 
                 </p> :
 
@@ -123,7 +156,14 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
 
                     <p className="capitalize font-semibold font-poppins text-[12px]">{propertyType}</p>
                     <div className="h-[17.25px] w-[1px] bg-[#333333]" />
-                    {!(item.projectType === 'land-residential' || item.projectType === 'land-commercial') && <div className="flex items-center gap-3">
+                    
+                    
+                    {
+                        item.propertyTypes && item.propertyTypes.length >= 2 ? <p className="capitalize font-semibold font-poppins text-[12px]">{item.propertyTypes?.[1]}</p> :
+
+                        <>
+                        {!(item.projectType === 'land-residential' || item.projectType === 'land-commercial') && 
+                    <div className="flex items-center gap-3">
                         <div className="flex items-center gap-2">
                             {/* <Image src={bed_icon} alt="bed icon" width={20} height={20} className="object-cover" /> */}
                             {/* <p className="text-sm font-light font-poppins">{item.numberOfBeds}</p> */}
@@ -137,16 +177,24 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
 
 
                         {/* <div className="flex items-center gap-2"> */}
-                            {/* <Image src={bath_icon} alt="bath icon" width={20} height={20} className="object-cover" /> */}
-                            {/* <p className="text-sm font-light font-poppins">{item.numberOfBath}</p> */}
-                            {/* <Typography
+                        {/* <Image src={bath_icon} alt="bath icon" width={20} height={20} className="object-cover" /> */}
+                        {/* <p className="text-sm font-light font-poppins">{item.numberOfBath}</p> */}
+                        {/* <Typography
                                 tag='p'
                                 className='text-[12px] font-light font-poppins'
                                 text={item.numberOfBath}
                             /> */}
                         {/* </div> */}
                     </div>}
-                    {!(item.projectType === 'land-residential' || item.projectType === 'land-commercial') && <div className="h-[20px] w-[1px] bg-[#333333]" />}
+                    </>
+                    }
+                    <div className="h-[17.25px] w-[1px] bg-[#333333]" />
+
+
+                    {
+                        item.propertyTypes && item.propertyTypes.length >= 3 ? <p className="capitalize font-semibold font-poppins text-[12px]">{item.propertyTypes?.[2]}</p> :
+                        <>
+                        {/* {!(item.projectType === 'land-residential' || item.projectType === 'land-commercial') && <div className="h-[20px] w-[1px] bg-[#333333]" />} */}
                     <div className="flex items-center gap-3">
 
                         <div className="flex items-center gap-2">
@@ -156,10 +204,10 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                             className='w-[20px] h-[20px]'
                             /> */}
                             <HiOutlineBuildingOffice
-                              color='#333'
-                            className='w-[18px] h-[18px]'
+                                color='#333'
+                                className='w-[18px] h-[18px]'
                             />
-                            
+
                             <Typography
                                 tag='p'
 
@@ -168,6 +216,10 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                             />
                         </div>
                     </div>
+                        </>
+                    }
+                    
+                    
                 </div>
 
                 <div className="sm:flex hidden gap-2 mt-[9px] items-center">
@@ -202,9 +254,9 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
 
 
                 <div className="flex items-center mt-[8px] sm:mt-[10.5px] gap-1">
-                   <div className="">
-                     <TfiLocationPin size={18} color='#333333' />
-                   </div>
+                    <div className="">
+                        <TfiLocationPin size={18} color='#333333' />
+                    </div>
                     {/* <Image src={location_icon} alt="location icon" width={15} height={15} className="object-cover" /> */}
                     {/* <p className="text-xs font-light font-poppins capitalize">{item.address || 'Jumeirah Village Circle, Dubai'}</p> */}
                     <Typography
@@ -220,15 +272,15 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
 
                 <div className="flex items-center mt-[9px] rounded-[3.75px] bg-[#FFE7EC] gap-1 px-3  text-[#FF1645]">
                     {/* <Image src={christmas__icon_star} alt="authenticity icon" width={20} height={20} className="object-cover py-1" /> */}
-                   <div className=" ">
-                    <BsStars size={16}/>
-                   </div>
+                    <div className=" ">
+                        <BsStars size={16} />
+                    </div>
                     <div className="text-[12px] font-light bg-[#FFE7EC] text-ellipsis line-clamp-1 py-1">
                         This listing was newly introduced {getDaysAgo(item.createdAt)}
                     </div>
                 </div>
 
-                <div className="flex mt-[3px] sm:mt-[10.5px] bg-white h-8 items-center gap-2">
+                <div className="flex mt-[3px] sm:mt-[10.5px] bg-white h-8 sm:h-7 lg:h-8 items-center gap-2">
                     {/* Details Button */}
                     {navigateDetailsButton &&
 
@@ -237,10 +289,10 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                             type="button"
                             className="!px-0 cursor-pointer sm:!px-4 flex w-full sm:w-[106.5px] h-[35px] items-center gap-2 rounded border-none bg-[#FF1645]"
                         >
-                              <div className="relative w-[20px] h-[20px]">
+                            <div className="relative w-[20px] h-[20px]">
 
-                        <CiViewList size={20} color='white' />
-                        </div>
+                                <CiViewList size={20} color='white' />
+                            </div>
                             <span className="text-[14px] text-white">Details</span>
                         </PrimaryButton>
 
@@ -254,7 +306,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                     >
                         <div className="relative w-[20px] h-[20px]">
 
-                        <PiNotePencilLight size={20} color='white' />
+                            <PiNotePencilLight size={20} color='white' />
                         </div>
                         <span className="text-[14px] text-white text-nowrap">Enquire Now</span>
                     </PrimaryButton>
