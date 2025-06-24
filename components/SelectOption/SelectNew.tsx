@@ -367,7 +367,7 @@ function SelectNew({
     >
       <div className='flex flex-1 justify-start gap-[13px] sm:justify-between items-center'>
         <label className={clsx(
-          'text-ellipsis no-scrollbar line-clamp-1 overflow-x-auto capitalize text-[12px] font-normal font-poppins',
+          'text-ellipsis truncate no-scrollbar line-clamp-1 overflow-x-auto capitalize text-[12px] font-normal font-poppins',
           isDisabled ? 'text-gray-500' : ''
         )}>
           {selected ? selected.label : label}

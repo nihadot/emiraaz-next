@@ -77,19 +77,22 @@ function SignupOtpPage() {
     }
 
 
-    const handleResentOTP = () => {
+    const handleResentOTP = async () => {
         try {
             setIsSubmitting(true);
             const token = localStorage.getItem(LOCAL_STORAGE_KEYS.SIGNUP_OTP_TOKEN);
             const mailId = localStorage.getItem(LOCAL_STORAGE_KEYS.SIGNUP_TEM_DATA);
             if (token && mailId) {
-                const payload = { token: token, email:mailId };
-                resendOtp(payload).unwrap();
+                const payload = { token: token, email: mailId };
+                const response = await resendOtp(payload).unwrap();
+                localStorage.setItem(LOCAL_STORAGE_KEYS.RESET_PASSWORD_TOKEN, response.token);
+                successToast('OTP sent successfully');
+
             }
-            
+
         } catch (error) {
             handleApiError(error);
-        }finally{
+        } finally {
             setIsSubmitting(false);
         }
     }
@@ -97,7 +100,7 @@ function SignupOtpPage() {
 
     return (
         <OTPVerification
-        handleResentOTP={handleResentOTP}
+            handleResentOTP={handleResentOTP}
             email={email}
             handleSubmit={handleSubmit}
             loading={isSubmitting}

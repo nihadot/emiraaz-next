@@ -106,15 +106,18 @@ function ForgotPassOTPVerification() {
     }
 
 
-    const handleResentOTP = () => {
+    const handleResentOTP = async() => {
         try {
             setIsSubmitting(true);
             const token = localStorage.getItem(LOCAL_STORAGE_KEYS.SIGNUP_OTP_TOKEN);
             const mailId = localStorage.getItem(LOCAL_STORAGE_KEYS.SIGNUP_TEM_DATA);
             if (token && mailId) {
                 const payload = { token: token, email: mailId };
-                resendOtp(payload).unwrap();
+                const response =await resendOtp(payload).unwrap();
+                      localStorage.setItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_OTP_TOKEN, response.token);
+            successToast('OTP sent successfully');
             }
+
 
         } catch (error) {
             handleApiError(error);

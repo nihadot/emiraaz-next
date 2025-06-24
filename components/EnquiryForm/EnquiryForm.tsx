@@ -6,6 +6,7 @@ import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import axios from 'axios';
 import { baseUrl } from '@/api';
 import PhoneInput from 'react-phone-input-2';
+import { useCountryCode } from '@/utils/useCountryCode';
 
 
 
@@ -15,6 +16,7 @@ interface UserData {
 
 
 function EnquiryForm({ projectId, setEnquiry }: { projectId: string, setEnquiry: (item: any) => void }) {
+        const countryCode = useCountryCode();
 
     const [formData, setFormData] = useState<{
         name: string;
@@ -109,19 +111,25 @@ function EnquiryForm({ projectId, setEnquiry }: { projectId: string, setEnquiry:
             />
 
             <PhoneInput
-                country={'in'}
-                value={formData.number}
+                value={countryCode}
+                    placeholder='Your Phone Number'
+
                 onChange={handlePhoneChange}
                 inputProps={{
                     name: 'phone',
                     required: true,
+                    fontSize: '16px',
+
                 }}
                 inputStyle={{
                     width: '100%',
                     height: '40px',
+                    fontSize: '16px',
                     borderRadius: '3.5px',
                     borderColor: '#ccc',
                 }}
+                    countryCodeEditable={false} 
+
             />
             <PrimaryButton
                 loading={loading}

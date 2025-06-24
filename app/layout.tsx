@@ -14,7 +14,7 @@ const poppins = Poppins({
 
 
 export const metadata: Metadata = {
-  title: "Propertyseller UAE | Apartments, Villas, Townhouses, Penthouses",
+  title: "PropertySeller UAE | Apartments, Villas, Townhouses, Penthouses",
   description: "PropertySeller is your partner for the latest off-plan projects and new developments across the UAE. If you're a investor or homebuyer all in one place with reliable and hassle-free.",
   keywords: [
     "propertyseller",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     "property for sale in al marjan island",
 
   ], openGraph: {
-    title: "Propertyseller UAE | Apartments, Villas, Townhouses, Penthouses",
+    title: "PropertySeller UAE | Apartments, Villas, Townhouses, Penthouses",
     description: "PropertySeller is your partner for the latest off-plan projects and new developments across the UAE. If you're a investor or homebuyer all in one place with reliable and hassle-free.",
     url: "https://www.propertyseller.com/",
     siteName: "Property Seller",

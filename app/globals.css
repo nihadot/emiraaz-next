@@ -114,3 +114,18 @@ body {
   border: 2px solid #FF1645;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
 }
+
+
+ /* Hide arrows in Chrome, Safari, Edge, Opera */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      font-size: 14px;
+
+    }
+
+    /* Hide arrows in Firefox */
+    input[type=number] {
+      -moz-appearance: textfield;
+      font-size: 14px;
+    }

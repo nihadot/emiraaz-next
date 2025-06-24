@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Keyboard } from 'swiper/modules';
 import 'swiper/css';
@@ -12,6 +12,8 @@ import { LiaBedSolid } from 'react-icons/lia';
 import Typography from '../atom/typography/Typography';
 import { HiOutlineBuildingOffice } from 'react-icons/hi2';
 import { TfiLocationPin } from 'react-icons/tfi';
+import { useFetchCurrencyQuery } from '@/redux/currency/currencyApi';
+import { formatCurrencyConversion } from '../atom/button/formatCurrencyConversion';
 
 
 function SmallCard({ item, handleClick }: { item: AllProjectsItems, handleClick: (item: AllProjectsItems) => void }) {
@@ -20,6 +22,19 @@ function SmallCard({ item, handleClick }: { item: AllProjectsItems, handleClick:
     const nextRef = useRef(null);
     const { currency, value } = formatCurrencyParts(item.priceInAED);
 
+     const [toggleCurrency, setToggleCurrency] = useState<string>('');
+    
+      useEffect(() => {
+        const url = new URL(window.location.href);
+        const currency = url.searchParams.get('currency');
+        if (currency) {
+          setToggleCurrency(currency);
+        } else {
+          setToggleCurrency('AED');
+        }
+      }, []);
+      const { data: currencyExchange } = useFetchCurrencyQuery({ currency: toggleCurrency });
+    
 
     type ProjectType =
         | "commercial-residential"
@@ -86,12 +101,31 @@ function SmallCard({ item, handleClick }: { item: AllProjectsItems, handleClick:
 
             <div className="">
 
-                <p className='mt-1'>
+                {/* <p className='mt-1'>
                     <span className='text-[14px] me-2 font-bold mt-[4.5px] font-poppins '>{currency}</span>
                     <span className='font-poppins font-bold text-[14px]'>
                         {value}
                     </span>
-                </p>
+                </p> */}
+
+                <h4 className='text-[16px] pt-2 font-semibold font-poppins'>
+                        <span className="text-[12px] font-semibold font-poppins">
+                          {/* {(projectType === 'commercial-residential' || projectType === 'project-residential' || projectType === 'project-commercial')
+                                                            &&
+                                                            <span className='text-[17px] font-medium'>Starting From </span>
+                                                        } */}
+                        </span>
+                        {
+                          (currencyExchange && currencyExchange.data && currencyExchange.data.rate && toggleCurrency !== 'AED') ?
+                            (formatCurrencyConversion(value, currencyExchange.data.rate)) : value
+                        }
+                         <span className='text-[11px] sm:text-[12.75px] font-medium mt-[4.5px] font-poppins '>{
+                          (currencyExchange && currencyExchange.data && currencyExchange.data.rate) ?
+                            currencyExchange.data.currency
+                            : currency
+                        }</span>
+                      </h4>
+
 
                 <div className="flex mt-1 justify-start gap-2">
 

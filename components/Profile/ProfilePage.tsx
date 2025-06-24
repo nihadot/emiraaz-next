@@ -23,6 +23,7 @@ import { logoutFailure, logoutStart, logoutSuccess } from '@/redux/slices/userSl
 import { useUserLocalStorage } from '@/app/useUserLocalStorage'
 import useAuthRedirect from '@/hooks/useAuthRedirect'
 import { LOCAL_STORAGE_KEYS } from '@/api/storage'
+import Link from 'next/link'
 
 function ProfilePage() {
     const router = useRouter();
@@ -228,19 +229,28 @@ useEffect(() => {
 
 
                         <div className="grid grid-cols-2 sm:mt-[28px] mt-[16px] sm:grid-cols-3 gap-[8.25px]  items-center justify-start">
+                            <Link
+                            href={'/saved-properties'}
+                            className=''
+                            >
                             <div className=" gap-[9.75px] rounded-[3.75px] px-[16px] h-[37.5px] flex justify-center items-center bg-[#E4E4E4]">
                                 <GoHeart color='#FF1645' size={19} />
-                                <p className='font-poppins font-medium text-[10.5px] sm:text-[12.75px] '>Wishlist Properties</p>
+                                <p className='font-poppins font-medium text-[10.5px] sm:text-[12.75px] '>Saved Properties</p>
 
                             </div>
+                            </Link>
 
 
 
+                               <Link
+                               href={'/enquired-properties'}
+                               >
                             <div className=" gap-[9.75px] rounded-[3.75px] px-[16px] h-[37.5px] flex justify-center items-center bg-[#E4E4E4]">
                                 <PiNotePencil color='#FF1645' size={19} />
                                 <p className='font-poppins font-medium text-[10.5px] text-nowrap sm:text-[12.75px] '>Enquired Properties</p>
 
                             </div>
+                               </Link>
 
                             <div className=" gap-[9.75px] col-span-2 sm:col-span-1 rounded-[3.75px] px-[16px] h-[37.5px] flex justify-center items-center bg-[#E4E4E4]">
                                 <VscHistory color='#FF1645' size={19} />

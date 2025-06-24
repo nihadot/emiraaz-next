@@ -25,10 +25,8 @@ import pIcon from "@/app/assets/p-icon.png";
 import ProjectCard from '../ProjectCard/ProjectCard'
 import CustomSlider from '../CustomSlider/CustomSlider'
 import ProjectCardSkelton from '../ProjectCard/ProjectCardSkelton'
-import VideoPreview from '@/app/home/VideoPreview'
 import RecommendedText from '../RecomendedText/RecommendedText'
 import CustomSliderUi from '@/app/home/CustomSliderUi'
-import Recommendations from '@/app/home/Recommendations'
 import BottomBanner from '@/app/home/BottomBanner'
 import MobileFooterBanner from '@/app/home/MobileFooterBanner'
 import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal'
@@ -38,7 +36,7 @@ import { LOCAL_STORAGE_KEYS } from '@/api/storage'
 function FeaturedProjects() {
 
 
-    useForceScrollRestore(); // Default key is "scroll-position"
+    useForceScrollRestore(); 
     useScrollToTopOnRefresh();
     const [loading, setLoading] = useState(false)
 
@@ -143,7 +141,6 @@ function FeaturedProjects() {
 
     const [debouncedSearch, setDebouncedSearch] = useState<any>("");
     const [EnquiryForm, setEnquiryForm] = useState({ status: false, id: '', count: 0 });
-    const [filterModel, setFilterModel] = useState(false);
 
     // Debounce search input
     useEffect(() => {
@@ -243,7 +240,7 @@ function FeaturedProjects() {
 
 
                     <SectionDivider
-                        containerClassName={clsx("mb-[12px]", true ? 'mt-[0px]' : 'mt-[10.5px]')}
+                        containerClassName={clsx("mb-[12px] mt-[10.5px]")}
                         lineClassName="h-[1px] w-full bg-[#DEDEDE]"
                     />
 
@@ -252,7 +249,7 @@ function FeaturedProjects() {
                     {/* Projects Section */}
                     <Container>
                         <SpaceWrapper
-                            className={false ? 'pt-[10px]' : 'pt-[0px]'}
+                            className={'pt-[0px]'}
                         >
 
                             <div className="mb-4 flex gap-2">
@@ -293,16 +290,17 @@ function FeaturedProjects() {
 
                                 <div className={"w-full md:block hidden max-w-[301.5px]"}>
 
- <RecommendedText
-    title="Recommended For You"
-    items={[
-        'Studio Properties For Sale in Dubai',
-        '1 BHK Flats in Downtown',
-        'Luxury Villas in Palm Jumeirah',
-        'Affordable Apartments in JVC',
-        'Beachfront Homes in Dubai Marina',
-    ]}
-/>
+                                    <RecommendedText
+                                        title="Recommended For You"
+                                        containerClassName='!mb-2 !mt-0'
+                                        items={[
+                                            'Studio Properties For Sale in Dubai',
+                                            '1 BHK Flats in Downtown',
+                                            'Luxury Villas in Palm Jumeirah',
+                                            'Affordable Apartments in JVC',
+                                            'Beachfront Homes in Dubai Marina',
+                                        ]}
+                                    />
 
                                     {/* {(smallVideoAds && smallVideoAds.length > 0 ?
                                         <div className={clsx("w-full mb-[12px] relative flex")}>
@@ -322,25 +320,25 @@ function FeaturedProjects() {
                                             shuffledImages={shuffledImages}
                                         />
                                         <RecommendedText
-    title="Trending Areas"
-    items={[
-        'Studio Properties For Sale in Dubai',
-        '1 BHK Flats in Downtown',
-        'Luxury Villas in Palm Jumeirah',
-        'Affordable Apartments in JVC',
-        'Beachfront Homes in Dubai Marina',
-    ]}
-/>
-<RecommendedText
-    title="Popular Searches"
-    items={[
-        'Off-plan Projects in Dubai',
-        'Ready to Move Villas',
-        'High ROI Areas in UAE',
-        'Townhouses in Arabian Ranches',
-        'Gated Communities in Sharjah',
-    ]}
-/>
+                                            title="Trending Areas"
+                                            items={[
+                                                'Studio Properties For Sale in Dubai',
+                                                '1 BHK Flats in Downtown',
+                                                'Luxury Villas in Palm Jumeirah',
+                                                'Affordable Apartments in JVC',
+                                                'Beachfront Homes in Dubai Marina',
+                                            ]}
+                                        />
+                                        <RecommendedText
+                                            title="Popular Searches"
+                                            items={[
+                                                'Off-plan Projects in Dubai',
+                                                'Ready to Move Villas',
+                                                'High ROI Areas in UAE',
+                                                'Townhouses in Arabian Ranches',
+                                                'Gated Communities in Sharjah',
+                                            ]}
+                                        />
 
 
 
@@ -377,20 +375,6 @@ function FeaturedProjects() {
 
 
                 <BottomBanner />
-
-                {/* Video ad son mobile */}
-                {/* {filters.page && filters.page <= 1 && smallVideoAds && smallVideoAds.length > 0 &&
-                    <Container>
-                        <div className="w-full mb-[35px] relative flex sm:hidden">
-                            <VideoPreview
-                                projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
-
-                                src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
-                            />
-                        </div>
-                    </Container>
-                } */}
-
 
                 {/* Mobile Footer Banner */}
                 <MobileFooterBanner />

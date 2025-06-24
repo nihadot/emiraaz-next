@@ -4,12 +4,11 @@ import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import Image from 'next/image';
 import React, { useMemo, useState } from 'react'
-import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi';
 import Pagination from '@/components/Pagination/Pagination';
 import { useViewAllBlogsQuery } from '@/redux/blogs/blogsApi';
 import Container from '@/components/atom/Container/Container';
 import { useRouter } from 'next/navigation';
-import ProjectCardSkelton from '../ProjectCard/ProjectCardSkelton';
+import Link from 'next/link';
 
 
 
@@ -74,13 +73,17 @@ function Blog({ initialData }: { initialData: any }) {
                                                 fill
                                                 alt={item.blogTitle}
                                                 src={item.image?.secure_url || ''}
-                                                className="rounded-[5px]"
+                                                className="rounded-[5px] cursor-text"
                                             />
                                         </div>
 
                                         {item?.date && <p className='text-[#767676] text-[12px] font-medium font-poppins mt-[13.5px]'>Date Published : {formatDate(item?.date)}</p>
                                         }
-                                        <h4 onClick={() => router.push(`/blog/${item.slug}`)} className='mt-[8.25px] font-poppins font-medium text-[17px] text-black line-clamp-2 text-ellipsis'>{item.blogTitle}</h4>
+                                        <Link
+                                            href={`/blog/${item.slug}`}
+                                        >
+                                            <h4 className='mt-[8.25px] font-poppins font-medium text-[17px] text-black line-clamp-2 text-ellipsis'>{item.blogTitle}</h4>
+                                        </Link>
 
 
                                     </div>

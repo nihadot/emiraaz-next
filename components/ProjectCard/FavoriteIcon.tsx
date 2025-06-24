@@ -13,7 +13,6 @@ interface UserData {
 }
 
 const FavoriteIcon = ({ projectId }: { projectId: string }) => {
-  // console.log('first',projectId)
   const [isFavorite, setIsFavorite] = useState(false);
 
   const wishlistItems = useSelector((state: RootState) => state.wishlist.items);

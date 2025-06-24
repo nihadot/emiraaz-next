@@ -137,7 +137,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({ defaultCurrency = 'AED'
       ref={dropdownRef}
     >
       <div
-        className={`flex items-center justify-between w-full px-3 py-[7px] bg-white border text-sm border-gray-200 rounded transition-all cursor-pointer duration-200 ${
+        className={`flex gap-2 items-center justify-between w-full px-3 py-[6.5px] bg-white border text-sm border-gray-200 rounded transition-all cursor-pointer duration-200 ${
           disabled
             ? 'bg-gray-100'
             : ''

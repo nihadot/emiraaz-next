@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseUrl, createBaseQueryWithReAuth } from '../../api';
 import { prepareAuthHeaders } from '../../api/authHeader';
-import { FetchAllCitiesResponse, FetchAllCityAndCountResponse, FetchAllCityNamesResponse, FetchCityByIdPayload, FetchCityByIdResponse } from './types';
+import { FetchAllCitiesResponse, FetchAllCitiesUnderProjectResponse, FetchAllCityAndCountResponse, FetchAllCityNamesResponse, FetchCityByIdPayload, FetchCityByIdResponse } from './types';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${baseUrl}/city/`,
@@ -23,7 +23,7 @@ const baseQueryWithReAuth = createBaseQueryWithReAuth(baseQuery, refreshTokenBas
 export const citiesApi = createApi({
   reducerPath: "citiesApi",
   baseQuery: baseQueryWithReAuth,
-  tagTypes: ["AllCities", "Cities", "City", "AllCitiesWithCount"],
+  tagTypes: ["AllCities", "Cities", "City", "AllCitiesWithCount", "projectsUnderCity", "EmirateDetailsByCityId"],
   endpoints: (builder) => ({
     fetchAllCityNames: builder.query<
       FetchAllCityNamesResponse,
@@ -34,12 +34,14 @@ export const citiesApi = createApi({
         sortBy?: string;
         sortOrder?: string;
         emirate?: string
+        slug?: string
       }
     >({
       query: ({
-        emirate
+        emirate,
+        slug,
       }) => ({
-        url: `/names?emirate=${emirate}`,
+        url: `/names?emirate=${emirate}&${slug ? `slug=${slug}` : ''}`,
         method: "GET",
         headers: { "Content-Type": "application/json" },
       }),
@@ -82,27 +84,26 @@ export const citiesApi = createApi({
       },
       providesTags: ["AllCitiesWithCount"],
     }),
-    // fetchAllCities: builder.query<FetchAllCitiesResponse, {
-    //   page?: number,
-    //   limit?: number,
-    //   search?: string,
-    //   sortBy?: string,
-    //   sortOrder?: string,
-    //   cities?:string[]
-    // }>({
-    //   query: ({
-    //     page = 1,
-    //     limit = 20,
-    //     search = "",
-    //     sortBy = "createdAt",
-    //     sortOrder = "desc",
-    //   }) => ({
-    //     url: `/?page=${page}&limit=${limit}&search=${search}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
-    //     method: "GET",
-    //     headers: { "Content-Type": "application/json" },
-    //   }),
-    //   providesTags: ["Cities"],
-    // }),
+    fetchAllProjectsUnderCity: builder.query<FetchAllCitiesUnderProjectResponse, {
+      page?: number,
+      limit?: number,
+      search?: string,
+      citySlug: string,
+      projectTypeFirst?: string,
+    }>({
+      query: ({
+        page = 1,
+        limit = 20,
+        search = "",
+        citySlug,
+        projectTypeFirst,
+      }) => ({
+        url: `/projects/${citySlug}?page=${page}&limit=${limit}&search=${search}&projectTypeFirst=${projectTypeFirst}`,
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }),
+      providesTags: ["projectsUnderCity"],
+    }),
 
     fetchAllCities: builder.query<FetchAllCitiesResponse, {
       page?: number,
@@ -134,7 +135,7 @@ export const citiesApi = createApi({
         }
 
         return {
-          url: `/?${queryParams.toString()}`,
+          url: `/all-cities/property-type-count/?${queryParams.toString()}`,
           method: "GET",
           headers: { "Content-Type": "application/json" },
         };
@@ -160,5 +161,6 @@ export const {
   useFetchAllCitiesQuery,
   useFetchCityByIdQuery,
   useFetchAllCityWithDetailedCountQuery,
+  useFetchAllProjectsUnderCityQuery,
 
 } = citiesApi;

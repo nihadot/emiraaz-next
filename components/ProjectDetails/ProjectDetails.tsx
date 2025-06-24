@@ -6,8 +6,8 @@ import { useViewAllProjectAdsCardsQuery } from '@/redux/projectAdsCard/projectAd
 import { ProjectType } from '@/redux/types';
 import { formatCurrencyParts } from '@/utils/formateAmount';
 import { shuffle } from '@/utils/shuffle';
-import { useRouter } from 'next/navigation';
-import React, { use, useEffect, useMemo, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { Suspense, use, useEffect, useMemo, useState } from 'react'
 import { FaImage, FaMap, FaVideo } from 'react-icons/fa';
 import { MdFullscreen } from 'react-icons/md';
 import { errorToast, successToast } from '../Toast';
@@ -65,22 +65,33 @@ import StickyScrollHeader from './StickyScrollHeader';
 import Header from '../Header';
 import { TfiLocationPin } from 'react-icons/tfi';
 import { useWindowSize } from '@/utils/useWindowSize';
+import { useFetchCurrencyQuery } from '@/redux/currency/currencyApi';
 
 
 interface UserData {
   _id: string;
   // Add more fields if needed
 }
+interface Props {
+  id:string;
+}
 
-function ProjectDetails({ id }: { id: string }) {
+function ProjectDetailsFunction({ id }: Props) {
 
 
   const router = useRouter();
   //   const { id } = use(params);
   const { data } = useFetchProjectByIdQuery({ id });
 
+    const searchParams = useSearchParams();
 
-  const handleBackTo = () => router.back();
+  const handleBackTo = () => {
+        const currency = searchParams.get('currency');
+        console.log(currency,'currency')
+// Build query string with currency if available
+        const queryString = currency ? `?currency=${currency}` : '';
+     router.push(`/${queryString}`);
+  };
 
   const [galleryModal, setGalleryModal] = useState(false);
   const [layoutModal, setLayoutModal] = useState(false);
@@ -379,6 +390,19 @@ function ProjectDetails({ id }: { id: string }) {
   }, [data]);
 
 
+  //  const [toggleCurrency, setToggleCurrency] = useState<string>('');
+  //     useEffect(() => {
+  //         const url = new URL(window.location.href);
+  //         const currency = url.searchParams.get('currency');
+  //         if (currency) {
+  //             setToggleCurrency(currency);
+  //         } else {
+  //             setToggleCurrency('AED');
+  //         }
+  //     }, []);
+
+          // const { data: currencyExchange } = useFetchCurrencyQuery({ currency: toggleCurrency });
+      
   return (
     <div className=" mx-auto w-full   ">
       <div className="hidden sm:block">
@@ -391,6 +415,7 @@ function ProjectDetails({ id }: { id: string }) {
 
       <MobileBreadcrumbNavigation
         projectTitle={data?.data?.projectTitle || ''}
+        projectId={data?.data._id || ''}
       />
 
       {data?.data._id && <StickyScrollHeader
@@ -721,7 +746,7 @@ function ProjectDetails({ id }: { id: string }) {
               </div>
 
 
-              <div className="sm:hidden rounded-[5.11px] z-40 px-[16.15px] flex bg-white left-0 fixed bottom-0 w-full justify-center items-center h-[85.2px]">
+              <div className="sm:hidden rounded-[5.11px] z-40 px-[16px] flex bg-white left-0 fixed bottom-0 w-full justify-center items-center h-[85.2px]">
 
                 <PrimaryButton
                   onClick={() => setEnquiryForm({ status: true, id: data?.data?._id || '', count: 1 })}
@@ -1186,4 +1211,14 @@ function ProjectDetails({ id }: { id: string }) {
   )
 }
 
-export default ProjectDetails
+
+
+function ProjectDetails(props: Props) {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <ProjectDetailsFunction {...props} />
+    </Suspense>
+  )
+}
+export default ProjectDetails;

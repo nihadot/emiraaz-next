@@ -7,6 +7,7 @@ interface OptionType {
   label: string;
   count?: number;
   value: string;
+  slug?: string;
 }
 
 interface SelectOptionProps {

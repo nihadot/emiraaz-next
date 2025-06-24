@@ -1,4 +1,3 @@
-'use client'
 import City from '@/components/City/City'
 import React from 'react'
 

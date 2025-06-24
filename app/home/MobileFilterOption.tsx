@@ -84,7 +84,7 @@ function MobileFilterOption({
         const mappedOptions = emiratesData?.data.map((item) => ({
             label: item.name,
             value: item._id,
-            count: 100,
+             count: item.count,
         })) || [];
 
         return [

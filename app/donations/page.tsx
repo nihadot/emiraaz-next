@@ -1,6 +1,8 @@
 import Container from '@/components/atom/Container/Container'
+import SectionDivider from '@/components/atom/SectionDivider/SectionDivider'
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
+import clsx from 'clsx'
 import React from 'react'
 
 function page() {
@@ -9,9 +11,11 @@ function page() {
             <Header />
 
 
-            <div className="">
-                <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
-            </div>
+              <SectionDivider
+                        containerClassName={clsx("mb-[12px] mt-[12px]")}
+                        lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+                    />
+
 
             <Container>
 

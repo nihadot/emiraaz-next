@@ -15,8 +15,8 @@ const OTP_LENGTH = 6;
 
 function SignupOtpPage() {
 
-        const { ready, isAuthentication, user } = useSelector((state: RootState) => state.user);
-    
+    const { user } = useSelector((state: RootState) => state.user);
+
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const token = localStorage.getItem(LOCAL_STORAGE_KEYS.CHANGE_PASSWORD_TOKEN);
@@ -24,13 +24,13 @@ function SignupOtpPage() {
                 router.push('/profile/change-password');
                 return;
             }
-           
+
         }
 
 
     }, [])
 
-       // Inside your component
+    // Inside your component
     useAuthRedirect();
     const router = useRouter();
     const [resendOtp] = useSignUpReSentOTPMutation();
@@ -40,7 +40,7 @@ function SignupOtpPage() {
     const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(''));
 
     const handleSubmit = async () => {
-        const token = localStorage.getItem(LOCAL_STORAGE_KEYS.SIGNUP_OTP_TOKEN);
+        const token = localStorage.getItem(LOCAL_STORAGE_KEYS.CHANGE_PASSWORD_TOKEN);
 
         try {
             setIsSubmitting(true);
@@ -80,19 +80,23 @@ function SignupOtpPage() {
     }
 
 
-    const handleResentOTP = () => {
+    const handleResentOTP = async () => {
         try {
             setIsSubmitting(true);
-            const token = localStorage.getItem(LOCAL_STORAGE_KEYS.SIGNUP_OTP_TOKEN);
-            const mailId = localStorage.getItem(LOCAL_STORAGE_KEYS.SIGNUP_TEM_DATA);
-            if (token && mailId) {
-                const payload = { token: token, email:mailId };
-                resendOtp(payload).unwrap();
+            const token = localStorage.getItem(LOCAL_STORAGE_KEYS.CHANGE_PASSWORD_TOKEN);
+
+            if (token && user) {
+
+                const payload = { token: token, email: user.email };
+                const response = await resendOtp(payload).unwrap();
+                localStorage.setItem(LOCAL_STORAGE_KEYS.CHANGE_PASSWORD_TOKEN, response.token);
+                successToast('OTP sent successfully');
+
             }
-            
+
         } catch (error) {
             handleApiError(error);
-        }finally{
+        } finally {
             setIsSubmitting(false);
         }
     }
@@ -100,7 +104,7 @@ function SignupOtpPage() {
 
     return (
         <OTPVerification
-        handleResentOTP={handleResentOTP}
+            handleResentOTP={handleResentOTP}
             email={user?.email || ''}
             handleSubmit={handleSubmit}
             loading={isSubmitting}

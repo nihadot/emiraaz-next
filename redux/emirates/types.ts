@@ -8,6 +8,7 @@ export type EmirateFetchAllNamesResponse = {
 type EmirateNames = {
     _id:string;
     name:string;
+    count?:number;
 }
 
 
@@ -43,4 +44,11 @@ type EmirateItem = {
     name: string | undefined;
     slug: string;
     _id: string;
+}
+export type FetchEmirateByCityByIdResponse = {
+    success: string,
+    data: {
+        name: string;
+        _id: string;
+    },
 }

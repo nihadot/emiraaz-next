@@ -15,7 +15,7 @@ function RegistrationSuccess({ onClose,
       <div className=" sm:w-[436px] w-full m-auto  relative">
         <button
           type='button'
-          className="absolute top-2 right-2 text-gray-600 dark:text-gray-300 "
+          className="absolute cursor-pointer top-2 right-2 text-gray-600 dark:text-gray-300 "
           onClick={onClose}
         >
           <IoMdClose size={18} color='#333333' />

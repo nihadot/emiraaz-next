@@ -14,6 +14,9 @@ import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portra
 import { useViewAllNewsQuery } from '@/redux/news/newsApi'
 import { formatDate } from '../atom/button/formatDate'
 import { Footer } from '../Footer'
+import Link from 'next/link'
+import SectionDivider from '../atom/SectionDivider/SectionDivider'
+import clsx from 'clsx'
 
 type Props = {
     initialData: any
@@ -57,9 +60,11 @@ const News = ({
     return (
         <main>
             <Header />
-            <div className="pb-[12.75px] flex">
-                <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
-            </div>
+         
+             <SectionDivider
+                                 containerClassName={clsx("mb-[12px] mt-[12px]")}
+                                 lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+                             />
 
             <Container>
 
@@ -75,11 +80,14 @@ const News = ({
                                             fill
                                             alt={item.newsTitle}
                                             src={item.image?.secure_url || ''}
-                                            className="rounded-[5px]"
+                                            className="rounded-[5px] cursor-text"
                                         />
                                     </div>
-
-                                    <h4 onClick={() => router.push(`/news/${item.slug}`)} className='mt-[8.25px] cursor-pointer font-poppins font-medium text-[14.25px] text-black line-clamp-2 text-ellipsis'>{item.newsTitle}</h4>
+<Link
+href={`/news/${item.slug}`}
+>
+                                    <h4  className='mt-[8.25px] cursor-pointer font-poppins font-medium text-[14.25px] text-black line-clamp-2 text-ellipsis'>{item.newsTitle}</h4>
+</Link>
 
                                     <div className="flex items-center mt-2  gap-[5px]">
 
@@ -92,7 +100,7 @@ const News = ({
                                                 alt="calender"
                                                 width={16.5}
                                                 height={16.5}
-                                                className="w-[16.5px] h-[16.5px]"
+                                                className="w-[16.5px] cursor-text h-[16.5px]"
                                             />
                                             <p className='text-[#767676]   text-[12px] font-medium font-poppins'>{formatDate(item?.date)}</p>
 

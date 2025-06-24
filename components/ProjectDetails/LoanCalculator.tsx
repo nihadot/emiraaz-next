@@ -152,7 +152,7 @@ const InputWithSlider = ({ label, value, min, max, step, onChange, unit }: {
             type="number"
             value={value}
             onChange={(e) => onChange(Number(e.target.value))}
-            className="border border-none text-[13.5px] font-poppins font-medium rounded-[15px] p-2 w-full"
+            className="border outline-none border-none text-[13.5px] font-poppins font-medium rounded-[15px] p-2 w-full"
           />
           <span className="text-[13.5px] font-medium font-poppins text-[#767676]">{unit}</span>
         </div>
@@ -165,7 +165,7 @@ const InputWithSlider = ({ label, value, min, max, step, onChange, unit }: {
           step={step}
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
-          className="w-full custom-range"
+          className="w-full outline-none border-none custom-range"
           style={{ background: `linear-gradient(to right, #ef4444 ${percentage}%, #dfdfdf ${percentage}%)` }}
         />
       </div>

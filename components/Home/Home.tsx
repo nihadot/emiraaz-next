@@ -69,7 +69,7 @@ interface UserData {
 function HomePageFunction({ initialData }: { initialData: any }) {
 
 
-    useForceScrollRestore(); // Default key is "scroll-position"
+    useForceScrollRestore();
     useScrollToTopOnRefresh();
     const [loading, setLoading] = useState(false)
 
@@ -170,9 +170,7 @@ function HomePageFunction({ initialData }: { initialData: any }) {
     });
 
     useEffect(() => {
-        // if(pathname.includes('/')){
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        // }
 
     }, [paginationHappened]);
 
@@ -255,7 +253,7 @@ function HomePageFunction({ initialData }: { initialData: any }) {
         const mappedOptions = emiratesData?.data.map((item) => ({
             label: item.name,
             value: item._id,
-            count: 100,
+            count: item.count,
         })) || [];
 
         const sortedOptions = mappedOptions.sort((a, b) => {
@@ -348,7 +346,7 @@ function HomePageFunction({ initialData }: { initialData: any }) {
     const handleClick = (item: AllProjectsItems) => {
 
         const currency = searchParams.get('currency');
-   
+
         const slug = item.slug;
 
         // Build query string with currency if available
@@ -969,7 +967,7 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                     </Container>
 
                     <SectionDivider
-                        containerClassName={clsx("mb-[12px]", filters?.page && filters?.page >= 1 ? 'mt-[12px]' : 'mt-[10.5px]')}
+                        containerClassName={clsx("mb-[12px] mt-[12px]")}
                         lineClassName="h-[1px] w-full bg-[#DEDEDE]"
                     />
 
@@ -1234,11 +1232,11 @@ function HomePageFunction({ initialData }: { initialData: any }) {
 
 
 function HomePage(props: { initialData: any }) {
-  return (
-    <Suspense>
-      <HomePageFunction {...props} />
-    </Suspense>
-  );
+    return (
+        <Suspense>
+            <HomePageFunction {...props} />
+        </Suspense>
+    );
 }
 
 export default HomePage;

@@ -41,7 +41,7 @@ function ResetPasswordPage() {
     } finally {
       setIsSubmitting(false);
     }
-  };
+  };  
 
 
   return (

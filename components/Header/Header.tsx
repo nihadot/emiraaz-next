@@ -37,7 +37,7 @@ function Header() {
   const dispatch = useDispatch();
   const router = useRouter();
 
- 
+
 
   const toggleMenu = () => setIsOpen(prev => !prev);
   const { isAuthentication, user } = useSelector((state: RootState) => state.user);
@@ -70,7 +70,7 @@ function Header() {
     const currency = url.searchParams.get('currency');
     if (currency) {
       setCurrency(currency);
-    }else{
+    } else {
       setCurrency('AED');
     }
   }, []);
@@ -103,9 +103,9 @@ function Header() {
 
         </div>
         <div className="w-[66.75px] block md:hidden ">
-  <CurrencySelect
-               defaultCurrency={currency}
-          
+          <CurrencySelect
+            defaultCurrency={currency}
+
           />
         </div>
         {/* <PrimaryButton
@@ -122,7 +122,7 @@ function Header() {
 
 
         </PrimaryButton> */}
-        
+
 
 
         <div className="min-laptop:flex hidden items-center gap-4">
@@ -150,7 +150,7 @@ function Header() {
             </PrimaryButton>
           </div>
 
-         
+
 
           {
             <div className="min-laptop:flex  gap-1 hidden">
@@ -167,10 +167,10 @@ function Header() {
 
 
               </PrimaryButton> */}
-               <CurrencySelect
-               defaultCurrency={currency}
-          
-          />
+              <CurrencySelect
+                defaultCurrency={currency}
+
+              />
 
               {isAuthentication ? <PrimaryButton
                 onClick={() => router.push('/profile')}
@@ -183,7 +183,7 @@ function Header() {
                     <PiUserCircle size={18} />
                   </div>
 
-                  <label htmlFor="" className='text-[12px] cursor-pointer font-normal max-w-[80px] overflow-hidden font-poppins'>{user?.name}</label>
+                  <label htmlFor="" className='text-[12px] cursor-pointer font-normal max-w-[80px] overflow-hidden font-poppins'>Profile</label>
                 </>
 
 

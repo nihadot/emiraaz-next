@@ -11,6 +11,8 @@ import { useViewAllNewsQuery, useViewNewsByIdQuery } from '@/redux/news/newsApi'
 import { shuffle } from '@/utils/shuffle'
 import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi'
 import { useRouter } from 'next/navigation'
+import SectionDivider from '../atom/SectionDivider/SectionDivider'
+import clsx from 'clsx'
 
 type Props = {
     id: string;
@@ -32,76 +34,75 @@ function NewsDetails({ id }: Props) {
     return (
         <main>
             <Header />
-            <div className="pb-[12.75px] sm:flex hidden">
-                <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
-            </div>
-
+            <SectionDivider
+                containerClassName={clsx("mb-[12px] mt-[12px]")}
+                lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+            />
             <Container>
 
-                <section className='m-auto gap-[30px] pb-20 '>
-                    {singleNews?.data?.image ? <div className="w-full relative object-cover h-[236px] sm:h-[523.5px]">
-                        <div className="px-4 py-1 font-poppins font-medium rounded-[3px] absolute text-[10.5px] sm:text-[12px] z-30 left-[15px] top-[15px] text-[#FF1645] bg-[#FFE7EC] ">{singleNews?.data?.newCategoryDetails?.name}</div>
-                        <Image
-                            fill
-                            alt={singleNews?.data.newsTitle || ''}
-                            src={singleNews?.data?.image?.secure_url || ''}
-                            className="rounded-md"
-                        />
-                    </div>
-                        :
-                        <div className="w-full bg-slate-50 animate-pulse rounded-[5px] h-[236px] sm:h-[523.5px]"></div>
-
-                    }
-
-                    <div className="mb-10 flex  gap-[27.5px] justify-center">
-
-
-                        <div className="w-full pt-[14px]  ">
-
-
-                            {singleNews?.data?.date ? <div className="flex items-center gap-[4.5px]">
-                                {singleNews?.data?.date && <p className='text-[#767676]   text-[12px] font-medium font-poppins'>{formatDate(singleNews?.data?.date)}</p>
-                                }
-                            </div> :
-                                <div className="w-[180px] mb-3 bg-slate-50 animate-pulse rounded-[5px] h-[40px]">
-
+                <section className='m-auto gap-[0px] flex flex-col pb-20 '>
+                    <div className="w-full h-full flex-1 gap-3 flex ">
+                        <div className=" h-full flex-1">
+                            {singleNews?.data?.image ?
+                                <div className="w-full relative object-cover h-[236px] sm:h-[523.5px]">
+                                    <div className="px-4 py-1 font-poppins font-medium rounded-[3px] absolute text-[10.5px] sm:text-[12px] z-30 left-[15px] top-[15px] text-[#FF1645] bg-[#FFE7EC] ">{singleNews?.data?.newCategoryDetails?.name}</div>
+                                    <Image
+                                        fill
+                                        alt={singleNews?.data.newsTitle || ''}
+                                        src={singleNews?.data?.image?.secure_url || ''}
+                                        className="rounded-md"
+                                    />
                                 </div>
-                            }
+                                :
+                                <div className="w-full bg-slate-50 animate-pulse rounded-[5px] h-[236px] sm:h-[523.5px]"></div>
 
-                            {singleNews?.data?.newsTitle ? <h1 className='font-poppins font-medium text-[19.5px] mt-[10.5px]'>{singleNews?.data?.newsTitle}</h1> :
-                                <div className='h-[40px] bg-slate-50 w-full mb-3 rounded-[5px] animate-pulse'></div>
-                            }
-
-                            {singleNews && singleNews.data && singleNews.data.newsBody && singleNews?.data?.newsBody ? <div
-                                className="text-[12px] w-full text-left font-poppins font-normal mt-[12px]"
-                                dangerouslySetInnerHTML={{ __html: `${singleNews?.data?.newsBody} ${singleNews?.data?.newsBody}` }}
-                            /> :
-                                <>
-                                    <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
-                                    <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
-                                    <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
-                                    <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
-                                    <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
-                                    <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
-                                    <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
-                                    <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
-                                    <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
-                                    <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
-                                </>
                             }
 
 
+                            <div className="w-full pt-[14px]  ">
+
+
+                                {singleNews?.data?.date ? <div className="flex items-center gap-[4.5px]">
+                                    {singleNews?.data?.date && <p className='text-[#767676]   text-[12px] font-medium font-poppins'>{formatDate(singleNews?.data?.date)}</p>
+                                    }
+                                </div> :
+                                    <div className="w-[180px] mb-3 bg-slate-50 animate-pulse rounded-[5px] h-[40px]">
+
+                                    </div>
+                                }
+
+                                {singleNews?.data?.newsTitle ? <h1 className='font-poppins font-medium text-[19.5px] mt-[10.5px]'>{singleNews?.data?.newsTitle}</h1> :
+                                    <div className='h-[40px] bg-slate-50 w-full mb-3 rounded-[5px] animate-pulse'></div>
+                                }
+
+                                {singleNews && singleNews.data && singleNews.data.newsBody && singleNews?.data?.newsBody ? <div
+                                    className="text-[12px] w-full text-left font-poppins font-normal mt-[12px]"
+                                    dangerouslySetInnerHTML={{ __html: `${singleNews?.data?.newsBody}` }}
+                                /> :
+                                    <>
+                                        <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
+                                        <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
+                                        <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
+                                        <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
+                                        <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
+                                        <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
+                                        <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
+                                        <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
+                                        <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
+                                        <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
+                                    </>
+                                }
+
+
+                            </div>
                         </div>
-
-
-
-                        <div className={"w-full md:block hidden max-w-[301.5px]"}>
-
+                        <div className=" md:block hidden max-w-[301.5px] w-full">
 
 
 
 
                             {<RecommendedText
+                                containerClassName='!my-0 !mb-2'
                                 title="Recommended For You"
                                 items={[
                                     'Studio Properties For Sale in Dubai',
@@ -150,16 +151,10 @@ function NewsDetails({ id }: Props) {
 
 
 
-
-
-
                         </div>
-
                     </div>
 
-
-
-                    <p className=' font-poppins font-medium text-[20px] my-3'>Recomended News :</p>
+                    <p className=' font-poppins font-medium text-[20px] p-2'>Recomended News :</p>
                     <div className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 gap-[30px] w-full h-fit">
 
                         {
@@ -175,13 +170,13 @@ function NewsDetails({ id }: Props) {
                                                     fill
                                                     alt={item.newsTitle}
                                                     src={item.image?.secure_url || ''}
-                                                    className="rounded-[5px]"
+                                                    className="rounded-[5px] cursor-text"
                                                 />
                                             </div>
 
                                             {item?.date && <p className='text-[#767676] text-[12px] font-medium font-poppins mt-[13.5px]'>Date Published : {formatDate(item?.date)}</p>
                                             }
-                                            <h4 onClick={() => router.push(`/news/${item.slug}`)} className='mt-[8.25px] font-poppins font-medium text-[17px] text-black line-clamp-2 text-ellipsis'>{item.newsTitle}</h4>
+                                            <h4 onClick={() => router.push(`/news/${item.slug}`)} className='mt-[8.25px] cursor-pointer font-poppins font-medium text-[17px] text-black line-clamp-2 text-ellipsis'>{item.newsTitle}</h4>
 
 
                                         </div>
@@ -209,10 +204,8 @@ function NewsDetails({ id }: Props) {
 
 
 
-
-
-
                 </section>
+
             </Container>
 
 

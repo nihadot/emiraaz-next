@@ -36,7 +36,7 @@ const CustomSliderComponent = ({
 
   return (
     <Link href={`/projects/${images[currentIndex].projectDetails?.slug}`} className={`relative flex w-full overflow-hidden ${containerClassName}`}>
-      <div className="relative h-[95px] sm:h-[600px] w-full">
+      <div className="relative h-[95px] sm:h-[550px] w-full">
         <AnimatePresence>
           <motion.div
             key={currentIndex}

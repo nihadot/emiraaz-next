@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import InputField from '@/components/InputField/InputField';
 import PrimaryButton from '@/components/Buttons';
 import Container from '@/components/atom/Container/Container';
 import { IoMdClose } from 'react-icons/io';
@@ -8,12 +7,14 @@ import { errorToast } from '@/components/Toast';
 import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import axios from 'axios';
 import { baseUrl } from '@/api';
+import InputField from '../InputField/InputField';
+import apiClient from '@/api/apiClient';
 
 interface UserData {
     _id: string;
     // Add more fields if needed
 }
-function EnquiryForm({ onClose, setState, state }: {
+function OpenHouseEnquiryForm({ onClose, setState, state }: {
     onClose: () => void, setState: React.Dispatch<React.SetStateAction<{
         status: boolean;
         id: string;
@@ -95,7 +96,7 @@ function EnquiryForm({ onClose, setState, state }: {
 
 
 
-            const response = await axios.post(`${baseUrl}/booking-slot`, payload);
+            const response = await apiClient.post(`${baseUrl}/open-house-register`, payload);
 
             if (response?.status === 201 && response?.data) {
                 setState((prev: any) => ({
@@ -126,7 +127,7 @@ function EnquiryForm({ onClose, setState, state }: {
 
                 <button
                     type='button'
-                    className="absolute top-2 right-2 text-gray-600 dark:text-gray-300 hover:text-red-500"
+                    className="absolute cursor-pointer top-2 right-2 text-gray-600 dark:text-gray-300 hover:text-red-500"
                     onClick={onClose}
                 >
                     <IoMdClose size={18} color='#333333' />
@@ -143,6 +144,7 @@ function EnquiryForm({ onClose, setState, state }: {
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="Name"
+                        
                     />
                 </SpaceWrapper>
 
@@ -172,16 +174,19 @@ function EnquiryForm({ onClose, setState, state }: {
                     />
                 </SpaceWrapper>
 
-                <PrimaryButton
-                    type="submit"
-                    disabled={loading}
-                    className="flex w-full h-[36px] items-center gap-2 rounded border-none bg-[#FF1645]"
-                >
-                    <span className="text-[14px] text-white">Submit</span>
-                </PrimaryButton>
+                 <button type="submit" disabled={loading} className="w-full  text-[14px] cursor-pointer font-medium bg-[#FF1645] text-white  h-[40px] rounded-[3px] hover:bg-[#D8133A] transition flex items-center justify-center">
+                                    {loading ? (
+                                        <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                        </svg>
+                                    ) : null}
+                                    {loading ? "loading..." : "Submit"}
+                                </button>
+
             </form>
         </Container>
     )
 }
 
-export default EnquiryForm
+export default OpenHouseEnquiryForm

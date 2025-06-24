@@ -16,6 +16,8 @@ import { LiaBedSolid } from "react-icons/lia";
 import { PiShareFat } from "react-icons/pi";
 import { TfiLocationPin } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
+import { formatCurrencyConversion } from "../atom/button/formatCurrencyConversion";
+import { useFetchCurrencyQuery } from "@/redux/currency/currencyApi";
 
 interface UserData {
   _id: string;
@@ -39,6 +41,20 @@ const ProjectBasicInfo = ({ projectId, type,
   type: string
   totalFloors?: string
 }) => {
+
+     const [toggleCurrency, setToggleCurrency] = useState<string>('');
+        useEffect(() => {
+            const url = new URL(window.location.href);
+            const currency = url.searchParams.get('currency');
+            if (currency) {
+                setToggleCurrency(currency);
+            } else {
+                setToggleCurrency('AED');
+            }
+        }, []);
+  
+            const { data: currencyExchange } = useFetchCurrencyQuery({ currency: toggleCurrency });
+        
 
   const [toggleWishlist] = useToggleWishlistItemMutation();
 
@@ -113,6 +129,7 @@ const ProjectBasicInfo = ({ projectId, type,
           )}
         </div>
         {/* Price */}
+        
         {(value !== '0' && currency) ?
           isProject ?
 
@@ -122,9 +139,16 @@ const ProjectBasicInfo = ({ projectId, type,
                 <span className='text-[12px] sm:text-[24px] mt-[4.5px] font-semibold font-poppins'>Starting From</span>
 
                 <span className='font-poppins sm:text-[33.75px] text-[30px] ms-1 font-semibold '>
-                  {value}
+                   {
+                                             (currencyExchange && currencyExchange.data && currencyExchange.data.rate && toggleCurrency !== 'AED') ?  
+                                             (formatCurrencyConversion(value,currencyExchange.data.rate)) : value
+                                         }
                 </span>
-                <span className='text-[11.928px] sm:text-[24px] font-semibold mt-[4.5px] font-poppins '>{currency}</span>
+                <span className='text-[11.928px] sm:text-[24px] font-semibold mt-[4.5px] font-poppins '>{
+              (currencyExchange && currencyExchange.data && currencyExchange.data.rate) ?
+                currencyExchange.data.currency
+                :  currency
+                }</span>
               </>}
 
             </h4> : <h4>

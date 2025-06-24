@@ -3,6 +3,7 @@ import { baseUrl, createBaseQueryWithReAuth } from '../../api';
 import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import { AllDevelopersItems } from './types';
 import { Pagination } from '@/utils/types';
+import { AllProjectsItems } from '../project/types';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${baseUrl}/developers/`,
@@ -27,30 +28,9 @@ const baseQueryWithReAuth = createBaseQueryWithReAuth(baseQuery, refreshTokenBas
 export const developersApi = createApi({
   reducerPath: "developersApi",
   baseQuery: baseQueryWithReAuth,
-  tagTypes: ["Developers"],
+  tagTypes: ["Developers","FetchAllProjectsUnderDeveloper"],
   endpoints: (builder) => ({
  
-    // viewAllDevelopers: builder.query<ViewDeveloperResponse, {
-    //   page?: number,
-    //   limit?: number,
-    //   search?: string,
-    //   sortBy?: string,
-    //   sortOrder?: string,
-    //   deleted?: string
-    // }>({
-    //   query: ({
-    //     page = 1,
-    //     limit = 20,
-    //     search = "",
-    //     sortBy = "createdAt",
-    //     sortOrder = "desc",
-    //   }) => ({
-    //     url: `/?page=${page}&limit=${limit}&search=${search}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
-    //     method: "GET",
-    //     headers: { "Content-Type": "application/json" },
-    //   }),
-    //   providesTags: ["Developers"],
-    // }),
      viewAllDevelopers: builder.query<ViewDeveloperResponse, {
               page?: number,
               limit?: number,
@@ -90,12 +70,54 @@ export const developersApi = createApi({
               providesTags: ["Developers"],
             }),
         
+
+               viewAllProjectsUnderDeveloper: builder.query<ViewAllProjectsUnderDeveloperResponse, {
+              page?: number,
+              limit?: number,
+              search?: string,
+              emirates?: string[],
+              developerId: string,
+            }>({
+              query: (params) => {
+                const {
+                  page = 1,
+                  limit = 21,
+                  search = "",
+                  emirates,
+                  developerId,
+                  ...restParams
+                } = params;
+        
+                const queryParams = new URLSearchParams({
+                  page: page.toString(),
+                  limit: limit.toString(),
+                  search,
+                  ...Object.fromEntries(
+                    Object.entries(restParams).filter(
+                      ([_, v]) => v !== undefined && (typeof v !== "string" || v !== "")
+                    )                  ),
+                });
+        
+                if (emirates && emirates.length > 0) {
+                  emirates.forEach(city => queryParams.append("emirates", city));
+                }
+        
+                return {
+                  url: `/projects/${developerId}?${queryParams.toString()}`,
+                  method: "GET",
+                  headers: { "Content-Type": "application/json" },
+                };
+              },
+              providesTags: ["FetchAllProjectsUnderDeveloper"],
+            }),
+        
    
   }),
 });
 
 export const {
   useViewAllDevelopersQuery,
+  useViewAllProjectsUnderDeveloperQuery,
 } = developersApi;
 
 
@@ -103,5 +125,13 @@ export interface ViewDeveloperResponse {
   success: boolean;
   message: string;
   data: AllDevelopersItems[];
+  pagination: Pagination;
+}
+
+
+export interface ViewAllProjectsUnderDeveloperResponse {
+  success: boolean;
+  message: string;
+  data: AllProjectsItems[];
   pagination: Pagination;
 }

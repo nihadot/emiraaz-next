@@ -14,6 +14,11 @@ import PaginationNew from "@/components/PaginationNew/PaginationNew";
 import { useDeviceType } from '@/utils/useDeviceType'
 import SpaceWrapper from '@/components/atom/SpaceWrapper/SpaceWrapper'
 import { RxArrowTopRight } from "react-icons/rx";
+import SelectLatest from '@/components/SelectOption/SelectLatest'
+import Link from 'next/link'
+import SearchNew from '@/components/SearchField/SearchNew'
+import SectionDivider from '@/components/atom/SectionDivider/SectionDivider'
+import clsx from 'clsx'
 
 
 function Developers() {
@@ -84,7 +89,6 @@ function Developers() {
         emiratesData?.data.map((item) => ({
             label: item.name,
             value: item._id,
-            count: 100,
         })) || [],
         [emiratesData]);
 
@@ -99,90 +103,109 @@ function Developers() {
 
 
 
-        <Container>
-        <section className=" flex-wrap w-full flex items-center  gap-2">
-                    <div className="sm:flex-[18%] w-full  h-[50px]">
-                        <SearchInput
-                            value={filters.search}
-                            onChange={handleChangeSearch}
-                            placeholder="Search..."
-                        />
-                    </div>
-                    <div className=" md:flex-[30%] h-full">
+                <Container>
+                    <section className=" flex-wrap w-full flex items-center gap-1 sm:gap-2">
+                        <div className="sm:flex-[18%] w-full max-w-[400px]  h-[50px]">
+                            <SearchNew
+                                value={filters.search}
+                                onChange={handleChangeSearch}
+                                placeholder="Search..."
+                            />
+                        </div>
+                        <div className=" md:flex-[30%] h-full">
 
-                    </div>
-                    <div className="sm:flex-[10%] sm:block hidden w-full h-[50px]">
-                        <SelectOption
-                            search
-                            // clearSelection={clear}
-                            className="w-[200px]"
-                            label="Emirates"
-                            options={emirateOptions}
-                            onSelect={handleSelect.emirate}
-                        />
-                    </div>
-
-                    <div className="w-full h-full flex sm:hidden gap-2">
-                        <SelectOption
-                            search
-                            // clearSelection={clear}
-                            className="w-[200px]"
-                            label="Emirates"
-                            options={emirateOptions}
-                            onSelect={handleSelect.emirate}
-                        />
-
-                    </div>
+                        </div>
+                        <div className="hidden max-w-[250px] w-full lg:flex h-[48px]">
+                            <SelectLatest
+                                listContainerUlListContainerClassName="w-[200px]"
+                                search
+                                label="Emirates"
+                                options={emirateOptions}
+                                onSelect={(e) => {
+                                    const url = new URL(window.location.href);
+                                    if (e?.value) {
+                                        url.searchParams.set('emirate', e?.label ?? '');
+                                    } else {
+                                        url.searchParams.delete('emirate');
+                                    }
+                                    const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                    window.history.pushState({}, '', newUrl);
+                                    handleSelect.emirate(e)
+                                }}
+                            />
+                        </div>
 
 
 
+                        <div className="flex lg:hidden w-full gap-2">
+
+                            <div className=" h-[40px] w-full">
+                                <SelectLatest
+                                    listContainerUlListContainerClassName="w-[200px]"
+                                    search
+                                    label="Emirates"
+                                    options={emirateOptions}
+                                    onSelect={(e) => {
+                                        const url = new URL(window.location.href);
+                                        if (e?.value) {
+                                            url.searchParams.set('emirate', e?.label ?? '');
+                                        } else {
+                                            url.searchParams.delete('emirate');
+                                        }
+                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                        window.history.pushState({}, '', newUrl);
+                                        handleSelect.emirate(e)
+                                    }}
+                                />
+                            </div>
+
+
+
+                        </div>
 
 
 
 
-                </section>
-        </Container>
 
-                <div className="w-full h-[1px] bg-gray-200 my-4"></div>
+                    </section>
+                </Container>
 
-<Container>
+              <SectionDivider
+                                  containerClassName={clsx("mb-[12px] mt-[12px]")}
+                                  lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+                              />
+          
+                <Container>
 
-<section className='h-full pb-20 grid-cols-1 w-full  gap-3 grid lg:grid-cols-3' >
+                    <section className='h-full pb-0 grid-cols-1 w-full  gap-3 grid lg:grid-cols-3' >
 
-{
-    allDevelopers && allDevelopers.data && allDevelopers.data.map((item, index) => {
-        return (
-            <Card
-                key={index}
-                item={item}
-            />
-        )
-    })
-}
-</section>
-</Container>
+                        {
+                            allDevelopers && allDevelopers.data && allDevelopers.data.map((item, index) => {
+                                return (
+                                    <Card
+                                        key={index}
+                                        item={item}
+                                    />
+                                )
+                            })
+                        }
+                    </section>
+                </Container>
 
-{/* 
+      
+                <SpaceWrapper className='mb-10'>
 
-                <Pagination
-                    currentPage={filters.page}
-                    totalPages={totalPages}
-                    onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
-                /> */}
+                    <PaginationNew
+                        currentPage={filters.page || 1}
+                        totalPages={totalPages}
+                        onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
+                        maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />
 
-<SpaceWrapper className='mb-10'>
+                </SpaceWrapper>
 
-     <PaginationNew
-                            currentPage={filters.page || 1}
-                            totalPages={totalPages}
-                            onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
-                            maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />
-
-</SpaceWrapper>
-         
             </div>
 
-        
+
 
             <Footer />
         </main>
@@ -207,9 +230,13 @@ function Card({ item }: CardProps) {
 
                     <p className='text-[18px] line-clamp-2 font-medium font-poppins'>{item.name}</p>
                     {/* <Image src={top_arrow_icon || ''} alt="bed icon" width={12} height={12} className="object-contain flex justify-center items-center" /> */}
-        <div className="w-4 h-4  ">
-             <RxArrowTopRight size={20} color='black' />
-        </div>
+                  <Link
+                  href={`/developers/${item.slug}`}
+                  >
+                    <div className="w-4 h-4  ">
+                        <RxArrowTopRight size={20} color='black' />
+                    </div>
+                  </Link>
                 </div>
 
             </div>

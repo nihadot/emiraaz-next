@@ -36,7 +36,7 @@ export type AllProjectsItems = {
   buildUpArea: string;
   usage: string;
   parkingAvailability: string;
-
+communityTick?: boolean;
   permitNumber: string;
   DED: string;
   ORN: string;
@@ -115,6 +115,16 @@ export type ViewProjectResponse = {
   message: string;
   data: AllProjectsItems[];
   pagination: Pagination;
+}
+
+
+export type ViewEnquiredProjectsResponse = {
+  success: boolean; 
+  message: string;
+  data: {
+    _id: string;
+    propertyDetails: AllProjectsItems;
+  }[];
 }
 
 

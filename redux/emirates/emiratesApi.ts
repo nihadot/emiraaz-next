@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseUrl, createBaseQueryWithReAuth } from '../../api';
 import { prepareAuthHeaders } from '../../api/authHeader';
-import { EmirateFetchAllItemsResponse, EmirateFetchAllNamesResponse, EmirateItemsFetchByIdPayload, EmirateItemsFetchByIdResponse } from './types';
+import { EmirateFetchAllItemsResponse, EmirateFetchAllNamesResponse, EmirateItemsFetchByIdPayload, EmirateItemsFetchByIdResponse, FetchEmirateByCityByIdResponse } from './types';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${baseUrl}/emirate/`,
@@ -23,7 +23,7 @@ const baseQueryWithReAuth = createBaseQueryWithReAuth(baseQuery, refreshTokenBas
 export const emirateApi = createApi({
   reducerPath: "emirateApi",
   baseQuery: baseQueryWithReAuth,
-  tagTypes: ["AllNames", "Emirates", "Emirate"],
+  tagTypes: ["AllNames", "Emirates", "Emirate","EmirateDetailsByCityId"],
   endpoints: (builder) => ({
     fetchAllEmirateNames: builder.query<EmirateFetchAllNamesResponse, void>({
       query: (credentials) => ({
@@ -63,6 +63,16 @@ export const emirateApi = createApi({
       providesTags: ["Emirate"],
 
     }),
+      getEmirateDetalsByCityId: builder.query<FetchEmirateByCityByIdResponse, {
+            slug: string,
+          }>({
+          query: (payload) => ({
+            url: `/details/city/${payload.slug}`,
+            method: "GET",
+          }),
+          providesTags: ["EmirateDetailsByCityId"],
+    
+        }),
   }),
 });
 
@@ -70,5 +80,6 @@ export const {
   useFetchAllEmirateNamesQuery,
   useFetchAllEmiratesQuery,
   useFetchEmirateByIdQuery,
+  useGetEmirateDetalsByCityIdQuery,
 
 } = emirateApi;

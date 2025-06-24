@@ -50,12 +50,12 @@ function Registration() {
             // const { confirmPassword, ...others } = values
             // Call the signup mutation from Redux Toolkit query
             const data = {
-  ...(values.nationality && { nationality: values.nationality }),
+                ...(values.nationality && { nationality: values.nationality }),
                 name: values.name,
             }
             const response = await editProfile(data).unwrap();
 
-            router.push('/profile'); 
+            router.push('/profile');
 
             updateLocalUser(response.user)
 
@@ -67,99 +67,99 @@ function Registration() {
         }
     };
 
-        return (
-            <>
-                <Header />
-                <SectionDivider
-                    containerClassName="mt-[10.5px] mb-[12px]"
-                    lineClassName="h-[1px] w-full bg-[#DEDEDE]"
-                />
-                <Container>
+    return (
+        <>
+            <Header />
+            <SectionDivider
+                containerClassName="mt-[10.5px] mb-[12px]"
+                lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+            />
+            <Container>
 
-                    <section className="flex flex-col min-h-[90vh] pb-20 items-start justify-center bg-white">
-
-
-                        <p className='font-poppins max-w-[400px] mt-6 font-medium text-[19.5px]  sm:text-[24px]'>Edit Profile</p>
-                        <Formik
-                            enableReinitialize
-                            initialValues={{
-                                name: fectchedUserProfileDetails?.user?.name || '',
-                                nationality: fectchedUserProfileDetails?.user?.nationality || '',
-                                email: fectchedUserProfileDetails?.user?.email || '',
-                                number: fectchedUserProfileDetails?.user?.number || '',
-                            }}
-                            validationSchema={ProfileSchema}
-                            onSubmit={handleSubmit}
-                        >
-                            {({  }) => (
-                                <Form className="w-full max-w-[400px] mt-4 smmt-6 bg-white">
-                                    <div className="mb-3">
-
-                                        <InputField type="text" id="name" name="name" placeholder="Enter your Name" loading={isSubmitting} />
-                                        <ErrorMessageBox
-                                            name="name"
-                                        />
-                                    </div>
-
-                                    <div className="mb-2">
-
-                                        <SelectField
-                                            name="nationality"
-                                            id="nationality"
-                                            loading={isSubmitting}
-                                        >
-                                            {nationalities.map((option) => (
-                                                <option key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </option>
-                                            ))}
-                                        </SelectField>
-                                    </div>
+                <section className="flex flex-col min-h-[90vh] pb-20 items-start justify-center bg-white">
 
 
-                                    <div className="mb-3">
+                    <p className='font-poppins max-w-[400px] mt-6 font-medium text-[19.5px]  sm:text-[24px]'>Edit Profile</p>
+                    <Formik
+                        enableReinitialize
+                        initialValues={{
+                            name: fectchedUserProfileDetails?.user?.name || '',
+                            nationality: fectchedUserProfileDetails?.user?.nationality || '',
+                            email: fectchedUserProfileDetails?.user?.email || '',
+                            number: fectchedUserProfileDetails?.user?.number || '',
+                        }}
+                        validationSchema={ProfileSchema}
+                        onSubmit={handleSubmit}
+                    >
+                        {({ }) => (
+                            <Form className="w-full max-w-[400px] mt-4 smmt-6 bg-white">
+                                <div className="mb-3">
 
-                                        <InputField className="cursor-not-allowed" type="email" id="email" name="email" placeholder="Enter your email" loading={true} />
-                                        <ErrorMessageBox
-                                            name="email"
-                                        />
-                                    </div>
+                                    <InputField type="text" id="name" name="name" placeholder="Enter your Name" loading={isSubmitting} />
+                                    <ErrorMessageBox
+                                        name="name"
+                                    />
+                                </div>
 
-                                    <div className="mb-3">
+                                <div className="mb-2">
 
-                                        <InputField
-
-
-                                            type="number" className="cursor-not-allowed" id="number" name="number" placeholder="Enter your number" loading={true} />
-                                        <ErrorMessageBox
-                                            name="number"
-                                        />
-                                    </div>
-
-
-
-
-                                    <button type="submit" disabled={isSubmitting} className="w-full mt-3 text-[14px] cursor-pointer font-medium bg-[#FF1645] text-white  h-[35px] rounded-[3px] hover:bg-[#D8133A] transition flex items-center justify-center">
-                                        {isSubmitting ? (
-                                            <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-                                            </svg>
-                                        ) : null}
-                                        {isSubmitting ? "loading..." : "Update"}
-                                    </button>
+                                    <SelectField
+                                        name="nationality"
+                                        id="nationality"
+                                        loading={isSubmitting}
+                                    >
+                                        {nationalities.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </SelectField>
+                                </div>
 
 
-                                </Form>
-                            )}
-                        </Formik>
-                    </section>
-                </Container>
+                                <div className="mb-3">
 
-                <Footer />
-            </>
-        )
-    
+                                    <InputField className="cursor-not-allowed" type="email" id="email" name="email" placeholder="Enter your email" loading={true} />
+                                    <ErrorMessageBox
+                                        name="email"
+                                    />
+                                </div>
+
+                                <div className="mb-3">
+
+                                    <InputField
+
+
+                                        type="number" className="cursor-not-allowed" id="number" name="number" placeholder="Enter your number" loading={true} />
+                                    <ErrorMessageBox
+                                        name="number"
+                                    />
+                                </div>
+
+
+
+
+                                <button type="submit" disabled={isSubmitting} className="w-full mt-3 text-[14px] cursor-pointer font-medium bg-[#FF1645] text-white  h-[35px] rounded-[3px] hover:bg-[#D8133A] transition flex items-center justify-center">
+                                    {isSubmitting ? (
+                                        <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                                        </svg>
+                                    ) : null}
+                                    {isSubmitting ? "loading..." : "Update"}
+                                </button>
+
+
+                            </Form>
+                        )}
+                    </Formik>
+                </section>
+            </Container>
+
+            <Footer />
+        </>
+    )
+
 
 }
 

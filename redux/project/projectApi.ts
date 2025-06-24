@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseUrl, createBaseQueryWithReAuth } from '../../api';
 import { prepareAuthHeaders } from '@/api/authHeader';
-import { AllNamesViewByIdResponse, AllProjectCountResponse, PayloadByIdResponse, ViewByIdResponse, ViewProjectResponse } from './types';
+import { AllNamesViewByIdResponse, AllProjectCountResponse, PayloadByIdResponse, ViewByIdResponse, ViewEnquiredProjectsResponse, ViewProjectResponse } from './types';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${baseUrl}/projects/`,
@@ -22,7 +22,7 @@ const baseQueryWithReAuth = createBaseQueryWithReAuth(baseQuery, refreshTokenBas
 export const projectApi = createApi({
   reducerPath: "projectApi",
   baseQuery: baseQueryWithReAuth,
-  tagTypes: ["Projects", "AllNames","FeatruedProjects", "Project", "AllProjectsCount"],
+  tagTypes: ["Projects", "EnquiredProjects", "AllNames", "FeatruedProjects", "Project", "AllProjectsCount"],
   endpoints: (builder) => ({
     fetchAllProjects: builder.query<ViewProjectResponse, {
       page?: number,
@@ -97,13 +97,21 @@ export const projectApi = createApi({
       providesTags: ["AllProjectsCount"],
     }),
 
-      fetchFeaturedProjects: builder.query<ViewProjectResponse, void>({
+    fetchFeaturedProjects: builder.query<ViewProjectResponse, void>({
       query: () => ({
         url: `/featured-projects`,
         method: "GET",
       }),
       providesTags: ["FeatruedProjects"],
     }),
+
+  fetchEnquiredProjects: builder.query<ViewEnquiredProjectsResponse, void>({
+  query: () => ({
+    url: `${baseUrl}/enquiry/user`,
+    method: "GET",
+  }),
+  providesTags: ["EnquiredProjects"],
+}),
 
   }),
 });
@@ -115,6 +123,7 @@ export const {
   useFetchProjectByIdQuery,
   useFetchAllProjectsCountQuery,
   useFetchFeaturedProjectsQuery,
+  useFetchEnquiredProjectsQuery,
 } = projectApi;
 
 

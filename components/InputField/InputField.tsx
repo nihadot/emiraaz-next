@@ -36,7 +36,7 @@ const InputField: React.FC<InputFieldProps> = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="flex-1 outline-none text-[10.5px] font-normal font-poppins bg-transparent text-[#767676] placeholder:text-[#767676]"
+        className="flex-1 outline-none text-[14px] font-normal font-poppins bg-transparent text-[#767676] placeholder:text-[#767676]"
         required={required}
       />
     </div>

@@ -2,13 +2,11 @@ import { useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Keyboard } from 'swiper/modules';
 import Image from 'next/image';
-
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { black_down_icon, black_right_down_icon, down_icon } from '@/app/assets';
 import { AllProjectsItems } from '@/redux/project/types';
-import { GrFormNext, GrNext } from 'react-icons/gr';
+import { GrFormNext } from 'react-icons/gr';
 function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
     const prevRef = useRef(null);
     const swiperRef = useRef<any>(null);
@@ -101,17 +99,17 @@ function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
             >
                 <div className="left-3 absolute z-[1000] top-3">
 
-                    {(item.handOverQuarter && item.handOverYear) && <div className="bg-white font-poppins font-medium flex text-[9.5px] items-center rounded-[2px] py-1  px-2">
-                        Handover Date : {item.handOverQuarter} {item.handOverYear}
+                    {(item?.handOverQuarter && item?.handOverYear) && <div className="bg-white font-poppins font-medium flex text-[9.5px] items-center rounded-[2px] py-1  px-2">
+                        Handover Date : {item?.handOverQuarter} {item?.handOverYear}
                     </div>}
 
-                    {(item.projectType) && <div className="bg-white mt-1  w-fit flex font-poppins font-medium text-[9.5px] items-center rounded-[2px] py-1  px-2">
-                        {getProjectTypeLabel(item.projectType)}
+                    {(item?.projectType) && <div className="bg-white mt-1  w-fit flex font-poppins font-medium text-[9.5px] items-center rounded-[2px] py-1  px-2">
+                        {getProjectTypeLabel(item?.projectType)}
                     </div>}
                 </div>
 
-                {item.mainImages.length > 0 &&
-                    item.mainImages.map((img: any, index: number) => (
+                {item?.mainImages?.length > 0 &&
+                    item?.mainImages?.map((img: any, index: number) => (
                         <SwiperSlide key={index} className="w-full h-full">
                             <Image
                                 src={img.secure_url}
