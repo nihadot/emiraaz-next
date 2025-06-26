@@ -140,6 +140,7 @@ function ModalForm({ item, setEnquiry, onClose }: Props) {
                         width: '100%',
                         height: '40px',
                         borderRadius: '3.5px',
+                        fontSize: '16px',
                         borderColor: '#ccc',
                     }}
                     countryCodeEditable={false} 

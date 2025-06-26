@@ -7,6 +7,8 @@ type Props = {
 }
 
 function CustomSliderUi({shuffledImages}: Props) {
+
+    console.log(shuffledImages,'shuffledImages')
   return (
         <div className="">
                         <CustomSlider

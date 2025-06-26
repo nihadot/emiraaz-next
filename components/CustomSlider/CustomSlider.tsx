@@ -32,7 +32,10 @@ const CustomSliderComponent = ({
     return () => clearInterval(interval);
   }, [images, autoSlideInterval]);
 
+
+  console.log(images, 'images')
   if (images.length === 0) return null;
+
 
   return (
     <Link href={`/projects/${images[currentIndex].projectDetails?.slug}`} className={`relative flex w-full overflow-hidden ${containerClassName}`}>

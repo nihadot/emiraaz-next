@@ -117,7 +117,7 @@ function ProjectDetailsFunction({ id }: Props) {
 
   // console.log(portraitBannerData,'portraitBannerData')
   // console.log(banners,'banners')
-  const shuffledImages = useMemo(() => shuffle(banners), [router]);
+  const shuffledImages = useMemo(() => shuffle(banners), [banners]);
 
 
   const options = [

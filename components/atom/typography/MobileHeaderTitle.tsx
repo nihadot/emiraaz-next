@@ -6,7 +6,7 @@ type Props = {
 
 function MobileHeaderTitle({content}: Props) {
   return (
-      <p className='text-[18px] font-bold font-poppins'>{content}</p>
+      <p className='text-[18px] text-nowrap font-bold font-poppins'>{content}</p>
   )
 }
 

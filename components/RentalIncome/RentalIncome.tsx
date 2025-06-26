@@ -103,7 +103,7 @@ function RentalIncome() {
 
     const banners = portraitBannerData?.data || [];
 
-    const shuffledImages = useMemo(() => shuffle(banners), []);
+    const shuffledImages = useMemo(() => shuffle(banners), [banners]);
   const [defaultEmirate, setDefaultEmirate] = useState<string>('');
       const [defaultCities, setDefaultCities] = useState<any>('');
   

@@ -20,6 +20,7 @@ import { PiUserCircle } from "react-icons/pi";
 import CurrencySelect from './CurrencySelect';
 import Link from 'next/link';
 import { useDeviceType } from '@/utils/useDeviceType';
+import { usePathname } from 'next/navigation'
 
 interface Props {
   logoSection?: React.ReactNode;
@@ -30,8 +31,11 @@ function Header({
   logoSection = <Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />,
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname()
 
-  const menuItems = [
+
+  const menuItemsData = [
+    { name: 'Home', link: '/' },
     { name: 'About', link: '/about' },
     { name: 'Featured Projects', link: '/featured-projects' },
     { name: 'Ai Agent', link: '/ai-agent' },
@@ -39,6 +43,15 @@ function Header({
     { name: 'Donation', link: '/donations' },
   ];
 
+  const deviceType = useDeviceType();
+
+
+const menuItems = menuItemsData.filter((item) => {
+  if (item.link === '/' && pathname === '/') {
+    return false; // hide 'Home' when on home page and not mobile
+  }
+  return true;
+});
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -68,6 +81,9 @@ function Header({
     }
   };
 
+  // console.log(pathname,'usePathname')
+  // console.log(usePathname,'usePathname')
+
   const [currency, setCurrency] = useState<string>('');
 
   useEffect(() => {
@@ -80,13 +96,12 @@ function Header({
     }
   }, []);
 
-  const deviceType = useDeviceType();
 
 
 
   return (
     <Container>
-      <header className='relative flex pt-3 sm:pt-4 sm:pb-3 pb-0 justify-between items-center w-full'>
+      <header className={clsx('relative flex pt-3 sm:pt-4 sm:pb-3 justify-between items-center w-full', pathname === '/' ? '!pb-3' : 'pb-0')}>
 
         {/* Mobile Menu Button */}
         <button
@@ -109,7 +124,7 @@ function Header({
           {
             deviceType === 'mobile' ?
               logoSection
-              : <Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />
+              : <Link href={'/'}><Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' /></Link>
 
           }
 
@@ -305,7 +320,7 @@ function Header({
                   className='w-[30px] h-[30px] text-black'
                    color="black" /> */}
                 <SpaceWrapper
-                  className='mt-5'
+                  className='mt-2'
                 >
                   <div className="p-1.5 sm:hidden  z-40 bg-[#FFE7EC] rounded-[3px] w-fit">
                     <IoCloseSharp
@@ -329,7 +344,9 @@ function Header({
                 </div>
               </PrimaryButton>
 
-              <NavMenu items={menuItems} />
+              <div className="mt-2">
+                <NavMenu items={menuItems} />
+              </div>
               <OtherNavMenus />
 
               <p className='text-[12px] font-medium  font-poppins mt-5'>Download PropertySeller App</p>
