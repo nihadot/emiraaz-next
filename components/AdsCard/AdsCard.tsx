@@ -25,7 +25,9 @@ function AdsCard({ item }: Props) {
 
                 <div className="w-full h-[1px] bg-black/10 my-2"></div>
                 <div className="flex flex-1 justify-between items-center ">
-                    <Image src={item.image?.secure_url || ''} width={180} height={140} className='w-[84px] h-[58.5px] object-cover' alt="" />
+                    <div className="relative w-[84px] h-[58.5px]">
+                    <Image src={item.image?.secure_url || ''} fill  className=' w-full h-full object-contain' alt="" />
+                    </div>
                     <button onClick={()=>handleNavigateClick()} className='bg-black text-nowrap text-center font-poppins rounded-[3.75px] text-white hover:bg-black/60 w-[132px] h-[31.5px] text-[14.25px] font-normal'>More Details</button>
                 </div>
 
