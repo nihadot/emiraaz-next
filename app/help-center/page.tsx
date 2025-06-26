@@ -1,6 +1,8 @@
 'use client'
 import Container from '@/components/atom/Container/Container'
+import SectionDivider from '@/components/atom/SectionDivider/SectionDivider'
 import SpaceWrapper from '@/components/atom/SpaceWrapper/SpaceWrapper'
+import MobileHeaderTitle from '@/components/atom/typography/MobileHeaderTitle'
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import SearchInput from '@/components/SearchField/Search'
@@ -24,12 +26,22 @@ function HelpCenter() {
 
         <main>
 
+                <Header     logoSection={
+                           <div className='h-full w-full flex justify-center items-center'>
+                             <MobileHeaderTitle
+                            content='Help Center'
+                            />
+                           </div>
+                        }/>
+                    <SectionDivider
+                                    containerClassName="mt-[10.5px] mb-[12px]"
+                                    lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+                                />
             <div className=" max-w-[1200px] mx-auto w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
-                <Header />
 
                 <Container>
                     <SpaceWrapper
-                        className='sm:pb-20'
+                        className='pb-20'
                     >
 
                         <div className="  font-poppins px-5 py-5 sm:py-20 flex flex-col justify-center items-center max-w-[900px] m-auto">

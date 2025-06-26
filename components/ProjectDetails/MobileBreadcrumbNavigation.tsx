@@ -12,6 +12,7 @@ import { RootState } from '@/redux/store'
 import { errorToast } from '../Toast'
 import { useToggleWishlistItemMutation } from '@/redux/wishlist/wishlistApi'
 import { LOCAL_STORAGE_KEYS } from '@/api/storage'
+import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle'
 interface UserData {
     _id: string;
 }
@@ -88,15 +89,19 @@ function MobileBreadcrumbNavigation({ projectTitle, projectId }: Props) {
 
             <div
                 onClick={() => window.location.href = "/"}
-                className="w-[120px]  ms-12 h-[30px] relative object-cover">
+                className=" ms-12 h-full flex items-center  relative object-cover">
 
-                <Image
+                {/* <Image
                     src={logoWebP}
                     className="w-full h-full"
                     alt="logo"
                     fill
 
+                /> */}
+                <MobileHeaderTitle
+                content='Details'
                 />
+               
             </div>
 
             <div className="flex gap-1 items-center ">

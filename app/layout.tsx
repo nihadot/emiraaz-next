@@ -5,6 +5,7 @@ import { ReduxProvider } from "@/redux/provider";
 import { Toaster } from "react-hot-toast";
 import AppInitializer from "./AppInitializer";
 import Script from "next/script";
+import NoInternetWrapper from "@/components/NoInternetWrapper/NoInternetWrapper";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -92,9 +93,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
         ></iframe></noscript>
         <ReduxProvider>
+           <NoInternetWrapper>
+
           <AppInitializer />
           <Toaster />
           {children}
+           </NoInternetWrapper>
         </ReduxProvider>
       </body>
     </html>

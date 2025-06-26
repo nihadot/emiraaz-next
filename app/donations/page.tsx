@@ -1,5 +1,6 @@
 import Container from '@/components/atom/Container/Container'
 import SectionDivider from '@/components/atom/SectionDivider/SectionDivider'
+import MobileHeaderTitle from '@/components/atom/typography/MobileHeaderTitle'
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import clsx from 'clsx'
@@ -8,7 +9,13 @@ import React from 'react'
 function page() {
     return (
         <main>
-            <Header />
+            <Header     logoSection={
+                           <div className='h-full w-full flex justify-center items-center'>
+                             <MobileHeaderTitle
+                            content='Donations'
+                            />
+                           </div>
+                        }/>
 
 
               <SectionDivider

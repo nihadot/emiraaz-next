@@ -1,24 +1,22 @@
 'use client'
-import { Formik, Form } from "formik";
+import { Formik, Form, useFormikContext } from "formik";
 import * as Yup from "yup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import React from 'react'
 import { Footer } from "@/components/Footer";
 import Header from "@/components/Header";
 import { useEditProfileMutation, useFetchUserProfileDetailsQuery, useSignUpMutation } from "@/redux/auth/authApi";
-import { errorToast } from "@/components/Toast";
 import SectionDivider from "@/components/atom/SectionDivider/SectionDivider";
 import Container from "../atom/Container/Container";
-import Link from "next/link";
 import ErrorMessageBox from "../Forms/ErrorMessageBox";
 import InputField from "../Forms/InputField";
-import { LOCAL_STORAGE_KEYS } from "@/api/storage";
 import { handleApiError } from "@/utils/handleApiError";
 import useAuthRedirect from "@/hooks/useAuthRedirect";
 import SelectField from "../Forms/SelectField";
 import { nationalities } from "@/data";
 import { useUserLocalStorage } from "@/app/useUserLocalStorage";
+import MobileHeaderTitle from "../atom/typography/MobileHeaderTitle";
 
 const ProfileSchema = Yup.object().shape({
     name: Yup.string()
@@ -36,6 +34,7 @@ function Registration() {
     useAuthRedirect();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { data: fectchedUserProfileDetails, isLoading: isFetchingUserProfileDetails } = useFetchUserProfileDetailsQuery();
+
 
     const router = useRouter();
 
@@ -69,7 +68,13 @@ function Registration() {
 
     return (
         <>
-            <Header />
+            <Header     logoSection={
+                           <div className='h-full w-full flex justify-center items-center'>
+                             <MobileHeaderTitle
+                            content='Profile'
+                            />
+                           </div>
+                        }/>
             <SectionDivider
                 containerClassName="mt-[10.5px] mb-[12px]"
                 lineClassName="h-[1px] w-full bg-[#DEDEDE]"

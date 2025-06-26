@@ -2,9 +2,9 @@ import { errorToast } from "@/components/Toast";
 export const handleApiError = (error: any) => {
   const defaultMessage = 'Something went wrong. Please try again later.';
 
-  console.log(error,'[Error]')
   // Extract potential sources of errors
   const responseData = error?.data;
+  console.log(error,'responseData')
   let message = responseData?.message || error?.message || defaultMessage;
   const errors = responseData?.errors;
 

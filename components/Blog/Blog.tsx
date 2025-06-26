@@ -9,6 +9,9 @@ import { useViewAllBlogsQuery } from '@/redux/blogs/blogsApi';
 import Container from '@/components/atom/Container/Container';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import SectionDivider from '../atom/SectionDivider/SectionDivider';
+import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle';
+import clsx from 'clsx';
 
 
 
@@ -50,11 +53,17 @@ function Blog({ initialData }: { initialData: any }) {
 
     return (
         <main>
-            <Header />
-            <div className="flex">
-                <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
-            </div>
-
+            <Header  logoSection={
+                           <div className='h-full w-full flex justify-center items-center'>
+                             <MobileHeaderTitle
+                            content='Blogs'
+                            />
+                           </div>
+                        }  />
+                <SectionDivider
+                containerClassName={clsx("mb-[12px] mt-[12px]")}
+                lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+            />
             <Container>
 
                 <h3 className='text-[26px] sm:text-[37.5px] text-center py-[32px] font-medium font-poppins text-[#FF1645]'>Learn, Discover, Invest.</h3>

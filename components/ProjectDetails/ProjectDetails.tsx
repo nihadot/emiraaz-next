@@ -769,13 +769,13 @@ function ProjectDetailsFunction({ id }: Props) {
               <div className="flex sm:hidden">
                 <RecommendedText
                   title="Recommended For You"
-                  items={[
-                    'Studio Properties For Sale in Dubai',
-                    '1 BHK Flats in Downtown',
-                    'Luxury Villas in Palm Jumeirah',
-                    'Affordable Apartments in JVC',
-                    'Beachfront Homes in Dubai Marina',
-                  ]}
+                items={[
+        'Smart Picks in Dubai’s Fastest-Growing Zones',
+        'Handpicked Homes with High ROI Potential',
+        'Investor-Friendly Properties You’ll Love',
+        'Move-In Ready Units in Prime Locations',
+        'Top-Rated Listings in Family-Friendly Areas',
+    ]}
                 />
               </div>
 

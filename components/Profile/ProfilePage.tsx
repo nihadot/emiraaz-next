@@ -24,6 +24,7 @@ import { useUserLocalStorage } from '@/app/useUserLocalStorage'
 import useAuthRedirect from '@/hooks/useAuthRedirect'
 import { LOCAL_STORAGE_KEYS } from '@/api/storage'
 import Link from 'next/link'
+import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle'
 
 function ProfilePage() {
     const router = useRouter();
@@ -132,7 +133,13 @@ useEffect(() => {
     return (
         <main>
             <div className="w-full font-[family-name:var(--font-geist-sans)]">
-                <Header />
+                <Header      logoSection={
+                                           <div className='h-full w-full flex justify-center items-center'>
+                                             <MobileHeaderTitle
+                                            content='Profile'
+                                            />
+                                           </div>
+                                        }/>
 
                 <SectionDivider
                     containerClassName="mt-[10.5px] mb-[12px]"

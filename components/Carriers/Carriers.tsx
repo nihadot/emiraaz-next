@@ -4,19 +4,19 @@ import Header from '../Header'
 import SectionDivider from '../atom/SectionDivider/SectionDivider'
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper'
 import Container from '../atom/Container/Container'
-import { Field, Form, Formik } from 'formik'
+import { Form, Formik } from 'formik'
 import { FaCheckCircle } from 'react-icons/fa'
 import { useCarrierEnquiryMutation } from '@/redux/carriers/carriersApi'
 import * as Yup from "yup"
-import { getErrorMessage } from '@/utils/errorHandler'
 import { errorToast } from '../Toast'
-import ErrorMessageLabel from '../ErrorMessageLabel/ErrorMessageLabel'
 import Modal from '../Modal/Modal'
 import RegistrationSuccess from '../EnquiryForm/RegistrationSuccess'
 import InputField from '../Forms/InputField'
 import ErrorMessageBox from '../Forms/ErrorMessageBox'
 import SelectField from '../Forms/SelectField'
 import { nationalities } from '@/data'
+import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle'
+import { Footer } from '../Footer'
 
 function Carriers() {
 
@@ -84,7 +84,15 @@ console.log('first')
     return (
         <main>
 
-            <Header />
+            <Header 
+               logoSection={
+                           <div className='h-full w-full flex justify-center items-center'>
+                             <MobileHeaderTitle
+                            content='Careers'
+                            />
+                           </div>
+                        }
+                        />
 
             <SectionDivider
                 containerClassName="mt-[10.5px] mb-[12px]"
@@ -192,7 +200,7 @@ console.log('first')
                         validationSchema={ProfileSchema}
                         onSubmit={handleSubmit}
                     >
-                        {({ isSubmitting,values,errors }) => (
+                        {({ isSubmitting }) => (
                             <Form className="w-full max-w-[700px] mt-4 sm:mt-6 bg-white">
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -339,6 +347,8 @@ console.log('first')
 
                 </Container>
             </Modal>
+
+            <Footer />
 
         </main>
     )

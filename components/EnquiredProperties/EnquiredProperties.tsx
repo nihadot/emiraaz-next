@@ -27,6 +27,7 @@ import { setWishlist } from '@/redux/wishlistSlice/wishlistSlice'
 import { AllSmallVideoItems } from '@/redux/smallVideo/types'
 import { useViewAllSmallVideosQuery } from '@/redux/smallVideo/smallViewApi'
 import useAuthRedirect from '@/hooks/useAuthRedirect'
+import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle'
 
 function EnquiredProperties() {
     const { data: projects } = useFetchEnquiredProjectsQuery();
@@ -123,7 +124,13 @@ function EnquiredProperties() {
             <main>
 
                 <div className=" min-h-screen  w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
-                    <Header />
+                    <Header     logoSection={
+                           <div className='h-full w-full flex justify-center items-center'>
+                             <MobileHeaderTitle
+                            content='Enquired Properties'
+                            />
+                           </div>
+                        }/>
 
 
 
@@ -183,13 +190,13 @@ function EnquiredProperties() {
                                     <RecommendedText
                                         title="Recommended For You"
                                         containerClassName='!mb-2 !mt-0'
-                                        items={[
-                                            'Studio Properties For Sale in Dubai',
-                                            '1 BHK Flats in Downtown',
-                                            'Luxury Villas in Palm Jumeirah',
-                                            'Affordable Apartments in JVC',
-                                            'Beachfront Homes in Dubai Marina',
-                                        ]}
+                                         items={[
+        'Smart Picks in Dubai’s Fastest-Growing Zones',
+        'Handpicked Homes with High ROI Potential',
+        'Investor-Friendly Properties You’ll Love',
+        'Move-In Ready Units in Prime Locations',
+        'Top-Rated Listings in Family-Friendly Areas',
+    ]}
                                     />
 
                                     {/* {(smallVideoAds && smallVideoAds.length > 0 ?
@@ -211,23 +218,25 @@ function EnquiredProperties() {
                                         />
                                         <RecommendedText
                                             title="Trending Areas"
-                                            items={[
-                                                'Studio Properties For Sale in Dubai',
-                                                '1 BHK Flats in Downtown',
-                                                'Luxury Villas in Palm Jumeirah',
-                                                'Affordable Apartments in JVC',
-                                                'Beachfront Homes in Dubai Marina',
-                                            ]}
+                                              items={[
+        'Ras Al Khaimah: The New Investment Hotspot',
+        'Dubai South: Near Expo, Near Future',
+        'Marjan Island: Beachfront Rental Boom',
+        'Dubai Creek Harbour: Where the Skyline Begins',
+        'Mohammed Bin Rashid City: Luxury Rising',
+        'Sharjah Waterfront City: Serenity & Value',
+    ]}
                                         />
                                         <RecommendedText
                                             title="Popular Searches"
-                                            items={[
-                                                'Off-plan Projects in Dubai',
-                                                'Ready to Move Villas',
-                                                'High ROI Areas in UAE',
-                                                'Townhouses in Arabian Ranches',
-                                                'Gated Communities in Sharjah',
-                                            ]}
+                                           items={[
+        'Downtown Dubai: Iconic City Living',
+        'Dubai Marina: Waterfront Lifestyle at Its Best',
+        'Business Bay: Where Work Meets Luxury',
+        'Yas Island, Abu Dhabi: Island Living Redefined',
+        'Jumeirah Village Circle: Affordable Modern Homes',
+        'Al Reem Island, Abu Dhabi: Urban Peace',
+    ]}
                                         />
 
 
@@ -274,13 +283,13 @@ function EnquiredProperties() {
 
                     <RecommendedText
                         title="Recommended For You"
-                        items={[
-                            'Studio Properties For Sale in Dubai',
-                            '1 BHK Flats in Downtown',
-                            'Luxury Villas in Palm Jumeirah',
-                            'Affordable Apartments in JVC',
-                            'Beachfront Homes in Dubai Marina',
-                        ]}
+                         items={[
+        'Smart Picks in Dubai’s Fastest-Growing Zones',
+        'Handpicked Homes with High ROI Potential',
+        'Investor-Friendly Properties You’ll Love',
+        'Move-In Ready Units in Prime Locations',
+        'Top-Rated Listings in Family-Friendly Areas',
+    ]}
                     />
                 </div>
 

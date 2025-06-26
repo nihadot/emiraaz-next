@@ -1,8 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import currencyCodes from 'currency-codes';
-import { FaChevronCircleDown } from 'react-icons/fa';
 import { IoChevronDown, IoSearch } from 'react-icons/io5';
-import { useFetchCurrencyQuery } from '@/redux/currency/currencyApi';
+import clsx from 'clsx';
 // import { ChevronDownIcon, SearchIcon } from '@heroicons/react/solid';
 
 // Define interfaces for type safety
@@ -15,16 +14,25 @@ interface CurrencySelectProps {
   defaultCurrency?: string;
   onChange?: (currency: Currency | null) => void;
   disabled?: boolean;
+  dropdownMainContainerClassName?: string;
+  dropdownContainerClassName?: string;
+  selectedCurrencyClassName?: string;
+  IoChevronDownColor?: string;
 }
 
-const CurrencySelect: React.FC<CurrencySelectProps> = ({ defaultCurrency = 'AED', onChange, disabled = false }) => {
+const CurrencySelect: React.FC<CurrencySelectProps> = ({ defaultCurrency = 'AED', onChange, disabled = false,
+  dropdownMainContainerClassName,
+  dropdownContainerClassName,
+  selectedCurrencyClassName,
+  IoChevronDownColor,
+ }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
   const [selectedCurrency, setSelectedCurrency] = useState<Currency | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-    
+
 
   // Memoize currencies to prevent unnecessary recalculations
   const currencies = useMemo<Currency[]>(() => {
@@ -38,18 +46,18 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({ defaultCurrency = 'AED'
     return data;
   }, []);
 
-  
+
   // Initialize default currency if provided
   useEffect(() => {
-      if (defaultCurrency && !selectedCurrency) {
-          const defaultCurr = currencies.find((curr) => curr.code === defaultCurrency);
-          if (defaultCurr) {
-              setSelectedCurrency(defaultCurr);
-              onChange?.(defaultCurr);
-            }
-        }
-    }, [defaultCurrency, currencies, onChange, selectedCurrency]);
-    
+    if (defaultCurrency && !selectedCurrency) {
+      const defaultCurr = currencies.find((curr) => curr.code === defaultCurrency);
+      if (defaultCurr) {
+        setSelectedCurrency(defaultCurr);
+        onChange?.(defaultCurr);
+      }
+    }
+  }, [defaultCurrency, currencies, onChange, selectedCurrency]);
+
   // Filter currencies based on search input
   const filteredCurrencies = useMemo<Currency[]>(() => {
     const searchLower = search.toLowerCase();
@@ -73,32 +81,32 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({ defaultCurrency = 'AED'
   // Handle currency selection
   const handleSelect = (currency: Currency) => {
 
-     const url = new URL(window.location.href);
+    const url = new URL(window.location.href);
 
-    if(selectedCurrency?.code === currency.code){
-        setSelectedCurrency(null);
-        setIsOpen(false);
-        setSearch('');
-        onChange?.(null);
-                                            url.searchParams.delete('currency');
+    if (selectedCurrency?.code === currency.code) {
+      setSelectedCurrency(null);
+      setIsOpen(false);
+      setSearch('');
+      onChange?.(null);
+      url.searchParams.delete('currency');
 
-    }else{
-                                            url.searchParams.set('currency', currency.code?? '');
-        
-        setSelectedCurrency(currency);
-        setIsOpen(false);
-        setSearch('');
-        onChange?.(currency);
+    } else {
+      url.searchParams.set('currency', currency.code ?? '');
+
+      setSelectedCurrency(currency);
+      setIsOpen(false);
+      setSearch('');
+      onChange?.(currency);
     }
-        
 
-                                        // if (e?.value) {
-                                        // } else {
-                                            // url.searchParams.delete('emirate');
-                                        // }
-                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                        window.history.pushState({}, '', newUrl);
-                                        window.location.reload();
+
+    // if (e?.value) {
+    // } else {
+    // url.searchParams.delete('emirate');
+    // }
+    const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+    window.history.pushState({}, '', newUrl);
+    window.location.reload();
 
 
   };
@@ -133,15 +141,14 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({ defaultCurrency = 'AED'
 
   return (
     <div
-      className={`relative w-full max-w-md font-sans ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+      className={clsx('',`relative w-full max-w-md font-sans ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`,dropdownMainContainerClassName)}
       ref={dropdownRef}
     >
       <div
-        className={`flex gap-2 items-center justify-between w-full px-3 py-[6.5px] bg-white border text-sm border-gray-200 rounded transition-all cursor-pointer duration-200 ${
-          disabled
+        className={clsx('',`flex gap-2 items-center justify-between w-full px-3 py-[6.5px] bg-white border text-sm border-gray-200 rounded transition-all cursor-pointer duration-200 ${disabled
             ? 'bg-gray-100'
             : ''
-        } `}
+          } `,dropdownContainerClassName)}
         onClick={handleToggle}
         role="combobox"
         tabIndex={disabled ? -1 : 0}
@@ -149,19 +156,19 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({ defaultCurrency = 'AED'
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         aria-disabled={disabled}
-         aria-controls="currency-dropdown-list"  // <-- Add this
+        aria-controls="currency-dropdown-list"  // <-- Add this
       >
-        <span className={`text-gray-800 text-[12px] font-medium ${selectedCurrency ? '' : 'text-gray-400'}`}>
+        <span className={(clsx('',`text-gray-800 text-[12px] font-medium ${selectedCurrency ? '' : 'text-gray-400'}`,selectedCurrencyClassName))}>
           {isLoading
             ? 'Loading currencies...'
             : selectedCurrency
-            ? `${selectedCurrency.code}`
-            : 'Currency'}
+              ? `${selectedCurrency.code}`
+              : 'Currency'}
         </span>
-       <IoChevronDown 
-          className={`w-4 h-[18px] text-gray-500 transform transition-transform duration-200 ${
-            isOpen ? 'rotate-180' : ''
-          } ${disabled ? 'text-gray-400' : ''}`}
+        <IoChevronDown
+        color={IoChevronDownColor}
+          className={`w-4 h-[18px] text-gray-500 transform transition-transform duration-200 ${isOpen ? 'rotate-180' : ''
+            } ${disabled ? 'text-gray-400' : ''}`}
         />
       </div>
 
@@ -188,9 +195,8 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({ defaultCurrency = 'AED'
               filteredCurrencies.map((curr) => (
                 <li
                   key={curr.code}
-                  className={`flex items-center p-2 text-sm text-gray-800 rounded-md hover:bg-blue-50 cursor-pointer transition-colors duration-150 ${
-                    selectedCurrency?.code === curr.code ? 'bg-blue-100 font-semibold' : ''
-                  }`}
+                  className={`flex items-center p-2 text-sm text-gray-800 rounded-md hover:bg-blue-50 cursor-pointer transition-colors duration-150 ${selectedCurrency?.code === curr.code ? 'bg-blue-100 font-semibold' : ''
+                    }`}
                   onClick={() => handleSelect(curr)}
                   role="option"
                   aria-selected={selectedCurrency?.code === curr.code}

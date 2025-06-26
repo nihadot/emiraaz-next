@@ -1,5 +1,7 @@
 import Container from '@/components/atom/Container/Container'
+import SectionDivider from '@/components/atom/SectionDivider/SectionDivider'
 import SpaceWrapper from '@/components/atom/SpaceWrapper/SpaceWrapper'
+import MobileHeaderTitle from '@/components/atom/typography/MobileHeaderTitle'
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import clsx from 'clsx'
@@ -36,43 +38,185 @@ export const metadata: Metadata = {
 function page() {
     return (
         <main>
-            <Header />
+            <Header
+                logoSection={
+                    <div className='h-full w-full flex justify-center items-center'>
+                        <MobileHeaderTitle
+                            content='About Us'
+                        />
+                    </div>
+                }
+            />
 
-            <div className="">
-                <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
-            </div>
-            <section className='bg-white text-black'>
+            <SectionDivider
+                containerClassName={clsx("mb-[12px] mt-[12px]")}
+                lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+            />
+            <section className='bg-white text-black pb-20'>
 
                 <Container>
-                    <h2 className=' font-poppins  font-medium text-[12px] sm:text-[14px] text-center py-[10px]'>About Us</h2>
-                    <h1 className=' font-poppins font-medium text-[19.5px] sm:text-[37.5px] text-center pb-[10px]'>Story Of PropertySeller.</h1>
+                    <h2 className=' font-poppins  font-medium text-[12px] sm:text-[14px] text-center py-3'>About Us</h2>
+                    <h1 className=' font-poppins font-medium text-[20px] sm:text-[37.5px] text-center pb-[6px] sm:pb-[10px]'>The Story Behind PropertySeller</h1>
                     <Paragraph
-                        content='At PropertySeller, we are not just a marketplace—we are the bridge that connects buyers with the best off-plan property opportunities. Our journey began with a clear vision: to simplify the real estate process, eliminate complexities, and bring transparency to every transaction.
-                            We saf a gap in the market where buyers struggled to find reliable information, access the right projects, and connect with trusted sellers. PropertySeller was born out of the need to fill this void—creating a seamless platform that offers verified listings, real-time insights, and expert support to guide every client toward their ideal investment.From the moment a buyer shows interest in a property to the final transaction, we ensure a smooth and efficient experience. We have built strong relationships with top developers, giving our users access to exclusive deals and early investment opportunities that are often hard to find elsewhere. Our approach is simple: provide accurate information, eliminate unnecessary barriers, and help buyers make informed decisions with confidence'
+                        content='Picture this: You are searching for your dream home or a smart investment. But soon you
+realise you are stuck in a frustrating loop, where each agent promises the world but delivers
+confusion. Biased recommendations, followed by relentless calls you never asked for, and
+privacy breached. They are pushing what they want to sell and not what you need, all while
+doing documents that are hard to understand and the pressure of making one of life’s
+biggest financial decisions, without clear guidance, feels overwhelming.'
 
                     />
-                    <SpaceWrapper className='pt-[28px]'>
+                    <SpaceWrapper className='pt-[8px]'>
                         <Paragraph
-                            content='At PropertySeller, we believe real estate should be hassle-free, accessible, and rewarding. That’s why we go beyond just being a platform—we act as your trusted partner in every step of the journey, ensuring that you invest wisely and with full confidence. What makes PropertySeller different is our commitment to transparency and efficiency. We understand that real estate transactions can be overwhelming, especially for first-time buyers and investors. That’s why we leverage technology and market expertise to provide a streamlined, user-friendly experience where buyers can explore properties, compare options, and get expert advice—all in one place. Our platform is designed to save time, reduce risks, and maximize investment potential. Beyond just connecting buyers and sellers, we are building a community of real estate enthusiasts, investors, and industry experts. PropertySeller is not just a marketplace; it is a movement towards a smarter, more connected, and more informed real estate industry. Whether you are looking for a luxury apartment in Dubai or a high-growth investment opportunity, PropertySeller is here to guide you every step of the way.PropertySeller operates under EMIRAAZ, its parent company, which provides the foundation and vision to drive innovation in the real estate industry.'
+                            content='If this sounds familiar, you’re not alone. Most of us have been through it. Tired of a real
+estate industry that seemed to prioritize profits over people, We knew something had to
+change.'
                         />
                     </SpaceWrapper>
 
 
-                    <div className='flex pb-10 flex-col sm:flex-row gap-[38px] mt-4 sm:mt-[40px] items-center justify-between'>
+                    <SpaceWrapper className='pt-[8px]'>
+                        <Paragraph
+                            content='That’s how PropertySeller was born.'
+                        />
+                    </SpaceWrapper>
+
+                    <SpaceWrapper className='pt-[8px]'>
+                        <Paragraph
+                            content='We believe that behind every property search is a human story. Maybe you’re a young
+couple looking for your first home. A parent planning a better future for your children. Or an
+investor ready to take the next big step.'
+                        />
+                    </SpaceWrapper>
 
 
-                        <div className="flex-1">
-                            <h3 className=' font-poppins  font-medium text-[19.5px] pb-3 sm:text-[37.5px] text-center'>Meet the Founder – Ashiq Emiraaz</h3>
+                    <SpaceWrapper className='pt-[8px]'>
+                        <Paragraph
+                            content='Whatever your story, we want to be a part of it. Not just as a service provider, but as a
+partner, someone who believes in your dreams just as much as you do.'
+                        />
+                    </SpaceWrapper>
 
-                            <SpaceWrapper className=''>
-                                <Paragraph
-                                    className='!text-center'
-                                    content='At PropertySeller, we believe real estate should be hassle-free, accessible, and rewarding. That’s why we go beyond just being a platform—we act as your trusted partner in every step of the journey, ensuring that you invest wisely and with full confidence. What makes PropertySeller different is our commitment to transparency and efficiency. We understand that real estate transactions can be overwhelming, especially for first-time buyers and investors. That’s why we leverage technology and market expertise to provide a streamlined, user-friendly experience where buyers can explore properties, compare options, and get expert advice—all in one place. Our platform is designed to save time, reduce risks, and maximize investment potential. Beyond just connecting buyers and sellers, we are building a community of real estate enthusiasts, investors, and industry experts. PropertySeller is not just a marketplace; it is a movement towards a smarter, more connected, and more informed real estate industry. Whether you are looking for a luxury apartment in Dubai or a high-growth investment opportunity, PropertySeller is here to guide you every step of the way.PropertySeller operates under EMIRAAZ, its parent company, which provides the foundation and vision to drive innovation in the real estate industry.'
-                                />
-                            </SpaceWrapper>
-                        </div>
 
-                    </div>
+
+
+                    <h3 className=' font-poppins font-medium text-[20px] sm:text-[37.5px] text-center pb-[0px] sm:pb-[10px] pt-6'>What We Do</h3>
+
+                    <SpaceWrapper className='pt-[6px] sm:pt-0'>
+                        <Paragraph
+                            content='PropertySeller is your trusted partner in real estate. We’ve created a seamless platform with
+verified listings, real-time insights, and expert support making every step of your property
+journey smooth, transparent, and empowering with no middlemen or agents and no hidden
+fees. Just honest, simplified, and straightforward transactions.'
+                        />
+                    </SpaceWrapper>
+
+
+
+
+                    <SpaceWrapper className='pt-[8px]'>
+                        <Paragraph
+                            content='One of the biggest frustrations buyers face today is duplication. The same off-plan or
+secondary property frequently appears across the same website with different price tags,
+whether listed simultaneously or at different times. This inconsistency causes confusion and
+distrust in their hearts.'
+                        />
+                    </SpaceWrapper>
+
+                    <SpaceWrapper className='pt-[8px]'>
+                        <Paragraph
+                            content='We solve this by working directly with developers and property owners, cutting out the noise
+and bringing verified, accurate, and fairly priced listings straight to you. Thanks to the strong
+partnerships we were able to build with top developers, our users gain access to exclusive
+listings and early investment opportunities often hard to find elsewhere.'
+                        />
+                    </SpaceWrapper>
+
+
+                    <SpaceWrapper className='pt-[8px]'>
+                        <Paragraph
+                            content='Though we began with off-plan projects, we’ve grown into a full-spectrum platform. Today,
+PropertySeller connects buyers to off-plan properties, resales, secondary homes, and
+land-offering a range of options all in one place.'
+                        />
+                    </SpaceWrapper>
+
+
+                    <SpaceWrapper className='pt-[8px]'>
+                        <Paragraph
+                            content='What truly sets us apart is our mission to not let any investor or buyer feel overwhelmed by
+the process. We commit to it by transparency, efficiency, and empowerment and by
+combining technology with market expertise to help you compare, decide, and invest with
+confidence. We’re a platform with a growing community of buyers, investors, and real estate
+enthusiasts who believe in doing things differently. Whether you’re searching for a luxury
+apartment in Dubai or your next big investment, PropertySeller is here to guide you every
+step of the way.'
+                        />
+                    </SpaceWrapper>
+
+
+                    <h3 className=' font-poppins font-medium text-[20px] sm:text-[37.5px] text-center pb-[0px] sm:pb-[10px] pt-6'>Who We Are</h3>
+
+
+                    <SpaceWrapper className='pt-[6px] sm:pt-0'>
+                        <Paragraph
+                            content='PropertySeller operates under EMIRAAZ, our parent company driving innovation in the real
+estate space. While PropertySeller is the platform you interact with, all backend operations,
+deal closures, legal formalities, and coordination are handled by EMIRAAZ PROPERTIES
+LLC, a company registered with the Dubai Economic Department.'
+                        />
+                    </SpaceWrapper>
+
+
+                    <h3 className=' font-poppins font-medium text-[20px] sm:text-[37.5px] text-center pb-[0px] sm:pb-[10px] pt-6'>Meet the Founder – Ashiq Emiraaz</h3>
+
+
+
+                    <SpaceWrapper className='pt-[6px] sm:pt-0'>
+                        <Paragraph
+                            content='Ashiq Emiraaz knows what it’s like to feel lost in the real estate maze. That frustration
+sparked a mission: to make property buying clear, honest, and empowering. With deep
+insights into the market’s challenges and opportunities, Ashiq built PropertySeller to put
+buyers first - offering real information, real support, and real results.'
+                        />
+                    </SpaceWrapper>
+
+
+
+                    <SpaceWrapper className='pt-[8px]'>
+                        <Paragraph
+                            content='Under his leadership, PropertySeller has grown into a comprehensive platform for property
+seekers - from off-plan to resales, secondary markets, and land.'
+                        />
+                    </SpaceWrapper>
+
+
+
+                    <SpaceWrapper className='pt-[8px]'>
+                        <Paragraph
+                            content='But Ashiq’s vision isn’t just about building a business. It’s about building a legacy - one
+where integrity is lived, not just spoken. Where transparency is part of every process, and
+customer satisfaction is more than a metric - it’s a promise.'
+                        />
+                    </SpaceWrapper>
+
+
+                    <SpaceWrapper className='pt-[8px]'>
+                        <Paragraph
+                            content='Welcome to PropertySeller.'
+                        />
+
+                    </SpaceWrapper>
+
+                    <SpaceWrapper className='pt-[8px]'>
+
+                        <Paragraph
+                            content='Welcome to your new beginning.'
+                        />
+                    </SpaceWrapper>
+
+
+
                 </Container>
             </section>
 

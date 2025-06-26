@@ -15,6 +15,7 @@ import SearchNew from '../SearchField/SearchNew';
 import SelectLatest from '../SelectOption/SelectLatest';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
 import clsx from 'clsx';
+import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle';
 
 function RentalIncome() {
 
@@ -132,7 +133,13 @@ function RentalIncome() {
         <main>
 
             <div className=" pb-10 w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
-                <Header />
+                <Header  logoSection={
+                               <div className='h-full w-full flex justify-center items-center'>
+                                 <MobileHeaderTitle
+                                content='Rental Income'
+                                />
+                               </div>
+                            }/>
 
                 <Container>
                     <section className="flex-wrap w-full flex items-center  gap-2">
@@ -276,7 +283,7 @@ function RentalIncome() {
 
                 <Container>
 
-                    <div className="flex gap-4 grid-cols-1">
+                    <div className="flex gap-2 grid-cols-1">
 
                         <section className='h-full w-full gap-3 grid grid-cols-1' >
 
@@ -299,7 +306,7 @@ function RentalIncome() {
                         </section>
 
 
-                        <div className="w-full min-1110px:block  hidden ps-2 max-w-[301.5px]">
+                        <div className="w-full min-1110px:block  hidden max-w-[301.5px]">
                            <div className="border p-3 rounded-[2px] border-[#DEDEDE] bg-[#F7F7F7] mb-2">
                             <p className='text-[12px] font-poppins font-medium'>Note:</p>
                             <p className='text-[12px] text-black/60 font-poppins'>The rental income figures shown are approximate and intended to give investors a general idea of the potential annual returns across different areas in Dubai and other Emirates. Actual rental yields may vary depending on factors such as property type, building age, location, amenities, demand, and market conditions.</p>
@@ -347,11 +354,12 @@ function Card({ item, title, name }: CardProps) {
                     <p className='capitalize line-clamp-1'>{item.emirateDetails.name}</p>
                 </div>
             </div>
-            {name === 'townhouses' && <div className="text-[13.5px] font-poppins font-medium pt-[5px] gap-1 flex flex-col">
+            {name === 'townhouses' && <div className="text-[13.5px] overflow-y-auto max-h-[120px] font-poppins font-medium pt-[5px] gap-1 flex flex-col">
                 {item.townhouses.map((item, index) => {
                     return (
                         <div key={index} className="text-[13.5px] font-poppins font-medium pt-[5px] gap-1 flex flex-col">
                             <p>{item.value} AED/yearly</p>
+                        
                         </div>
                     )
                 })}
@@ -360,23 +368,25 @@ function Card({ item, title, name }: CardProps) {
                 <p>5 bedroom {item.townHouseThreeBedroom} AED/yearly</p> */}
             </div>}
 
-            {name === 'villas' && <div className="text-[13.5px] font-poppins font-medium  pt-[5px] gap-1 flex flex-col">
+            {name === 'villas' && <div className="text-[13.5px] overflow-y-auto max-h-[120px] font-poppins font-medium  pt-[5px] gap-1 flex flex-col">
                 {item.villas.map((item, index) => {
                     return (
                         <div key={index} className="text-[13.5px] font-poppins font-medium pt-[5px] gap-1 flex flex-col">
                             <p>{item.value}/yearly</p>
+                        
                         </div>
                     )
                 })}
             </div>}
 
 
-            {name === 'apartments' && <div className="text-[13.5px] font-poppins font-medium pt-[5px] gap-1 flex flex-col">
+            {name === 'apartments' && <div className="text-[13.5px] overflow-y-auto max-h-[100px] font-poppins font-medium pt-[5px] gap-1 flex flex-col">
                 {
                     item.apartments.map((item, index) => {
                         return (
                             <div key={index} className="text-[13.5px] font-poppins font-medium pt-[5px] gap-1 flex flex-col">
                                 <p>{item.value}/yearly</p>
+                            
                             </div>
                         )
                     })

@@ -1,6 +1,7 @@
 import Container from '@/components/atom/Container/Container'
 import SectionDivider from '@/components/atom/SectionDivider/SectionDivider'
 import SpaceWrapper from '@/components/atom/SpaceWrapper/SpaceWrapper'
+import MobileHeaderTitle from '@/components/atom/typography/MobileHeaderTitle'
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import clsx from 'clsx'
@@ -172,7 +173,13 @@ function page() {
 
   return (
     <main>
-      <Header />
+      <Header   logoSection={
+               <div className='h-full w-full flex justify-center items-center'>
+                 <MobileHeaderTitle
+                content='Terms & Conditions'
+                />
+               </div>
+            }/>
 
       <SectionDivider
         containerClassName="mt-[10.5px] mb-[12px]"

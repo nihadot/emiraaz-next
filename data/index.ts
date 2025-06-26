@@ -286,3 +286,45 @@ export  const nationalities = [
   { value: 'lithuania', label: 'Lithuania' },
   { value: 'luxembourg', label: 'Luxembourg' }
 ];
+
+export const propertyType = [
+    {
+        value:'',
+        label:"Choose Property Type"
+    },
+   {
+                    id: 1,
+                    value: "villa",
+                    label: "Villa",
+                },
+                {
+                    id: 2,
+                    value: "apartment",
+                    label: "Apartment"
+                },
+                {
+                    id: 3,
+                    value: "penthouse",
+                    label: "Penthouse"
+                },
+                {
+                    id: 4,
+                    value: "townhouse",
+                    label: "Townhouse"
+                },
+                  {
+                    id: 5,
+                    value: "officespace",
+                    label: "Office Space",
+                },
+                {
+                    id: 5,
+                    value: "shops",
+                    label: "Shops"
+                },
+                {
+                    id: 7,
+                    value: "warehouse",
+                    label: "Ware House"
+                },
+]

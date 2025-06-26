@@ -268,7 +268,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                         tag='p'
 
                         className='text-[12px] line-clamp-1 text-ellipsis font-light font-poppins capitalize'
-                        text={item.address || 'Jumeirah Village Circle, Dubai'}
+                        text={item.address}
                     />
                 </div>
 

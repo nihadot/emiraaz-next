@@ -201,22 +201,18 @@ const ProjectBasicInfo = ({ projectId, type,
 
         {/* Property Type */}
         <div className="flex flex-wrap sm:flex-nowrap mt-[12.75px] items-center gap-3">
-          {propertyType ? <p className="capitalize font-medium font-poppins text-[12px]">{propertyType}</p> :
-            <div className="w-full max-w-[100px] h-[25px] rounded bg-gray-50"></div>
-          }          <div className="h-[18px] w-[1px] bg-[#333333]" />
+          <p className="capitalize font-medium font-poppins text-[12px]">{propertyType ? propertyType : 'NOT PROVIDED'}</p>
+                    <div className="h-[18px] w-[1px] bg-[#333333]" />
           {!(propertyType === 'land-residential' || propertyType === 'land-commercial') && <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               {/* <Image src={bed_icon} alt="bed icon" width={20} height={20} className="object-cover" /> */}
               {/* <p className="text-sm font-light font-poppins">{item.numberOfBeds}</p> */}
 
-              {type ? <> <Typography
+              <Typography
                 tag='p'
                 className='text-[12px] text-nowrap font-light font-poppins'
-                text={type}
+                text={type ? type : 'NOT PROVIDED'}
               />
-                <LiaBedSolid size={20} color='#333' />
-              </> : <p className="h-[25px] w-[80px] bg-gray-50 rounded" />
-              }
             </div>
 
 
@@ -236,7 +232,7 @@ const ProjectBasicInfo = ({ projectId, type,
 
             <div className="flex items-center gap-2">
               {/* <Image src={bath_icon} alt="bath icon" width={20} height={20} className="object-cover" /> */}
-              {totalFloors ? <>
+            <>
                 <HiOutlineBuildingOffice
                   color='#333'
                   className='w-[18px] h-[18px]'
@@ -246,12 +242,10 @@ const ProjectBasicInfo = ({ projectId, type,
                   tag='p'
 
                   className='text-[12px] font-light font-poppins'
-                  text={`${totalFloors} floors`}
+                  text={`${totalFloors ? totalFloors : 'NOT PROVIDED'} ${totalFloors ? ' floors' : ''}`}
                 />
               </>
-                :
-                <div className="w-[100px] h-[25px] rounded bg-gray-50"></div>
-              }
+               
 
             </div>
           </div>

@@ -22,14 +22,14 @@ import explore_icon from "@/app/assets/explore_icon.png";
 
 
 function WhyDubai() {
-  return (
-     <main>
-            <div style={{ backgroundImage: `url(${why_dubai_icon?.src})`,backgroundSize:"100% 125%",backgroundRepeat:"no-repeat",backgroundPosition:"center center" }} className="w-full flex flex-col justify-center items-center  relative h-[619px] bg-slate-50">
+    return (
+        <main>
+            <div style={{ backgroundImage: `url(${why_dubai_icon?.src})`, backgroundSize: "100% 125%", backgroundRepeat: "no-repeat", backgroundPosition: "center center" }} className="w-full flex flex-col justify-center items-center  relative h-[619px] bg-slate-50">
                 <Container>
                     <div className="absolute z-40 top-0 left-0 w-full h-full">
                         <HeaderSecondary />
                     </div>
-               
+
                     <div className=" max-w-[730px] w-full sm:h-[214px] px-[41px] py-[34px] rounded-[7.5px] mt-20 bg-white/60 backdrop-blur-md">
                         <h2 className='text-[12px] font-medium font-poppins text-black'>Why Dubai</h2>
                         <h1 className='text-[37.5px] font-poppins font-medium text-black'>Why Invest in Dubai Real Estate?</h1>
@@ -167,7 +167,7 @@ function WhyDubai() {
 
 
 
-      <SpaceWrapper
+                    <SpaceWrapper
                         className='mb-[37.5px] sm:mb-[60px]'
                     >   <InfoCardLeft
                         description='Real estate investors can qualify for long-term residency visas, including 3-year, 5-year, and 10-year Golden Visas, depending on the property investment value. This provides added security and residency benefits for investors and their families.'
@@ -206,7 +206,7 @@ function WhyDubai() {
 
 
 
-      <SpaceWrapper
+                    <SpaceWrapper
                         className='mb-[37.5px] sm:mb-[60px]'
                     >   <InfoCardLeft
                         description='Real estate investors can qualify for long-term residency visas, including 3-year, 5-year, and 10-year Golden Visas, depending on the property investment value. This provides added security and residency benefits for investors and their families.'
@@ -247,7 +247,7 @@ function WhyDubai() {
 
 
 
-      <SpaceWrapper
+                    <SpaceWrapper
                         className='mb-[37.5px] sm:mb-[60px]'
                     >   <InfoCardLeft
                         description={`Explore the legacy of Expo 2020 and its lasting impact on Dubai's growth, innovation, and global connectivity. Discover how this landmark event has shaped the future of our city and the opportunities that lie ahead.`}
@@ -273,7 +273,7 @@ function WhyDubai() {
 
 
         </main>
-  )
+    )
 }
 
 export default WhyDubai

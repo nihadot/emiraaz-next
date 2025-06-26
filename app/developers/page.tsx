@@ -19,6 +19,7 @@ import Link from 'next/link'
 import SearchNew from '@/components/SearchField/SearchNew'
 import SectionDivider from '@/components/atom/SectionDivider/SectionDivider'
 import clsx from 'clsx'
+import MobileHeaderTitle from '@/components/atom/typography/MobileHeaderTitle'
 
 
 function Developers() {
@@ -99,7 +100,15 @@ function Developers() {
         <main>
 
             <div className=" w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
-                <Header />
+                <Header 
+                    logoSection={
+                                           <div className='h-full w-full flex justify-center items-center'>
+                                             <MobileHeaderTitle
+                                            content='Developers'
+                                            />
+                                           </div>
+                                        }
+                />
 
 
 

@@ -16,6 +16,7 @@ import { Footer } from '../Footer';
 import OpenHouseEnquiryForm from '../EnquiryForm/OpenHouseEnquiryForm';
 import Modal from '../Modal/Modal';
 import { formatDate } from '../atom/button/formatDate';
+import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle';
 
 function OpenHouse() {
 
@@ -63,7 +64,13 @@ function OpenHouse() {
 
     return (
         <main>
-            <Header />
+            <Header     logoSection={
+                           <div className='h-full w-full flex justify-center items-center'>
+                             <MobileHeaderTitle
+                            content='Open House'
+                            />
+                           </div>
+                        }/>
 
             <SectionDivider
                 containerClassName="mt-[10.5px] mb-[12px]"

@@ -1,6 +1,8 @@
 'use client'
 import Container from '@/components/atom/Container/Container'
+import SectionDivider from '@/components/atom/SectionDivider/SectionDivider'
 import SpaceWrapper from '@/components/atom/SpaceWrapper/SpaceWrapper'
+import MobileHeaderTitle from '@/components/atom/typography/MobileHeaderTitle'
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import clsx from 'clsx'
@@ -17,8 +19,19 @@ function HelpCenter() {
 
         <main>
 
-            <div className=" max-w-[1200px] mx-auto w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
-                <Header />
+                <Header
+                    logoSection={
+                                           <div className='h-full w-full flex justify-center items-center'>
+                                             <MobileHeaderTitle
+                                            content='Common Questions'
+                                            />
+                                           </div>
+                                        } />
+
+                      <SectionDivider
+                containerClassName="mt-[10.5px] mb-[12px]"
+                lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+            />
 
                 <Container>
                     <SpaceWrapper
@@ -26,8 +39,8 @@ function HelpCenter() {
                     >
 
 
-                        <div className="flex flex-col mt-[75px] items-center justify-center m-auto  max-w-[600px] w-full">
-                            <h3 className='font-poppins text-center font-medium text-[19.5px] sm:text-[37.5px]'>
+                        <div className="flex flex-col mt-5 sm:mt-[75px] items-center justify-center m-auto  max-w-[600px] w-full">
+                            <h3 className='font-poppins text-center font-medium text-[26px]  sm:text-[34px] sm:leading-10'>
                                 Your <span className='text-[#FF1645]'>PropertySeller</span>Questions, Answered Here
                             </h3>
                             <Paragraph
@@ -197,7 +210,6 @@ function HelpCenter() {
                 </Container>
 
 
-            </div>
 
             <Footer />
         </main>
@@ -241,7 +253,7 @@ function ToggleButton({ title, children }: {
                 className="w-full flex justify-between items-center px-3 py-2 cursor-pointer"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <p className="font-poppins capitalize font-medium text-[14px] sm:text-[16px] text-black">
+                <p className="font-poppins capitalize font-medium text-[14px] text-black">
                     {title}
                 </p>
                 {isOpen ? (

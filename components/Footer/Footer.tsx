@@ -227,10 +227,10 @@ function Footer() {
                                         title: "Enquired Properties",
                                         link: "/enquired-properties"
                                     },
-                                    {
-                                        title: "Purchase History",
-                                        link: "/purchase-history"
-                                    }
+                                    // {
+                                    //     title: "Purchase History",
+                                    //     link: "/purchase-history"
+                                    // }
                                 ]}
                             />
                             <FooterList
@@ -257,8 +257,8 @@ function Footer() {
                                         link: "/open-house"
                                     },
                                     {
-                                        title:"Carriers",
-                                        link:"/carriers"
+                                        title:"Careers",
+                                        link:"/careers"
                                     }
                                 ]}
                             />

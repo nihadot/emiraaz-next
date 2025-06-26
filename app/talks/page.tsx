@@ -1,10 +1,14 @@
 'use client'
 import Container from '@/components/atom/Container/Container';
+import SectionDivider from '@/components/atom/SectionDivider/SectionDivider';
+import SpaceWrapper from '@/components/atom/SpaceWrapper/SpaceWrapper';
+import MobileHeaderTitle from '@/components/atom/typography/MobileHeaderTitle';
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import Pagination from '@/components/Pagination/Pagination';
 import { useFetchAllVideoQuery } from '@/redux/talks/talksApi';
 import { VideoItem } from '@/redux/talks/types';
+import clsx from 'clsx';
 import React, { useEffect, useMemo, useState } from 'react'
 import { FaPlay } from "react-icons/fa";
 /* eslint-disable @next/next/no-img-element */
@@ -38,12 +42,20 @@ function Talk() {
 
     return (
         <main>
-            <Header />
+            <Header  logoSection={
+               <div className='h-full w-full flex justify-center items-center'>
+                 <MobileHeaderTitle
+                content='Property Talks'
+                />
+               </div>
+            }/>
 
 
-      <div className="">
-        <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
-      </div>
+               <SectionDivider
+                containerClassName={clsx("mb-[12px] mt-[12px]")}
+                lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+            />
+
             <Container>
 
                 <div className="gap-[31px] mt-4 grid-cols-1 grid sm:grid-cols-2 md:grid-cols-3">
@@ -178,11 +190,14 @@ function Talk() {
 
                 </div>
 
+<SpaceWrapper className='mb-10'>
+
                 <Pagination
                     currentPage={filters.page}
                     totalPages={totalPages}
                     onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
-                />
+                    />
+                    </SpaceWrapper>
             </Container>
 
             <Footer />

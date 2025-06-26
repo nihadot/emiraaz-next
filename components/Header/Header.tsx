@@ -2,7 +2,7 @@
 
 import { menu_icon, mobileAppIcon, ps_logo, user_icon } from '@/app/assets';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import NavMenu from './NavMenu';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
@@ -11,19 +11,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { logoutFailure, logoutStart, logoutSuccess } from '@/redux/userSlice/userSlice';
 import { LOCAL_STORAGE_KEYS } from '@/api/storage';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { errorToast } from '../Toast';
 import Container from '../atom/Container/Container';
 import { IoCloseSharp } from 'react-icons/io5';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
-import { IoChevronDown } from "react-icons/io5";
 import { PiUserCircle } from "react-icons/pi";
-import currencyCodes from 'currency-codes';
 import CurrencySelect from './CurrencySelect';
+import Link from 'next/link';
+import { useDeviceType } from '@/utils/useDeviceType';
 
+interface Props {
+  logoSection?: React.ReactNode;
+}
 
+function Header({
 
-function Header() {
+  logoSection = <Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />,
+}: Props) {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
@@ -75,11 +80,13 @@ function Header() {
     }
   }, []);
 
+  const deviceType = useDeviceType();
+
 
 
   return (
     <Container>
-      <header className='relative flex pt-4 pb-3 justify-between items-center w-full'>
+      <header className='relative flex pt-3 sm:pt-4 sm:pb-3 pb-0 justify-between items-center w-full'>
 
         {/* Mobile Menu Button */}
         <button
@@ -99,7 +106,12 @@ function Header() {
 
           router.push("/")
         }} className="w-[140px] cursor-pointer sm:w-[138.75px] ms-7 sm:ms-0 h-[50px] sm:h-[32.25px] relative ">
-          <Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />
+          {
+            deviceType === 'mobile' ?
+              logoSection
+              : <Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />
+
+          }
 
         </div>
         <div className="w-[66.75px] block md:hidden ">
@@ -282,7 +294,7 @@ function Header() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className='fixed top-0 left-0 h-full w-[300px] bg-white z-50 p-3 shadow-lg flex flex-col gap-2'
+              className='sm:hidden fixed top-0 left-0 h-full w-[300px] bg-white z-50 p-3 shadow-lg flex flex-col gap-2'
             >
               <div className='flex justify-start'>
                 {/* <button onClick={toggleMenu} className='text-black text-xl font-bold'>
@@ -318,6 +330,7 @@ function Header() {
               </PrimaryButton>
 
               <NavMenu items={menuItems} />
+              <OtherNavMenus />
 
               <p className='text-[12px] font-medium  font-poppins mt-5'>Download PropertySeller App</p>
 
@@ -336,3 +349,59 @@ function Header() {
 }
 
 export default Header;
+
+
+
+
+
+
+
+
+
+
+type MenuItem = {
+  name: string;
+  link: string;
+}
+
+function OtherNavMenusFunction() {
+
+  const searchParams = useSearchParams();
+  const currency = searchParams.get('currency');
+
+  const [menusList, setMenusList] = useState<MenuItem[]>([
+    { name: 'Careers', link: '/careers' },
+    { name: 'Open House', link: '/open-house' },
+    { name: 'Rental Income', link: '/rental-income' },
+    { name: 'News', link: '/allnews' },
+    { name: 'Blog', link: '/blogs' },
+    { name: 'Rental Income', link: '/rental-income' },
+  ]);
+  return (
+    <ul className='flex flex-col gap-[19px]  items-start'>
+      {menusList.map((item, index) => {
+
+        const url = new URL(item.link, 'https://www.propertyseller.com');
+        if (currency) {
+          url.searchParams.set('currency', currency as string);
+        }
+
+        return (
+          <li className={clsx('font-medium text-black font-poppins text-[12px]')} key={index}>
+            <Link href={`${url.pathname}${url.search}`}>{item.name}</Link>
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
+
+function OtherNavMenus() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <OtherNavMenusFunction />
+    </Suspense>
+  )
+}

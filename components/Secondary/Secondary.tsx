@@ -39,9 +39,9 @@ import BottomBanner from '@/app/home/BottomBanner';
 
 function Secondary() {
 
-        useForceScrollRestore(); // Default key is "scroll-position"
-    
-useScrollToTopOnRefresh();
+    useForceScrollRestore(); // Default key is "scroll-position"
+
+    useScrollToTopOnRefresh();
 
     const router = useRouter()
     const pathname = usePathname();
@@ -266,23 +266,23 @@ useScrollToTopOnRefresh();
         return copy;
     };
 
-       
-        const [paginationHappened, setPaginationHappened] = useState(false)
-        useEffect(()=>{
-                 window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-        },[paginationHappened]);
-    
+
+    const [paginationHappened, setPaginationHappened] = useState(false)
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    }, [paginationHappened]);
+
     const totalPages = projects?.pagination?.totalPages || 1;
 
-        useEffect(() => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const page = urlParams.get('page');
-    
-            if (page) {
-                setFilters(prev => ({ ...prev, page: parseInt(page) }))
-            }
-        }, [filters.page]);
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const page = urlParams.get('page');
+
+        if (page) {
+            setFilters(prev => ({ ...prev, page: parseInt(page) }))
+        }
+    }, [filters.page]);
 
     return (
         <main>
@@ -549,7 +549,7 @@ useScrollToTopOnRefresh();
                                         }
                                     ]}
                                 />
-                                    <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Properties Available</p>
+                                <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Properties Available</p>
                             </div>
 
 
@@ -559,12 +559,12 @@ useScrollToTopOnRefresh();
                             >
                                 <LocationTags
 
-                                       data={
-                                            cities?.data?.slice(0, 4).map((item) => ({
-                                                location: item.name,
-                                                count: item.count,
-                                            })) || []
-                                        }
+                                    data={
+                                        cities?.data?.slice(0, 4).map((item) => ({
+                                            location: item.name,
+                                            count: item.count,
+                                        })) || []
+                                    }
                                 />
                             </SpaceWrapper>
 
@@ -600,52 +600,53 @@ useScrollToTopOnRefresh();
                         </div>
 
                         <div className="w-full xl:block hidden max-w-[301.5px]">
-                       
-                       
-                       
-                                                   <RecommendedText
-                                                       title="Recommended For You"
-                                                       items={[
-                                                           'Studio Properties For Sale in Dubai',
-                                                           '1 BHK Flats in Downtown',
-                                                           'Luxury Villas in Palm Jumeirah',
-                                                           'Affordable Apartments in JVC',
-                                                           'Beachfront Homes in Dubai Marina',
-                                                       ]}
-                                                   />
-                                                   <div className="sticky top-3 left-0">
-                       
-                                                       <CustomSliderUi
-                                                           shuffledImages={shuffledImages}
-                                                       />
-                       
-                                                         <RecommendedText
-                                                       title="Recommended For You"
-                                                       items={[
-                                                           'Studio Properties For Sale in Dubai',
-                                                           '1 BHK Flats in Downtown',
-                                                           'Luxury Villas in Palm Jumeirah',
-                                                           'Affordable Apartments in JVC',
-                                                           'Beachfront Homes in Dubai Marina',
-                                                       ]}
-                                                   />
-                                                   <RecommendedText
-                                                       title="Popular Searches"
-                                                       items={[
-                                                           'Off-plan Projects in Dubai',
-                                                           'Ready to Move Villas',
-                                                           'High ROI Areas in UAE',
-                                                           'Townhouses in Arabian Ranches',
-                                                           'Gated Communities in Sharjah',
-                                                       ]}
-                                                   />
-                       
-                                                   </div>
-                       
-                                                 
-                       
-                       
-                                               </div>
+
+
+
+                            <RecommendedText
+                                title="Recommended For You"
+                                items={[
+                                    'Smart Picks in Dubai’s Fastest-Growing Zones',
+                                    'Handpicked Homes with High ROI Potential',
+                                    'Investor-Friendly Properties You’ll Love',
+                                    'Move-In Ready Units in Prime Locations',
+                                    'Top-Rated Listings in Family-Friendly Areas',
+                                ]}
+                            />
+                            <div className="sticky top-3 left-0">
+
+                                <CustomSliderUi
+                                    shuffledImages={shuffledImages}
+                                />
+
+                                <RecommendedText
+                                    title="Recommended For You"
+                                    items={[
+                                        'Smart Picks in Dubai’s Fastest-Growing Zones',
+                                        'Handpicked Homes with High ROI Potential',
+                                        'Investor-Friendly Properties You’ll Love',
+                                        'Move-In Ready Units in Prime Locations',
+                                        'Top-Rated Listings in Family-Friendly Areas',
+                                    ]}
+                                />
+                                <RecommendedText
+                                    title="Popular Searches"
+                              items={[
+        'Downtown Dubai: Iconic City Living',
+        'Dubai Marina: Waterfront Lifestyle at Its Best',
+        'Business Bay: Where Work Meets Luxury',
+        'Yas Island, Abu Dhabi: Island Living Redefined',
+        'Jumeirah Village Circle: Affordable Modern Homes',
+        'Al Reem Island, Abu Dhabi: Urban Peace',
+    ]}
+                                />
+
+                            </div>
+
+
+
+
+                        </div>
                     </div>
                 </Container>
 
@@ -662,7 +663,7 @@ useScrollToTopOnRefresh();
                             onPageChange={(newPage) => {
                                 const url = new URL(window.location.href);
                                 url.searchParams.set('page', newPage.toString());
-                                  window.history.pushState({}, '', url);
+                                window.history.pushState({}, '', url);
                                 setPaginationHappened(pre => !pre)
                                 setFilters(prev => ({ ...prev, page: newPage }))
                             }}

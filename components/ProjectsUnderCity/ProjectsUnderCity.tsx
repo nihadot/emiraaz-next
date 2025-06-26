@@ -30,6 +30,7 @@ import { SwitchSelector } from '../SelectOption';
 import { productTypeOptionFirstItems } from '@/data';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
 import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal';
+import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle';
 
 type Props = {
     id: string;
@@ -236,7 +237,13 @@ function ProjectsUnderCityFunction({ id }: Props) {
     return (
         <>
         <main>
-            <Header />
+            <Header     logoSection={
+                           <div className='h-full w-full flex justify-center items-center'>
+                             <MobileHeaderTitle
+                            content='Projects'
+                            />
+                           </div>
+                        }/>
 
 
             <Container>
@@ -440,13 +447,13 @@ function ProjectsUnderCityFunction({ id }: Props) {
 
                             {true && <RecommendedText
                                 title="Recommended For You"
-                                items={[
-                                    'Studio Properties For Sale in Dubai',
-                                    '1 BHK Flats in Downtown',
-                                    'Luxury Villas in Palm Jumeirah',
-                                    'Affordable Apartments in JVC',
-                                    'Beachfront Homes in Dubai Marina',
-                                ]}
+                                 items={[
+        'Smart Picks in Dubai’s Fastest-Growing Zones',
+        'Handpicked Homes with High ROI Potential',
+        'Investor-Friendly Properties You’ll Love',
+        'Move-In Ready Units in Prime Locations',
+        'Top-Rated Listings in Family-Friendly Areas',
+    ]}
                             />}
 
                             <div className="sticky top-3 left-0">
@@ -459,23 +466,24 @@ function ProjectsUnderCityFunction({ id }: Props) {
                                 {true && <>
                                     <RecommendedText
                                         title="Recommended For You"
-                                        items={[
-                                            'Studio Properties For Sale in Dubai',
-                                            '1 BHK Flats in Downtown',
-                                            'Luxury Villas in Palm Jumeirah',
-                                            'Affordable Apartments in JVC',
-                                            'Beachfront Homes in Dubai Marina',
-                                        ]}
+                                         items={[
+        'Smart Picks in Dubai’s Fastest-Growing Zones',
+        'Handpicked Homes with High ROI Potential',
+        'Investor-Friendly Properties You’ll Love',
+        'Move-In Ready Units in Prime Locations',
+        'Top-Rated Listings in Family-Friendly Areas',
+    ]}
                                     />
                                     <RecommendedText
                                         title="Popular Searches"
-                                        items={[
-                                            'Off-plan Projects in Dubai',
-                                            'Ready to Move Villas',
-                                            'High ROI Areas in UAE',
-                                            'Townhouses in Arabian Ranches',
-                                            'Gated Communities in Sharjah',
-                                        ]}
+                                            items={[
+        'Downtown Dubai: Iconic City Living',
+        'Dubai Marina: Waterfront Lifestyle at Its Best',
+        'Business Bay: Where Work Meets Luxury',
+        'Yas Island, Abu Dhabi: Island Living Redefined',
+        'Jumeirah Village Circle: Affordable Modern Homes',
+        'Al Reem Island, Abu Dhabi: Urban Peace',
+    ]}
                                     />
                                 </>}
 

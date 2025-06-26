@@ -18,6 +18,7 @@ import Link from 'next/link';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
 import clsx from 'clsx';
 import SearchNew from '../SearchField/SearchNew';
+import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle';
 
 
 function City() {
@@ -96,7 +97,13 @@ function City() {
     return (
         <main>
 
-            <Header />
+            <Header     logoSection={
+                           <div className='h-full w-full flex justify-center items-center'>
+                             <MobileHeaderTitle
+                            content='Cities'
+                            />
+                           </div>
+                        }/>
             <div className="w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
 
                 <Container>

@@ -11,6 +11,9 @@ import CustomSliderUi from '@/app/home/CustomSliderUi';
 import { Footer } from '../Footer';
 import { formatDate } from '../atom/button/formatDate';
 import { useRouter } from 'next/navigation';
+import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle';
+import SectionDivider from '../atom/SectionDivider/SectionDivider';
+import clsx from 'clsx';
 
 type Props = {
     id: string;
@@ -31,10 +34,18 @@ function BlogDetails({ id }: Props) {
 
     return (
         <main>
-            <Header />
-            <div className="pb-[12.75px] sm:flex hidden">
-                <div className="h-[1px] w-full bg-[#DEDEDE]"></div>
-            </div>
+            <Header   logoSection={
+                           <div className='h-full w-full flex justify-center items-center'>
+                             <MobileHeaderTitle
+                            content='Details'
+                            />
+                           </div>
+                        } />
+              <SectionDivider
+                containerClassName={clsx("mb-[12px] mt-[12px]")}
+                lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+            />
+            
 
             <Container>
 
@@ -111,13 +122,13 @@ function BlogDetails({ id }: Props) {
                             {<RecommendedText
                                 containerClassName='!my-0 !mb-2'
                                 title="Recommended For You"
-                                items={[
-                                    'Studio Properties For Sale in Dubai',
-                                    '1 BHK Flats in Downtown',
-                                    'Luxury Villas in Palm Jumeirah',
-                                    'Affordable Apartments in JVC',
-                                    'Beachfront Homes in Dubai Marina',
-                                ]}
+                                 items={[
+        'Smart Picks in Dubai’s Fastest-Growing Zones',
+        'Handpicked Homes with High ROI Potential',
+        'Investor-Friendly Properties You’ll Love',
+        'Move-In Ready Units in Prime Locations',
+        'Top-Rated Listings in Family-Friendly Areas',
+    ]}
                             />}
 
                             <div className="sticky top-3 left-0">
@@ -131,23 +142,24 @@ function BlogDetails({ id }: Props) {
                                 {<>
                                     <RecommendedText
                                         title="Recommended For You"
-                                        items={[
-                                            'Studio Properties For Sale in Dubai',
-                                            '1 BHK Flats in Downtown',
-                                            'Luxury Villas in Palm Jumeirah',
-                                            'Affordable Apartments in JVC',
-                                            'Beachfront Homes in Dubai Marina',
-                                        ]}
+                                         items={[
+        'Smart Picks in Dubai’s Fastest-Growing Zones',
+        'Handpicked Homes with High ROI Potential',
+        'Investor-Friendly Properties You’ll Love',
+        'Move-In Ready Units in Prime Locations',
+        'Top-Rated Listings in Family-Friendly Areas',
+    ]}
                                     />
                                     <RecommendedText
                                         title="Popular Searches"
-                                        items={[
-                                            'Off-plan Projects in Dubai',
-                                            'Ready to Move Villas',
-                                            'High ROI Areas in UAE',
-                                            'Townhouses in Arabian Ranches',
-                                            'Gated Communities in Sharjah',
-                                        ]}
+                                            items={[
+        'Downtown Dubai: Iconic City Living',
+        'Dubai Marina: Waterfront Lifestyle at Its Best',
+        'Business Bay: Where Work Meets Luxury',
+        'Yas Island, Abu Dhabi: Island Living Redefined',
+        'Jumeirah Village Circle: Affordable Modern Homes',
+        'Al Reem Island, Abu Dhabi: Urban Peace',
+    ]}
                                     />
                                 </>}
 

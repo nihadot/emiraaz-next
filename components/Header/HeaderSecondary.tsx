@@ -1,7 +1,7 @@
 "use client";
 import { menu_icon, mobileAppIcon, propertySellerWhiteLogo, user_icon } from '@/app/assets';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import NavMenu from './NavMenu';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
@@ -10,12 +10,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { logoutFailure, logoutStart, logoutSuccess } from '@/redux/userSlice/userSlice';
 import { LOCAL_STORAGE_KEYS } from '@/api/storage';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { errorToast } from '../Toast';
 import Container from '../atom/Container/Container';
-import { FaChevronDown, FaRegUserCircle, FaUser } from 'react-icons/fa';
-import { IoChevronDown, IoCloseSharp, IoMenuOutline } from "react-icons/io5";
+import { IoCloseSharp, IoMenuOutline } from "react-icons/io5";
 import SpaceWrapper from "../atom/SpaceWrapper/SpaceWrapper";
+import { PiUserCircle } from 'react-icons/pi';
+import CurrencySelect from './CurrencySelect';
+import Link from 'next/link';
 
 function HeaderSecondary() {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,6 +60,17 @@ function HeaderSecondary() {
     }
   };
 
+  const [currency, setCurrency] = useState<string>('');
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const currency = url.searchParams.get('currency');
+    if (currency) {
+      setCurrency(currency);
+    } else {
+      setCurrency('AED');
+    }
+  }, []);
 
 
   return (
@@ -82,7 +95,7 @@ function HeaderSecondary() {
           <Image src={propertySellerWhiteLogo} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />
 
         </div>
-        <PrimaryButton
+        {/* <PrimaryButton
           type='button'
           className='flex !rounded-[2.5px] md:hidden w-[66.75px] items-center gap-1'
         >
@@ -95,7 +108,15 @@ function HeaderSecondary() {
           </>
 
 
-        </PrimaryButton>
+        </PrimaryButton> */}
+
+        <div className="block sm:hidden"> <CurrencySelect
+          defaultCurrency={currency}
+          dropdownMainContainerClassName='!w-[85px]'
+          dropdownContainerClassName='!bg-transparent !h-[38px]'
+          selectedCurrencyClassName='!text-white'
+          IoChevronDownColor='white'
+        /></div>
 
 
         <div className="min-laptop:flex hidden items-center gap-4">
@@ -108,65 +129,52 @@ function HeaderSecondary() {
               items={menuItems} />
           </div>
 
+          <div className="flex gap-2">
+
+            <CurrencySelect
+              defaultCurrency={currency}
+              dropdownMainContainerClassName='!w-[85px]'
+              dropdownContainerClassName='!bg-transparent'
+              selectedCurrencyClassName='!text-white'
+              IoChevronDownColor='white'
+            />
+
+            {isAuthentication ? <PrimaryButton
+              onClick={() => router.push('/profile')}
+              type='button'
+              className='flex w-fit !px-2 h-[33px] cursor-pointer items-center'
+            >
+              <>
+
+                <div className="w-4 h-4 relative flex cursor-pointer justify-center items-center">
+                  <PiUserCircle size={18} color='white' />
+                </div>
+
+                <label htmlFor="" className='text-[12px] text-white cursor-pointer font-normal max-w-[80px] overflow-hidden font-poppins'>Profile</label>
+              </>
 
 
-          {isAuthentication ?
-
-            <div className="min-laptop:flex  gap-1 hidden">
+            </PrimaryButton> :
               <PrimaryButton
+                onClick={() => router.push('/login')}
                 type='button'
-                className='flex items-center text-white gap-1'
+                className='flex w-fit cursor-pointer !px-2 h-[33px] items-center'
               >
                 <>
-                  <FaUser color='white' size={18} />
-                  <Image src={user_icon} alt='menu icon' width={20} />
-                  <label htmlFor="">User</label>
+
+                  <div className="w-4 h-4  relative flex justify-center items-center">
+                    <PiUserCircle size={18} color='white' />
+                  </div>
+
+                  <label htmlFor="" className='text-white text-[12px] font-normal  font-poppins'>Login</label>
                 </>
 
 
               </PrimaryButton>
 
-              <PrimaryButton
-                onClick={() => handleLogout()}
-                type='button'
-                className='flex items-center gap-1'
-              >
-                <>
-                  <Image src={user_icon} alt='menu icon' width={20} />
-                  <label htmlFor="">Logout</label>
-                </>
+            }
+          </div>
 
-
-              </PrimaryButton>
-            </div>
-
-            : <div className="min-laptop:flex  gap-[7.5px] hidden">
-              <PrimaryButton
-                type='button'
-                className='flex !px-3 text-white items-center gap-1'
-              >
-                <>
-                  <label htmlFor="" className='text-[12px] font-normal  font-poppins'>AED</label>
-                  <FaChevronDown />
-                </>
-
-
-              </PrimaryButton>
-
-              <PrimaryButton
-                type='button'
-                className='flex !px-3 text-white items-center gap-1'
-              >
-                <>
-                  <FaRegUserCircle size={18} />
-                  <label htmlFor="" className='text-[12px] font-normal  font-poppins'>AED</label>
-                </>
-
-
-              </PrimaryButton>
-
-
-            </div>}
         </div>
 
 
@@ -178,14 +186,14 @@ function HeaderSecondary() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className='fixed top-0 left-0 h-full w-[300px] bg-white z-50 p-3 shadow-lg flex flex-col gap-2'
+              className='fixed top-0 md:hidden left-0 h-full w-[300px] bg-white z-50 p-3 shadow-lg flex flex-col gap-2'
             >
               <div className='flex justify-start'>
 
                 <SpaceWrapper
                   className='mt-5'
                 >
-                  <div className="p-1.5 sm:hidden  z-40 bg-[#FFE7EC] rounded-[3px] w-fit">
+                  <div className="p-1.5 md:hidden  z-40 bg-[#FFE7EC] rounded-[3px] w-fit">
                     <IoCloseSharp
                       onClick={toggleMenu}
                       size={17} color='#333333' />
@@ -197,17 +205,20 @@ function HeaderSecondary() {
 
 
               </div>
-
-              <PrimaryButton
-                type="submit"
-                className=" bg-[#FF1645] disabled:!bg-[#FFE7EC]/60 !py-1 !px-2 w-full text-white h-[35px] border-none "
-              >
-                <div className="flex justify-center items-center gap-2">
-                  <label className=" text-nowrap font-medium text-white text-[10.5px] font-poppins">{'Signup/ Login'}</label>
-                </div>
-              </PrimaryButton>
+              <Link href="/login" className="">
+                <PrimaryButton
+                  type="submit"
+                  className=" bg-[#FF1645] disabled:!bg-[#FFE7EC]/60 !py-1 !px-2 w-full text-white h-[35px] border-none "
+                >
+                  <div className="flex justify-center items-center gap-2">
+                    <label className=" text-nowrap font-medium text-white text-[10.5px] font-poppins">{'Signup/ Login'}</label>
+                  </div>
+                </PrimaryButton>
+              </Link>
 
               <NavMenu items={menuItems} />
+
+              <OtherNavMenus/>
 
               <p className='text-[12px] font-medium  font-poppins mt-5'>Download PropertySeller App</p>
 
@@ -226,3 +237,50 @@ function HeaderSecondary() {
 }
 
 export default HeaderSecondary;
+
+
+type MenuItem = {
+  name: string;
+  link: string;
+}
+
+function OtherNavMenusFunction() {
+
+   const searchParams = useSearchParams();
+  const currency = searchParams.get('currency');
+
+  const [menusList, setMenusList] = useState<MenuItem[]>([
+    { name: 'Careers', link: '/careers' },
+    { name: 'Open House', link: '/open-house' },
+    { name: 'Rental Income', link: '/rental-income' },
+    { name: 'News', link: '/allnews' },
+    { name: 'Blog', link: '/blogs' },
+    { name: 'Rental Income', link: '/rental-income' },
+  ]);
+  return (
+      <ul className='flex flex-col gap-[19px]  items-start'>
+        {menusList.map((item, index) =>{
+          
+          const url = new URL(item.link, 'https://www.propertyseller.com');
+          if (currency) {
+            url.searchParams.set('currency', currency as string);
+          }
+
+          return(
+          <li className={clsx('font-medium text-black font-poppins text-[12px]')} key={index}>
+            <Link href={`${url.pathname}${url.search}`}>{item.name}</Link>
+          </li>
+        )})}
+      </ul>
+  )
+}
+
+
+function OtherNavMenus() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <OtherNavMenusFunction />
+    </Suspense>
+  )
+}

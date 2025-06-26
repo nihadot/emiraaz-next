@@ -2,6 +2,7 @@
 import Container from '@/components/atom/Container/Container'
 import SectionDivider from '@/components/atom/SectionDivider/SectionDivider'
 import SpaceWrapper from '@/components/atom/SpaceWrapper/SpaceWrapper'
+import MobileHeaderTitle from '@/components/atom/typography/MobileHeaderTitle';
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import clsx from 'clsx'
@@ -14,7 +15,7 @@ function page() {
     {
       title: '1. INTRODUCTION',
       content: [
-        "1.1 Property Seller is a company registered in Dubai with its registered office at Blue Bay Tower, Business bay, Dubai, UAE , which owns and operates the website www.propertyseller.ae",
+        "1.1 Property Seller is a company registered in Dubai with its registered office at Blue Bay Tower, Business bay, Dubai, UAE , which owns and operates the website www.propertyseller.com",
         "1.2 This document is termed as ‘The Privacy Policy’, or the policy forms part of the Terms of Use related to the use and information of the use of the website. By using the website you consent to us collecting, using and disclosing your information according to the terms of this Policy, listed here. The Policy listed here may be amended from time to time without any prior notice, and the changes made will be effected from the date on which it becomes published in the Website. If you have any objections to the Policy statements or the amendments made here then you must immediately stop using the website or make use of its contents.",
         `1.3 The terms mentioned as “we", "our", "us" , here means ‘The Property Seller’ and its affiliates, subsidiaries, employees, agents or assigned parties.`,
         "1.4 This Policy becomes effective between you and us from the date of use of this website, which by default means that you consent to the terms listed in the Policy.",
@@ -84,17 +85,17 @@ function page() {
     {
       title: "7. YOUR RIGHT TO ACCESS AND CORRECT YOUR PERSONAL INFORMATION",
       content: [
-        "7.1 You have the right to access and control your information. Your requests will be honored and wherever applicable the data can be corrected, amended or deleted. Kindly write to support@the propertyseller.ae for further queries.",
+        "7.1 You have the right to access and control your information. Your requests will be honored and wherever applicable the data can be corrected, amended or deleted. Kindly write to support@the propertyseller.com for further queries.",
         "7.2 Access to personal information:You can request access to the information provided by you and will be granted access unless subject to any legal exemptions. You are required to produce identity proofs to comply with the verification processes. A small fee is also charged for providing a copy of the relevant data.",
         "7.3 Correction and deletion: You have the right to delete, update or amend your personal information. However we would request you to exercise discretion in doing so due to complying with legal requirements.",
-        "7.4 Marketing preferences: You can use the unsubscribe link to stop receiving email communication or you can send a mail to support@propertyseller.ae. For enquiries on Marketing you can use any of the links mentioned in the marketing and communication section or by sending an email to marketing@propertyseller.ae.",
+        "7.4 Marketing preferences: You can use the unsubscribe link to stop receiving email communication or you can send a mail to support@propertyseller.com. For enquiries on Marketing you can use any of the links mentioned in the marketing and communication section or by sending an email to marketing@propertyseller.com.",
 
       ]
     },
     {
       title: "8. USE OF COOKIES",
       content: [
-        "8.1: This website uses cookies (which is not limited to google analytics and double click for publishers. Information regarding google partner sites can be found in the link provided here: https://www.google.com/policies/privacy/partners) which are files that collect data store information in your hard drive. Cookies are meant to restrict uses of such information. It allows the website to track account holders, identify new users and record the usage of sessions which are basically meant to optimize the usage of the site for better experience. Cookies are automatically deleted after a period of time for online advertisements. Details regarding this are available at support@the propertyseller.ae",
+        "8.1: This website uses cookies (which is not limited to google analytics and double click for publishers. Information regarding google partner sites can be found in the link provided here: https://www.google.com/policies/privacy/partners) which are files that collect data store information in your hard drive. Cookies are meant to restrict uses of such information. It allows the website to track account holders, identify new users and record the usage of sessions which are basically meant to optimize the usage of the site for better experience. Cookies are automatically deleted after a period of time for online advertisements. Details regarding this are available at support@the propertyseller.com",
         "8.2 Though browsers accept cookies automatically it can be disabled from the browser. With the cookies deleted from your browser, you may find that certain functions and features will not work as intended on the site disrupting services",
         "8.3 The following sites provide more information on the various types of cookies, the way they are used and how to manage preferences: http://www.aboutcookies.org/ or http://www.allaboutcookies.org/.",
 
@@ -117,7 +118,7 @@ function page() {
       content: ["11.1 Third party advertising networks are allowed to place advertisements on the site on our behalf. They may use cookies in the visitor’s cookie file, which will have their own target technology in place to serve their needs",
 
         "11.2 Advertisements from these third-party advertisers may contain personalized banners which apply technology to serve their ends. They collect data according to the applicable laws and regulations.(including but not limited to laws governing privacy, and data protection).",
-        "11.3Third party advertisers operate on their own Privacy Policies which are made available on their websites. For further information on what third party advertisers do please get in touch with info@thepropertyseller.ae",
+        "11.3Third party advertisers operate on their own Privacy Policies which are made available on their websites. For further information on what third party advertisers do please get in touch with info@thepropertyseller.com",
       ],
 
     },
@@ -151,7 +152,13 @@ function page() {
 
   return (
     <main>
-      <Header />
+      <Header     logoSection={
+                           <div className='h-full w-full flex justify-center items-center'>
+                             <MobileHeaderTitle
+                            content='Privacy Policy'
+                            />
+                           </div>
+                        }/>
 
       <SectionDivider
         containerClassName="mt-[10.5px] mb-[12px]"
