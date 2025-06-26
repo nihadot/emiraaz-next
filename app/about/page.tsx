@@ -180,7 +180,7 @@ insights into the market’s challenges and opportunities, Ashiq built PropertyS
 buyers first - offering real information, real support, and real results.Under his leadership, PropertySeller has grown into a comprehensive platform for property
 seekers - from off-plan to resales, secondary markets, and land.But Ashiq’s vision isn’t just about building a business. It’s about building a legacy - one
 where integrity is lived, not just spoken. Where transparency is part of every process, and
-customer satisfaction is more than a metric - it’s a promise.'
+customer satisfaction is more than a metric - it’s a promise.Welcome to PropertySeller. Welcome to your new beginning.'
                         />
                     </SpaceWrapper>
 {/* 
