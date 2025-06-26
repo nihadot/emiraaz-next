@@ -10,13 +10,13 @@ function AiAgent() {
     return (
         <main>
             <Header
-            logoSection={
-                 <div className='h-full w-full flex justify-center items-center'>
-                 <MobileHeaderTitle
-                content='Ai Agent'
-                />
-               </div>
-            }
+                logoSection={
+                    <div className='h-full w-full flex justify-center items-center'>
+                        <MobileHeaderTitle
+                            content='Ai Agent'
+                        />
+                    </div>
+                }
             />
             <SectionDivider
                 containerClassName={clsx("mb-[12px]", true ? 'mt-[12px]' : 'mt-[10.5px]')}

@@ -88,7 +88,7 @@ function MobileBreadcrumbNavigation({ projectTitle, projectId }: Props) {
             </div>
 
             <div
-                onClick={() => window.location.href = "/"}
+                // onClick={() => window.location.href = "/"}
                 className=" ms-12 h-full flex items-center  relative object-cover">
 
                 {/* <Image

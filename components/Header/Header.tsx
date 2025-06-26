@@ -104,7 +104,7 @@ function Header({
         <div onClick={() => {
           sessionStorage.removeItem('scroll-position');
 
-          router.push("/")
+          // router.push("/")
         }} className="w-[140px] cursor-pointer sm:w-[138.75px] ms-7 sm:ms-0 h-[50px] sm:h-[32.25px] relative ">
           {
             deviceType === 'mobile' ?

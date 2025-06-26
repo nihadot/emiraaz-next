@@ -63,39 +63,39 @@ realise you are stuck in a frustrating loop, where each agent promises the world
 confusion. Biased recommendations, followed by relentless calls you never asked for, and
 privacy breached. They are pushing what they want to sell and not what you need, all while
 doing documents that are hard to understand and the pressure of making one of life’s
-biggest financial decisions, without clear guidance, feels overwhelming.'
+biggest financial decisions, without clear guidance, feels overwhelming.If this sounds familiar, you’re not alone. Most of us have been through it. Tired of a real
+estate industry that seemed to prioritize profits over people, We knew something had to
+change.That’s how PropertySeller was born.We believe that behind every property search is a human story. Maybe you’re a young
+couple looking for your first home. A parent planning a better future for your children. Or an
+investor ready to take the next big step.Whatever your story, we want to be a part of it. Not just as a service provider, but as a
+partner, someone who believes in your dreams just as much as you do.'
 
                     />
-                    <SpaceWrapper className='pt-[8px]'>
+                    {/* <SpaceWrapper className='pt-[8px]'>
                         <Paragraph
-                            content='If this sounds familiar, you’re not alone. Most of us have been through it. Tired of a real
-estate industry that seemed to prioritize profits over people, We knew something had to
-change.'
+                            content=''
                         />
                     </SpaceWrapper>
 
 
                     <SpaceWrapper className='pt-[8px]'>
                         <Paragraph
-                            content='That’s how PropertySeller was born.'
+                            content=''
                         />
                     </SpaceWrapper>
 
                     <SpaceWrapper className='pt-[8px]'>
                         <Paragraph
-                            content='We believe that behind every property search is a human story. Maybe you’re a young
-couple looking for your first home. A parent planning a better future for your children. Or an
-investor ready to take the next big step.'
+                            content=''
                         />
                     </SpaceWrapper>
 
 
                     <SpaceWrapper className='pt-[8px]'>
                         <Paragraph
-                            content='Whatever your story, we want to be a part of it. Not just as a service provider, but as a
-partner, someone who believes in your dreams just as much as you do.'
+                            content=''
                         />
-                    </SpaceWrapper>
+                    </SpaceWrapper> */}
 
 
 
@@ -107,44 +107,15 @@ partner, someone who believes in your dreams just as much as you do.'
                             content='PropertySeller is your trusted partner in real estate. We’ve created a seamless platform with
 verified listings, real-time insights, and expert support making every step of your property
 journey smooth, transparent, and empowering with no middlemen or agents and no hidden
-fees. Just honest, simplified, and straightforward transactions.'
-                        />
-                    </SpaceWrapper>
-
-
-
-
-                    <SpaceWrapper className='pt-[8px]'>
-                        <Paragraph
-                            content='One of the biggest frustrations buyers face today is duplication. The same off-plan or
+fees. Just honest, simplified, and straightforward transactions.One of the biggest frustrations buyers face today is duplication. The same off-plan or
 secondary property frequently appears across the same website with different price tags,
 whether listed simultaneously or at different times. This inconsistency causes confusion and
-distrust in their hearts.'
-                        />
-                    </SpaceWrapper>
-
-                    <SpaceWrapper className='pt-[8px]'>
-                        <Paragraph
-                            content='We solve this by working directly with developers and property owners, cutting out the noise
+distrust in their hearts.We solve this by working directly with developers and property owners, cutting out the noise
 and bringing verified, accurate, and fairly priced listings straight to you. Thanks to the strong
 partnerships we were able to build with top developers, our users gain access to exclusive
-listings and early investment opportunities often hard to find elsewhere.'
-                        />
-                    </SpaceWrapper>
-
-
-                    <SpaceWrapper className='pt-[8px]'>
-                        <Paragraph
-                            content='Though we began with off-plan projects, we’ve grown into a full-spectrum platform. Today,
+listings and early investment opportunities often hard to find elsewhere.Though we began with off-plan projects, we’ve grown into a full-spectrum platform. Today,
 PropertySeller connects buyers to off-plan properties, resales, secondary homes, and
-land-offering a range of options all in one place.'
-                        />
-                    </SpaceWrapper>
-
-
-                    <SpaceWrapper className='pt-[8px]'>
-                        <Paragraph
-                            content='What truly sets us apart is our mission to not let any investor or buyer feel overwhelmed by
+land-offering a range of options all in one place.What truly sets us apart is our mission to not let any investor or buyer feel overwhelmed by
 the process. We commit to it by transparency, efficiency, and empowerment and by
 combining technology with market expertise to help you compare, decide, and invest with
 confidence. We’re a platform with a growing community of buyers, investors, and real estate
@@ -153,6 +124,35 @@ apartment in Dubai or your next big investment, PropertySeller is here to guide 
 step of the way.'
                         />
                     </SpaceWrapper>
+
+
+
+{/* 
+                    <SpaceWrapper className='pt-[8px]'>
+                        <Paragraph
+                            content=''
+                        />
+                    </SpaceWrapper>
+
+                    <SpaceWrapper className='pt-[8px]'>
+                        <Paragraph
+                            content=''
+                        />
+                    </SpaceWrapper>
+
+
+                    <SpaceWrapper className='pt-[8px]'>
+                        <Paragraph
+                            content=''
+                        />
+                    </SpaceWrapper>
+
+
+                    <SpaceWrapper className='pt-[8px]'>
+                        <Paragraph
+                            content=''
+                        />
+                    </SpaceWrapper> */}
 
 
                     <h3 className=' font-poppins font-medium text-[20px] sm:text-[37.5px] text-center pb-[0px] sm:pb-[10px] pt-6'>Who We Are</h3>
@@ -177,26 +177,26 @@ LLC, a company registered with the Dubai Economic Department.'
                             content='Ashiq Emiraaz knows what it’s like to feel lost in the real estate maze. That frustration
 sparked a mission: to make property buying clear, honest, and empowering. With deep
 insights into the market’s challenges and opportunities, Ashiq built PropertySeller to put
-buyers first - offering real information, real support, and real results.'
-                        />
-                    </SpaceWrapper>
-
-
-
-                    <SpaceWrapper className='pt-[8px]'>
-                        <Paragraph
-                            content='Under his leadership, PropertySeller has grown into a comprehensive platform for property
-seekers - from off-plan to resales, secondary markets, and land.'
-                        />
-                    </SpaceWrapper>
-
-
-
-                    <SpaceWrapper className='pt-[8px]'>
-                        <Paragraph
-                            content='But Ashiq’s vision isn’t just about building a business. It’s about building a legacy - one
+buyers first - offering real information, real support, and real results.Under his leadership, PropertySeller has grown into a comprehensive platform for property
+seekers - from off-plan to resales, secondary markets, and land.But Ashiq’s vision isn’t just about building a business. It’s about building a legacy - one
 where integrity is lived, not just spoken. Where transparency is part of every process, and
 customer satisfaction is more than a metric - it’s a promise.'
+                        />
+                    </SpaceWrapper>
+{/* 
+
+
+                    <SpaceWrapper className='pt-[8px]'>
+                        <Paragraph
+                            content=''
+                        />
+                    </SpaceWrapper>
+
+
+
+                    <SpaceWrapper className='pt-[8px]'>
+                        <Paragraph
+                            content=''
                         />
                     </SpaceWrapper>
 
@@ -213,7 +213,7 @@ customer satisfaction is more than a metric - it’s a promise.'
                         <Paragraph
                             content='Welcome to your new beginning.'
                         />
-                    </SpaceWrapper>
+                    </SpaceWrapper> */}
 
 
 

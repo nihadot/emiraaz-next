@@ -54,6 +54,7 @@ import pIcon from "@/app/assets/p-icon.png";
 import { headers } from 'next/headers';
 import { useCountryCode } from '@/utils/useCountryCode';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 type PaymentPlan = {
     label?: string;
     value?: string;
@@ -501,7 +502,11 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                 <div className=" min-h-screen  w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
                     <Header
                     logoSection={
+                        <Link
+                        href={'/'}
+                        >
                                   <Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />
+                        </Link>
                         
                     }
                     />
