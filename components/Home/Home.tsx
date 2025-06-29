@@ -55,6 +55,7 @@ import { headers } from 'next/headers';
 import { useCountryCode } from '@/utils/useCountryCode';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import ViewPreviewVideo from '@/app/home/ViewPreviewVideo';
 type PaymentPlan = {
     label?: string;
     value?: string;
@@ -1074,6 +1075,7 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                             />
                                         </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>)
                                     }
+
 
 
 

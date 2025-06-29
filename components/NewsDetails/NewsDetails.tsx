@@ -34,13 +34,13 @@ function NewsDetails({ id }: Props) {
 
     return (
         <main>
-            <Header     logoSection={
-                           <div className='h-full w-full flex justify-center items-center'>
-                             <MobileHeaderTitle
-                            content='Details'
-                            />
-                           </div>
-                        }/>
+            <Header logoSection={
+                <div className='h-full w-full flex justify-center items-center'>
+                    <MobileHeaderTitle
+                        content='Details'
+                    />
+                </div>
+            } />
             <SectionDivider
                 containerClassName={clsx("mb-[12px] mt-[12px]")}
                 lineClassName="h-[1px] w-full bg-[#DEDEDE]"
@@ -82,10 +82,13 @@ function NewsDetails({ id }: Props) {
                                     <div className='h-[40px] bg-slate-50 w-full mb-3 rounded-[5px] animate-pulse'></div>
                                 }
 
-                                {singleNews && singleNews.data && singleNews.data.newsBody && singleNews?.data?.newsBody ? <div
-                                    className="text-[12px] w-full text-left font-poppins font-normal mt-[12px]"
-                                    dangerouslySetInnerHTML={{ __html: `${singleNews?.data?.newsBody}` }}
-                                /> :
+                                {singleNews && singleNews.data && singleNews.data.newsBody && singleNews?.data?.newsBody ?
+                                    <p
+                                        className="text-[12px] whitespace-pre-wrap w-full text-left font-poppins font-normal mt-[12px]"
+                                    // dangerouslySetInnerHTML={{ __html: `${singleNews?.data?.newsBody}` }}
+                                    >
+                                        {singleNews?.data?.newsBody}</p>
+                                    :
                                     <>
                                         <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
                                         <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
@@ -111,13 +114,13 @@ function NewsDetails({ id }: Props) {
                             {<RecommendedText
                                 containerClassName='!my-0 !mb-2'
                                 title="Recommended For You"
-                                 items={[
-        'Smart Picks in Dubai’s Fastest-Growing Zones',
-        'Handpicked Homes with High ROI Potential',
-        'Investor-Friendly Properties You’ll Love',
-        'Move-In Ready Units in Prime Locations',
-        'Top-Rated Listings in Family-Friendly Areas',
-    ]}
+                                items={[
+                                    'Smart Picks in Dubai’s Fastest-Growing Zones',
+                                    'Handpicked Homes with High ROI Potential',
+                                    'Investor-Friendly Properties You’ll Love',
+                                    'Move-In Ready Units in Prime Locations',
+                                    'Top-Rated Listings in Family-Friendly Areas',
+                                ]}
                             />}
 
                             <div className="sticky top-3 left-0">
@@ -131,24 +134,24 @@ function NewsDetails({ id }: Props) {
                                 {<>
                                     <RecommendedText
                                         title="Recommended For You"
-                                         items={[
-        'Smart Picks in Dubai’s Fastest-Growing Zones',
-        'Handpicked Homes with High ROI Potential',
-        'Investor-Friendly Properties You’ll Love',
-        'Move-In Ready Units in Prime Locations',
-        'Top-Rated Listings in Family-Friendly Areas',
-    ]}
+                                        items={[
+                                            'Smart Picks in Dubai’s Fastest-Growing Zones',
+                                            'Handpicked Homes with High ROI Potential',
+                                            'Investor-Friendly Properties You’ll Love',
+                                            'Move-In Ready Units in Prime Locations',
+                                            'Top-Rated Listings in Family-Friendly Areas',
+                                        ]}
                                     />
                                     <RecommendedText
                                         title="Popular Searches"
-                                            items={[
-        'Downtown Dubai: Iconic City Living',
-        'Dubai Marina: Waterfront Lifestyle at Its Best',
-        'Business Bay: Where Work Meets Luxury',
-        'Yas Island, Abu Dhabi: Island Living Redefined',
-        'Jumeirah Village Circle: Affordable Modern Homes',
-        'Al Reem Island, Abu Dhabi: Urban Peace',
-    ]}
+                                        items={[
+                                            'Downtown Dubai: Iconic City Living',
+                                            'Dubai Marina: Waterfront Lifestyle at Its Best',
+                                            'Business Bay: Where Work Meets Luxury',
+                                            'Yas Island, Abu Dhabi: Island Living Redefined',
+                                            'Jumeirah Village Circle: Affordable Modern Homes',
+                                            'Al Reem Island, Abu Dhabi: Urban Peace',
+                                        ]}
                                     />
                                 </>}
 

@@ -85,10 +85,13 @@ function BlogDetails({ id }: Props) {
                                 {singleBlog?.data?.blogTitle ? <h1 className='font-poppins font-medium text-[19.5px] mt-[10.5px]'>{singleBlog?.data?.blogTitle}</h1> :
                                     <div className='h-[40px] bg-slate-50 w-full mb-3 rounded-[5px] animate-pulse'></div>
                                 }
-                                {singleBlog && singleBlog.data && singleBlog.data.blogBody && singleBlog?.data?.blogTitle ? <div
-                                    className="text-[12px] w-full text-left font-poppins font-normal mt-[12px]"
-                                    dangerouslySetInnerHTML={{ __html: `${singleBlog?.data?.blogBody}` }}
-                                /> :
+                                {singleBlog && singleBlog.data && singleBlog.data.blogBody && singleBlog?.data?.blogTitle ? <p
+                                    className="text-[12px] whitespace-pre-wrap w-full text-left font-poppins font-normal mt-[12px]"
+                                    // dangerouslySetInnerHTML={{ __html: `${singleBlog?.data?.blogBody}` }}
+                                >
+                                    {singleBlog?.data?.blogBody}
+                                    </p>
+                                     :
                                     <>
                                         <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
                                         <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>

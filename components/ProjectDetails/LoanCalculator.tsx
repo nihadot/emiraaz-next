@@ -131,6 +131,7 @@ const MortgageCalculator = ({
 
 export default MortgageCalculator
 
+
 const InputWithSlider = ({ label, value, min, max, step, onChange, unit }: {
   label: string,
   value: number,
