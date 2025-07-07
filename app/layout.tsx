@@ -15,8 +15,8 @@ const poppins = Poppins({
 
 
 export const metadata: Metadata = {
-  title: "PropertySeller UAE | Apartments, Villas, Townhouses, Penthouses",
-  description: "PropertySeller is your partner for the latest off-plan projects and new developments across the UAE. If you're a investor or homebuyer all in one place with reliable and hassle-free.",
+  title: "Trusted Real Estate Partner in UAE | PropertySeller Dubai",
+  description: "Buy properties direct from developers & owners on PropertySeller. ✔Verified listings ✔ transparent pricing ✔ Properties for sale in Dubai, Abu Dhabi &  Sharjah",
   keywords: [
     "propertyseller",
     "property seller",
