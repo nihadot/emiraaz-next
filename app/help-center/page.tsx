@@ -8,12 +8,12 @@ import Header from '@/components/Header'
 import SearchInput from '@/components/SearchField/Search'
 import clsx from 'clsx'
 import { motion, AnimatePresence } from 'framer-motion'
-import React, { useState } from 'react'
+import React, { Suspense, useState } from 'react'
 import { AiOutlineUser } from "react-icons/ai";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 
 
-function HelpCenter() {
+function HelpCenterComponet() {
 
     const [search, setSearch] = useState("");
 
@@ -26,17 +26,17 @@ function HelpCenter() {
 
         <main>
 
-                <Header     logoSection={
-                           <div className='h-full w-full flex justify-center items-center'>
-                             <MobileHeaderTitle
-                            content='Help Center'
-                            />
-                           </div>
-                        }/>
-                    <SectionDivider
-                                    containerClassName="mt-[10.5px] mb-[12px]"
-                                    lineClassName="h-[1px] w-full bg-[#DEDEDE]"
-                                />
+            <Header logoSection={
+                <div className='h-full w-full flex justify-center items-center'>
+                    <MobileHeaderTitle
+                        content='Help Center'
+                    />
+                </div>
+            } />
+            <SectionDivider
+                containerClassName="mt-[10.5px] mb-[12px]"
+                lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+            />
             <div className=" max-w-[1200px] mx-auto w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
 
                 <Container>
@@ -89,7 +89,7 @@ function HelpCenter() {
                             />
 
 
-                              <HelpTopics
+                            <HelpTopics
                                 icon={<AiOutlineUser size={27} color='#FF1645' />}
                                 title='User Profiles'
                                 options={[
@@ -119,118 +119,118 @@ function HelpCenter() {
                         <div className="mt-[40px]">
                             <ToggleButton
                                 title='What types of properties can I find on PropertySeller?'
-                              
+
                             >
-                                  <>
+                                <>
+
+                                    <Paragraph
+                                        content='On PropertySeller, we offer an extensive and diverse range of properties to meet the varying needs and preferences of our clients. Our listings include:'
+                                    />
+
+                                    <ol className='list-decimal list-inside'>
+                                        <li> <ContentHeading
+                                            title='Residential Apartments:'
+                                        />
+                                            <Paragraph
+                                                className='inline'
+                                                content=' Whether you are looking for a cozy studio or a spacious multi-bedroom apartment, we have options in various styles, sizes, and price ranges. From modern high-rises in bustling urban areas to tranquil communities with stunning views, our residential apartments cater to all lifestyles.'
+                                            />
+                                        </li>
+
+
+
+
+                                        <li> <ContentHeading
+                                            title='Villas :'
+                                        />
+                                            <Paragraph
+                                                className='inline'
+                                                content='For those seeking more space and privacy, PropertySeller features an impressive selection of villas. These range from luxurious, fully-furnished properties with private pools and gardens to more modest family homes. Many of our villas are located in sought-after neighborhoods, providing access to top amenities, schools, and leisure facilities'
+                                            />
+                                        </li>
+
+
+
+
+
+
+
+                                        <li> <ContentHeading
+                                            title='Townhouses :'
+                                        />
+                                            <Paragraph
+                                                className='inline'
+                                                content='Townhouses offer a perfect blend of community living and individual space. Our listings include beautifully designed townhouses that are ideal for families, featuring multiple floors, private outdoor areas, and access to community facilities such as parks and pools. These properties are often situated in family-friendly neighborhoods with a strong sense of community'
+                                            />
+                                        </li>
+
+
+
+
+
+
+                                        <li> <ContentHeading
+                                            title='Commercial Spaces :'
+                                        />
+                                            <Paragraph
+                                                className='inline'
+                                                content='For investors and entrepreneurs, PropertySeller provides an array of commercial properties, including office spaces, retail units, warehouses, and mixed-use developments. Whether you are looking to start a new business, expand an existing one, or invest in commercial real estate, our listings feature properties in prime locations that attract high foot traffic and ensure visibility.'
+                                            />
+                                        </li>
+
+
+
+
+
+
+                                        <li> <ContentHeading
+                                            title='Off-Plan Developments :'
+                                        />
+                                            <Paragraph
+                                                className='inline'
+                                                content={`We also specialize in off-plan properties, which allow buyers to invest in new developments before they are completed. This option often provides significant advantages, such as lower prices and the opportunity to customize certain aspects of the property. Our off-plan listings include exciting new projects from reputable developers, giving buyers a chance to secure a property in some of the UAE's most promising areas`}
+                                            />
+                                        </li>
+
+
+
+
+
+
+
+                                        <li> <ContentHeading
+                                            title='Luxury Properties :'
+                                        />
+                                            <Paragraph
+                                                className='inline'
+                                                content={`For those seeking the pinnacle of opulence, PropertySeller showcases an exclusive selection of luxury properties, including high-end villas and penthouses in prestigious communities. These properties often come with premium features, such as private pools, state-of-the-art amenities, and breathtaking views, catering to clients who desire a lavish lifestyle`}
+                                            />
+                                        </li>
+
+
+
+
+                                        <li> <ContentHeading
+                                            title='Vacation Homes :'
+                                        />
+                                            <Paragraph
+                                                className='inline'
+                                                content={`If you’re looking for a holiday retreat, we feature a range of vacation homes in popular tourist destinations across the UAE. These properties are ideal for those seeking a second home or investment opportunities in the short-term rental market, allowing you to enjoy the beauty of the UAE while generating income.`}
+                                            />
+                                        </li>
+
+
+
 
                                         <Paragraph
-                                            content='On PropertySeller, we offer an extensive and diverse range of properties to meet the varying needs and preferences of our clients. Our listings include:'
-                                        />
-
-                                        <ol className='list-decimal list-inside'>
-                                            <li> <ContentHeading
-                                                title='Residential Apartments:'
-                                            />
-                                                <Paragraph
-                                                    className='inline'
-                                                    content=' Whether you are looking for a cozy studio or a spacious multi-bedroom apartment, we have options in various styles, sizes, and price ranges. From modern high-rises in bustling urban areas to tranquil communities with stunning views, our residential apartments cater to all lifestyles.'
-                                                />
-                                            </li>
-
-
-
-
-                                             <li> <ContentHeading
-                                                title='Villas :'
-                                            />
-                                                <Paragraph
-                                                    className='inline'
-                                                    content='For those seeking more space and privacy, PropertySeller features an impressive selection of villas. These range from luxurious, fully-furnished properties with private pools and gardens to more modest family homes. Many of our villas are located in sought-after neighborhoods, providing access to top amenities, schools, and leisure facilities'
-                                                />
-                                            </li>
-
-
-
-
-
-
-
-                                             <li> <ContentHeading
-                                                title='Townhouses :'
-                                            />
-                                                <Paragraph
-                                                    className='inline'
-                                                    content='Townhouses offer a perfect blend of community living and individual space. Our listings include beautifully designed townhouses that are ideal for families, featuring multiple floors, private outdoor areas, and access to community facilities such as parks and pools. These properties are often situated in family-friendly neighborhoods with a strong sense of community'
-                                                />
-                                            </li>
-
-
-
-
-
-
-                                             <li> <ContentHeading
-                                                title='Commercial Spaces :'
-                                            />
-                                                <Paragraph
-                                                    className='inline'
-                                                    content='For investors and entrepreneurs, PropertySeller provides an array of commercial properties, including office spaces, retail units, warehouses, and mixed-use developments. Whether you are looking to start a new business, expand an existing one, or invest in commercial real estate, our listings feature properties in prime locations that attract high foot traffic and ensure visibility.'
-                                                />
-                                            </li>
-
-
-
-
-
-
-                                             <li> <ContentHeading
-                                                title='Off-Plan Developments :'
-                                            />
-                                                <Paragraph
-                                                    className='inline'
-                                                    content={`We also specialize in off-plan properties, which allow buyers to invest in new developments before they are completed. This option often provides significant advantages, such as lower prices and the opportunity to customize certain aspects of the property. Our off-plan listings include exciting new projects from reputable developers, giving buyers a chance to secure a property in some of the UAE's most promising areas`}
-                                                />
-                                            </li>
-
-
-
-
-
-
-
-                                             <li> <ContentHeading
-                                                title='Luxury Properties :'
-                                            />
-                                                <Paragraph
-                                                    className='inline'
-                                                    content={`For those seeking the pinnacle of opulence, PropertySeller showcases an exclusive selection of luxury properties, including high-end villas and penthouses in prestigious communities. These properties often come with premium features, such as private pools, state-of-the-art amenities, and breathtaking views, catering to clients who desire a lavish lifestyle`}
-                                                />
-                                            </li>
-
-
-
-
-                                                <li> <ContentHeading
-                                                title='Vacation Homes :'
-                                            />
-                                                <Paragraph
-                                                    className='inline'
-                                                    content={`If you’re looking for a holiday retreat, we feature a range of vacation homes in popular tourist destinations across the UAE. These properties are ideal for those seeking a second home or investment opportunities in the short-term rental market, allowing you to enjoy the beauty of the UAE while generating income.`}
-                                                />
-                                            </li>
-
-
-
-
-                               <Paragraph
                                             content={`At PropertySeller, we pride ourselves on providing detailed property descriptions, high-quality images, and virtual tours to help you make informed decisions. Our user-friendly platform allows you to filter properties based on your specific preferences, such as price, location, and property type, ensuring you can easily find the perfect space to meet your needs. Whether you're a first-time buyer, an experienced investor, or someone looking to rent, PropertySeller is your one-stop destination for all your property needs in the UAE.`}
                                         />
 
 
 
-                                        </ol>
-                                    </>
-                                </ToggleButton>
+                                    </ol>
+                                </>
+                            </ToggleButton>
 
 
 
@@ -238,35 +238,35 @@ function HelpCenter() {
 
 
 
-                                 <ToggleButton
+                            <ToggleButton
                                 title='Is there a fee to use PropertySeller?'
-                              
+
                             />
 
 
-                               <ToggleButton
+                            <ToggleButton
                                 title='How can I contact a property agent?'
-                              
+
                             />
 
-                                <ToggleButton
+                            <ToggleButton
                                 title='How can I sell my property through PropertySeller?'
-                              
+
                             />
 
 
-                                <ToggleButton
+                            <ToggleButton
                                 title='What should I do if I have questions about a specific property?'
-                              
+
                             />
 
-                                   <ToggleButton
+                            <ToggleButton
                                 title='What are the legal requirements for buying property in the UAE?'
-                              
+
                             />
 
 
-                            
+
                         </div>
 
 
@@ -282,7 +282,15 @@ function HelpCenter() {
     )
 }
 
-export default HelpCenter
+// export default HelpCenter
+export default function HelpCenter() {
+    return (
+        // You could have a loading skeleton as the `fallback` too
+        <Suspense>
+            <HelpCenterComponet />
+        </Suspense>
+    )
+}
 
 
 function HelpTopics({

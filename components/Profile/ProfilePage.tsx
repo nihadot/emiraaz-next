@@ -1,14 +1,12 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { RootState } from '@/redux/store'
 import Header from '@/components/Header'
 import { Footer } from '@/components/Footer'
-import { IUser, useEditProfileMutation, useFetchUserProfileDetailsQuery } from '@/redux/auth/authApi'
-import { useCloudinaryUpload } from '@/utils/cloudinary/useCloudinaryUpload'
-import { FolderName } from '@/redux/types'
+import { IUser, useFetchUserProfileDetailsQuery } from '@/redux/auth/authApi'
 import { FaTrash } from 'react-icons/fa'
 import PrimaryButton from '@/components/Buttons'
 import Container from '@/components/atom/Container/Container'
@@ -18,7 +16,6 @@ import { PiNotePencil } from "react-icons/pi";
 import { VscHistory } from "react-icons/vsc";
 import SectionDivider from '@/components/atom/SectionDivider/SectionDivider'
 import { errorToast } from '@/components/Toast'
-import { isUserLoad } from '@/redux/userSlice/userSlice'
 import { logoutFailure, logoutStart, logoutSuccess } from '@/redux/slices/userSlice/userSlice'
 import { useUserLocalStorage } from '@/app/useUserLocalStorage'
 import useAuthRedirect from '@/hooks/useAuthRedirect'
@@ -26,21 +23,18 @@ import { LOCAL_STORAGE_KEYS } from '@/api/storage'
 import Link from 'next/link'
 import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle'
 
-function ProfilePage() {
+function ProfilePageComponent() {
     const router = useRouter();
     const dispatch = useDispatch();
-    const { ready, isAuthentication, user } = useSelector((state: RootState) => state.user);
+    const { isAuthentication, user } = useSelector((state: RootState) => state.user);
 
-    const { uploadImage } = useCloudinaryUpload();
-    const [editProfile] = useEditProfileMutation();
-    const { localUser, updateLocalUser, clearUserData } = useUserLocalStorage();
+    const { clearUserData } = useUserLocalStorage();
 
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-    const [isUploading, setIsUploading] = useState(false);
     const [newAvatar, setNewAvatar] = useState<File | null>(null);
     const [userData, setUserData] = useState<IUser | null>(null);
-    const { data: fectchedUserProfileDetails, isLoading: isFetchingUserProfileDetails } = useFetchUserProfileDetailsQuery();
+    const { data: fectchedUserProfileDetails } = useFetchUserProfileDetailsQuery();
    // Inside your component
 useAuthRedirect();
 
@@ -58,36 +52,6 @@ useEffect(() => {
 
         return () => URL.revokeObjectURL(objectUrl);
     }, [selectedImage]);
-
-    // 📤 Upload handler
-    const handleImageUpload = async () => {
-        if (!newAvatar) return;
-
-        try {
-            setIsUploading(true);
-            const uploadedImage = await uploadImage(newAvatar, FolderName.Users);
-
-            if (uploadedImage) {
-                const payload = { avatar: uploadedImage };
-                await editProfile(payload).unwrap();
-
-                const updatedUser = {
-                    ...localUser,
-                    avatar: uploadedImage,
-                };
-
-                updateLocalUser(updatedUser);
-                dispatch(isUserLoad({ user: updatedUser }));
-            } else {
-                errorToast('Image upload failed.');
-            }
-        } catch (err) {
-            console.error('Upload error:', err);
-            errorToast('Failed to upload image.');
-        } finally {
-            setIsUploading(false);
-        }
-    };
 
     const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file: any = e.target.files?.[0];
@@ -178,10 +142,10 @@ useEffect(() => {
                                                 className="rounded-full object-cover"
                                             />
                                         </div>
-                                    ) : isAuthentication && user?.avatar?.secure_url ? (
+                                    ) : isAuthentication && user?.avatar?.webp?.url ? (
                                         <div className="rounded-full relative w-[70px] h-[70px] overflow-hidden border-[#DEDEDE] bg-[#E4E4E4] flex justify-center items-center">
                                             <Image
-                                                src={user.avatar.secure_url}
+                                                src={user.avatar.webp?.url}
                                                 alt="user avatar"
                                                 fill
                                                 className="rounded-full object-cover"
@@ -221,7 +185,7 @@ useEffect(() => {
                         </div>
 
 
-                        {newAvatar && (
+                        {/* {newAvatar && (
                             <PrimaryButton
                                 onClick={handleImageUpload}
                                 disabled={isUploading}
@@ -232,7 +196,7 @@ useEffect(() => {
                                     <label className="cursor-pointer text-nowrap font-medium text-[#FF1645] text-[13px] font-poppins">{isUploading ? 'Uploading...' : 'Update'}</label>
                                 </div>
                             </PrimaryButton>
-                        )}
+                        )} */}
 
 
                         <div className="grid grid-cols-2 sm:mt-[28px] mt-[16px] sm:grid-cols-3 gap-[8.25px]  items-center justify-start">
@@ -327,4 +291,11 @@ useEffect(() => {
     )
 }
 
-export default ProfilePage
+export default function ProfilePage() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <ProfilePageComponent />
+    </Suspense>
+  )
+}

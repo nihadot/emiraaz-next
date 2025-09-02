@@ -14,7 +14,11 @@ export type AllBlogItems = {
   image?: ImageType;
   metaDescription?: string;
   date?: string;
-  blogBody?: string
+  blogBody?: {
+    text: string;
+    json: any;
+    html: string;
+  }
 }
 
 

@@ -27,7 +27,7 @@ function AboutHeader(
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
-    { name: 'About', link: '/about' },
+    { name: 'About', link: '/about-property-seller' },
     { name: 'Property Talks', link: '/property-talks' },
     { name: 'Rental Income', link: '/rental-income' },
     { name: 'Developers', link: '/developers' },

@@ -1,12 +1,13 @@
 'use client'
 
+import { ImageType } from '@/utils/types';
 import Image from 'next/image'
 import React, { useState, useRef, useEffect } from 'react'
 import { FaAlignLeft, FaArrowLeft, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { IoCloseSharp } from "react-icons/io5";
 
 type Props = {
-  images: { secure_url: string }[];
+  images: ImageType[];
   close?: () => void;
 }
 
@@ -50,7 +51,7 @@ function ImageContainer({ images,close }: Props) {
           <div ref={previewRef} className="relative w-[90%]  max-w-4xl h-[80vh] flex justify-center items-center sm:rounded-md shadow-lg">
             <div className="relative max-w-[874.5px] w-full h-[200px] sm:h-[580.5px]">
               <Image
-                src={images[previewIndex].secure_url}
+                src={images[previewIndex].webp?.url}
                 alt="Preview"
                 fill
                 className="object-cover rounded-[3.75px] overflow-hidden"
@@ -94,7 +95,7 @@ function ImageContainer({ images,close }: Props) {
               className="relative flex-1 h-[178px] sm:h-[400px] cursor-pointer"
             >
               <Image
-                src={item.secure_url}
+                src={item.webp?.url}
                 alt={`image-${index}`}
                 fill
                 className="rounded-md object-cover"

@@ -29,7 +29,7 @@ const SearchNew: React.FC<SearchInputProps> = ({
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
-                className="outline-none h-full flex-1 text-[12px] font-normal  font-poppins bg-transparent  "
+                className="outline-none h-full flex-1 text-base md:text-sm font-normal  font-poppins bg-transparent  "
             />
         </div>
     );

@@ -2,7 +2,7 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter } from 'next/navigation';
 import React from 'react'
 import { Footer } from "@/components/Footer";
@@ -37,7 +37,7 @@ const LoginSchema = Yup.object().shape({
 type TogglePassword = "password" | "text";
 
 
-function Registration() {
+function RegistrationComponent() {
 
     const [togglePassword, setTogglePassword] = useState<TogglePassword>("password");
     const [toggleConfirmPassword, setToggleConfirmPassword] = useState('password');
@@ -178,9 +178,11 @@ function Registration() {
     )
 }
 
-export default Registration
 
-
-
-
-
+export default function Registration() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RegistrationComponent />
+    </Suspense>
+  );
+}

@@ -293,7 +293,7 @@ function ProjectsUnderDeveloperFunction({ id }: Props) {
                                         {/* <div className={clsx("w-full mb-[12px] relative",filters?.page && filters?.page > 1 ? 'hidden':'flex')}> */}
                                         <VideoPreview
                                             projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
-                                            src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                                            src={smallVideoAds?.[0]?.videoFile?.url?.url || ''}
                                         />
                                     </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>)
                                 }

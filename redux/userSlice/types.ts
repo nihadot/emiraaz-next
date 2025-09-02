@@ -1,8 +1,10 @@
+import { ImageType } from "@/utils/types";
+
 export interface User {
     name: string;
     number:string;
     email: string;
-    avatar?: ImageItem;
+    avatar?: ImageType;
     nationality?:string;
 }
 
@@ -15,10 +17,5 @@ export interface AuthState {
     ready: boolean
 }
 
-type ImageItem = {
-    asset_id: string;
-    secure_url: string;
-    url: string;
-    public_id: string;
-  };
+
   

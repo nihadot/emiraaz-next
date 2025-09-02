@@ -4,25 +4,25 @@ import MobileHeaderTitle from '@/components/atom/typography/MobileHeaderTitle'
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import clsx from 'clsx'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 
-function page() {
+function Page() {
   return (
     <main>
-      <Header     logoSection={
-                           <div className='h-full w-full flex justify-center items-center'>
-                             <MobileHeaderTitle
-                            content='Property Talks'
-                            />
-                           </div>
-                        }/>
+      <Header logoSection={
+        <div className='h-full w-full flex justify-center items-center'>
+          <MobileHeaderTitle
+            content='Property Talks'
+          />
+        </div>
+      } />
 
       <SectionDivider
-                   containerClassName={clsx("mb-[12px] mt-[12px]")}
-                   lineClassName="h-[1px] w-full bg-[#DEDEDE]"
-               />
-   
+        containerClassName={clsx("mb-[12px] mt-[12px]")}
+        lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+      />
+
       <section>
 
       </section>
@@ -31,4 +31,14 @@ function page() {
   )
 }
 
-export default page
+// export default page
+
+
+export default function OtherNavMenus() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <Page />
+    </Suspense>
+  )
+}

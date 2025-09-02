@@ -2,6 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import currencyCodes from 'currency-codes';
 import { IoChevronDown, IoSearch } from 'react-icons/io5';
 import clsx from 'clsx';
+import { usePathname, useSearchParams } from 'next/navigation';
 // import { ChevronDownIcon, SearchIcon } from '@heroicons/react/solid';
 
 // Define interfaces for type safety
@@ -25,7 +26,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({ defaultCurrency = 'AED'
   dropdownContainerClassName,
   selectedCurrencyClassName,
   IoChevronDownColor,
- }) => {
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
   const [selectedCurrency, setSelectedCurrency] = useState<Currency | null>(null);
@@ -33,18 +34,35 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({ defaultCurrency = 'AED'
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+   const pathname = usePathname(); // "/blog/post-1"
+  const searchParams = useSearchParams(); 
+
+  // Get all params as an object
+  const query = Object.fromEntries(searchParams.entries());
+
 
   // Memoize currencies to prevent unnecessary recalculations
   const currencies = useMemo<Currency[]>(() => {
-    const data = currencyCodes.data
+    // console.log(currencyCodes,'currencyCodes')
+    const UAECurrency = currencyCodes.data.find((curr) => curr.code === 'AED');
+
+    if(!UAECurrency) return [];
+    
+
+    const data = currencyCodes.data.filter((curr) => curr.code !== 'AED')
       .map((curr) => ({
         code: curr.code,
         name: curr.currency,
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
+
+       const finalData = query?.currency !== "AED"
+    ? [{ code: UAECurrency.code, name: UAECurrency.currency }, ...data]
+    : data;
+
     setIsLoading(false);
-    return data;
-  }, []);
+    return finalData;
+  }, [currencyCodes]);
 
 
   // Initialize default currency if provided
@@ -141,14 +159,14 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({ defaultCurrency = 'AED'
 
   return (
     <div
-      className={clsx('',`relative w-full max-w-md font-sans ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`,dropdownMainContainerClassName)}
+      className={clsx('', `relative w-full max-w-md font-sans ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`, dropdownMainContainerClassName)}
       ref={dropdownRef}
     >
       <div
-        className={clsx('',`flex gap-2 items-center justify-between w-full px-3 py-[6.5px] bg-white border text-sm border-gray-200 rounded transition-all cursor-pointer duration-200 ${disabled
-            ? 'bg-gray-100'
-            : ''
-          } `,dropdownContainerClassName)}
+        className={clsx('', `flex gap-2 items-center justify-between w-full px-3 py-[6.5px] bg-white border text-sm border-gray-200 rounded transition-all cursor-pointer duration-200 ${disabled
+          ? 'bg-gray-100'
+          : ''
+          } `, dropdownContainerClassName)}
         onClick={handleToggle}
         role="combobox"
         tabIndex={disabled ? -1 : 0}
@@ -158,7 +176,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({ defaultCurrency = 'AED'
         aria-disabled={disabled}
         aria-controls="currency-dropdown-list"  // <-- Add this
       >
-        <span className={(clsx('',`text-gray-800 text-[12px] font-medium ${selectedCurrency ? '' : 'text-gray-400'}`,selectedCurrencyClassName))}>
+        <span className={(clsx('', `text-gray-800 text-[12px] font-medium ${selectedCurrency ? '' : 'text-gray-400'}`, selectedCurrencyClassName))}>
           {isLoading
             ? 'Loading currencies...'
             : selectedCurrency
@@ -166,7 +184,7 @@ const CurrencySelect: React.FC<CurrencySelectProps> = ({ defaultCurrency = 'AED'
               : 'Currency'}
         </span>
         <IoChevronDown
-        color={IoChevronDownColor}
+          color={IoChevronDownColor}
           className={`w-4 h-[18px] text-gray-500 transform transition-transform duration-200 ${isOpen ? 'rotate-180' : ''
             } ${disabled ? 'text-gray-400' : ''}`}
         />

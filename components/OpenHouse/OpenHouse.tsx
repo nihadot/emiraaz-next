@@ -95,7 +95,7 @@ function OpenHouse() {
                                     <div className="w-full relative h-[177px]">
                                         <Image
                                             fill
-                                            src={item?.image.secure_url}
+                                            src={item?.image?.webp?.url}
                                             alt={item.title}
                                             className='object-cover rounded-t-[6px]'
                                         />

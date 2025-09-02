@@ -103,7 +103,7 @@ function Footer() {
                                     },
                                     {
                                         title: "About",
-                                        link: "/about"
+                                        link: "/about-property-seller"
                                     },
                                     {
                                         title: "Blog",
@@ -236,6 +236,10 @@ function Footer() {
                             <FooterList
                                 title="Quick Links"
                                 items={[
+                                        {
+                                        title:"Why Dubai",
+                                        link:"/why-dubai"
+                                    },
                                     {
                                         title: "Terms & Conditions",
                                         link: "/terms"

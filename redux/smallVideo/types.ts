@@ -4,7 +4,7 @@ export type AllSmallVideoItems = {
     name: string;
     startingDate: string;
     endingDate: string;
-    videoFile ?: ImageType,
+    videoFile ?: any,
     thumbnail?: ImageType,
     slug: string;
     _id:string;

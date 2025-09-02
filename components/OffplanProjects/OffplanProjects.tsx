@@ -465,25 +465,25 @@ useScrollToTopOnRefresh();
                                 }, {
                                     value: "villa",
                                     label: "Villa",
-                                    count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'villa')?.count || 0,
+                                    count: allCounts?.data?.propertyTypes?.find(item => item?.name === 'villa')?.count || 0,
 
                                 },
                                 {
                                     value: "apartment",
                                     label: "Apartment",
-                                    count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'apartment')?.count || 0,
+                                    count: allCounts?.data?.propertyTypes?.find(item => item?.name === 'apartment')?.count || 0,
 
                                 },
                                 {
                                     value: "penthouse",
                                     label: "Penthouse",
-                                    count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'penthouse')?.count || 0,
+                                    count: allCounts?.data?.propertyTypes?.find(item => item?.name === 'penthouse')?.count || 0,
 
                                 },
                                 {
                                     value: "townhouse",
                                     label: "Townhouse",
-                                    count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'townhouse')?.count || 0,
+                                    count: allCounts?.data?.propertyTypes?.find(item => item?.name === 'townhouse')?.count || 0,
 
                                 }]}
                                 onSelect={(e) => {
@@ -575,12 +575,12 @@ useScrollToTopOnRefresh();
                                 }, {
                                     value: "on-handover",
                                     label: "On Handover",
-                                    count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'on-handover')?.count || 0,
+                                    count: allCounts?.data?.paymentPlans?.find(item => item?.name === 'on-handover')?.count || 0,
                                 },
                                 {
                                     value: "post-handover",
                                     label: "Post Handover",
-                                    count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'post-handover')?.count || 0,
+                                    count: allCounts?.data?.paymentPlans?.find(item => item?.name === 'post-handover')?.count || 0,
                                 },]}
                                 onSelect={handleSelect.paymentPlan}
                             />
@@ -613,12 +613,12 @@ useScrollToTopOnRefresh();
                                 {
                                     value: "with-discount",
                                     label: "With Discount",
-                                    count: allCounts?.data?.discount?.find(item => item?.discount === 'with-discount')?.count || 0,
+                                    count: allCounts?.data?.discount?.find(item => item?.name === 'with-discount')?.count || 0,
                                 },
                                 {
                                     value: "without-discount",
                                     label: "Without Discount",
-                                    count: allCounts?.data?.discount?.find(item => item?.discount === 'without-discount')?.count || 0,
+                                    count: allCounts?.data?.discount?.find(item => item?.name === 'without-discount')?.count || 0,
 
                                 },]}
                                 onSelect={handleSelect.discount}

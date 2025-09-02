@@ -78,7 +78,7 @@ export default function CustomMobileSlider({
            
           alt=''
           fill
-            src={img.mobileImage?.secure_url || ''}
+            src={img.mobileImage?.webp?.url || ''}
             className={` object-cover ${imageClassName}`}
             draggable={false}
           />

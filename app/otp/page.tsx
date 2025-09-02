@@ -1,16 +1,16 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import Header from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { useVerifyPasswordChangeMutation } from '@/redux/auth/authApi';
 import { errorToast, successToast } from '@/components/Toast';
-import { IoIosArrowRoundBack, IoMdArrowRoundBack } from "react-icons/io";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 const OTP_LENGTH = 6;
 
-export default function OtpPage() {
+function OtpPageComponent() {
     const router = useRouter();
     const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(''));
     const [resetPasswordToken, setResetPasswordToken] = useState<string | null>(null);
@@ -132,4 +132,13 @@ export default function OtpPage() {
             <Footer />
         </main>
     );
+}
+
+
+export default function OtpPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <OtpPageComponent />
+    </Suspense>
+  );
 }

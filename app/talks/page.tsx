@@ -222,7 +222,7 @@ function Card({ item }: CardProps) {
             <div className="h-[208.5px] relative">
 
           <img
-            src={item.thumbnail?.secure_url}
+            src={item.thumbnail?.webp?.url}
             className='h-full rounded-[3.5px] object-cover w-full'
             alt=""
           />

@@ -216,7 +216,7 @@ function ProjectsUnderCityFunction({ id }: Props) {
 
 
     const cityOptions = useMemo(() => {
-        console.log(cities, 'cities')
+     
         const mappedOptions = cities?.data.map((item) => ({
             label: item.name,
             value: item.name,
@@ -288,7 +288,7 @@ function ProjectsUnderCityFunction({ id }: Props) {
                                 defaultValueMultiple={cityOptions?.filter((item) => item.slug === id)}
                                 search
                                 onSelect={(e) => {
-                                    console.log(e, 'e')
+                                 
                                     router.push(`/cities/${e?.slug}`)
                                 }}
                                
@@ -438,7 +438,7 @@ function ProjectsUnderCityFunction({ id }: Props) {
                                     {/* <div className={clsx("w-full mb-[12px] relative",filters?.page && filters?.page > 1 ? 'hidden':'flex')}> */}
                                     <VideoPreview
                                         projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
-                                        src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                                        src={smallVideoAds?.[0]?.videoFile?.url?.url || ''}
                                     />
                                 </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>)
                             }

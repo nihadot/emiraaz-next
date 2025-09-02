@@ -2,15 +2,13 @@
 import { useFetchAllCitiesQuery } from '@/redux/cities/citiesApi';
 import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
 import { useDeviceType } from '@/utils/useDeviceType';
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import Header from '../Header';
 import Container from '../atom/Container/Container';
-import SearchInput from '../SearchField/Search';
-import { SelectOption } from '../SelectOption';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import PaginationNew from '../PaginationNew/PaginationNew';
 import { Footer } from '../Footer';
-import { CityItem, CityItemWithCount } from '@/redux/cities/types';
+import {  CityItemWithCount } from '@/redux/cities/types';
 import Image from 'next/image';
 import { citiesBackIcon } from '@/app/assets';
 import SelectLatest from '../SelectOption/SelectLatest';
@@ -21,7 +19,7 @@ import SearchNew from '../SearchField/SearchNew';
 import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle';
 
 
-function City() {
+function CityComponent() {
 
     const [filters, setFilters] = useState({
         page: 1,
@@ -84,7 +82,6 @@ function City() {
         emiratesData?.data.map((item) => ({
             label: item.name,
             value: item._id,
-            count: 100,
         })) || [],
         [emiratesData]);
 
@@ -138,7 +135,6 @@ function City() {
                         <div className="sm:flex-[10%] sm:block hidden w-full h-[50px]">
                             <SelectLatest
                                 listContainerUlListContainerClassName="w-[200px]"
-                                search
                                 label="Emirates"
                                 options={emirateOptions}
                                 onSelect={(e) => {
@@ -201,9 +197,16 @@ function City() {
     )
 }
 
-export default City
+// export default City
 
 
+export default function City() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CityComponent />
+    </Suspense>
+  );
+}
 
 
 
@@ -243,7 +246,7 @@ function Card({ item }: CardProps) {
                     {item?.image && item?.name ?
                         <div className="w-full h-[124.5px] relative" >
                             <Image
-                                src={item.image.secure_url}
+                                src={item.image.webp?.url}
                                 alt={item.name}
                                 fill
                                 className='w-full object-cover rounded h-[124.5px]'

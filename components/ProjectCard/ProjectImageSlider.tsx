@@ -112,7 +112,7 @@ function ProjectImageSlider({ item }: { item: AllProjectsItems }) {
                     item?.mainImages?.map((img: any, index: number) => (
                         <SwiperSlide key={index} className="w-full h-full">
                             <Image
-                                src={img.secure_url}
+                                src={img.webp?.url}
                                 className="object-cover"
                                 fill
                                 alt="project image"

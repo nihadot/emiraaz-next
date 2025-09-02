@@ -25,7 +25,7 @@ function MobileCard({ item }: Props) {
 
                 <div className="w-full h-[1px] bg-black/10 my-2"></div>
                 <div className="flex items-center">
-                    <Image src={item.image?.secure_url || ''} width={180} height={140} className=' p-4 object-contain' alt="" />
+                    <Image src={item.image?.webp?.url || ''} width={180} height={140} className=' p-4 object-contain' alt="" />
                     <button onClick={()=>handleNavigateClick()} className='bg-black h-10 rounded-md text-white px-6 hover:bg-black/60 py-2 text-sm font-normal'>More Details</button>
                 </div>
 

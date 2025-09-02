@@ -1,5 +1,5 @@
 "use client";
-import { menu_icon, mobileAppIcon, propertySellerWhiteLogo, user_icon } from '@/app/assets';
+import { menu_icon, mobileAppIcon, propertySellerWhiteLogo } from '@/app/assets';
 import Image from 'next/image';
 import React, { Suspense, useEffect, useState } from 'react';
 import NavMenu from './NavMenu';
@@ -19,11 +19,11 @@ import { PiUserCircle } from 'react-icons/pi';
 import CurrencySelect from './CurrencySelect';
 import Link from 'next/link';
 
-function HeaderSecondary() {
+function HeaderSecondaryComponenet() {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
-    { name: 'About', link: '/about' },
+    { name: 'About', link: '/about-property-seller' },
     { name: 'Property Talks', link: '/property-talks' },
     { name: 'Rental Income', link: '/rental-income' },
     { name: 'Developers', link: '/developers' },
@@ -236,7 +236,16 @@ function HeaderSecondary() {
   );
 }
 
-export default HeaderSecondary;
+
+export default function HeaderSecondary() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense fallback={<div>Loading...</div>}>
+      <HeaderSecondaryComponenet />
+    </Suspense>
+  )
+}
+// export default HeaderSecondary;
 
 
 type MenuItem = {
@@ -279,7 +288,7 @@ function OtherNavMenusFunction() {
 function OtherNavMenus() {
   return (
     // You could have a loading skeleton as the `fallback` too
-    <Suspense>
+    <Suspense fallback={<div>Loading...</div>}>
       <OtherNavMenusFunction />
     </Suspense>
   )

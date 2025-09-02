@@ -38,7 +38,7 @@ function MobileBreadcrumbNavigation({ projectTitle, projectId }: Props) {
     const router = useRouter();
     const goBack = () => {
         const currency = searchParams.get('currency');
-        console.log(currency, 'currency')
+     
         // Build query string with currency if available
         const queryString = currency ? `?currency=${currency}` : '';
         router.push(`/${queryString}`);

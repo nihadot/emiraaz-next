@@ -81,7 +81,7 @@ function Blog({ initialData }: { initialData: any }) {
                                             <Image
                                                 fill
                                                 alt={item.blogTitle}
-                                                src={item.image?.secure_url || ''}
+                                                src={item.image?.webp?.url || ''}
                                                 className="rounded-[5px] cursor-text"
                                             />
                                         </div>

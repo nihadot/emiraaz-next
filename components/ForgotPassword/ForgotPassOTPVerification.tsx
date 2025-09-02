@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import { errorToast, successToast } from '@/components/Toast';
@@ -10,7 +10,7 @@ import OTPVerification from '../OTPVerification/OTPVerification';
 
 const OTP_LENGTH = 6;
 
-function ForgotPassOTPVerification() {
+function ForgotPassOTPVerificationComponet() {
     const [email, setEmail] = useState<string>('');
     const [otpToken, setOtpToken] = useState<string>('');
 
@@ -106,16 +106,16 @@ function ForgotPassOTPVerification() {
     }
 
 
-    const handleResentOTP = async() => {
+    const handleResentOTP = async () => {
         try {
             setIsSubmitting(true);
             const token = localStorage.getItem(LOCAL_STORAGE_KEYS.SIGNUP_OTP_TOKEN);
             const mailId = localStorage.getItem(LOCAL_STORAGE_KEYS.SIGNUP_TEM_DATA);
             if (token && mailId) {
                 const payload = { token: token, email: mailId };
-                const response =await resendOtp(payload).unwrap();
-                      localStorage.setItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_OTP_TOKEN, response.token);
-            successToast('OTP sent successfully');
+                const response = await resendOtp(payload).unwrap();
+                localStorage.setItem(LOCAL_STORAGE_KEYS.FORGOT_PASSWORD_OTP_TOKEN, response.token);
+                successToast('OTP sent successfully');
             }
 
 
@@ -138,4 +138,11 @@ function ForgotPassOTPVerification() {
     )
 }
 
-export default ForgotPassOTPVerification
+
+export default function ForgotPassOTPVerification() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <ForgotPassOTPVerificationComponet />
+        </Suspense>
+    );
+}

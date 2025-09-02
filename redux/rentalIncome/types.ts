@@ -13,8 +13,8 @@ export type AllRentalIncomeItems = {
         name: string,
         _id: string
     },
-    villas: DyanmicField[];
-    apartments: DyanmicField[];
-    townhouses: DyanmicField[];
+    villas: string[];
+    apartments: string[];
+    townhouses: string[];
     _id: string;
 }

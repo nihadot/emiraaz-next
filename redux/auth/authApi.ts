@@ -211,7 +211,7 @@ export interface forgotPasswordOTPVerficaitionResponse {
 export interface IUser {
     name: string;
     email: string;
-    avatar: ImageItem;
+    avatar: ImageType;
     number: string;
     nationality: string | undefined;
     _id: string;
@@ -227,7 +227,7 @@ export interface AuthResponse {
     name: string;
     number: string;
     email: string;
-    avatar?: ImageItem;
+    avatar?: ImageType;
   };
   accessToken: string;
   refreshToken:string;
@@ -259,12 +259,7 @@ export interface SignUpForgotPasswordPayload {
   email:string;
 }
 
-type ImageItem = {
-  asset_id: string;
-  secure_url: string;
-  url: string;
-  public_id: string;
-};
+
 
 
 export interface SignUpOTPPayload {

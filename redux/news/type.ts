@@ -12,7 +12,11 @@ import { ImageType } from "@/utils/types";
     metaKeywords: string;
     metaTitle: string;
     newCategoryDetails: NewCategoryDetailsType;
-    newsBody: string;
+    newsBody: {
+      text: string;
+      json: any;
+      html: string;
+    };
     newsTitle: string;
     slug: string;
     _id: string;

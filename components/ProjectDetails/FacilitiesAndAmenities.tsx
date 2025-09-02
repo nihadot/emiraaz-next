@@ -22,7 +22,7 @@ function FacilitiesAndAmenities({data,heading}: Props) {
 
                                         <Image
                                           
-                                            src={item?.image?.secure_url}
+                                            src={item?.image?.webp?.url}
                                             alt={`Thumbnail ${index}`}
                                             width={40}
                                             height={40}

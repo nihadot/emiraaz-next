@@ -21,7 +21,7 @@ import SearchNew from '../SearchField/SearchNew';
 import SelectLatest from '../SelectOption/SelectLatest';
 import SelectNew from '../SelectOption/SelectNew';
 import { SwitchSelector } from '../SelectOption';
-import { CompletionTypes, FurnishTypes, productTypeOptionFirstItems, PropertyTypes, propertyTypeSecond } from '@/data';
+import { CompletionTypes, productTypeOptionFirstItems, PropertyTypes, propertyTypeSecond } from '@/data';
 import { HiOutlineAdjustmentsHorizontal } from 'react-icons/hi2';
 import ExpandableComponentDropdown from '../ExpandableComponent/ExpandableComponent';
 import clsx from 'clsx';
@@ -51,11 +51,8 @@ import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import LocationTags from '../LocationTags/LocationTags';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import pIcon from "@/app/assets/p-icon.png";
-import { headers } from 'next/headers';
-import { useCountryCode } from '@/utils/useCountryCode';
-import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import ViewPreviewVideo from '@/app/home/ViewPreviewVideo';
+import HomePageContent from './HomePageContent';
 type PaymentPlan = {
     label?: string;
     value?: string;
@@ -343,6 +340,7 @@ function HomePageFunction({ initialData }: { initialData: any }) {
 
 
     const totalPages = projects?.pagination?.totalPages || 1;
+    const totalRecords = projects?.pagination?.totalRecords;
 
     const searchParams = useSearchParams();
     const handleClick = (item: AllProjectsItems) => {
@@ -502,14 +500,14 @@ function HomePageFunction({ initialData }: { initialData: any }) {
 
                 <div className=" min-h-screen  w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
                     <Header
-                    logoSection={
-                        <Link
-                        href={'/'}
-                        >
-                                  <Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />
-                        </Link>
-                        
-                    }
+                        logoSection={
+                            <Link
+                                href={'/'}
+                            >
+                                <Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />
+                            </Link>
+
+                        }
                     />
 
                     <Container>
@@ -772,25 +770,25 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                     }, {
                                         value: "villa",
                                         label: "Villa",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'villa')?.count || 0,
+                                        count: allCounts?.data?.propertyTypes?.find(item => item?.name === 'villa')?.count || 0,
 
                                     },
                                     {
                                         value: "apartment",
                                         label: "Apartment",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'apartment')?.count || 0,
+                                        count: allCounts?.data?.propertyTypes?.find(item => item?.name === 'apartment')?.count || 0,
 
                                     },
                                     {
                                         value: "penthouse",
                                         label: "Penthouse",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'penthouse')?.count || 0,
+                                        count: allCounts?.data?.propertyTypes?.find(item => item?.name === 'penthouse')?.count || 0,
 
                                     },
                                     {
                                         value: "townhouse",
                                         label: "Townhouse",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'townhouse')?.count || 0,
+                                        count: allCounts?.data?.propertyTypes?.find(item => item?.name === 'townhouse')?.count || 0,
 
                                     }]}
                                     onSelect={(e) => {
@@ -904,12 +902,12 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                     }, {
                                         value: "on-handover",
                                         label: "On Handover",
-                                        count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'on-handover')?.count || 0,
+                                        count: allCounts?.data?.paymentPlans?.find(item => item?.name === 'onHandover')?.count || 0,
                                     },
                                     {
                                         value: "post-handover",
                                         label: "Post Handover",
-                                        count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'post-handover')?.count || 0,
+                                        count: allCounts?.data?.paymentPlans?.find(item => item?.name === 'postHandover')?.count || 0,
                                     },]}
                                     onSelect={handleSelect.paymentPlan}
                                 />
@@ -936,12 +934,12 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                     {
                                         value: "with-discount",
                                         label: "With Discount",
-                                        count: allCounts?.data?.discount?.find(item => item?.discount === 'with-discount')?.count || 0,
+                                        count: allCounts?.data?.discount?.find(item => item?.name === 'with-discount')?.count || 0,
                                     },
                                     {
                                         value: "without-discount",
                                         label: "Without Discount",
-                                        count: allCounts?.data?.discount?.find(item => item?.discount === 'without-discount')?.count || 0,
+                                        count: allCounts?.data?.discount?.find(item => item?.name === 'without-discount')?.count || 0,
 
                                     },]}
                                     onSelect={handleSelect.discount}
@@ -960,7 +958,26 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                     clearSelection={clear}
                                     className="w-[200px]"
                                     label="Furnish Type"
-                                    options={FurnishTypes}
+                                    options={[{
+                                        value: "all",
+                                        label: "All",
+                                    }, {
+                                        value: "fully-furnished",
+                                        label: "Fully Furnished",
+                                        count: allCounts?.data?.furnisheds?.find(item => item?.name === 'fully-furnished')?.count || 0,
+
+                                    },
+                                    {
+                                        value: "semi-furnished",
+                                        label: "Semi Furnished",
+                                        count: allCounts?.data?.furnisheds?.find(item => item?.name === 'semi-furnished')?.count || 0,
+
+                                    },
+                                    {
+                                        value: "un-furnishing",
+                                        label: "UnFurnished",
+                                        count: allCounts?.data?.furnisheds?.find(item => item?.name === 'un-furnishing')?.count || 0,
+                                    },]}
                                     onSelect={handleSelect.furnishType}
                                 />
                             </div>
@@ -1071,7 +1088,7 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                             {/* <div className={clsx("w-full mb-[12px] relative",filters?.page && filters?.page > 1 ? 'hidden':'flex')}> */}
                                             <VideoPreview
                                                 projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
-                                                src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                                                src={smallVideoAds?.[0]?.videoFile?.url?.url || ''}
                                             />
                                         </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>)
                                     }
@@ -1081,13 +1098,13 @@ function HomePageFunction({ initialData }: { initialData: any }) {
 
                                     {filters.page && filters.page > 1 && <RecommendedText
                                         title="Recommended For You"
-                                         items={[
-        'Smart Picks in Dubai’s Fastest-Growing Zones',
-        'Handpicked Homes with High ROI Potential',
-        'Investor-Friendly Properties You’ll Love',
-        'Move-In Ready Units in Prime Locations',
-        'Top-Rated Listings in Family-Friendly Areas',
-    ]}
+                                        items={[
+                                            'Smart Picks in Dubai’s Fastest-Growing Zones',
+                                            'Handpicked Homes with High ROI Potential',
+                                            'Investor-Friendly Properties You’ll Love',
+                                            'Move-In Ready Units in Prime Locations',
+                                            'Top-Rated Listings in Family-Friendly Areas',
+                                        ]}
                                     />}
 
                                     <div className="sticky top-3 left-0">
@@ -1101,24 +1118,24 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                         {filters.page && filters.page > 1 && <>
                                             <RecommendedText
                                                 title="Recommended For You"
-                                              items={[
-        'Smart Picks in Dubai’s Fastest-Growing Zones',
-        'Handpicked Homes with High ROI Potential',
-        'Investor-Friendly Properties You’ll Love',
-        'Move-In Ready Units in Prime Locations',
-        'Top-Rated Listings in Family-Friendly Areas',
-    ]}
+                                                items={[
+                                                    'Smart Picks in Dubai’s Fastest-Growing Zones',
+                                                    'Handpicked Homes with High ROI Potential',
+                                                    'Investor-Friendly Properties You’ll Love',
+                                                    'Move-In Ready Units in Prime Locations',
+                                                    'Top-Rated Listings in Family-Friendly Areas',
+                                                ]}
                                             />
                                             <RecommendedText
                                                 title="Popular Searches"
-                                             items={[
-        'Downtown Dubai: Iconic City Living',
-        'Dubai Marina: Waterfront Lifestyle at Its Best',
-        'Business Bay: Where Work Meets Luxury',
-        'Yas Island, Abu Dhabi: Island Living Redefined',
-        'Jumeirah Village Circle: Affordable Modern Homes',
-        'Al Reem Island, Abu Dhabi: Urban Peace',
-    ]}
+                                                items={[
+                                                    'Downtown Dubai: Iconic City Living',
+                                                    'Dubai Marina: Waterfront Lifestyle at Its Best',
+                                                    'Business Bay: Where Work Meets Luxury',
+                                                    'Yas Island, Abu Dhabi: Island Living Redefined',
+                                                    'Jumeirah Village Circle: Affordable Modern Homes',
+                                                    'Al Reem Island, Abu Dhabi: Urban Peace',
+                                                ]}
                                             />
                                         </>}
 
@@ -1165,17 +1182,19 @@ function HomePageFunction({ initialData }: { initialData: any }) {
 
 
 
-                        <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">{filters.page} To {totalPages} of {allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Listings</div>
+                        <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">{filters.page} To {totalPages} of {totalRecords} Listings</div>
                     </div>
                 </Container>
 
 
+                <HomePageContent />
 
 
                 <SectionDivider
                     containerClassName="mt-[45.75px]"
                     lineClassName="h-[1px] hidden sm:block w-full bg-[#DEDEDE]"
                 />
+
 
 
                 <BottomBanner />
@@ -1187,7 +1206,7 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                             <VideoPreview
                                 projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
 
-                                src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                                src={smallVideoAds?.[0]?.videoFile?.url?.url || ''}
                             />
                         </div>
                     </Container>
@@ -1202,13 +1221,13 @@ function HomePageFunction({ initialData }: { initialData: any }) {
 
                     <RecommendedText
                         title="Recommended For You"
-                         items={[
-        'Smart Picks in Dubai’s Fastest-Growing Zones',
-        'Handpicked Homes with High ROI Potential',
-        'Investor-Friendly Properties You’ll Love',
-        'Move-In Ready Units in Prime Locations',
-        'Top-Rated Listings in Family-Friendly Areas',
-    ]}
+                        items={[
+                            'Smart Picks in Dubai’s Fastest-Growing Zones',
+                            'Handpicked Homes with High ROI Potential',
+                            'Investor-Friendly Properties You’ll Love',
+                            'Move-In Ready Units in Prime Locations',
+                            'Top-Rated Listings in Family-Friendly Areas',
+                        ]}
                     />
                 </div>
 
@@ -1223,6 +1242,7 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                     onClose={() => setFilterModel(false)}
                     show={filterModel}
                 />
+
 
 
 

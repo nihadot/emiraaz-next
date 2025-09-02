@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import { errorToast, successToast } from '@/components/Toast';
@@ -13,7 +13,7 @@ import { RootState } from '@/redux/store';
 
 const OTP_LENGTH = 6;
 
-function SignupOtpPage() {
+function SignupOtpPageComponent() {
 
     const { user } = useSelector((state: RootState) => state.user);
 
@@ -45,7 +45,7 @@ function SignupOtpPage() {
         try {
             setIsSubmitting(true);
             const enteredOtp = otp.join('');
-            console.log(OTP_LENGTH, 'OTP_LENGTH', enteredOtp, 'enteredOtp')
+
             if (enteredOtp.length !== OTP_LENGTH) {
                 errorToast('Please enter all 6 digits.');
                 return;
@@ -113,4 +113,12 @@ function SignupOtpPage() {
     )
 }
 
-export default SignupOtpPage
+
+
+export default function SignupOtpPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SignupOtpPageComponent />
+        </Suspense>
+    );
+}

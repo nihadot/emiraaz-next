@@ -565,12 +565,12 @@ useScrollToTopOnRefresh();
                                     }, {
                                         value: "on-handover",
                                         label: "On Handover",
-                                        count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'on-handover')?.count || 0,
+                                        count: allCounts?.data?.paymentPlans?.find(item => item?.name === 'on-handover')?.count || 0,
                                     },
                                     {
                                         value: "post-handover",
                                         label: "Post Handover",
-                                        count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'post-handover')?.count || 0,
+                                        count: allCounts?.data?.paymentPlans?.find(item => item?.name === 'post-handover')?.count || 0,
                                     },]}
                                     onSelect={handleSelect.paymentPlan}
                                 />

@@ -4,18 +4,18 @@ import { LOCAL_STORAGE_KEYS } from "./storage";
 import { logoutStart, logoutSuccess } from "@/redux/userSlice/userSlice";
 // import { logoutStart, logoutSuccess } from "../features/adminSlice/adminSlice";
 
-export const baseUrl = `https://api.propertyseller.com/api/v1`
+// export const baseUrl = `https://api.propertyseller.com/api/v1`
+export const baseUrl = process.env.NEXT_PUBLIC_API_URL
 // export const baseUrl = `http://192.168.196.6:4000/api/v1`
 // export const baseUrl = `http://192.168.196.227:4000/api/v1`
 // export const baseUrl = `http://192.168.1.7:4000/api/v1`
 // export const baseUrl = `http://192.168.130.212:4000/api/v1`
 // export const baseUrl = `http://localhost:4000/api/v1`
+// export const baseUrl = `http://10.92.107.143:4000/api/v1`
 // export const baseUrl = `https://ai-updations-api.onrender.com/api/v1`
 export const placeHolderLink = 'https://placehold.co/300x468'
-
 export const CLOUDINARY_PERSISTENT = 'demo_purpose';
 export const CLOUDINARY_NAME = 'dknxmloqh';
-
 export const createBaseQueryWithReAuth = (
     baseQuery: any,
     refreshTokenBaseQuery: any

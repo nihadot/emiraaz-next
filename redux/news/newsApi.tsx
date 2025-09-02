@@ -121,20 +121,20 @@ type CountItem = {
 
 
 type PropertyTypeItem = {
-    propertyType: string;
+    name: string;
     count: number;
 }
 
 type DiscountItem = {
-    discount: string;
+    name: string;
     count: number;
 }
 
 type PaymentPlanItem = {
-    paymentPlan: string;
+    name: string;
     count: number;
 }
 type FurnishedItem = {
-    furnished: string;
+    name: string;
     count: number;
 }

@@ -7,7 +7,7 @@ import { AllProjectsItems } from '@/redux/project/types';
 import { shuffle } from '@/utils/shuffle';
 import { useDeviceType } from '@/utils/useDeviceType';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import Header from '../Header';
 import Container from '../atom/Container/Container';
 import SearchNew from '../SearchField/SearchNew';
@@ -42,10 +42,10 @@ import { parsePrice } from '@/utils/parsePrice';
 import RecommendedText from '../RecomendedText/RecommendedText';
 
 
-function Resale() {
+function ResaleComponent() {
 
     useForceScrollRestore(); // Default key is "scroll-position"
-useScrollToTopOnRefresh();
+    useScrollToTopOnRefresh();
 
     const router = useRouter()
     const pathname = usePathname();
@@ -283,12 +283,12 @@ useScrollToTopOnRefresh();
             setAllProjects(projects?.data);
         }
     }, [projects]);
-   
-    const [paginationHappened, setPaginationHappened] = useState(false)
-    useEffect(()=>{
-             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    },[paginationHappened]);
+    const [paginationHappened, setPaginationHappened] = useState(false)
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    }, [paginationHappened]);
 
     return (
         <main>
@@ -572,12 +572,12 @@ useScrollToTopOnRefresh();
                                     }, {
                                         value: "on-handover",
                                         label: "On Handover",
-                                        count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'on-handover')?.count || 0,
+                                        count: allCounts?.data?.paymentPlans?.find(item => item?.name === 'on-handover')?.count || 0,
                                     },
                                     {
                                         value: "post-handover",
                                         label: "Post Handover",
-                                        count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'post-handover')?.count || 0,
+                                        count: allCounts?.data?.paymentPlans?.find(item => item?.name === 'post-handover')?.count || 0,
                                     },]}
                                     onSelect={handleSelect.paymentPlan}
                                 />
@@ -685,13 +685,13 @@ useScrollToTopOnRefresh();
 
                             <RecommendedText
                                 title="Recommended For You"
-                                 items={[
-        'Smart Picks in Dubai’s Fastest-Growing Zones',
-        'Handpicked Homes with High ROI Potential',
-        'Investor-Friendly Properties You’ll Love',
-        'Move-In Ready Units in Prime Locations',
-        'Top-Rated Listings in Family-Friendly Areas',
-    ]}
+                                items={[
+                                    'Smart Picks in Dubai’s Fastest-Growing Zones',
+                                    'Handpicked Homes with High ROI Potential',
+                                    'Investor-Friendly Properties You’ll Love',
+                                    'Move-In Ready Units in Prime Locations',
+                                    'Top-Rated Listings in Family-Friendly Areas',
+                                ]}
                             />
                             <div className="sticky top-3 left-0">
 
@@ -699,31 +699,31 @@ useScrollToTopOnRefresh();
                                     shuffledImages={shuffledImages}
                                 />
 
-                                  <RecommendedText
-                                title="Recommended For You"
-                                 items={[
-        'Smart Picks in Dubai’s Fastest-Growing Zones',
-        'Handpicked Homes with High ROI Potential',
-        'Investor-Friendly Properties You’ll Love',
-        'Move-In Ready Units in Prime Locations',
-        'Top-Rated Listings in Family-Friendly Areas',
-    ]}
-                            />
-                            <RecommendedText
-                                title="Popular Searches"
-                              items={[
-        'Downtown Dubai: Iconic City Living',
-        'Dubai Marina: Waterfront Lifestyle at Its Best',
-        'Business Bay: Where Work Meets Luxury',
-        'Yas Island, Abu Dhabi: Island Living Redefined',
-        'Jumeirah Village Circle: Affordable Modern Homes',
-        'Al Reem Island, Abu Dhabi: Urban Peace',
-    ]}
-                            />
+                                <RecommendedText
+                                    title="Recommended For You"
+                                    items={[
+                                        'Smart Picks in Dubai’s Fastest-Growing Zones',
+                                        'Handpicked Homes with High ROI Potential',
+                                        'Investor-Friendly Properties You’ll Love',
+                                        'Move-In Ready Units in Prime Locations',
+                                        'Top-Rated Listings in Family-Friendly Areas',
+                                    ]}
+                                />
+                                <RecommendedText
+                                    title="Popular Searches"
+                                    items={[
+                                        'Downtown Dubai: Iconic City Living',
+                                        'Dubai Marina: Waterfront Lifestyle at Its Best',
+                                        'Business Bay: Where Work Meets Luxury',
+                                        'Yas Island, Abu Dhabi: Island Living Redefined',
+                                        'Jumeirah Village Circle: Affordable Modern Homes',
+                                        'Al Reem Island, Abu Dhabi: Urban Peace',
+                                    ]}
+                                />
 
                             </div>
 
-                          
+
 
 
                         </div>
@@ -742,7 +742,7 @@ useScrollToTopOnRefresh();
                             onPageChange={(newPage) => {
                                 const url = new URL(window.location.href);
                                 url.searchParams.set('page', newPage.toString());
-                                  window.history.pushState({}, '', url);
+                                window.history.pushState({}, '', url);
                                 setPaginationHappened(pre => !pre)
                                 setFilters(prev => ({ ...prev, page: newPage }))
                             }}
@@ -790,4 +790,11 @@ useScrollToTopOnRefresh();
     )
 }
 
-export default Resale
+
+export default function Resale() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResaleComponent />
+    </Suspense>
+  );
+}

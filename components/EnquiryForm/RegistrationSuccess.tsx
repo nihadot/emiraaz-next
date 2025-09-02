@@ -3,12 +3,13 @@ import Image from 'next/image'
 import React from 'react'
 import { IoMdClose } from 'react-icons/io'
 import Container from '../atom/Container/Container'
+import clsx from 'clsx'
 
 function RegistrationSuccess({ onClose,
-
+  headlineClassName,
   headline = "Your Registration Success",
   content = "Our team will contact you Shortly"
- }: { onClose: () => void, headline?: string, content?: string }) {
+ }: { onClose: () => void, headline?: string, content?: string,headlineClassName?:string }) {
   return (
     <Container>
 
@@ -22,7 +23,7 @@ function RegistrationSuccess({ onClose,
 
         </button>
         <div className='rounded-[5px] flex justify-center flex-col px-4 items-center bg-white gap-2  py-10'>
-          <p className='text-[18px] font-medium font-poppins'>{headline}</p>
+          <p className={clsx('text-[18px] font-medium font-poppins', headlineClassName)}>{headline}</p>
           <p className='text-[12px] font-poppins font-light'>{content}</p>
 
           <Image src={registration_success} alt="location icon" width={120} height={120} className="object-cover" />

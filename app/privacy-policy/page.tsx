@@ -6,9 +6,9 @@ import MobileHeaderTitle from '@/components/atom/typography/MobileHeaderTitle';
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import clsx from 'clsx'
-import React from 'react'
+import React, { Suspense } from 'react'
 
-function page() {
+function PageComponent() {
 
 
   const terms = [
@@ -152,13 +152,13 @@ function page() {
 
   return (
     <main>
-      <Header     logoSection={
-                           <div className='h-full w-full flex justify-center items-center'>
-                             <MobileHeaderTitle
-                            content='Privacy Policy'
-                            />
-                           </div>
-                        }/>
+      <Header logoSection={
+        <div className='h-full w-full flex justify-center items-center'>
+          <MobileHeaderTitle
+            content='Privacy Policy'
+          />
+        </div>
+      } />
 
       <SectionDivider
         containerClassName="mt-[10.5px] mb-[12px]"
@@ -205,7 +205,6 @@ function page() {
   )
 }
 
-export default page
 
 
 
@@ -224,4 +223,13 @@ function Paragraph({ content, className }: { content: string, className?: string
   return (
     <p className={clsx('text-[12px] font-poppins font-normal text-[#000000]', className)}>{content}</p>
   )
+}
+
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PageComponent />
+    </Suspense>
+  );
 }

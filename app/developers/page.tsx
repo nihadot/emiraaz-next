@@ -1,14 +1,11 @@
 'use client'
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
-import SearchInput from '@/components/SearchField/Search'
-import { SelectOption } from '@/components/SelectOption'
 import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import { useViewAllDevelopersQuery } from '@/redux/developers/developersApi'
 import { AllDevelopersItems } from '@/redux/developers/types'
 import Image from 'next/image'
-import { top_arrow_icon } from '../assets'
 import Container from '@/components/atom/Container/Container'
 import PaginationNew from "@/components/PaginationNew/PaginationNew";
 import { useDeviceType } from '@/utils/useDeviceType'
@@ -22,7 +19,7 @@ import clsx from 'clsx'
 import MobileHeaderTitle from '@/components/atom/typography/MobileHeaderTitle'
 
 
-function Developers() {
+function DevelopersComponent() {
 
     const deviceType = useDeviceType();
 
@@ -100,14 +97,14 @@ function Developers() {
         <main>
 
             <div className=" w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
-                <Header 
+                <Header
                     logoSection={
-                                           <div className='h-full w-full flex justify-center items-center'>
-                                             <MobileHeaderTitle
-                                            content='Developers'
-                                            />
-                                           </div>
-                                        }
+                        <div className='h-full w-full flex justify-center items-center'>
+                            <MobileHeaderTitle
+                                content='Developers'
+                            />
+                        </div>
+                    }
                 />
 
 
@@ -127,7 +124,6 @@ function Developers() {
                         <div className="hidden max-w-[250px] w-full lg:flex h-[48px]">
                             <SelectLatest
                                 listContainerUlListContainerClassName="w-[200px]"
-                                search
                                 label="Emirates"
                                 options={emirateOptions}
                                 onSelect={(e) => {
@@ -179,11 +175,11 @@ function Developers() {
                     </section>
                 </Container>
 
-              <SectionDivider
-                                  containerClassName={clsx("mb-[12px] mt-[12px]")}
-                                  lineClassName="h-[1px] w-full bg-[#DEDEDE]"
-                              />
-          
+                <SectionDivider
+                    containerClassName={clsx("mb-[12px] mt-[12px]")}
+                    lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+                />
+
                 <Container>
 
                     <section className='h-full pb-0 grid-cols-1 w-full  gap-3 grid lg:grid-cols-3' >
@@ -201,7 +197,7 @@ function Developers() {
                     </section>
                 </Container>
 
-      
+
                 <SpaceWrapper className='mb-10'>
 
                     <PaginationNew
@@ -221,8 +217,6 @@ function Developers() {
     )
 }
 
-export default Developers
-
 
 type CardProps = {
     item: AllDevelopersItems;
@@ -233,23 +227,31 @@ function Card({ item }: CardProps) {
         <div className='border flex-1 font-poppins h-[115px] w-full  flex justify-center items-center rounded-[3px] border-[#DEDEDE] p-0'>
             <div className="flex ms-3 gap-2 w-full items-center ">
                 <div className="flex overflow-hidden justify-center items-center border px-3 py-1 w-[100px] h-[80px] border-[#DEDEDE] rounded-[3px] ">
-                    <Image src={item?.image?.secure_url || ''} alt="bed icon" width={100} height={80} className="object-cover flex justify-center items-center" />
+                    <Image src={item?.image?.webp?.url || ''} alt="bed icon" width={100} height={80} className="object-cover flex justify-center items-center" />
                 </div>
                 <div className="flex w-full items-center justify-between pe-4 gap-2">
 
                     <p className='text-[18px] line-clamp-2 font-medium font-poppins'>{item.name}</p>
                     {/* <Image src={top_arrow_icon || ''} alt="bed icon" width={12} height={12} className="object-contain flex justify-center items-center" /> */}
-                  <Link
-                  href={`/developers/${item.slug}`}
-                  >
-                    <div className="w-4 h-4  ">
-                        <RxArrowTopRight size={20} color='black' />
-                    </div>
-                  </Link>
+                    <Link
+                        href={`/developers/${item.slug}`}
+                    >
+                        <div className="w-4 h-4  ">
+                            <RxArrowTopRight size={20} color='black' />
+                        </div>
+                    </Link>
                 </div>
 
             </div>
 
         </div>
     )
+}
+
+export default function Developers() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <DevelopersComponent />
+        </Suspense>
+    );
 }

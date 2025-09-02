@@ -189,7 +189,7 @@ function FeaturedProjects() {
     const [allProjects, setAllProjects] = useState<AllProjectsItems[]>();
 
     useEffect(() => {
-        console.log(projects, 'projects')
+      
         if (projects?.data) {
             setAllProjects(projects?.data);
         }

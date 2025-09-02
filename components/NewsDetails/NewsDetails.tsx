@@ -56,7 +56,7 @@ function NewsDetails({ id }: Props) {
                                     <Image
                                         fill
                                         alt={singleNews?.data.newsTitle || ''}
-                                        src={singleNews?.data?.image?.secure_url || ''}
+                                        src={singleNews?.data?.image?.webp?.url || ''}
                                         className="rounded-md"
                                     />
                                 </div>
@@ -83,11 +83,13 @@ function NewsDetails({ id }: Props) {
                                 }
 
                                 {singleNews && singleNews.data && singleNews.data.newsBody && singleNews?.data?.newsBody ?
-                                    <p
-                                        className="text-[12px] whitespace-pre-wrap w-full text-left font-poppins font-normal mt-[12px]"
-                                    // dangerouslySetInnerHTML={{ __html: `${singleNews?.data?.newsBody}` }}
-                                    >
-                                        {singleNews?.data?.newsBody}</p>
+                                    // <p
+
+                                    //     className="text-[12px] whitespace-pre-wrap w-full text-left font-poppins font-normal mt-[12px]" >
+                                    //     </p>
+                                    <div className="mt-[12px] font-poppins"
+                                    dangerouslySetInnerHTML={{ __html: singleNews?.data?.newsBody?.html }}
+                                    ></div>
                                     :
                                     <>
                                         <div className="w-full h-[50px] bg-slate-50 mb-3 animate-pulse rounded-[5px]"></div>
@@ -173,14 +175,14 @@ function NewsDetails({ id }: Props) {
                                 .filter(item => item.slug !== id)
                                 .map((item, index) => {
                                     return (
-                                        <div className="" key={index}>
+                                        <div key={index}>
                                             <div key={index} className="relative w-full h-[208.5px] object-cover">
                                                 <div className="px-4 py-1 font-poppins font-medium rounded-[3px] absolute text-[10.5px] sm:text-[13.5px] z-30 left-[15px] top-[15px] text-[#FF1645] bg-[#FFE7EC] ">{item.newCategoryDetails?.name}</div>
 
                                                 <Image
                                                     fill
                                                     alt={item.newsTitle}
-                                                    src={item.image?.secure_url || ''}
+                                                    src={item.image?.webp?.url}
                                                     className="rounded-[5px] cursor-text"
                                                 />
                                             </div>

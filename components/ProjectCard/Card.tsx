@@ -37,7 +37,7 @@ function Card({ item, handleClick }: Props) {
 
       {/* Image Banner */}
       <div className="relative overflow-hidden rounded-[3.75px] sm:w-full h-[142.5px]">
-        <Image fill src={item.mainImages[0].secure_url} className='object-cover' alt='menu icon' />
+        <Image fill src={item?.mainImages?.[0]?.webp?.url} className='object-cover' alt='menu icon' />
       </div>
 
       {/* Project Title */}

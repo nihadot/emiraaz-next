@@ -13,13 +13,14 @@ import RegistrationSuccess from "@/components/EnquiryForm/RegistrationSuccess";
 import Container from "@/components/atom/Container/Container";
 import Modal from "@/components/Modal/Modal";
 import AlreadyEnquired from "@/components/EnquiryForm/AlreadyEnquired";
+import { ImageType } from "@/utils/types";
 
 const SidePanel = ({
     projectId,
     images, videoLink, handleGalleryModal, handleGallerySelect, filteredProjectAdsCard, shuffledImages
 }: {
     mainImage: string,
-    images: { secure_url: string }[],
+    images: ImageType [],
     selectedIndex: number,
     videoLink?: string,
     filteredProjectAdsCard: AllProjectAdsCards[];
@@ -40,23 +41,23 @@ const SidePanel = ({
             <div className="gap-[6px] md:flex hidden flex-col">
                
                {
-                images?.[1]?.secure_url ?  <ImageBlock wrapperClassName="h-[177.5px]" onClick={() => {
+                images?.[1]?.webp?.url ?  <ImageBlock wrapperClassName="h-[177.5px]" onClick={() => {
                     handleGalleryModal()
                     handleGallerySelect('images')
-                }} src={images?.[1]?.secure_url} alt="Next image" /> : <div className="h-[177.5px] w-full bg-gray-50"></div>
+                }} src={images?.[1]?.webp?.url} alt="Next image" /> : <div className="h-[177.5px] w-full bg-gray-50"></div>
                }
                
-               { images?.[2]?.secure_url ? <>
+               { images?.[2]?.webp?.url ? <>
                
                { videoLink ? <ImageBlock imageCount={images.length} wrapperClassName="h-[136.5px]" onClick={() => {
                     handleGalleryModal()
                     handleGallerySelect('images')
-                }} src={images?.[2]?.secure_url} alt="With Overlay" showOverlay /> :
+                }} src={images?.[2]?.webp?.url} alt="With Overlay" showOverlay /> :
 
                 <ImageBlock  wrapperClassName="h-[136.5px]" onClick={() => {
                     handleGalleryModal()
                     handleGallerySelect('images')
-                }} src={images?.[2]?.secure_url} alt="With Overlay" />
+                }} src={images?.[2]?.webp?.url} alt="With Overlay" />
                 
                 }
                </>  
@@ -78,7 +79,7 @@ const SidePanel = ({
                      <ImageBlock imageCount={images.length} wrapperClassName="h-[163.5px]" onClick={() => {
                     handleGalleryModal()
                     handleGallerySelect('images')
-                }} src={images?.[3]?.secure_url} alt="With Overlay" showOverlay />
+                }} src={images?.[3]?.webp?.url} alt="With Overlay" showOverlay />
                     
                     }
                 </div>

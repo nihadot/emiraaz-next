@@ -4,7 +4,6 @@ export const handleApiError = (error: any) => {
 
   // Extract potential sources of errors
   const responseData = error?.data;
-  console.log(error,'responseData')
   let message = responseData?.message || error?.message || defaultMessage;
   const errors = responseData?.errors;
 

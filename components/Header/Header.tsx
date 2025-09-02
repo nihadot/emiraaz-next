@@ -9,10 +9,7 @@ import { clsx } from 'clsx';
 import PrimaryButton from '../Buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { logoutFailure, logoutStart, logoutSuccess } from '@/redux/userSlice/userSlice';
-import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { errorToast } from '../Toast';
 import Container from '../atom/Container/Container';
 import { IoCloseSharp } from 'react-icons/io5';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
@@ -26,7 +23,7 @@ interface Props {
   logoSection?: React.ReactNode;
 }
 
-function Header({
+function HeaderComponent({
 
   logoSection = <Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />,
 }: Props) {
@@ -36,7 +33,7 @@ function Header({
 
   const menuItemsData = [
     { name: 'Home', link: '/' },
-    { name: 'About', link: '/about' },
+    { name: 'About', link: '/about-property-seller' },
     { name: 'Featured Projects', link: '/featured-projects' },
     { name: 'Ai Agent', link: '/ai-agent' },
     { name: 'Rental Income', link: '/rental-income' },
@@ -59,30 +56,6 @@ const menuItems = menuItemsData.filter((item) => {
 
   const toggleMenu = () => setIsOpen(prev => !prev);
   const { isAuthentication, user } = useSelector((state: RootState) => state.user);
-  const handleLogout = async () => {
-
-    if (!window.confirm('Logout?')) {
-      return true;
-    }
-    try {
-      dispatch(logoutStart());
-
-      localStorage.removeItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN)
-      localStorage.removeItem(LOCAL_STORAGE_KEYS.USER_DATA)
-
-      dispatch(logoutSuccess());
-
-
-      router.push("/login");
-
-    } catch (error: any) {
-      dispatch(logoutFailure(error))
-      errorToast(error?.response?.data?.message || error?.data?.message || error?.response?.message || error?.message || 'Error occurred, please try again later');
-    }
-  };
-
-  // console.log(pathname,'usePathname')
-  // console.log(usePathname,'usePathname')
 
   const [currency, setCurrency] = useState<string>('');
 
@@ -365,8 +338,19 @@ const menuItems = menuItemsData.filter((item) => {
   );
 }
 
-export default Header;
+// export default Header;
 
+
+
+export default function Header(prop:Props) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HeaderComponent 
+      {...prop}
+      />
+    </Suspense>
+  );
+}
 
 
 

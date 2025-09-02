@@ -483,25 +483,25 @@ useScrollToTopOnRefresh();
                                     }, {
                                         value: "villa",
                                         label: "Villa",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'villa')?.count || 0,
+                                        count: allCounts?.data?.propertyTypes?.find(item => item?.name === 'villa')?.count || 0,
 
                                     },
                                     {
                                         value: "apartment",
                                         label: "Apartment",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'apartment')?.count || 0,
+                                        count: allCounts?.data?.propertyTypes?.find(item => item?.name === 'apartment')?.count || 0,
 
                                     },
                                     {
                                         value: "penthouse",
                                         label: "Penthouse",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'penthouse')?.count || 0,
+                                        count: allCounts?.data?.propertyTypes?.find(item => item?.name === 'penthouse')?.count || 0,
 
                                     },
                                     {
                                         value: "townhouse",
                                         label: "Townhouse",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.propertyType === 'townhouse')?.count || 0,
+                                        count: allCounts?.data?.propertyTypes?.find(item => item?.name === 'townhouse')?.count || 0,
 
                                     }]}
                                     onSelect={(e) => {

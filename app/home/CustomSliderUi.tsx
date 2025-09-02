@@ -3,20 +3,19 @@ import { PortraitBanner } from '@/redux/portraitBannerAd/types'
 import React from 'react'
 
 type Props = {
-    shuffledImages:PortraitBanner[]
+    shuffledImages: PortraitBanner[]
 }
 
-function CustomSliderUi({shuffledImages}: Props) {
+function CustomSliderUi({ shuffledImages }: Props) {
 
-    console.log(shuffledImages,'shuffledImages')
-  return (
+    return (
         <div className="">
-                        <CustomSlider
-                            images={shuffledImages}
-                            containerClassName=""
-                        />
-                    </div>
-  )
+            <CustomSlider
+                images={shuffledImages}
+                containerClassName=""
+            />
+        </div>
+    )
 }
 
 export default CustomSliderUi

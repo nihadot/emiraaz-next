@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: "website",
       images: [
         {
-          url: data?.data?.image?.secure_url,
+          url: data?.data?.image?.webp?.url,
           width: 1200,
           height: 630,
           alt: data?.data?.newsTitle,
@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: "summary_large_image",
       images: [
         {
-          url: data?.data?.image?.secure_url,
+          url: data?.data?.image?.webp?.url,
           width: 1200,
           height: 630,
           alt: data?.data?.newsTitle,

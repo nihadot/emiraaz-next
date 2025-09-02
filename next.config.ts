@@ -1,5 +1,9 @@
 import type { NextConfig } from "next";
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+
 const nextConfig: NextConfig = {
   /* config options here */
   images: {
@@ -15,6 +19,7 @@ const nextConfig: NextConfig = {
 
   
   },
+  productionBrowserSourceMaps: false, // ⛔ disables .map files in production
 
   // reactStrictMode: false, // optional if causing too many re-renders
   // turbo: true,
@@ -27,4 +32,4 @@ const nextConfig: NextConfig = {
 
 
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

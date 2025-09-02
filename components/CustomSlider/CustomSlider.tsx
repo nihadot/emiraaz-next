@@ -5,6 +5,8 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { getOrCreateDeviceId } from '@/utils/uniquId';
+import { sentUniqueId } from '@/api/auth';
 
 interface CustomSliderProps {
   images: PortraitBanner[];
@@ -32,13 +34,25 @@ const CustomSliderComponent = ({
     return () => clearInterval(interval);
   }, [images, autoSlideInterval]);
 
-
-  console.log(images, 'images')
   if (images.length === 0) return null;
 
+  const handleClick = async (id:string) => {
+    try {
+      console.log('first')
 
+      // Usage
+      const myDeviceId: string = getOrCreateDeviceId();
+      console.log("Device ID:", myDeviceId);
+      await sentUniqueId({ uniqueId: myDeviceId,type:'banner-ads',id });
+    } catch (error) {
+      console.log(error)
+    }
+
+  };
   return (
-    <Link href={`/projects/${images[currentIndex].projectDetails?.slug}`} className={`relative flex w-full overflow-hidden ${containerClassName}`}>
+    <Link
+      onClick={()=>handleClick(images[currentIndex]._id)}
+      href={`/projects/${images[currentIndex].projectDetails?.slug}`} className={`relative flex w-full overflow-hidden ${containerClassName}`}>
       <div className="relative h-[95px] sm:h-[550px] w-full">
         <AnimatePresence>
           <motion.div
@@ -55,14 +69,14 @@ const CustomSliderComponent = ({
             <Image
               alt={'ads image'}
               fill
-              src={images[currentIndex]?.mobileImage?.secure_url || ''}
+              src={images[currentIndex]?.mobileImage?.webp?.url || ''}
               className={`object-cover sm:hidden ${imageClassName}`}
             />
 
-             <Image
+            <Image
               alt={'ads image'}
               fill
-              src={images[currentIndex]?.desktopImage?.secure_url || ''}
+              src={images[currentIndex]?.desktopImage?.webp?.url || ''}
               className={`object-cover hidden sm:block ${imageClassName}`}
             />
           </motion.div>

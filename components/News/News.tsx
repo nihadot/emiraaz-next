@@ -26,7 +26,6 @@ type Props = {
 const News = ({
     initialData
 }: Props) => {
-    const router = useRouter();
 
     const [filters, setFilters] = useState<FiltersState>({
         page: 1,
@@ -61,13 +60,13 @@ const News = ({
     return (
         <main>
             <Header
-            logoSection={
-               <div className='h-full w-full flex justify-center items-center'>
-                 <MobileHeaderTitle
-                content='News'
-                />
-               </div>
-            }
+                logoSection={
+                    <div className='h-full w-full flex justify-center items-center'>
+                        <MobileHeaderTitle
+                            content='News'
+                        />
+                    </div>
+                }
             />
 
             <SectionDivider
@@ -88,7 +87,7 @@ const News = ({
                                             <Image
                                                 fill
                                                 alt={item.newsTitle}
-                                                src={item.image?.secure_url || ''}
+                                                src={item.image?.webp?.url}
                                                 className="rounded-[5px] cursor-text"
                                             />
                                         </div>
@@ -163,7 +162,7 @@ const News = ({
                                         <Image
                                             fill
                                             alt={item.newsTitle}
-                                            src={item.image?.secure_url || ''}
+                                            src={item.image?.webp?.url}
                                             className="rounded-[5px]"
                                         />
                                     </div>
@@ -205,13 +204,13 @@ const News = ({
                         <div className="mt-4"></div>
                         <RecommendedText
                             title="Recommended For You"
-                                 items={[
-        'Smart Picks in Dubai’s Fastest-Growing Zones',
-        'Handpicked Homes with High ROI Potential',
-        'Investor-Friendly Properties You’ll Love',
-        'Move-In Ready Units in Prime Locations',
-        'Top-Rated Listings in Family-Friendly Areas',
-    ]}
+                            items={[
+                                'Smart Picks in Dubai’s Fastest-Growing Zones',
+                                'Handpicked Homes with High ROI Potential',
+                                'Investor-Friendly Properties You’ll Love',
+                                'Move-In Ready Units in Prime Locations',
+                                'Top-Rated Listings in Family-Friendly Areas',
+                            ]}
                         />
                         <div className="sticky top-3 mt-3 left-0">
 
@@ -226,23 +225,23 @@ const News = ({
                                 <RecommendedText
                                     title="Recommended For You"
                                     items={[
-        'Smart Picks in Dubai’s Fastest-Growing Zones',
-        'Handpicked Homes with High ROI Potential',
-        'Investor-Friendly Properties You’ll Love',
-        'Move-In Ready Units in Prime Locations',
-        'Top-Rated Listings in Family-Friendly Areas',
-    ]}
+                                        'Smart Picks in Dubai’s Fastest-Growing Zones',
+                                        'Handpicked Homes with High ROI Potential',
+                                        'Investor-Friendly Properties You’ll Love',
+                                        'Move-In Ready Units in Prime Locations',
+                                        'Top-Rated Listings in Family-Friendly Areas',
+                                    ]}
                                 />
                                 <RecommendedText
                                     title="Popular Searches"
-                                  items={[
-        'Downtown Dubai: Iconic City Living',
-        'Dubai Marina: Waterfront Lifestyle at Its Best',
-        'Business Bay: Where Work Meets Luxury',
-        'Yas Island, Abu Dhabi: Island Living Redefined',
-        'Jumeirah Village Circle: Affordable Modern Homes',
-        'Al Reem Island, Abu Dhabi: Urban Peace',
-    ]}
+                                    items={[
+                                        'Downtown Dubai: Iconic City Living',
+                                        'Dubai Marina: Waterfront Lifestyle at Its Best',
+                                        'Business Bay: Where Work Meets Luxury',
+                                        'Yas Island, Abu Dhabi: Island Living Redefined',
+                                        'Jumeirah Village Circle: Affordable Modern Homes',
+                                        'Al Reem Island, Abu Dhabi: Urban Peace',
+                                    ]}
                                 />
                             </>}
 

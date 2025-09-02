@@ -62,7 +62,7 @@ function Carriers() {
 
 
     const handleSubmit = async (values: typeof formData, { setSubmitting, resetForm }: any) => {
-console.log('first')
+
         try {
             const response = await carrierEnquiry(values).unwrap();
 

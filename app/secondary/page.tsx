@@ -1,8 +1,9 @@
 'use client'
 
 import Secondary from "@/components/Secondary/Secondary"
+import { Suspense } from "react";
 
-function page() {
+function PageComponent() {
 
 
   return (
@@ -10,4 +11,12 @@ function page() {
   )
 }
 
-export default page
+
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PageComponent />
+    </Suspense>
+  );
+}

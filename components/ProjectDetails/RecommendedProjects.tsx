@@ -19,7 +19,7 @@ function RecommendedProjects({ projects }: Props) {
 
   const router = useRouter();
   const handleClick = useCallback((item: AllProjectsItems) => {
-    console.log(item,'iTem')
+ 
     router.push(`/projects/${item.slug}`);
   }, [router]);
   const [EnquiryForm, setEnquiryForm] = useState({ status: false, id: '', count: 0 });

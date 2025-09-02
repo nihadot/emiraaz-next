@@ -1,7 +1,7 @@
 'use client'
 import { Formik, Form, useFormikContext } from "formik";
 import * as Yup from "yup";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import React from 'react'
 import { Footer } from "@/components/Footer";
@@ -28,7 +28,7 @@ const ProfileSchema = Yup.object().shape({
 
 
 
-function Registration() {
+function RegistrationComponent() {
 
     // Inside your component
     useAuthRedirect();
@@ -168,8 +168,14 @@ function Registration() {
 
 }
 
-export default Registration
+// export default Registration
 
 
-
+export default function Registration() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RegistrationComponent />
+    </Suspense>
+  );
+}
 

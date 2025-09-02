@@ -566,12 +566,12 @@ useScrollToTopOnRefresh();
                                     }, {
                                         value: "on-handover",
                                         label: "On Handover",
-                                        count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'on-handover')?.count || 0,
+                                        count: allCounts?.data?.paymentPlans?.find(item => item?.name === 'on-handover')?.count || 0,
                                     },
                                     {
                                         value: "post-handover",
                                         label: "Post Handover",
-                                        count: allCounts?.data?.paymentPlans?.find(item => item?.paymentPlan === 'post-handover')?.count || 0,
+                                        count: allCounts?.data?.paymentPlans?.find(item => item?.name === 'post-handover')?.count || 0,
                                     },]}
                                     onSelect={handleSelect.paymentPlan}
                                 />
@@ -604,12 +604,12 @@ useScrollToTopOnRefresh();
                                     {
                                         value: "with-discount",
                                         label: "With Discount",
-                                        count:  allCounts?.data?.discount?.find(item => item?.discount === 'with-discount')?.count || 0,
+                                        count:  allCounts?.data?.discount?.find(item => item?.name === 'with-discount')?.count || 0,
                                     },
                                     {
                                         value: "without-discount",
                                         label: "Without Discount",
-                                        count:  allCounts?.data?.discount?.find(item => item?.discount === 'without-discount')?.count || 0,
+                                        count:  allCounts?.data?.discount?.find(item => item?.name === 'without-discount')?.count || 0,
 
                                     },]}
                                     onSelect={handleSelect.discount}
@@ -685,7 +685,7 @@ useScrollToTopOnRefresh();
                                                          {/* <div className={clsx("w-full mb-[12px] relative",filters?.page && filters?.page > 1 ? 'hidden':'flex')}> */}
                                                              <VideoPreview
                                                                  projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
-                                                                 src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                                                                 src={smallVideoAds?.[0]?.videoFile?.url?.url || ''}
                                                              />
                                                          </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>
                                                      }

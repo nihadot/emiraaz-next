@@ -87,7 +87,7 @@ function ProjectDetailsFunction({ id }: Props) {
 
   const handleBackTo = () => {
         const currency = searchParams.get('currency');
-        console.log(currency,'currency')
+        // console.log(currency,'currency')
 // Build query string with currency if available
         const queryString = currency ? `?currency=${currency}` : '';
      router.push(`/${queryString}`);
@@ -101,7 +101,7 @@ function ProjectDetailsFunction({ id }: Props) {
   const [imagesIndex, setImageIndex] = useState(0);
   const images = data?.data?.mainImages ?? [];
   const layoutImages = data?.data?.layoutImages ?? [];
-  const mainImage = images[imagesIndex]?.secure_url;
+  const mainImage = images[imagesIndex]?.webp?.url;
   const propertyType = data?.data?.propertyTypes?.[0] ?? '';
   const { currency, value } = formatCurrencyParts(data?.data?.priceInAED || 0);
   const { data: projects } = useFetchAllProjectsQuery(
@@ -466,7 +466,7 @@ function ProjectDetailsFunction({ id }: Props) {
 
                 <MainImageDisplay
                   mainImage={mainImage}
-                  images={images}
+                  // images={images}
                   selectedIndex={imagesIndex}
                   onSelectImage={setImageIndex}
                 />
@@ -513,8 +513,8 @@ function ProjectDetailsFunction({ id }: Props) {
                   EnquiryForm={EnquiryForm}
                   projectId={data?.data?._id || ''}
                   projectTitle={data?.data?.projectTitle || ''}
-                  descriptionInArabic={data?.data?.descriptionInArabic || ''}
-                  descriptionInEnglish={data?.data.description || ''}
+                  descriptionInArabic={data?.data?.descriptionInArabic?.html || data?.data?.descriptionInArabic?.text || ''}
+                  descriptionInEnglish={data?.data.description?.html || data?.data?.description?.text || ''}
                   // descriptionInRussian={data?.data.descriptionInRussian || ''}
                   title="Description"
                 /> :
@@ -546,7 +546,7 @@ function ProjectDetailsFunction({ id }: Props) {
                   { title: 'Retail Centres', content: data?.data?.retailCenters || 'NOT PROVIDED' },
                   { title: 'Elevators', content: data?.data?.elevators || 'NOT PROVIDED' },
                   { title: 'Swimming Pools', content: data?.data?.swimmingPool || 'NOT PROVIDED' },
-                  { title: 'Unique ID', content: data?.data?.uniqueId || 'NOT PROVIDED' },
+                  { title: 'Search Id', content: data?.data?.uniqueId || 'NOT PROVIDED' },
                   { title: 'Project No', content: data?.data?.projectNumber || 'NOT PROVIDED' },
                 ]}
               />
@@ -608,7 +608,7 @@ function ProjectDetailsFunction({ id }: Props) {
                       data={data?.data.facilitiesAmenitiesDetails.map((item) => {
                         return {
                           name: item.name,
-                          icon: item.image?.secure_url
+                          icon: item.image?.webp?.url
                         }
                       }) || []}
                     /> :
@@ -664,8 +664,7 @@ function ProjectDetailsFunction({ id }: Props) {
                 />
               </div>}
 
-              {/* {console.log(data?.data.paymentOptions,'data?.data.paymentPlan')} */}
-
+           
               {
                 data?.data?.paymentOptions ?
                   <PropertyDetailsSectionStringArray
@@ -684,7 +683,7 @@ function ProjectDetailsFunction({ id }: Props) {
 
               <div className="flex mt-[18px] sm:mt-[25.5px] justify-between items-center w-full">
                 <RegulatoryInformation
-                  qrCodeUrl={data?.data?.qrCodeImage?.secure_url}
+                  qrCodeUrl={data?.data?.qrCodeImage?.webp?.url}
                   icon
                   reportedProjectHandler={() => {
                     const userDataString = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA);

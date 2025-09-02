@@ -1,9 +1,6 @@
-export type ImageItem = {
-    asset_id: string;
-    secure_url: string;
-    url: string;
-    public_id: string;
-};
+import { ImageType } from "@/utils/types";
+
+export interface ImageItem extends ImageType {}
 
 
 export type ProjectType =

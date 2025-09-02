@@ -322,7 +322,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
 
 
             <div className="absolute hidden min-1110px:block right-3 bottom-3">
-                <Image src={item?.developerDetails?.image?.secure_url || ''} alt="authenticity icon" width={57} height={11.25} className="object-cover" />
+                <Image src={item?.developerDetails?.image?.webp?.url || ''} alt="authenticity icon" width={57} height={11.25} className="object-cover" />
 
             </div>
             <div className="absolute hidden sm:flex right-0 z-20">

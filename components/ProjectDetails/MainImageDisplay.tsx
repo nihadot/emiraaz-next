@@ -4,7 +4,7 @@ const MainImageDisplay = ({
     mainImage
 }: {
     mainImage: string,
-    images: { secure_url: string }[],
+    // images: { secure_url: string }[],
     selectedIndex: number,
     onSelectImage: (index: number) => void
 }) => (

@@ -1,4 +1,12 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+
+@layer utilities {
+  .animate-pulse-slow {
+    animation: pulse 5s ease-in-out infinite;
+  }
+}
 
 :root {
   --background: #ffffff;
@@ -56,7 +64,9 @@ body {
 }
 
 
-
+.flag-dropdown{
+  border-radius: 5px 0px 0px 5px !important;
+}
 
 /* 
 .custom-range::-webkit-slider-thumb {
