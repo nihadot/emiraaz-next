@@ -1,5 +1,3 @@
-import { search_icon } from "@/app/assets";
-import Image from "next/image";
 import React from "react";
 import { FaSearch } from "react-icons/fa";
 

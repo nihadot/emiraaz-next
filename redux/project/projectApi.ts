@@ -18,7 +18,6 @@ const refreshTokenBaseQuery = fetchBaseQuery({
 
 const baseQueryWithReAuth = createBaseQueryWithReAuth(baseQuery, refreshTokenBaseQuery);
 
-
 export const projectApi = createApi({
   reducerPath: "projectApi",
   baseQuery: baseQueryWithReAuth,

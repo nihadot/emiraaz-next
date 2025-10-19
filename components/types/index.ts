@@ -15,7 +15,6 @@ export type FiltersState = {
     bath?: string;
     projectTypeFirst?: string
     projectTypeLast?: string;
-
     page?: number,
     limit?: number,
     search?: string,

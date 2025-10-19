@@ -35,7 +35,7 @@ const LoginSchema = Yup.object().shape({
 
 
 
-function QuickEnquiryComponent() {
+export default function QuickEnquiryComponent() {
 
     const [_isSubmitting, setIsSubmitting] = useState(false);
     const countryCode = useCountryCode();
@@ -46,7 +46,7 @@ function QuickEnquiryComponent() {
     // Initialize the login mutation hook
     const [quickEnquiry, { isLoading, error }] = useAddQuickEnquiryMutation();
 
-    const handleSubmit = async (values: { name: string; email: string; number: string; notes: string }, { setSubmitting , resetForm }: any) => {
+    const handleSubmit = async (values: { name: string; email: string; number: string; notes: string }, { setSubmitting, resetForm }: any) => {
         try {
             setIsSubmitting(true); // Show loading state
 
@@ -66,13 +66,14 @@ function QuickEnquiryComponent() {
             resetForm();
         } catch (error: any) {
             // console.error("Login Error:", error.message);
-                        errorToast(error?.response?.data?.message || error?.data?.message || error?.response?.message || error?.message || 'Error occurred, please try again later');
-            
+            errorToast(error?.response?.data?.message || error?.data?.message || error?.response?.message || error?.message || 'Error occurred, please try again later');
+
         } finally {
             setIsSubmitting(false); // Reset loading state
         }
     };
 
+ 
 
     return (
         <>
@@ -90,8 +91,8 @@ function QuickEnquiryComponent() {
                     <p
                         className="text-sm pt-3 text-[#666666] font-poppins font-normal"
                     >Need help? Share your details and we’ll get back to you.</p>
-                    <Formik
-                        initialValues={{ name: "", email: "", number: countryCode || '+971', notes: "" }}
+                    { countryCode && <Formik
+                        initialValues={{ name: "", email: "", number: countryCode, notes: "" }}
                         validationSchema={LoginSchema}
                         onSubmit={handleSubmit}
                     >
@@ -117,6 +118,7 @@ function QuickEnquiryComponent() {
                                         onChange={(e) => {
                                             setFieldValue("number", e)
                                         }}
+
                                         inputProps={{
                                             name: 'phone',
                                             required: true,
@@ -205,7 +207,7 @@ function QuickEnquiryComponent() {
 
                             </Form>
                         )}
-                    </Formik>
+                    </Formik>}
                 </section>
             </Container>
 
@@ -214,16 +216,3 @@ function QuickEnquiryComponent() {
     )
 }
 
-// export default QuickEnquiry
-
-
-
-
-
-export default function QuickEnquiry() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <QuickEnquiryComponent />
-    </Suspense>
-  );
-}

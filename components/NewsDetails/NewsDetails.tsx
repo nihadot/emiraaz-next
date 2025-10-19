@@ -17,9 +17,10 @@ import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle'
 
 type Props = {
     id: string;
+    siteMap: any[];
 }
 
-function NewsDetails({ id }: Props) {
+function NewsDetails({ id,siteMap }: Props) {
 
     const { data: singleNews } = useViewNewsByIdQuery({ id });
     const { data: allNews } = useViewAllNewsQuery({});
@@ -87,7 +88,7 @@ function NewsDetails({ id }: Props) {
 
                                     //     className="text-[12px] whitespace-pre-wrap w-full text-left font-poppins font-normal mt-[12px]" >
                                     //     </p>
-                                    <div className="mt-[12px] font-poppins"
+                                    <div className="mt-[12px] font-poppins text-sm text-[#333333] prose prose-sm max-w-none font-normal leading-[1.9rem]"
                                     dangerouslySetInnerHTML={{ __html: singleNews?.data?.newsBody?.html }}
                                     ></div>
                                     :
@@ -116,13 +117,8 @@ function NewsDetails({ id }: Props) {
                             {<RecommendedText
                                 containerClassName='!my-0 !mb-2'
                                 title="Recommended For You"
-                                items={[
-                                    'Smart Picks in Dubai’s Fastest-Growing Zones',
-                                    'Handpicked Homes with High ROI Potential',
-                                    'Investor-Friendly Properties You’ll Love',
-                                    'Move-In Ready Units in Prime Locations',
-                                    'Top-Rated Listings in Family-Friendly Areas',
-                                ]}
+                                items={shuffle(siteMap)?.slice(0, 6)}
+                                
                             />}
 
                             <div className="sticky top-3 left-0">
@@ -136,24 +132,11 @@ function NewsDetails({ id }: Props) {
                                 {<>
                                     <RecommendedText
                                         title="Recommended For You"
-                                        items={[
-                                            'Smart Picks in Dubai’s Fastest-Growing Zones',
-                                            'Handpicked Homes with High ROI Potential',
-                                            'Investor-Friendly Properties You’ll Love',
-                                            'Move-In Ready Units in Prime Locations',
-                                            'Top-Rated Listings in Family-Friendly Areas',
-                                        ]}
+                                        items={shuffle(siteMap)?.slice(0, 6)}
                                     />
                                     <RecommendedText
                                         title="Popular Searches"
-                                        items={[
-                                            'Downtown Dubai: Iconic City Living',
-                                            'Dubai Marina: Waterfront Lifestyle at Its Best',
-                                            'Business Bay: Where Work Meets Luxury',
-                                            'Yas Island, Abu Dhabi: Island Living Redefined',
-                                            'Jumeirah Village Circle: Affordable Modern Homes',
-                                            'Al Reem Island, Abu Dhabi: Urban Peace',
-                                        ]}
+                                        items={shuffle(siteMap)?.slice(0, 6)}
                                     />
                                 </>}
 

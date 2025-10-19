@@ -19,6 +19,7 @@ import { openHouseApi } from './openhouse/openhouseApi';
 import { videosApi } from './talks/talksApi';
 import { campaignApi } from './campaign/campaignApi';
 import { quickEnquiryApi } from './quickEnquiry/quickEnquiryApi';
+import { forSaleApi } from './forSale/forSaleApi';
 
 
 export const store = configureStore({
@@ -41,6 +42,7 @@ export const store = configureStore({
     [currencyApi.reducerPath]: currencyApi.reducer,
     [campaignApi.reducerPath]: campaignApi.reducer,
     [quickEnquiryApi.reducerPath]: quickEnquiryApi.reducer,
+    [forSaleApi.reducerPath]: forSaleApi.reducer,
     user: userSlice,
     wishlist: wishlistSlice,
 
@@ -65,6 +67,7 @@ export const store = configureStore({
       currencyApi.middleware,
       campaignApi.middleware,
       quickEnquiryApi.middleware,
+      forSaleApi.middleware,
     ),
 });
 

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 
 type Props = {
@@ -6,7 +7,11 @@ type Props = {
 
 function MobileHeaderTitle({content}: Props) {
   return (
+    <Link
+    href={'/'}
+    >
       <p className='text-[18px] text-nowrap font-bold font-poppins'>{content}</p>
+    </Link>
   )
 }
 

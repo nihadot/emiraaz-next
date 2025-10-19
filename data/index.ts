@@ -119,10 +119,18 @@ export const propertyTypeFirst = [
 
 export const productTypeOptionFirstItems = [
     // { label: "All", value: "all" },
-    { label: "Off-Plan projects", value: "off-plan-projects" },
-    { label: "Off-Plan Resale", value: "off-plan-resale" },
-    { label: "Secondary ", value: "off-plan-secondary" },
-    { label: "Land ", value: "off-plan-land" },
+    { label: "Off-Plan Projects", value: "off-plan-projects",link:"off-plan-projects" },
+    { label: "Off-Plan Resale", value: "resale" ,link:"off-plan-resale"},
+    { label: "Secondary ", value: "secondary",link:"off-plan-secondary" },
+    { label: "Land ", value: "land",link:"off-plan-land" },
+]
+
+export const propertyCategoryType = [
+    // { label: "All", value: "all" },
+    { label: "Off-Plan Projects", value: "off-plan-projects",link:"off-plan-projects" },
+    { label: "Off-Plan Resale", value: "resale" ,link:"off-plan-resale"},
+    { label: "Secondary ", value: "secondary",link:"off-plan-secondary" },
+    { label: "Land ", value: "land",link:"off-plan-land" },
 ]
 
 export const propertyTypeSecond = [

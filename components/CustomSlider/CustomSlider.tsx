@@ -38,17 +38,18 @@ const CustomSliderComponent = ({
 
   const handleClick = async (id:string) => {
     try {
-      console.log('first')
-
+      // console.log('first')
       // Usage
       const myDeviceId: string = getOrCreateDeviceId();
-      console.log("Device ID:", myDeviceId);
+      // console.log("Device ID:", myDeviceId);
       await sentUniqueId({ uniqueId: myDeviceId,type:'banner-ads',id });
     } catch (error) {
-      console.log(error)
+      // console.log(error)
     }
 
   };
+
+  // console.log('Ite from Custom Slider')
   return (
     <Link
       onClick={()=>handleClick(images[currentIndex]._id)}

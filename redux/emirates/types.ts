@@ -5,10 +5,11 @@ export type EmirateFetchAllNamesResponse = {
 }
 
 
-type EmirateNames = {
+export type EmirateNames = {
     _id:string;
     name:string;
     count?:number;
+    slug:string;
 }
 
 

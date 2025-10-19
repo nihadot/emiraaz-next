@@ -124,7 +124,7 @@ const ProjectDescription: React.FC<ProjectDescriptionProps> = ({
       {isTruncated && (
         <button
           onClick={() => setModalOpen(true)}
-          className="text-[#FF1645] font-medium text-[12px] flex justify-center items-center font-poppins bg-[#FFE7EC]  w-[84.5px] h-[27px] py-[8px] rounded text-sm"
+          className="text-[#FF1645] cursor-pointer font-medium text-[12px] flex justify-center items-center font-poppins bg-[#FFE7EC]  w-[84.5px] h-[27px] py-[8px] rounded text-sm"
         >
           Read more
         </button>

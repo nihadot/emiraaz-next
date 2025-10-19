@@ -113,10 +113,10 @@ function Footer() {
                                         title: "News",
                                         link: "/allnews"
                                     },
-                                    {
-                                        title: "Property Talks",
-                                        link: "/talks"
-                                    },
+                                    // {
+                                    //     title: "Property Talks",
+                                    //     link: "/property-talks"
+                                    // },
                                     {
                                         title: "Rental Income",
                                         link: "/rental-income"
@@ -154,7 +154,11 @@ function Footer() {
                                     {
                                         title: "Land",
                                         link: "/"
-                                    }
+                                    },
+                                    // {
+                                    //     title:"Site Map",
+                                    //     link:"/site-index/offplan-residential/dubai"
+                                    // }
                                 ]}
                             />
                             <FooterList
@@ -175,7 +179,11 @@ function Footer() {
                                     {
                                         title: "Land",
                                         link: "/"
-                                    }
+                                    },
+                                    //    {
+                                    //     title:"Site Map",
+                                    //     link:"/site-index/offplan-residential/dubai"
+                                    // }
                                 ]}
                             />
                             <FooterList
@@ -205,6 +213,10 @@ function Footer() {
                                     title: "Umm Al-Quwain",
                                     link: "/"
                                 },
+                                //    {
+                                //         title:"Site Map",
+                                //         link:"/site-index/offplan-residential/dubai"
+                                //     }
                                
                                 ]}
                             />
@@ -215,22 +227,33 @@ function Footer() {
                                         title: "Login / Register",
                                         link: "/login"
                                     },
-                                    {
-                                        title: "My Profile",
-                                        link: "/profile"
-                                    },
-                                    {
-                                        title: "Saved Properties",
-                                        link: "/saved-properties"
-                                    },
-                                    {
-                                        title: "Enquired Properties",
-                                        link: "/enquired-properties"
-                                    },
                                     // {
-                                    //     title: "Purchase History",
-                                    //     link: "/purchase-history"
-                                    // }
+                                    //     title: "My Profile",
+                                    //     link: "/profile"
+                                    // },
+                                    // {
+                                    //     title: "Saved Properties",
+                                    //     link: "/saved-properties"
+                                    // },
+                                    // {
+                                    //     title: "Enquired Properties",
+                                    //     link: "/enquired-properties"
+                                    // },
+                                       {
+                                        title:"Site Map",
+                                        link:"/site-index/offplan-residential/dubai"
+                                    },
+                                    {
+                                        title: "Quick Enquiry",
+                                        link: "/quick-enquiry"
+                                    },
+
+                                    {
+                                        
+                                        title:"Agent Verification",
+
+                                        link:"/agent-verification"
+                                    }
                                 ]}
                             />
                             <FooterList
@@ -242,11 +265,11 @@ function Footer() {
                                     },
                                     {
                                         title: "Terms & Conditions",
-                                        link: "/terms"
+                                        link: "/terms-and-conditions"
                                     },
                                     {
                                         title: "Privacy Policy",
-                                        link: "/privacy-policy"
+                                        link: "/privacy-and-policy"
                                     },
                                     {
                                         title: "Donations",

@@ -19,7 +19,7 @@ import SearchNew from '../SearchField/SearchNew';
 import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle';
 
 
-function CityComponent() {
+export default function CityComponent() {
 
     const [filters, setFilters] = useState({
         page: 1,
@@ -198,15 +198,6 @@ function CityComponent() {
 }
 
 // export default City
-
-
-export default function City() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <CityComponent />
-    </Suspense>
-  );
-}
 
 
 

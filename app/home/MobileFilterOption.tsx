@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AiOutlineClose } from "react-icons/ai";
 import SectionDivider from '@/components/atom/SectionDivider/SectionDivider';
 import Container from '@/components/atom/Container/Container';
-import { CompletionTypes, propertyTypeFirst, PropertyTypes, propertyTypeSecond } from '@/data';
+import { CompletionTypes, productTypeOptionFirstItems, propertyCategoryType, propertyTypeFirst, PropertyTypes, propertyTypeSecond } from '@/data';
 import SwitchSelectorMobile from '@/components/SelectOption/SwitchSelectorMobile';
 import { SelectHandoverDate } from '@/components/SelectHandoverDate';
 import PriceRangeInput from './RangeCalculator';
@@ -16,28 +16,67 @@ import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
 import { useFetchAllProjectsQuery } from '@/redux/project/projectApi';
 import { FiltersState } from '@/components/types';
 import { apartment_icon, penthouse_icon, townhouse_icon, villa_icon } from '../assets';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { EmirateNames } from '@/redux/emirates/types';
+import { CountItem } from '@/redux/news/newsApi';
+import { Pagination } from '@/utils/types';
 
 type Props = {
     show: boolean;
     onClose: () => void;
+    emiratesData: EmirateNames[],
+    pagination: Pagination | undefined
     handleFilterChanges?: (item: AllProjectsItems[]) => void;
     setFiltersHandler: (item: FiltersState) => void;
     resultProjects: (item: AllProjectsItems[]) => void;
-    priceRange?: boolean;
-    bathroomsRange?: boolean;
+    // priceRange?: boolean;
+    // bathroomsRange?: boolean;
+    allCounts: CountItem
 
 };
+
+
+type PropertyOptionProps = {
+    label: string
+    value: string
+    icon: StaticImageData | string
+    selected: boolean
+    onSelect: (option: { label: string; value: string }) => void
+}
+
+
+const PropertyOption = ({ label, value, icon, selected, onSelect }: PropertyOptionProps) => (
+    <div className="flex flex-col gap-1">
+        <div
+            onClick={() => onSelect({ label, value })}
+            className={clsx(
+                "p-3.5 rounded-full cursor-pointer",
+                selected ? "bg-red-700/10" : "outline outline-[#DEDEDE]"
+            )}
+        >
+            <Image className="bg-transparent" src={icon} alt={`${label} icon`} width={30} height={30} />
+        </div>
+        <p className="text-[10px] font-medium font-poppins text-center">{label}</p>
+    </div>
+)
+
 
 function MobileFilterOption({
     show,
     onClose,
     setFiltersHandler,
     resultProjects,
-    bathroomsRange,
-    priceRange,
+    // bathroomsRange,
+    pagination,
+    // priceRange,
+    emiratesData,
+    allCounts,
+
 }: Props) {
     const [clear, setClear] = React.useState(false);
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
 
 
     React.useEffect(() => {
@@ -51,7 +90,7 @@ function MobileFilterOption({
             document.body.style.overflow = 'auto'; // Clean up on unmount
         };
     }, [show]);
-    const { data: emiratesData } = useFetchAllEmirateNamesQuery();
+    // const { data: emiratesData } = useFetchAllEmirateNamesQuery();
 
 
     const [filters, setFilters] = useState<FiltersState>({
@@ -67,7 +106,7 @@ function MobileFilterOption({
         paymentPlan: undefined,
         furnishType: "",
         discount: "",
-        projectTypeFirst: 'all',
+        projectTypeFirst: 'off-plan-projects',
         projectTypeLast: 'all',
         bedAndBath: "",
         minPrice: '',
@@ -79,19 +118,54 @@ function MobileFilterOption({
     });
 
 
+    const allCountsOfEmirate = emiratesData?.reduce((acc, curr) => {
+        acc += curr.count || 0;
+        return acc;
+    }, 0);
 
-    const emirateOptions = React.useMemo(() => {
-        const mappedOptions = emiratesData?.data.map((item) => ({
+
+    const emirateOptions = useMemo(() => {
+        const preferredOrder = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ras Al Khaimah', 'Ajman', 'Umm Al-Quwain'];
+
+        const mappedOptions = emiratesData?.map((item) => ({
             label: item.name,
             value: item._id,
-             count: item.count,
+            count: item.count,
+            slug: item.slug,
         })) || [];
 
+        const sortedOptions = mappedOptions?.sort((a, b) => {
+            const aIndex = preferredOrder?.indexOf(a.label);
+            const bIndex = preferredOrder?.indexOf(b.label);
+
+            // If both labels are in the preferredOrder list
+            if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+
+            // If only one is in the list, put it before the other
+            if (aIndex !== -1) return -1;
+            if (bIndex !== -1) return 1;
+
+            // If neither is in the list, sort alphabetically (optional)
+            return a?.label?.localeCompare(b?.label);
+        });
+
         return [
-            { label: "All", value: "all" }, // <--- Add "All" option at the top
-            ...mappedOptions,
+            { label: "All", value: "all", count: allCountsOfEmirate }, // Always first
+            ...sortedOptions,
         ];
-    }, [emiratesData]);
+    }, []);
+    // const emirateOptions = React.useMemo(() => {
+    //     const mappedOptions = emiratesData?.data.map((item) => ({
+    //         label: item.name,
+    //         value: item._id,
+    //          count: item.count,
+    //     })) || [];
+
+    //     return [
+    //         { label: "All", value: "all" }, // <--- Add "All" option at the top
+    //         ...mappedOptions,
+    //     ];
+    // }, [emiratesData]);
     const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
     const [rangeCalculator, setRangeCalculator] = useState(false);
 
@@ -123,10 +197,12 @@ function MobileFilterOption({
 
 
     const cityOptions = useMemo(() => {
-        const mappedOptions = cities?.data.map((item) => ({
+        const mappedOptions = cities?.data?.map((item) => ({
             label: item.name,
             value: item.name,
             count: item.count,
+            slug: item.slug,
+
         })) || [];
 
         return [
@@ -141,7 +217,7 @@ function MobileFilterOption({
             setFilters(prev => ({ ...prev, cities: [] }));
             return;
         }
-        setFilters(prev => ({ ...prev, cities: option.map((item) => item.value) }));
+        setFilters(prev => ({ ...prev, cities: option.map((item) => item?.value) }));
     }, []);
     const [showBedBath, setShowBedBath] = useState(false);
 
@@ -209,60 +285,210 @@ function MobileFilterOption({
     const [defaultEmirate, setDefaultEmirate] = useState<string>('');
     const [defaultCities, setDefaultCities] = useState<any>('');
 
-
+    // console.log(filters, 'filters')
     const handleDone = () => {
-        setFiltersHandler(filters);
+
+        // setFiltersHandler(filters);
         onClose()
 
-        if (projects?.data) {
-            resultProjects(projects?.data)
-        }
+        // if (projects?.data) {
+        //     resultProjects(projects?.data)
+        // }
     }
+
+    useEffect(() => {
+        setFiltersHandler(filters)
+    }, [filters])
+
+    // const [debouncedSearch, setDebouncedSearch] = useState<any>("");
+
+    //     // Debounce search input
+    //     useEffect(() => {
+    //         const handler = setTimeout(() => {
+    //             setDebouncedSearch(filters.search);
+    //             setFilters(prev => ({ ...prev, page: 1 }));
+    //         }, 500);
+
+    //         return () => clearTimeout(handler);
+    //     }, [filters.search]);
+
 
     // Data fetching with memoized query params
     const queryParams = useMemo(() => ({
         limit: 20,
         page: filters.page,
         cities: filters.cities,
-        developers: filters.developers,
-        facilities: filters.facilities,
+        // search: debouncedSearch,
+
+        // developers: filters.developers,
+        // facilities: filters.facilities,
         propertyType: filters.propertyType,
         completionType: filters.completionType,
         paymentPlan: filters.paymentPlan,
         year: filters.handoverDate?.year,
         qtr: filters.handoverDate?.quarter,
         discount: filters.discount,
-        projectTypeFirst: filters.projectType, // off plan or ....
+        projectTypeFirst: filters.projectTypeFirst, // off plan or ....
         projectTypeLast: filters.propertyTypeSecond, // 'residential' or 'commercial'
         furnishing: filters.furnishType,
         emirate: filters.emirate,
-        maxPrice: filters.maxPrice,
-        minPrice: filters.minPrice,
-        minSqft: filters.minSqft,
-        maxSqft: filters.maxSqft,
-        beds: filters.beds,
-        bath: filters.bath,
+        // maxPrice: filters.maxPrice,
+        // minPrice: filters.minPrice,
+        // minSqft: filters.minSqft,
+        // maxSqft: filters.maxSqft,
+        // beds: filters.beds,
+        // bath: filters.bath,
     }), [filters]);
+    const [isPropertyType, setIsPropertyType] = useState('');
+
 
 
     const { data: projects } = useFetchAllProjectsQuery(queryParams);
 
 
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const emirate = urlParams.get('emirate');
+    // useEffect(() => {
+    //     const urlParams = new URLSearchParams(window.location.search);
+    //     const emirate = urlParams.get('emirate');
+    //     const cities = urlParams.get('cities');
+    //     const toConvertedCitiesParams = cities?.split(',')
+
+    //     if (emirate) {
+    //         setDefaultEmirate(emirate)
+    //     }
+    //     if (toConvertedCitiesParams) {
+    //         setDefaultCities(toConvertedCitiesParams)
+    //     }
+
+
+    // }, []);
+
+
+    function updateUrl({ emirate, propertyFirst, propertySecond }: { emirate?: string, propertyFirst?: string, propertySecond?: string }) {
+        const currentSegments = pathname.split('/').filter(Boolean); // e.g. ['buy', 'abu-dhabi', 'off-plan-projects']
+        const urlParams = new URLSearchParams(searchParams.toString());
         const cities = urlParams.get('cities');
         const toConvertedCitiesParams = cities?.split(',')
 
-        if (emirate) {
-            setDefaultEmirate(emirate)
+        const segments = [...currentSegments];
+        const isExistEmirate = segments.find((seg) =>
+            emirateOptions.some((item: any) => item.slug === seg)
+        );
+
+
+        const isExistPropertyType = segments.find((seg) =>
+            productTypeOptionFirstItems.some((item: any) => item.value === seg)
+        );
+
+        const isPropertyTypeSecond = segments.find((seg) =>
+            propertyTypeSecond.some((item: any) => item.value === seg)
+        );
+
+        let fullUrl = '/buy';
+
+
+
+        if (emirate === "all") {
+            fullUrl = `/buy/${isExistPropertyType ? isExistPropertyType : ''}/${isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
         }
+
+        if (emirate !== 'all' && emirate) {
+            fullUrl += `/${emirate}/${propertyFirst ? propertyFirst : isExistPropertyType ? isExistPropertyType : ''}/${isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
+        }
+
+        if (propertyFirst) {
+            fullUrl += `/${isExistEmirate ? isExistEmirate : ''}/${propertyFirst ? propertyFirst : isExistPropertyType ? isExistPropertyType : ''}/${isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
+        }
+
+        if (propertySecond !== 'all' && propertySecond) {
+            // fullUrl = `/buy/${propertySecond}`;
+            fullUrl += `/${isExistEmirate ? isExistEmirate : ''}/${isExistPropertyType ? isExistPropertyType : ''}/${propertySecond ? propertySecond : isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
+
+        }
+        if (propertySecond === 'all') {
+            fullUrl = `/buy/${isExistEmirate ? isExistEmirate : ''}/${isExistPropertyType ? isExistPropertyType : ''}`;
+        }
+
+
+        fullUrl += `?${urlParams.toString()}`
+
+        // console.log(urlParams, 'urlParamsurlParams')
+
         if (toConvertedCitiesParams) {
             setDefaultCities(toConvertedCitiesParams)
+
         }
 
+        // console.log(fullUrl)
 
-    }, []);
+        window.history.pushState({}, '', fullUrl);
+    }
+
+    const icons = [apartment_icon, penthouse_icon, townhouse_icon, villa_icon]
+
+    const totalPropertyTypesCounts = allCounts?.propertyTypes?.map(item => item?.count).reduce((a, b) => a + b, 0)
+
+
+    const propertyTypesLists = {
+        commercial: [{
+            value: "officespace",
+            label: "Office Space",
+            count: allCounts?.propertyTypes?.find(item => item?.name === 'officespace')?.count || 0,
+
+        }, {
+            value: "shop",
+            label: "Shop",
+            count: allCounts?.propertyTypes?.find(item => item?.name === 'shop')?.count || 0,
+
+        }, {
+            value: "warehouse",
+            label: "Warehouse",
+            count: allCounts?.propertyTypes?.find(item => item?.name === 'warehouse')?.count || 0,
+        },],
+
+        residential: [
+            {
+                value: "villa",
+                label: "Villa",
+                count: allCounts?.propertyTypes?.find(item => item?.name === 'villa')?.count || 0,
+
+            },
+            {
+                value: "apartment",
+                label: "Apartment",
+                count: allCounts?.propertyTypes?.find(item => item?.name === 'apartment')?.count || 0,
+
+            },
+            {
+                value: "penthouse",
+                label: "Penthouse",
+                count: allCounts?.propertyTypes?.find(item => item?.name === 'penthouse')?.count || 0,
+
+            },
+            {
+                value: "townhouse",
+                label: "Townhouse",
+                count: allCounts?.propertyTypes?.find(item => item?.name === 'townhouse')?.count || 0,
+
+            }
+        ],
+
+        default: [
+            {
+                value: "all",
+                label: "All",
+                count: totalPropertyTypesCounts,
+
+            }
+        ],
+        getAll: () => {
+            return [...propertyTypesLists.default, ...propertyTypesLists.residential, ...propertyTypesLists.commercial]
+        }
+    }
+
+    const allTypes = propertyTypesLists?.getAll()
+    // const pagination = data?.pagination;
+
+    const totalRecords = pagination?.totalRecords;
 
 
     return (
@@ -284,7 +510,7 @@ function MobileFilterOption({
                                     <label className='text-[13px] font-poppins font-semibold'>Filters</label>
                                     <AiOutlineClose
                                         onClick={onClose}
-                                        size={15}
+                                        size={20}
                                     />
                                 </div>
                             </Container>
@@ -311,15 +537,19 @@ function MobileFilterOption({
                                         label="Emirates"
                                         options={emirateOptions}
                                         onSelect={(e) => {
-                                            const url = new URL(window.location.href);
-                                            if (e?.value) {
-                                                url.searchParams.set('emirate', e?.label ?? '');
-                                            } else {
-                                                url.searchParams.delete('emirate');
-                                            }
-                                            const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                            window.history.pushState({}, '', newUrl);
-                                            handleSelect.emirate(e)
+                                            // const url = new URL(window.location.href);
+                                            // if (e?.value) {
+                                            //     url.searchParams.set('emirate', e?.label ?? '');
+                                            // } else {
+                                            //     url.searchParams.delete('emirate');
+                                            // }
+                                            // const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                            // window.history.pushState({}, '', newUrl);
+                                            // handleSelect.emirate(e)
+                                            const emirate = e?.slug ? e.slug : 'all';
+                                            // console.log(emirate, 'Hyyy')
+                                            updateUrl({ emirate });
+                                            handleSelect.emirate(e);
                                         }}
                                     />
                                 </div>
@@ -340,7 +570,7 @@ function MobileFilterOption({
 
                                                 if (e && e.length > 0) {
 
-                                                    url.searchParams.set('cities', e?.map((item) => item.label).join(','));
+                                                    url.searchParams.set('cities', e?.map((item) => item.slug).join(','));
                                                 } else {
                                                     url.searchParams.delete('cities');
                                                 }
@@ -367,7 +597,12 @@ function MobileFilterOption({
                                     <SwitchSelectorMobile
                                         clearSelection={clear}
                                         className='!grid-cols-3 '
-                                        onSelect={handleSelect.propertyTypeSecond}
+                                        onSelect={(e) => {
+                                            updateUrl({ propertySecond: e });
+                                            handleSelect.propertyTypeSecond(e);
+                                            setIsPropertyType(e);
+                                        }
+                                        }
                                         defaultValue={propertyTypeSecond[0].value}
                                         options={propertyTypeSecond}
                                     />
@@ -378,9 +613,12 @@ function MobileFilterOption({
                                 <div className="h-[80px]">
                                     <SwitchSelectorMobile
                                         clearSelection={clear}
-                                        onSelect={handleSelect.projectType}
-                                        defaultValue={propertyTypeFirst[0].value}
-                                        options={propertyTypeFirst}
+                                        onSelect={(e) => {
+                                            updateUrl({ propertyFirst: e });
+                                            handleSelect.projectTypeFirst(e)
+                                        }}
+                                        defaultValue={propertyCategoryType[0].value}
+                                        options={propertyCategoryType}
 
                                     />
                                 </div>
@@ -394,7 +632,7 @@ function MobileFilterOption({
                                             onClick={() => handleSelect.propertyType({ label: PropertyTypes[2].label, value: PropertyTypes[2].value })}
 
                                             className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[2].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
-                                         
+
                                             <Image className='bg-transparent' src={apartment_icon} alt="apartment icon" width={30} height={30} />
                                         </div>
                                         <p className='text-[10px]  font-medium font-poppins text-center'>Apartment</p>
@@ -407,7 +645,7 @@ function MobileFilterOption({
                                             onClick={() => handleSelect.propertyType({ label: PropertyTypes[3].label, value: PropertyTypes[3].value })}
 
                                             className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[3].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
-                                            
+
                                             <Image className='bg-transparent' src={penthouse_icon} alt="penthouse icon" width={30} height={30} />
 
                                         </div>
@@ -423,7 +661,7 @@ function MobileFilterOption({
                                             onClick={() => handleSelect.propertyType({ label: PropertyTypes[4].label, value: PropertyTypes[4].value })}
 
                                             className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[4].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
-                                      
+
                                             <Image className='bg-transparent' src={townhouse_icon} alt="townhouse icon" width={30} height={30} />
 
                                         </div>
@@ -437,7 +675,7 @@ function MobileFilterOption({
                                             onClick={() => handleSelect.propertyType({ label: PropertyTypes[1].label, value: PropertyTypes[1].value })}
 
                                             className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[1].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
-                                           
+
                                             <Image className='bg-transparent' src={villa_icon} alt="villa icon" width={30} height={30} />
 
                                         </div>
@@ -447,6 +685,20 @@ function MobileFilterOption({
 
                                 </div>
 
+                                {/* <div className="flex justify-between">
+                                    {PropertyTypes.map((type, i) => (
+                                        <PropertyOption
+                                            key={type.value}
+                                            label={type.label}
+                                            value={type.value}
+                                            icon={icons[i]}
+
+                                            selected={filters?.propertyType?.includes(type.value) ?? false}
+                                            onSelect={handleSelect.propertyType}
+                                        />
+                                    ))}
+                                </div> */}
+
 
 
                                 {/* Completion */}
@@ -455,7 +707,18 @@ function MobileFilterOption({
                                 <div className="h-[80px]">
                                     <SwitchSelectorMobile
                                         defaultValue={CompletionTypes[0].value}
-                                        onSelect={handleSelect.completionType}
+                                        onSelect={(e) => {
+                                            const url = new URL(window.location.href);
+                                            if (e == 'all') {
+                                                url.searchParams.delete('completion-type');
+                                            } else {
+                                                url.searchParams.set('completion-type', e ?? '');
+                                            }
+                                            const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                            window.history.pushState({}, '', newUrl);
+
+                                            handleSelect.completionType(e)
+                                        }}
                                         options={CompletionTypes}
                                         clearSelection={clear}
                                     />
@@ -468,8 +731,8 @@ function MobileFilterOption({
                                     clearButton={false}
                                     doneButton={false}
                                     wrapperClassName='!w-full !h-fit !border-none !shadow-none'
-                                    initialYear={filters.handoverDate?.year ? filters.handoverDate?.year : 2025}
-                                    initialQuarter={filters.handoverDate?.quarter ? filters.handoverDate?.quarter : "Q3"}
+                                    // initialYear={filters.handoverDate?.year ? filters.handoverDate?.year : 2025}
+                                    // initialQuarter={filters.handoverDate?.quarter ? filters.handoverDate?.quarter : "Q3"}
 
                                     onDone={(year, quarter) => {
                                         handleSelect.handoverDate({ quarter, year })
@@ -515,7 +778,7 @@ function MobileFilterOption({
 
 
                                 {/* Price Range */}
-                                {priceRange && <div className="">
+                                {false && <div className="">
                                     <PriceRangeInput
                                         clearButton={clear}
                                         doneButton={false}
@@ -538,7 +801,7 @@ function MobileFilterOption({
 
 
                             {/* Bed And Bath Selector */}
-                            {bathroomsRange && <div className="">
+                            {false && <div className="">
                                 <BedBathSelector
                                     doneButton={clear}
                                     clearButton={false}
@@ -658,7 +921,7 @@ function MobileFilterOption({
                                         className="border w-full font-medium font-poppins text-[10.5px] rounded-[3px] bg-[#FF1645] text-white border-[#FF1645]"
                                         onClick={handleDone}
                                     >
-                                        Show {projects?.data?.length ?? 0} Properties
+                                        Show {totalRecords ?? 0} Properties
                                     </button>
                                 </div>
                             </Container>

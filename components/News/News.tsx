@@ -20,11 +20,14 @@ import clsx from 'clsx'
 import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle'
 
 type Props = {
-    initialData: any
+    initialData: any;
+    siteMap: any[]
+
 }
 
 const News = ({
-    initialData
+    initialData,
+    siteMap,
 }: Props) => {
 
     const [filters, setFilters] = useState<FiltersState>({
@@ -204,13 +207,8 @@ const News = ({
                         <div className="mt-4"></div>
                         <RecommendedText
                             title="Recommended For You"
-                            items={[
-                                'Smart Picks in Dubai’s Fastest-Growing Zones',
-                                'Handpicked Homes with High ROI Potential',
-                                'Investor-Friendly Properties You’ll Love',
-                                'Move-In Ready Units in Prime Locations',
-                                'Top-Rated Listings in Family-Friendly Areas',
-                            ]}
+                                                                   items={shuffle(siteMap)?.slice(0, 6)}
+                           
                         />
                         <div className="sticky top-3 mt-3 left-0">
 
@@ -224,24 +222,13 @@ const News = ({
                             {<>
                                 <RecommendedText
                                     title="Recommended For You"
-                                    items={[
-                                        'Smart Picks in Dubai’s Fastest-Growing Zones',
-                                        'Handpicked Homes with High ROI Potential',
-                                        'Investor-Friendly Properties You’ll Love',
-                                        'Move-In Ready Units in Prime Locations',
-                                        'Top-Rated Listings in Family-Friendly Areas',
-                                    ]}
+                                    items={shuffle(siteMap)?.slice(0, 6)}
+                                   
                                 />
                                 <RecommendedText
                                     title="Popular Searches"
-                                    items={[
-                                        'Downtown Dubai: Iconic City Living',
-                                        'Dubai Marina: Waterfront Lifestyle at Its Best',
-                                        'Business Bay: Where Work Meets Luxury',
-                                        'Yas Island, Abu Dhabi: Island Living Redefined',
-                                        'Jumeirah Village Circle: Affordable Modern Homes',
-                                        'Al Reem Island, Abu Dhabi: Urban Peace',
-                                    ]}
+                                     items={shuffle(siteMap)?.slice(0, 6)}
+                                    
                                 />
                             </>}
 

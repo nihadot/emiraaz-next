@@ -1,5 +1,6 @@
 import { baseUrl } from "@/api";
 import News from "@/components/News/News"
+import { getSiteMapData } from "@/utils/getSiteMapData";
 import { Metadata } from "next";
 
 // Enable ISR with 60-second revalidation
@@ -11,11 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
     // Fetch metadata with cache-busting timestamp to ensure fresh data
     const responseData = await fetch(
       `${baseUrl}/meta-data?referencePage=news-page`,
-      {
-        next: {
-          revalidate: 60 // Revalidate every 10 seconds
-        },
-      }
+   
     ).then((res) => res.json())
 
     const data = responseData?.data?.[0] || {};
@@ -85,13 +82,20 @@ export default async function AllNews() {
   try {
     const res = await fetch(`${baseUrl}/news?limit=24`);
 
+    const dataFetchRandomSiteMap = await getSiteMapData(); // fetches only once, then cached
+
+
     if (!res.ok) {
       throw new Error(`API returned ${res.status} ${res.statusText}`);
     }
 
     const data = await res.json();
 
-    return <News initialData={data.data} />;
+    return <News
+
+      siteMap={dataFetchRandomSiteMap?.data}
+
+      initialData={data.data} />;
   } catch (err) {
     console.error('Error fetching news:', err);
     return <div>Failed to load news.</div>;

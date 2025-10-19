@@ -14,7 +14,7 @@ export type FetchAllCityAndCountResponse = {
 }
 
 
-type CityNames = {
+export type CityNames = {
     _id: string;
     name: string;
     count: number;

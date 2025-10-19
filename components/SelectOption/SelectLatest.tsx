@@ -162,7 +162,7 @@ const [hasInitializedDefault, setHasInitializedDefault] = useState(false);
   // here handle If user search , then filter search , If not searched then show all options in the filteredOptions
   const filteredOptions = useMemo(() =>
     options.filter((option) =>
-      option.label.toLowerCase().includes(searchTerm.toLowerCase())
+      option?.label?.toLowerCase().includes(searchTerm?.toLowerCase())
     ), [options, searchTerm]
   );
 
@@ -172,16 +172,16 @@ const [hasInitializedDefault, setHasInitializedDefault] = useState(false);
   const resultData = useMemo(() => {
 
    if (multiple) {
-    const selectedValues = selectedMultiple.map(item => item.value);
+    const selectedValues = selectedMultiple?.map(item => item?.value);
 
-    const findAllOption = filteredOptions.find(option => option.value === 'all') || null;
+    const findAllOption = filteredOptions?.find(option => option?.value === 'all') || null;
 
-    const selectedOptions = filteredOptions.filter(option =>
-      option.value !== 'all' && selectedValues.includes(option.value)
+    const selectedOptions = filteredOptions?.filter(option =>
+      option.value !== 'all' && selectedValues?.includes(option?.value)
     );
 
-    const unselectedOptions = filteredOptions.filter(option =>
-      option.value !== 'all' && !selectedValues.includes(option.value)
+    const unselectedOptions = filteredOptions?.filter(option =>
+      option.value !== 'all' && !selectedValues?.includes(option?.value)
     );
 
     return [

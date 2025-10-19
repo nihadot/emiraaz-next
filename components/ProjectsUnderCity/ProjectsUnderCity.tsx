@@ -34,6 +34,7 @@ import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle';
 
 type Props = {
     id: string;
+    siteMap: any[];
 }
 
 export type FiltersState = {
@@ -47,7 +48,7 @@ export type FiltersState = {
 };
 
 
-function ProjectsUnderCityFunction({ id }: Props) {
+export default function ProjectsUnderCityFunction({ id,siteMap }: Props) {
 
 
 
@@ -447,13 +448,8 @@ function ProjectsUnderCityFunction({ id }: Props) {
 
                             {true && <RecommendedText
                                 title="Recommended For You"
-                                 items={[
-        'Smart Picks in Dubai’s Fastest-Growing Zones',
-        'Handpicked Homes with High ROI Potential',
-        'Investor-Friendly Properties You’ll Love',
-        'Move-In Ready Units in Prime Locations',
-        'Top-Rated Listings in Family-Friendly Areas',
-    ]}
+                               items={shuffle(siteMap)?.slice(0, 6)}
+                                 
                             />}
 
                             <div className="sticky top-3 left-0">
@@ -466,24 +462,13 @@ function ProjectsUnderCityFunction({ id }: Props) {
                                 {true && <>
                                     <RecommendedText
                                         title="Recommended For You"
-                                         items={[
-        'Smart Picks in Dubai’s Fastest-Growing Zones',
-        'Handpicked Homes with High ROI Potential',
-        'Investor-Friendly Properties You’ll Love',
-        'Move-In Ready Units in Prime Locations',
-        'Top-Rated Listings in Family-Friendly Areas',
-    ]}
+                               items={shuffle(siteMap)?.slice(0, 6)}
+                                        
                                     />
                                     <RecommendedText
                                         title="Popular Searches"
-                                            items={[
-        'Downtown Dubai: Iconic City Living',
-        'Dubai Marina: Waterfront Lifestyle at Its Best',
-        'Business Bay: Where Work Meets Luxury',
-        'Yas Island, Abu Dhabi: Island Living Redefined',
-        'Jumeirah Village Circle: Affordable Modern Homes',
-        'Al Reem Island, Abu Dhabi: Urban Peace',
-    ]}
+                               items={shuffle(siteMap)?.slice(0, 6)}
+                                          
                                     />
                                 </>}
 
@@ -545,12 +530,12 @@ function ProjectsUnderCityFunction({ id }: Props) {
 }
 
 
-function ProjectsUnderCity(props: Props) {
-  return (
-    // You could have a loading skeleton as the `fallback` too
-    <Suspense>
-      <ProjectsUnderCityFunction {...props} />
-    </Suspense>
-  )
-}
-export default ProjectsUnderCity;
+// function ProjectsUnderCity(props: Props) {
+//   return (
+//     // You could have a loading skeleton as the `fallback` too
+//     <Suspense>
+//       <ProjectsUnderCityFunction {...props} />
+//     </Suspense>
+//   )
+// }
+// export default ProjectsUnderCity;

@@ -17,9 +17,10 @@ import clsx from 'clsx';
 
 type Props = {
     id: string;
+    siteMap:any[];
 }
 
-function BlogDetails({ id }: Props) {
+function BlogDetails({ id,siteMap }: Props) {
 
     const { data: singleBlog } = useViewBlogByIdQuery({ id });
     const { data: allBlogs } = useViewAllBlogsQuery({});
@@ -118,20 +119,11 @@ function BlogDetails({ id }: Props) {
                         </div>
                         <div className={"md:block hidden max-w-[301.5px] w-full"}>
 
-
-
-
-
                             {<RecommendedText
                                 containerClassName='!my-0 !mb-2'
                                 title="Recommended For You"
-                                items={[
-                                    'Smart Picks in Dubai’s Fastest-Growing Zones',
-                                    'Handpicked Homes with High ROI Potential',
-                                    'Investor-Friendly Properties You’ll Love',
-                                    'Move-In Ready Units in Prime Locations',
-                                    'Top-Rated Listings in Family-Friendly Areas',
-                                ]}
+                                items={shuffle(siteMap)?.slice(0, 6)}
+                               
                             />}
 
                             <div className="sticky top-3 left-0">
@@ -145,24 +137,13 @@ function BlogDetails({ id }: Props) {
                                 {<>
                                     <RecommendedText
                                         title="Recommended For You"
-                                        items={[
-                                            'Smart Picks in Dubai’s Fastest-Growing Zones',
-                                            'Handpicked Homes with High ROI Potential',
-                                            'Investor-Friendly Properties You’ll Love',
-                                            'Move-In Ready Units in Prime Locations',
-                                            'Top-Rated Listings in Family-Friendly Areas',
-                                        ]}
+                                        items={shuffle(siteMap)?.slice(0, 6)}
+                                     
                                     />
                                     <RecommendedText
                                         title="Popular Searches"
-                                        items={[
-                                            'Downtown Dubai: Iconic City Living',
-                                            'Dubai Marina: Waterfront Lifestyle at Its Best',
-                                            'Business Bay: Where Work Meets Luxury',
-                                            'Yas Island, Abu Dhabi: Island Living Redefined',
-                                            'Jumeirah Village Circle: Affordable Modern Homes',
-                                            'Al Reem Island, Abu Dhabi: Urban Peace',
-                                        ]}
+                                        items={shuffle(siteMap)?.slice(0, 6)}
+                                        
                                     />
                                 </>}
 

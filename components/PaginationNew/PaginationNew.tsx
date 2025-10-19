@@ -85,7 +85,7 @@ const PaginationNew: React.FC<PaginationNewProps> = ({
         {visiblePages.map((page) => (
           <button
             key={page}
-            className={`w-9 h-9 min-w-[36px] px-2 py-1 text-sm rounded text-[#767676] ${
+            className={`w-9 h-9 cursor-pointer min-w-[36px] px-2 py-1 text-sm rounded text-[#767676] ${
               currentPage === page
                 ? "bg-red-600/10 text-red-600 font-medium"
                 : "bg-[#F5F5F5]"

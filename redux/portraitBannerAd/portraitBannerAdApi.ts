@@ -44,6 +44,7 @@ export const portraitBannerAdApi = createApi({
         headers: { "Content-Type": "application/json" },
       }),
       providesTags: ["PortraitBanner"],
+        keepUnusedDataFor: 60 * 60,
     }),
 
   }),

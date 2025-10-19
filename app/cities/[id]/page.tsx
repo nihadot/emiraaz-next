@@ -1,5 +1,6 @@
 import ProjectsUnderCity from '@/components/ProjectsUnderCity/ProjectsUnderCity'
-import React, {  } from 'react'
+import { getSiteMapData } from '@/utils/getSiteMapData';
+import React, { } from 'react'
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -9,6 +10,9 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
   const { id } = await params; // Await the params Promise
+  const dataFetchRandomSiteMap = await getSiteMapData(); // fetches only once, then cached
 
-  return <ProjectsUnderCity id={id} />;
+  return <ProjectsUnderCity
+    siteMap={dataFetchRandomSiteMap?.data}
+    id={id} />;
 }

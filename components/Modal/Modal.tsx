@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import Container from '../atom/Container/Container';
 
 interface ModalProps {
   isOpen: boolean;
@@ -27,21 +26,21 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 
   return (
-   
+
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+      onClick={onClose}
+    >
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
-        onClick={onClose}
+        className="relative rounded-md w-full"
+        onClick={(e) => e.stopPropagation()}
       >
-        <div
-          className="relative rounded-md w-full"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Close Button */}
+        {/* Close Button */}
 
 
-          {children}
-        </div>
+        {children}
       </div>
+    </div>
 
   );
 };

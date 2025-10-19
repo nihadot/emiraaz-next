@@ -34,9 +34,9 @@ type Props = {
     navigateEnquiredButton?: boolean;
 };
 
-function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetailsButton,navigateEnquiredButton = true }: Props) {
+function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetailsButton, navigateEnquiredButton = true }: Props) {
     const [toggleCurrency, setToggleCurrency] = useState<string>('');
-  
+
     useEffect(() => {
         const url = new URL(window.location.href);
         const currency = url.searchParams.get('currency');
@@ -51,7 +51,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
     const { data: currencyExchange } = useFetchCurrencyQuery({ currency: toggleCurrency });
 
     const { currency, value } = formatCurrencyParts(item.priceInAED);
-    const propertyType = item?.propertyTypes?.length > 0 ? item?.propertyTypes[0] : '';
+    // const propertyType = item?.propertyTypes?.length > 0 ? item?.propertyTypes[0] : '';
     const furnishing =
         item.furnishing === 'fully-furnished'
             ? 'Fully Furnished'
@@ -61,7 +61,19 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                     ? 'Un Furnishing'
                     : item.furnishing ? item.furnishing : 'NOT SELECTED';
 
+    const propertyTypes = item?.propertyTypes || [];
+    const hasType = !(item.projectType === 'land-residential' || item.projectType === 'land-commercial');
 
+    const renderTypeBlock = (icon: React.ReactNode, text: string) => (
+        <div className="flex items-center gap-2">
+            {icon}
+            <Typography
+                tag="p"
+                className="text-[12px] font-light font-poppins line-clamp-1"
+                text={text}
+            />
+        </div>
+    );
     return (
         <div className="relative overflow-hidden w-full sm:w-full flex-none sm:h-[500px] lg:h-[260px] rounded lg:flex-row flex-col flex h-[410px] border border-[#DEDEDE]">
 
@@ -75,8 +87,11 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
 
             <div className="flex font-poppins relative flex-col px-[10px] pt-[10px] pb-[3px] sm:p-[10px] lg:p-[16.5px]">
 
-                <div className="absolute flex top-0 sm:hidden right-0 z-20">
-                    <FavoriteIcon projectId={item._id} />
+                <div className="absolute flex w-8 h-8 top-0 sm:hidden right-2 z-40">
+                    {/* <FavoriteIcon projectId={item._id} /> */}
+                    <Image  src={item?.developerDetails?.image?.webp?.url || ''} alt="authenticity icon" fill className="object-cover" />
+
+
                 </div>
                 <div className="relative w-fit">
                     {/* <h3 className="text-[20px] font-medium capitalize">
@@ -112,42 +127,42 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                 </Typography> */}
 
                 {/* Price  */}
-                {(item.projectType === 'commercial-residential' || item.projectType === 'project-residential' || item.projectType === 'project-commercial') ? 
-                <p>
-                    <span className='text-[17px] font-semibold'>Starting From</span>
-                    <span className='font-poppins text-[24.75px] ms-2 sm:ms-1 font-semibold '>
-                        {
-                            (currencyExchange && currencyExchange.data && currencyExchange.data.rate && toggleCurrency !== 'AED') ?  
-                            (formatCurrencyConversion(value,currencyExchange.data.rate)) : value
-                        }
-                       
-                    </span>
-                    <span className='text-[11.928px] sm:text-[12.75px] ms-[2px] sm:ms-0 font-semibold mt-[4.5px] font-poppins '>{
-                (currencyExchange && currencyExchange.data && currencyExchange.data.rate) ?
-                currencyExchange.data.currency
-                :  currency
-                }</span>
+                {(item.projectType === 'commercial-residential' || item.projectType === 'project-residential' || item.projectType === 'project-commercial') ?
+                    <p>
+                        <span className='text-[17px] font-semibold'>Starting From</span>
+                        <span className='font-poppins text-[24.75px] ms-2 sm:ms-1 font-semibold '>
+                            {
+                                (currencyExchange && currencyExchange.data && currencyExchange.data.rate && toggleCurrency !== 'AED') ?
+                                    (formatCurrencyConversion(value, currencyExchange.data.rate)) : value
+                            }
 
-                </p> 
-                
-                :
+                        </span>
+                        <span className='text-[11.928px] sm:text-[12.75px] ms-[2px] sm:ms-0 font-semibold mt-[4.5px] font-poppins '>{
+                            (currencyExchange && currencyExchange.data && currencyExchange.data.rate) ?
+                                currencyExchange.data.currency
+                                : currency
+                        }</span>
 
-                     <p>
-                    {/* <span className='text-[17px] font-semibold'>Starting From</span> */}
-                    <span className='font-poppins text-[24.75px] ms-2 sm:ms-1 font-semibold '>
-                        {
-                            (currencyExchange && currencyExchange.data && currencyExchange.data.rate && toggleCurrency !== 'AED') ?  
-                            (formatCurrencyConversion(value,currencyExchange.data.rate)) : value
-                        }
-                       
-                    </span>
-                    <span className='text-[11.928px] sm:text-[12.75px] ms-[2px] sm:ms-0 font-semibold mt-[4.5px] font-poppins '>{
-                (currencyExchange && currencyExchange.data && currencyExchange.data.rate) ?
-                currencyExchange.data.currency
-                :  currency
-                }</span>
+                    </p>
 
-                </p> 
+                    :
+
+                    <p>
+                        {/* <span className='text-[17px] font-semibold'>Starting From</span> */}
+                        <span className='font-poppins text-[24.75px] ms-2 sm:ms-1 font-semibold '>
+                            {
+                                (currencyExchange && currencyExchange.data && currencyExchange.data.rate && toggleCurrency !== 'AED') ?
+                                    (formatCurrencyConversion(value, currencyExchange.data.rate)) : value
+                            }
+
+                        </span>
+                        <span className='text-[11.928px] sm:text-[12.75px] ms-[2px] sm:ms-0 font-semibold mt-[4.5px] font-poppins '>{
+                            (currencyExchange && currencyExchange.data && currencyExchange.data.rate) ?
+                                currencyExchange.data.currency
+                                : currency
+                        }</span>
+
+                    </p>
                 }
 
 
@@ -157,21 +172,20 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
 
                 {/* Property Type */}
 
-                <div className="flex mt-[2px] sm:mt-[4.5px] items-center gap-3">
+                {/* <div className="flex mt-[2px] sm:mt-[4.5px] items-center gap-3">
 
                     <p className="capitalize font-semibold font-poppins text-[12px]">{propertyType}</p>
                     <div className="h-[17.25px] w-[1px] bg-[#333333]" />
                     
                     
                     {
-                        item.propertyTypes && item.propertyTypes.length >= 2 && item?.communityTick ? <p className="capitalize font-semibold font-poppins text-[12px]">{item.propertyTypes?.[1]}</p> :
+                        item.propertyTypes && item.propertyTypes.length == 2  ? <p className="capitalize font-semibold font-poppins text-[12px]">{item.propertyTypes?.[1]}</p> :
 
                         <>
                         {!(item.projectType === 'land-residential' || item.projectType === 'land-commercial') && 
                     <div className="flex items-center gap-3">
                         <div className="flex items-center gap-2">
-                            {/* <Image src={bed_icon} alt="bed icon" width={20} height={20} className="object-cover" /> */}
-                            {/* <p className="text-sm font-light font-poppins">{item.numberOfBeds}</p> */}
+                         
                             <LiaBedSolid size={20} color='#333' />
                             <Typography
                                 tag='p'
@@ -180,16 +194,6 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                             />
                         </div>
 
-
-                        {/* <div className="flex items-center gap-2"> */}
-                        {/* <Image src={bath_icon} alt="bath icon" width={20} height={20} className="object-cover" /> */}
-                        {/* <p className="text-sm font-light font-poppins">{item.numberOfBath}</p> */}
-                        {/* <Typography
-                                tag='p'
-                                className='text-[12px] font-light font-poppins'
-                                text={item.numberOfBath}
-                            /> */}
-                        {/* </div> */}
                     </div>}
                     </>
                     }
@@ -197,17 +201,12 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
 
 
                     {
-                        item.propertyTypes && item.propertyTypes.length >= 3 && item?.communityTick ? <p className="capitalize font-semibold font-poppins text-[12px]">{item.propertyTypes?.[2]}</p> :
+                        item.propertyTypes && item.propertyTypes.length >= 3 ? <p className="capitalize font-semibold font-poppins text-[12px]">{item.propertyTypes?.[2]}</p> :
                         <>
-                        {/* {!(item.projectType === 'land-residential' || item.projectType === 'land-commercial') && <div className="h-[20px] w-[1px] bg-[#333333]" />} */}
-                    <div className="flex items-center gap-3">
+                     { !(item.propertyTypes && item.propertyTypes.length == 2)  && <div className="flex items-center gap-3">
 
                         <div className="flex items-center gap-2">
-                            {/* <p className="text-sm font-light font-poppins">{item.squareFeet} </p> */}
-                            {/* <GoScreenFull
-                            color='#333'
-                            className='w-[20px] h-[20px]'
-                            /> */}
+                            
                             <HiOutlineBuildingOffice
                                 color='#333'
                                 className='w-[18px] h-[18px]'
@@ -220,11 +219,37 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                                 text={`${item.totalFloors || 0} floors`}
                             />
                         </div>
-                    </div>
+                    </div>}
                         </>
                     }
                     
                     
+                </div> */}
+
+                <div className="flex mt-[2px] sm:mt-[4.5px] items-center gap-3">
+                    {propertyTypes.slice(0, 3).map((pt, idx) => (
+                        <React.Fragment key={idx}>
+                            <p className="capitalize font-semibold font-poppins text-[12px]">{pt}</p>
+                            {idx < propertyTypes.length - 1 && <div className="h-[17.25px] w-[1px] bg-[#333333]" />}
+                        </React.Fragment>
+                    ))}
+
+                    {propertyTypes.length < 3 && hasType && (
+                        <>
+                            <div className="h-[17.25px] w-[1px] bg-[#333333]" />
+                            {renderTypeBlock(<LiaBedSolid size={20} color="#333" />, item.type)}
+                        </>
+                    )}
+
+                    {propertyTypes.length < 2 && (
+                        <>
+                            <div className="h-[17.25px] w-[1px] bg-[#333333]" />
+                            {renderTypeBlock(
+                                <HiOutlineBuildingOffice color="#333" className="w-[18px] h-[18px]" />,
+                                `${item.totalFloors || 0} floors`
+                            )}
+                        </>
+                    )}
                 </div>
 
                 <div className="sm:flex hidden gap-2 mt-[9px] items-center">
@@ -235,23 +260,22 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                         className='text-[12px] line-clamp-1 text-ellipsis capitalize'
                         text={`${furnishing}`}
                     />
-                    <div className="h-[17.25px] w-[1px] bg-[#333333]" />
+                    { item?.facilitiesAmenitiesDetails.length > 0 && <div className="h-[17.25px] w-[1px] bg-[#333333]" />}
 
                     <div className="flex gap-1 items-center justify-center">
                         {item?.facilitiesAmenitiesDetails?.slice(0, 2)?.map((f, index, arr) => (
                             <React.Fragment key={index}>
-                                {/* <p className="text-xs px-2 capitalize">{f.name}</p> */}
                                 <Typography
                                     tag='p'
-
                                     className='text-[12px] line-clamp-1 px-2 capitalize'
                                     text={f.name}
                                 />
                                 {index < arr.length - 1 && (
-                                    <div className="h-[17.25px] w-[1px] bg-[#333333]" />
+                                    <div className="inline-block h-[17.25px] w-[1px] bg-[#333333] mx-1" />
                                 )}
                             </React.Fragment>
                         ))}
+
                     </div>
 
 
@@ -281,7 +305,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                         <BsStars size={16} />
                     </div>
                     <div className="text-[12px] font-light bg-[#FFE7EC] text-ellipsis line-clamp-1 py-1">
-                        This listing was newly introduced { item.createdAt ? getDaysAgo(item.createdAt) : '' }
+                        This listing was newly introduced {item.createdAt ? getDaysAgo(item.createdAt) : ''}
                     </div>
                 </div>
 
@@ -304,7 +328,7 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
                     }
 
                     {/* Enquiry Button */}
-                    { navigateEnquiredButton && <PrimaryButton
+                    {navigateEnquiredButton && <PrimaryButton
                         onClick={() => handleEnquiryFormClick(item)}
                         type="button"
                         className="flex cursor-pointer !px-0 sm:!px-4 w-full sm:w-[140.5px] h-[35px] items-center gap-2 rounded border-none bg-[#FF1645]"

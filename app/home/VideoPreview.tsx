@@ -1508,6 +1508,7 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
               setIsPlaying(false);
               setShowReplay(true);
             }}
+            preload="metadata"
             className="mx-auto"
           />
 

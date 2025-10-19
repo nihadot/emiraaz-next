@@ -27,18 +27,18 @@ const Body: React.FC = () => {
             // Simulate AI typing
             setIsTyping(true)
             // setTimeout(() => {
-                // setIsTyping(false)
-                // }, 4000)
-                
-                const response = await axios(`${baseUrl}/ps-aiagent`, {
-                    method: 'POST',
-                    data: {
-                        message: text
-                    }
-                })
-                
-                const data = response.data?.data;
-                setMessages(prev => [...prev, { id: Date.now() + 1, fromUser: false,data, }])
+            // setIsTyping(false)
+            // }, 4000)
+
+            const response = await axios(`${baseUrl}/ps-aiagent`, {
+                method: 'POST',
+                data: {
+                    message: text
+                }
+            })
+
+            const data = response.data?.data;
+            setMessages(prev => [...prev, { id: Date.now() + 1, fromUser: false, data, }])
 
 
 
@@ -46,12 +46,12 @@ const Body: React.FC = () => {
 
         } catch (error: any) {
             toast.error(error.message)
-        }finally {
+        } finally {
             setIsTyping(false)
         }
     }
 
-    console.log(messages,'asassa')
+    // console.log(messages,'asassa')
 
     return (
         <div className='bg-white w-full min-h-[40vh] max-w-[640px] m-auto flex flex-col justify-start mt-20 items-center p-4'>

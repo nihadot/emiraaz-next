@@ -2,6 +2,7 @@ import React from 'react'
 import BlogDetails from '@/components/BlogDetails/BlogDetails';
 import { baseUrl } from '@/api';
 import { Metadata } from 'next';
+import { getSiteMapData } from '@/utils/getSiteMapData';
 
 interface PageProps {
     params: Promise<{ id: string }>;
@@ -64,9 +65,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function Page({ params }: PageProps) {
 
+      const dataFetchRandomSiteMap = await getSiteMapData(); // fetches only once, then cached
+  
+
     const { id } = await params; // Await the params Promise
 
     return (
-        <BlogDetails id={id} />
+        <BlogDetails id={id}
+        siteMap={dataFetchRandomSiteMap?.data}
+        
+        />
     )
 }

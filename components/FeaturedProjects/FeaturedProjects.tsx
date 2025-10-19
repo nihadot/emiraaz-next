@@ -27,17 +27,21 @@ import CustomSlider from '../CustomSlider/CustomSlider'
 import ProjectCardSkelton from '../ProjectCard/ProjectCardSkelton'
 import RecommendedText from '../RecomendedText/RecommendedText'
 import CustomSliderUi from '@/app/home/CustomSliderUi'
-import BottomBanner from '@/app/home/BottomBanner'
+import BottomBanner from '@/app/home/BottomBannerasas'
 import MobileFooterBanner from '@/app/home/MobileFooterBanner'
 import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal'
 import { LOCAL_STORAGE_KEYS } from '@/api/storage'
 import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle'
 
 
-function FeaturedProjects() {
+function FeaturedProjects({
+    siteMap
+}: {
+    siteMap: any[]
+}) {
 
 
-    useForceScrollRestore(); 
+    useForceScrollRestore();
     useScrollToTopOnRefresh();
     const [loading, setLoading] = useState(false)
 
@@ -189,7 +193,7 @@ function FeaturedProjects() {
     const [allProjects, setAllProjects] = useState<AllProjectsItems[]>();
 
     useEffect(() => {
-      
+
         if (projects?.data) {
             setAllProjects(projects?.data);
         }
@@ -236,13 +240,13 @@ function FeaturedProjects() {
             <main>
 
                 <div className=" min-h-screen  w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
-                    <Header     logoSection={
-                           <div className='h-full w-full flex justify-center items-center'>
-                             <MobileHeaderTitle
-                            content='Featured Projects'
+                    <Header logoSection={
+                        <div className='h-full w-full flex justify-center items-center'>
+                            <MobileHeaderTitle
+                                content='Featured Projects'
                             />
-                           </div>
-                        }/>
+                        </div>
+                    } />
 
 
 
@@ -300,13 +304,8 @@ function FeaturedProjects() {
                                     <RecommendedText
                                         title="Recommended For You"
                                         containerClassName='!mb-2 !mt-0'
-                                         items={[
-        'Smart Picks in Dubai’s Fastest-Growing Zones',
-        'Handpicked Homes with High ROI Potential',
-        'Investor-Friendly Properties You’ll Love',
-        'Move-In Ready Units in Prime Locations',
-        'Top-Rated Listings in Family-Friendly Areas',
-    ]}
+                                        items={shuffle(siteMap)?.slice(0, 6)}
+
                                     />
 
                                     {/* {(smallVideoAds && smallVideoAds.length > 0 ?
@@ -328,25 +327,13 @@ function FeaturedProjects() {
                                         />
                                         <RecommendedText
                                             title="Trending Areas"
-                                            items={[
-        'Ras Al Khaimah: The New Investment Hotspot',
-        'Dubai South: Near Expo, Near Future',
-        'Marjan Island: Beachfront Rental Boom',
-        'Dubai Creek Harbour: Where the Skyline Begins',
-        'Mohammed Bin Rashid City: Luxury Rising',
-        'Sharjah Waterfront City: Serenity & Value',
-    ]}
+                                            items={shuffle(siteMap)?.slice(0, 6)}
+
                                         />
                                         <RecommendedText
                                             title="Popular Searches"
-                                           items={[
-        'Downtown Dubai: Iconic City Living',
-        'Dubai Marina: Waterfront Lifestyle at Its Best',
-        'Business Bay: Where Work Meets Luxury',
-        'Yas Island, Abu Dhabi: Island Living Redefined',
-        'Jumeirah Village Circle: Affordable Modern Homes',
-        'Al Reem Island, Abu Dhabi: Urban Peace',
-    ]}
+                                            items={shuffle(siteMap)?.slice(0, 6)}
+
                                         />
 
 
@@ -393,13 +380,8 @@ function FeaturedProjects() {
 
                     <RecommendedText
                         title="Recommended For You"
-                         items={[
-        'Smart Picks in Dubai’s Fastest-Growing Zones',
-        'Handpicked Homes with High ROI Potential',
-        'Investor-Friendly Properties You’ll Love',
-        'Move-In Ready Units in Prime Locations',
-        'Top-Rated Listings in Family-Friendly Areas',
-    ]}
+                                                        items={shuffle(siteMap)?.slice(0, 6)}
+                        
                     />
                 </div>
 

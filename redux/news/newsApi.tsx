@@ -106,7 +106,7 @@ type PayloadByIdResponse = {
 }
 
 
-type CountItem = {
+export type CountItem = {
    _id: string;
     propertyTypes: PropertyTypeItem[];
     discount:DiscountItem[];
@@ -115,6 +115,7 @@ type CountItem = {
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
+    totalProjects: number;
 
 }
 

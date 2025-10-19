@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import ProjectDetails from "@/components/ProjectDetails/ProjectDetails";
 import { baseUrl } from "@/api";
+import { getSiteMapData } from "@/utils/getSiteMapData";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -10,7 +11,7 @@ interface PageProps {
 // ✅ Static Paths for Pre-rendering (e.g., top 10 projects)
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${baseUrl}/projects?limit=200`);
+    const res = await fetch(`${baseUrl}/projects?limit=500`);
 
     if (!res.ok) {
       throw new Error(`API returned ${res.status} ${res.statusText}`);
@@ -145,5 +146,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function Page({ params }: PageProps) {
   const { id } = await params; // Await the params Promise
 
-  return <ProjectDetails id={id} />;
+  const dataFetchRandomSiteMap = await getSiteMapData(); // fetches only once, then cached
+
+
+  return <ProjectDetails
+    siteMap={dataFetchRandomSiteMap?.data}
+
+    id={id} />;
 }

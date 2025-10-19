@@ -74,9 +74,10 @@ interface UserData {
 }
 interface Props {
   id:string;
+  siteMap:any[];
 }
 
-function ProjectDetailsFunction({ id }: Props) {
+export default function ProjectDetailsFunction({ id,siteMap }: Props) {
 
 
   const router = useRouter();
@@ -85,13 +86,16 @@ function ProjectDetailsFunction({ id }: Props) {
 
     const searchParams = useSearchParams();
 
-  const handleBackTo = () => {
-        const currency = searchParams.get('currency');
-        // console.log(currency,'currency')
-// Build query string with currency if available
-        const queryString = currency ? `?currency=${currency}` : '';
-     router.push(`/${queryString}`);
-  };
+ const handleBackTo = () => {
+  const currency = searchParams.get('currency');
+  const queryString = currency ? `?currency=${currency}` : '';
+
+  if (window.history.length > 1) {
+    router.back();
+  } else {
+    router.push(`/${queryString}`);
+  }
+};
 
   const [galleryModal, setGalleryModal] = useState(false);
   const [layoutModal, setLayoutModal] = useState(false);
@@ -635,6 +639,22 @@ function ProjectDetailsFunction({ id }: Props) {
                   interestRate={interestRate}
                 />}
 
+
+                {
+                data?.data?.paymentOptions ?
+                  <PropertyDetailsSectionStringArray
+                    headerTitle="Payment Plan"
+                    data={data?.data?.paymentOptions}
+                  />
+                  :
+                  <div className="gap-2 mt-4 sm:grid pe-0  grid-cols-1 sm:grid-cols-4 ">
+
+                    {Array.from({ length: width < 640 ? 6 : 24 }).map((_, i) => (
+                      <div key={i} className="w-full mt-2 sm:mt-0.5 h-[30px] sm:h-[26px] rounded bg-gray-50"></div>
+                    ))}
+                  </div>
+              }
+
                 {/* Desktop view */}
                 {totalPrice ? <div className="hidden mt-[24.75px] sm:block">
                   <MortgageCalculator
@@ -665,23 +685,10 @@ function ProjectDetailsFunction({ id }: Props) {
               </div>}
 
            
-              {
-                data?.data?.paymentOptions ?
-                  <PropertyDetailsSectionStringArray
-                    headerTitle="Payment Plan"
-                    data={data?.data?.paymentOptions}
-                  />
-                  :
-                  <div className="gap-2 mt-4 sm:grid pe-0  grid-cols-1 sm:grid-cols-4 ">
-
-                    {Array.from({ length: width < 640 ? 6 : 24 }).map((_, i) => (
-                      <div key={i} className="w-full mt-2 sm:mt-0.5 h-[30px] sm:h-[26px] rounded bg-gray-50"></div>
-                    ))}
-                  </div>
-              }
+              
 
 
-              <div className="flex mt-[18px] sm:mt-[25.5px] justify-between items-center w-full">
+              {/* <div className="flex mt-[18px] sm:mt-[25.5px] justify-between items-center w-full">
                 <RegulatoryInformation
                   qrCodeUrl={data?.data?.qrCodeImage?.webp?.url}
                   icon
@@ -694,7 +701,6 @@ function ProjectDetailsFunction({ id }: Props) {
 
                     handleReportProjectModal();
                   }}
-                  // reportedProjectHandler={handleReportProjectModal}
                   headerTitle="Regulatory Information "
                   data={[
                     {
@@ -716,13 +722,7 @@ function ProjectDetailsFunction({ id }: Props) {
 
                   ]}
                 />
-
-
-
-
-
-
-              </div>
+              </div> */}
 
               <div className="sm:mt-4">
 
@@ -768,18 +768,14 @@ function ProjectDetailsFunction({ id }: Props) {
               <div className="flex sm:hidden">
                 <RecommendedText
                   title="Recommended For You"
-                items={[
-        'Smart Picks in Dubai’s Fastest-Growing Zones',
-        'Handpicked Homes with High ROI Potential',
-        'Investor-Friendly Properties You’ll Love',
-        'Move-In Ready Units in Prime Locations',
-        'Top-Rated Listings in Family-Friendly Areas',
-    ]}
+                                                       items={shuffle(siteMap)?.slice(0, 6)}
+               
                 />
               </div>
 
             </div>
             <SidePanel
+            siteMap={siteMap}
               projectId={data?.data?._id || ''}
               shuffledImages={shuffledImages}
               handleGalleryModal={handleGalleryModal}
@@ -1212,12 +1208,12 @@ function ProjectDetailsFunction({ id }: Props) {
 
 
 
-function ProjectDetails(props: Props) {
-  return (
-    // You could have a loading skeleton as the `fallback` too
-    <Suspense>
-      <ProjectDetailsFunction {...props} />
-    </Suspense>
-  )
-}
-export default ProjectDetails;
+// function ProjectDetails(props: Props) {
+//   return (
+//     // You could have a loading skeleton as the `fallback` too
+//     <Suspense>
+//       <ProjectDetailsFunction {...props} />
+//     </Suspense>
+//   )
+// }
+// export default ProjectDetails;

@@ -40,3 +40,24 @@ interface RefreshTokenApiResponse {
   token: string;
   message?: string;
 }
+
+
+
+
+
+
+
+export const fetchAgentDetailsWithUniqueId = async ({uniqueId}:{uniqueId:string}): Promise<{success:boolean;message:string;data?:any}> => {
+  try {
+    const response = await axios.post(
+      `${baseUrl}/auth/agent/verifying`,
+      {
+        agentId:uniqueId
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error?.response?.data?.message || error?.message || 'Error refreshing token');
+  }
+};
+

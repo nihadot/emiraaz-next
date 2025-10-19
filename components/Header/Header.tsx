@@ -32,7 +32,7 @@ function HeaderComponent({
 
 
   const menuItemsData = [
-    { name: 'Home', link: '/' },
+    // { name: 'Home', link: '/' },
     { name: 'About', link: '/about-property-seller' },
     { name: 'Featured Projects', link: '/featured-projects' },
     { name: 'Ai Agent', link: '/ai-agent' },
@@ -44,9 +44,9 @@ function HeaderComponent({
 
 
 const menuItems = menuItemsData.filter((item) => {
-  if (item.link === '/' && pathname === '/') {
-    return false; // hide 'Home' when on home page and not mobile
-  }
+  // if (item.link === '/' && pathname === '/') {
+  //   return true; // hide 'Home' when on home page and not mobile
+  // }
   return true;
 });
   const dispatch = useDispatch();
@@ -318,7 +318,8 @@ const menuItems = menuItemsData.filter((item) => {
               </PrimaryButton>
 
               <div className="mt-2">
-                <NavMenu items={menuItems} />
+              
+                <NavMenu items={[{ name: 'Home', link: '/' },...menuItems]} />
               </div>
               <OtherNavMenus />
 

@@ -21,7 +21,7 @@ import SearchNew from '../SearchField/SearchNew';
 import SelectLatest from '../SelectOption/SelectLatest';
 import SelectNew from '../SelectOption/SelectNew';
 import { SwitchSelector } from '../SelectOption';
-import { CompletionTypes, productTypeOptionFirstItems, PropertyTypes, propertyTypeSecond } from '@/data';
+import { CompletionTypes, productTypeOptionFirstItems, propertyCategoryType, PropertyTypes, propertyTypeSecond } from '@/data';
 import { HiOutlineAdjustmentsHorizontal } from 'react-icons/hi2';
 import ExpandableComponentDropdown from '../ExpandableComponent/ExpandableComponent';
 import clsx from 'clsx';
@@ -34,7 +34,7 @@ import ProjectCardSkelton from '../ProjectCard/ProjectCardSkelton';
 import VideoPreview from '@/app/home/VideoPreview';
 import CustomSliderUi from '@/app/home/CustomSliderUi';
 import Recommendations from '@/app/home/Recommendations';
-import BottomBanner from '@/app/home/BottomBanner';
+import BottomBanner from '@/app/home/BottomBannerasas';
 import MobileFooterBanner from '@/app/home/MobileFooterBanner';
 import RecommendedText from '../RecomendedText/RecommendedText';
 import MobileFilterOption from '@/app/home/MobileFilterOption';
@@ -44,7 +44,7 @@ import PaginationNew from '../PaginationNew/PaginationNew';
 import { FiltersState } from '../types';
 import Image from 'next/image';
 import { big_white_logo_icon, ps_logo } from '@/app/assets';
-import { useViewAllCountsQuery } from '@/redux/news/newsApi';
+import { CountItem, useViewAllCountsQuery } from '@/redux/news/newsApi';
 import { parsePrice } from '@/utils/parsePrice';
 import { useForceScrollRestore, useScrollToTopOnRefresh } from '@/hooks/useScrollRestoration';
 import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
@@ -53,6 +53,9 @@ import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import pIcon from "@/app/assets/p-icon.png";
 import Link from 'next/link';
 import HomePageContent from './HomePageContent';
+import { EmirateNames } from '@/redux/emirates/types';
+import { CityNames } from '@/redux/cities/types';
+import { PortraitBanner } from '@/redux/portraitBannerAd/types';
 type PaymentPlan = {
     label?: string;
     value?: string;
@@ -62,10 +65,32 @@ interface UserData {
     _id: string;
     // Add more fields if needed
 }
+type Props = {
+    emiratesData: EmirateNames[],
+    urls?: string[]
+    allCounts: CountItem
+    initialCities: CityNames[],
+    videoAds: AllSmallVideoItems[],
+    initialData: AllProjectsItems[],
+    portraitBanners: PortraitBanner,
+    siteMap: any[],
+    content: object
+}
 
 
+function HomePage({
+    emiratesData,
+    videoAds,
+    urls,
+    initialCities,
+    allCounts,
+    initialData,
+    portraitBanners,
+    content,
+    siteMap,
+}: Props) {
 
-function HomePageFunction({ initialData }: { initialData: any }) {
+    // console.log(content,'contentcontentcontent')
 
 
     useForceScrollRestore();
@@ -141,6 +166,7 @@ function HomePageFunction({ initialData }: { initialData: any }) {
             return () => clearTimeout(timer)
         }
     }, []);
+    const [debouncedSearch, setDebouncedSearch] = useState<any>("");
 
     // console.log(wishlistData, 'wishlistData')
 
@@ -173,25 +199,6 @@ function HomePageFunction({ initialData }: { initialData: any }) {
 
     }, [paginationHappened]);
 
-
-
-
-    const [debouncedSearch, setDebouncedSearch] = useState<any>("");
-    const [clear, setClear] = useState(false);
-    const [EnquiryForm, setEnquiryForm] = useState({ status: false, id: '', count: 0 });
-    const [filterModel, setFilterModel] = useState(false);
-    const [showYearSelector, setShowYearSelector] = useState(false);
-
-    // Debounce search input
-    useEffect(() => {
-        const handler = setTimeout(() => {
-            setDebouncedSearch(filters.search);
-            setFilters(prev => ({ ...prev, page: 1 }));
-        }, 500);
-
-        return () => clearTimeout(handler);
-    }, [filters.search]);
-
     // Data fetching with memoized query params
     const queryParams = useMemo(() => ({
         limit: 24,
@@ -221,16 +228,47 @@ function HomePageFunction({ initialData }: { initialData: any }) {
     }), [filters, debouncedSearch]);
 
 
-    const { data: allCounts } = useViewAllCountsQuery();
+    const { data } = useFetchAllProjectsQuery(queryParams, {
+        refetchOnMountOrArgChange: true,
+        refetchOnReconnect: true,
+        refetchOnFocus: true,
+        skip: false,
+    });
+
+    const pagination = data?.pagination;
+
+    const [clear, setClear] = useState(false);
+    const [EnquiryForm, setEnquiryForm] = useState({ status: false, id: '', count: 0 });
+    const [filterModel, setFilterModel] = useState(false);
+    const [showYearSelector, setShowYearSelector] = useState(false);
+
+    // Debounce search input
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedSearch(filters.search);
+            setFilters(prev => ({ ...prev, page: 1 }));
+        }, 500);
+
+        return () => clearTimeout(handler);
+    }, [filters.search]);
+
+
+
+    // const { data: allCounts } = useViewAllCountsQuery();
     const { data: allProjectsCounts } = useFetchAllProjectsCountQuery();
-    const { data: emiratesData } = useFetchAllEmirateNamesQuery();
+    // const { data: emiratesData } = useFetchAllEmirateNamesQuery();
     const { data: portraitBannerData } = useFetchAllPortraitBannersQuery({});
     const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
-    const { data: projects } = useFetchAllProjectsQuery({ ...queryParams }, {
-        skip: false,
-        // @ts-expect-error — We know this line might throw a TS error due to initialData
-        initialData,
-    });
+    // const { data: projects } = useFetchAllProjectsQuery({ ...queryParams }, {
+    //     skip: false,
+    //     // @ts-expect-error — We know this line might throw a TS error due to initialData
+    //     initialData,
+    // });
+
+
+    const projects = data?.data || initialData;
+
+
     // projects?.data
     // Memoized data mapping
     // const emirateOptions = useMemo(() => {
@@ -249,7 +287,7 @@ function HomePageFunction({ initialData }: { initialData: any }) {
     const emirateOptions = useMemo(() => {
         const preferredOrder = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ras Al Khaimah', 'Ajman', 'Umm Al-Quwain'];
 
-        const mappedOptions = emiratesData?.data.map((item) => ({
+        const mappedOptions = emiratesData.map((item) => ({
             label: item.name,
             value: item._id,
             count: item.count,
@@ -339,8 +377,8 @@ function HomePageFunction({ initialData }: { initialData: any }) {
     }), []);
 
 
-    const totalPages = projects?.pagination?.totalPages || 1;
-    const totalRecords = projects?.pagination?.totalRecords;
+    const totalPages = pagination?.totalPages || 1;
+    const totalRecords = pagination?.totalRecords;
 
     const searchParams = useSearchParams();
     const handleClick = (item: AllProjectsItems) => {
@@ -367,6 +405,9 @@ function HomePageFunction({ initialData }: { initialData: any }) {
     const handleFilterModal = useCallback(() => {
         setFilterModel(prev => !prev);
     }, []);
+
+
+    const [isPropertyType, setIsPropertyType] = useState('all');
 
 
     const handleClear = useCallback(() => {
@@ -408,18 +449,20 @@ function HomePageFunction({ initialData }: { initialData: any }) {
 
 
     useEffect(() => {
-        if (projects?.data) {
-            setAllProjects(projects?.data);
+        if (projects) {
+            setAllProjects(projects);
         }
     }, [projects]);
+    const lastCitySlug = filters.cities?.[filters.cities.length - 1];
 
+    const isMatchCity = cityOptions.find((item: any) => item.slug === lastCitySlug);
 
 
     const [defaultEmirate, setDefaultEmirate] = useState<string>('');
     const [defaultCities, setDefaultCities] = useState<any>('');
     const [defaultPropertyType, setDefaultPropertyType] = useState<string>('');
     const [defaultProjectStage, setDefaultProjectStage] = useState<string>('');
-    const [defaultCompletionType, setDefaultCompletionType] = useState<string>('');
+    const [defaultCompletionType, setDefaultCompletionType] = useState<string>('all');
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -430,33 +473,34 @@ function HomePageFunction({ initialData }: { initialData: any }) {
         }
     }, [filters.page]);
 
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const propertyType = urlParams.get('property-type');
-        const emirate = urlParams.get('emirate');
-        const cities = urlParams.get('cities');
-        const toConvertedCitiesParams = cities?.split(',')
-        const completionType = urlParams.get('completion-type') ? urlParams.get('completion-type') : 'all';
+    const currentSegments = pathname.split('/').filter(Boolean); // e.g. ['buy', 'abu-dhabi', 'off-plan-projects']
+
+    // useEffect(() => {
+    //     const urlParams = new URLSearchParams(window.location.search);
+    //     // const propertyType = urlParams.get('property-type');
+    //     const emirate = urlParams.get('emirate');
+    //     const cities = urlParams.get('cities');
+    //     const toConvertedCitiesParams = cities?.split(',')
+    //     const completionType = urlParams.get('completion-type') ? urlParams.get('completion-type') : 'all';
 
 
 
-        if (propertyType) {
-            setDefaultPropertyType(propertyType)
-        }
-        if (emirate) {
-            setDefaultEmirate(emirate)
-        }
-        if (toConvertedCitiesParams) {
-            setDefaultCities(toConvertedCitiesParams)
-        }
+    //     // if (propertyType) {
+    //     //     setDefaultPropertyType(propertyType)
+    //     // }
+    //     // if (emirate) {
+    //     //     setDefaultEmirate(emirate)
+    //     // }
+    //     if (toConvertedCitiesParams) {
+    //         setDefaultCities(toConvertedCitiesParams)
+    //     }
 
-        if (completionType) {
-            setDefaultCompletionType(completionType)
-        }
+    //     if (completionType) {
+    //         setDefaultCompletionType(completionType)
+    //     }
 
 
-    }, []);
-
+    // }, []);
 
 
 
@@ -472,8 +516,139 @@ function HomePageFunction({ initialData }: { initialData: any }) {
 
     }, []);
 
+    function updateUrl({ emirate, propertyFirst, propertySecond }: { emirate?: string, propertyFirst?: string, propertySecond?: string }) {
+        const currentSegments = pathname.split('/').filter(Boolean); // e.g. ['buy', 'abu-dhabi', 'off-plan-projects']
+        const urlParams = new URLSearchParams(searchParams.toString());
+        const cities = urlParams.get('cities');
+        const toConvertedCitiesParams = cities?.split(',')
+
+        const segments = [...currentSegments];
+        const isExistEmirate = segments.find((seg) =>
+            emirateOptions.some((item: any) => item.slug === seg)
+        );
 
 
+        const isExistPropertyType = segments.find((seg) =>
+            productTypeOptionFirstItems.some((item: any) => item.value === seg)
+        );
+
+        const isPropertyTypeSecond = segments.find((seg) =>
+            propertyTypeSecond.some((item: any) => item.value === seg)
+        );
+
+        let fullUrl = '/buy';
+
+
+
+        if (emirate === "all") {
+            fullUrl = `/buy/${isExistPropertyType ? isExistPropertyType : ''}/${isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
+        }
+
+        if (emirate !== 'all' && emirate) {
+            fullUrl += `/${emirate}/${propertyFirst ? propertyFirst : isExistPropertyType ? isExistPropertyType : ''}/${isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
+        }
+
+        if (propertyFirst) {
+            fullUrl += `/${isExistEmirate ? isExistEmirate : ''}/${propertyFirst ? propertyFirst : isExistPropertyType ? isExistPropertyType : ''}/${isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
+        }
+
+        if (propertySecond !== 'all' && propertySecond) {
+            // fullUrl = `/buy/${propertySecond}`;
+            fullUrl += `/${isExistEmirate ? isExistEmirate : ''}/${isExistPropertyType ? isExistPropertyType : ''}/${propertySecond ? propertySecond : isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
+
+        }
+        if (propertySecond === 'all') {
+            fullUrl = `/buy/${isExistEmirate ? isExistEmirate : ''}/${isExistPropertyType ? isExistPropertyType : ''}`;
+        }
+
+
+        fullUrl += `?${urlParams.toString()}`
+
+        // console.log(urlParams, 'urlParamsurlParams')
+
+        if (toConvertedCitiesParams) {
+            setDefaultCities(toConvertedCitiesParams)
+
+        }
+
+        if (pathname === '/') {
+            fullUrl = '/'
+        }
+
+        // console.log(fullUrl)
+
+        window.history.pushState({}, '', fullUrl);
+    }
+
+    const totalPropertyTypesCounts = allCounts?.propertyTypes?.map(item => item?.count).reduce((a, b) => a + b, 0)
+
+
+    const propertyTypesLists = {
+        commercial: [{
+            value: "officespace",
+            label: "Office Space",
+            count: allCounts?.propertyTypes?.find(item => item?.name === 'officespace')?.count || 0,
+
+        }, {
+            value: "shop",
+            label: "Shop",
+            count: allCounts?.propertyTypes?.find(item => item?.name === 'shop')?.count || 0,
+
+        }, {
+            value: "warehouse",
+            label: "Warehouse",
+            count: allCounts?.propertyTypes?.find(item => item?.name === 'warehouse')?.count || 0,
+        },],
+
+        residential: [
+            {
+                value: "villa",
+                label: "Villa",
+                count: allCounts?.propertyTypes?.find(item => item?.name === 'villa')?.count || 0,
+
+            },
+            {
+                value: "apartment",
+                label: "Apartment",
+                count: allCounts?.propertyTypes?.find(item => item?.name === 'apartment')?.count || 0,
+
+            },
+            {
+                value: "penthouse",
+                label: "Penthouse",
+                count: allCounts?.propertyTypes?.find(item => item?.name === 'penthouse')?.count || 0,
+
+            },
+            {
+                value: "townhouse",
+                label: "Townhouse",
+                count: allCounts?.propertyTypes?.find(item => item?.name === 'townhouse')?.count || 0,
+
+            }
+        ],
+
+        default: [
+            {
+                value: "all",
+                label: "All",
+                count: totalPropertyTypesCounts,
+
+            }
+        ],
+        getAll: () => {
+            return [...propertyTypesLists.default, ...propertyTypesLists.residential, ...propertyTypesLists.commercial]
+        }
+    }
+    const segments = [...currentSegments];
+
+    const isExistPropertyCategoryType = segments.find((seg) =>
+        productTypeOptionFirstItems.some((item: any) => item.value === seg)
+    );
+
+    // const totalRecords = pagination?.totalRecords;
+    // console.log(propertyTypesLists,'propertyTypesLists')
+    const allTypes = propertyTypesLists?.getAll()
+    // console.log(allTypes,'allTypes')
 
     if (loading) {
         return (
@@ -496,6 +671,10 @@ function HomePageFunction({ initialData }: { initialData: any }) {
         <>
             <main>
 
+                <HomePageContent
+                    content={content}
+                    display={true}
+                />
 
 
                 <div className=" min-h-screen  w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
@@ -535,15 +714,16 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                     label="Emirates"
                                     options={emirateOptions}
                                     onSelect={(e) => {
-                                        const url = new URL(window.location.href);
-                                        if (e?.value) {
-                                            url.searchParams.set('emirate', e?.label ?? '');
-                                        } else {
-                                            url.searchParams.delete('emirate');
-                                        }
-                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                        window.history.pushState({}, '', newUrl);
-                                        handleSelect.emirate(e)
+                                        // const url = new URL(window.location.href);
+                                        // if (e?.value) {
+                                        //     url.searchParams.set('emirate', e?.label ?? '');
+                                        // } else {
+                                        //     url.searchParams.delete('emirate');
+                                        // }
+                                        // const newUrl = `/buy/${url.pathname}?${url.searchParams.toString()}`;
+                                        // window.history.pushState({}, '', newUrl);
+                                        // handleSelect.emirate(e)
+                                        router.push(`/buy/${e?.slug}/off-plan-projects`)
                                     }}
                                 />
                             </div>
@@ -567,9 +747,11 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                                 url.searchParams.delete('cities');
                                             }
                                             const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                            window.history.pushState({}, '', newUrl);
+                                            // window.history.pushState({}, '', newUrl);
 
                                             handleChangeCities(e);
+                                            router.push(`/buy/dubai/off-plan-projects/${newUrl}`)
+
 
                                         }
 
@@ -600,15 +782,8 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                         label="Emirates"
                                         options={emirateOptions}
                                         onSelect={(e) => {
-                                            const url = new URL(window.location.href);
-                                            if (e?.value) {
-                                                url.searchParams.set('emirate', e?.label ?? '');
-                                            } else {
-                                                url.searchParams.delete('emirate');
-                                            }
-                                            const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                            window.history.pushState({}, '', newUrl);
-                                            handleSelect.emirate(e)
+                                            router.push(`/buy/${e?.slug}/off-plan-projects`)
+
                                         }}
                                     />
                                 </div>
@@ -623,20 +798,22 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                         onSelectMultiple={(e) => {
                                             const url = new URL(window.location.href);
 
-                                            if (e) {
+                                            // if (e) {
 
-                                                if (e && e.length > 0) {
+                                            //     if (e && e.length > 0) {
 
-                                                    url.searchParams.set('cities', e?.map((item) => item.label).join(','));
-                                                } else {
-                                                    url.searchParams.delete('cities');
-                                                }
-                                                const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                                window.history.pushState({}, '', newUrl);
+                                            //         url.searchParams.set('cities', e?.map((item) => item.label).join(','));
+                                            //     } else {
+                                            //         url.searchParams.delete('cities');
+                                            //     }
+                                            const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                            //     window.history.pushState({}, '', newUrl);
 
-                                                handleChangeCities(e);
+                                            //     handleChangeCities(e);
+                                            // router.push(`/buy/dubai/${newUrl}`)
 
-                                            }
+                                            // }
+                                            router.push(`/buy/dubai/off-plan-projects/${e}`)
 
 
                                         }}
@@ -651,40 +828,27 @@ function HomePageFunction({ initialData }: { initialData: any }) {
 
 
                             {/* Done */}
-                            {productTypeOptionFirstItems.length > 0 ? <div className="h-[40px] sm:h-[48px]">
+                            {propertyCategoryType.length > 0 ? <div className="h-[40px] sm:h-[48px]">
                                 <SwitchSelector
                                     containerClassName="sm:!gap-1"
                                     onSelect={(e) => {
+
+
                                         const url = new URL(window.location.href);
-                                        const searchParams = url.search;
-                                        handleSelect.projectTypeFirst(e);
-
-                                        let path = '/';
-
                                         if (e === 'off-plan-projects') {
                                             return;
                                         }
+                                        // updateUrl({ propertyFirst: e });
+                                        // handleSelect.projectTypeFirst(e);
+                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                        //     window.history.pushState({}, '', newUrl);
 
-                                        switch (e) {
-                                            case 'off-plan-resale':
-                                                path = '/off-plan-resale';
-                                                break;
-                                            case 'off-plan-secondary':
-                                                path = '/secondary';
-                                                break;
-                                            case 'off-plan-land':
-                                                path = '/land';
-                                                break;
-                                        }
-
-
-
-                                        window.location.href = `${path}${searchParams}`;
-
+                                        //     handleChangeCities(e);
+                                        router.push(`/buy/${e}/${newUrl}`)
 
                                     }}
-                                    defaultValue={productTypeOptionFirstItems?.[0]?.value}
-                                    options={productTypeOptionFirstItems}
+                                    defaultValue={propertyCategoryType?.[0]?.value}
+                                    options={propertyCategoryType}
 
                                 />
                             </div> : <div className="w-full h-full bg-gray-50"></div>}
@@ -695,39 +859,23 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                 <SwitchSelector
                                     containerClassName="sm:!gap-1"
                                     onSelect={(e) => {
-                                        const url = new URL(window.location.href);
-                                        const searchParams = url.search;
-                                        handleSelect.projectTypeLast(e);
-
-                                        let path = '/';
-
+                                        // updateUrl({ propertySecond: e });
+                                        // handleSelect.propertyTypeSecond(e);
+                                        // setIsPropertyType(e);
                                         if (e === 'all') {
                                             return;
                                         }
+                                        const url = new URL(window.location.href);
 
-                                        switch (e) {
-                                            case 'residential':
-                                                if (pathname === '/') {
-                                                    path = '/off-plan-projects/residential';
-                                                }
+                                        // updateUrl({ propertyFirst: e });
+                                        // handleSelect.projectTypeFirst(e);
+                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                        //     window.history.pushState({}, '', newUrl);
+                                        setIsPropertyType(e);
 
-                                                break;
-                                            case 'commercial':
-                                                if (pathname === '/') {
-                                                    path = '/off-plan-projects/commercial';
-                                                }
-
-                                                break;
-
-                                        }
-
-
-
-                                        window.location.href = `${path}${searchParams}`;
-
-
+                                        //     handleChangeCities(e);
+                                        router.push(`/buy/off-plan-projects/${e}/${newUrl}`)
                                     }
-
                                     }
                                     // onSelect={handleSelect.propertyTypeSecond}
                                     defaultValue={propertyTypeSecond[0].value}
@@ -762,50 +910,37 @@ function HomePageFunction({ initialData }: { initialData: any }) {
 
                                 <SelectLatest
                                     label="Property Types"
-                                    options={[{
-                                        value: "all",
-                                        label: "All",
-                                        count: 0,
-
-                                    }, {
-                                        value: "villa",
-                                        label: "Villa",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.name === 'villa')?.count || 0,
-
-                                    },
-                                    {
-                                        value: "apartment",
-                                        label: "Apartment",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.name === 'apartment')?.count || 0,
-
-                                    },
-                                    {
-                                        value: "penthouse",
-                                        label: "Penthouse",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.name === 'penthouse')?.count || 0,
-
-                                    },
-                                    {
-                                        value: "townhouse",
-                                        label: "Townhouse",
-                                        count: allCounts?.data?.propertyTypes?.find(item => item?.name === 'townhouse')?.count || 0,
-
-                                    }]}
+                                    options={
+                                        [
+                                            ...(isPropertyType === 'residential' || isPropertyType === 'commercial' ? propertyTypesLists.default : []),
+                                            ...(isPropertyType === 'residential' ? propertyTypesLists.residential : []),
+                                            ...(isPropertyType === 'commercial' ? propertyTypesLists.commercial : []),
+                                            ...((isPropertyType === 'all') ? [
+                                                ...propertyTypesLists.default,
+                                                ...propertyTypesLists.residential,
+                                                ...propertyTypesLists.commercial,
+                                            ] : []),
+                                        ]
+                                    }
                                     onSelect={(e) => {
                                         const url = new URL(window.location.href);
-                                        if (e?.value) {
-                                            url.searchParams.set('property-type', e?.label ?? '');
-                                        } else {
-                                            url.searchParams.delete('property-type');
-                                        }
+                                        // if (e?.value) {
+                                        //     url.searchParams.set('property-type', e?.label ?? '');
+                                        // } else {
+                                        //     url.searchParams.delete('property-type');
+                                        // }
+                                        // if(e?.value === 'all'){
+                                        //     return;
+                                        // }
                                         const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                        window.history.pushState({}, '', newUrl);
-                                        handleSelect.propertyType(e)
+                                        // window.history.pushState({}, '', newUrl);
+                                        // handleSelect.propertyType(e)
+                                        router.push(`/buy/dubai/off-plan-projects/${newUrl}`)
+
                                     }}
                                     clearSelection={clear}
-                                    defaultValue={PropertyTypes?.find((item) => item?.label === defaultPropertyType)}
+                                    defaultValue={allTypes?.find((item) => item?.value === defaultPropertyType)}
                                     listContainerUlListContainerClassName="w-[200px]"
-
                                 />
                             </div>
 
@@ -823,15 +958,20 @@ function HomePageFunction({ initialData }: { initialData: any }) {
 
 
                                         const url = new URL(window.location.href);
-                                        if (e == 'all') {
-                                            url.searchParams.delete('completion-type');
-                                        } else {
-                                            url.searchParams.set('completion-type', e ?? '');
+                                        // if (e == 'all') {
+                                        //     url.searchParams.delete('completion-type');
+                                        // } else {
+                                        //     url.searchParams.set('completion-type', e ?? '');
+                                        // }
+
+                                        if (e === 'all') {
+                                            return;
                                         }
                                         const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                        window.history.pushState({}, '', newUrl);
+                                        // window.history.pushState({}, '', newUrl);
+                                        router.push(`/buy/dubai/off-plan-projects/${e}`)
 
-                                        handleSelect.completionType(e)
+                                        // handleSelect.completionType(e)
                                     }}
                                     clearSelection={clear}
                                     options={CompletionTypes}
@@ -845,6 +985,7 @@ function HomePageFunction({ initialData }: { initialData: any }) {
 
                             )}>
 
+
                                 <ExpandableComponentDropdown
                                     isOpen={showYearSelector}
                                     onToggle={() => setShowYearSelector(prev => !prev)}
@@ -856,21 +997,27 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                     }}
                                     customCloseControl={<button className="text-xs text-red-600">X</button>}
                                 >
-                                    <SelectHandoverDate
-                                        initialYear={filters.handoverDate?.year ? filters.handoverDate?.year : 2025}
-                                        initialQuarter={filters.handoverDate?.quarter ? filters.handoverDate?.quarter : "Q2"}
+                                    <Link
+                                        href={`/buy/dubai/off-plan-projects`}
+                                    >
+                                        <SelectHandoverDate
+                                            initialYear={filters.handoverDate?.year ? filters.handoverDate?.year : 2025}
+                                            initialQuarter={filters.handoverDate?.quarter ? filters.handoverDate?.quarter : "Q2"}
 
-                                        onDone={(year, quarter) => {
-                                            handleSelect.handoverDate({ quarter, year })
-                                        }}
-                                        onClose={() => setShowYearSelector(false)}
-                                        reset={() => {
+                                            onDone={(year, quarter) => {
+                                                // handleSelect.handoverDate({ quarter, year })
+                                                router.push(`/buy/dubai/off-plan-projects`)
 
-                                        }}
-                                        onChange={(year, quarter) => {
+                                            }}
+                                            onClose={() => setShowYearSelector(false)}
+                                            reset={() => {
 
-                                        }}
-                                    />
+                                            }}
+                                            onChange={(year, quarter) => {
+
+                                            }}
+                                        />
+                                    </Link>
                                 </ExpandableComponentDropdown>
 
                             </div>
@@ -902,14 +1049,25 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                     }, {
                                         value: "on-handover",
                                         label: "On Handover",
-                                        count: allCounts?.data?.paymentPlans?.find(item => item?.name === 'onHandover')?.count || 0,
+                                        count: allCounts?.paymentPlans?.find(item => item?.name === 'onHandover')?.count || 0,
                                     },
                                     {
                                         value: "post-handover",
                                         label: "Post Handover",
-                                        count: allCounts?.data?.paymentPlans?.find(item => item?.name === 'postHandover')?.count || 0,
+                                        count: allCounts?.paymentPlans?.find(item => item?.name === 'postHandover')?.count || 0,
                                     },]}
-                                    onSelect={handleSelect.paymentPlan}
+                                    onSelect={(e) => {
+                                        const url = new URL(window.location.href);
+                                        if (e?.value) {
+                                            url.searchParams.set('payment-plan', e?.label ?? '');
+                                        } else {
+                                            url.searchParams.delete('payment-plan');
+                                        }
+                                        // window.history.pushState({}, '', newUrl);
+                                        // handleSelect.paymentPlan(e)
+                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                        router.push(`/buy/dubai/off-plan-projects/`)
+                                    }}
                                 />
                             </div>
 
@@ -934,15 +1092,25 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                     {
                                         value: "with-discount",
                                         label: "With Discount",
-                                        count: allCounts?.data?.discount?.find(item => item?.name === 'with-discount')?.count || 0,
+                                        count: allCounts?.discount?.find(item => item?.name === 'with-discount')?.count || 0,
                                     },
                                     {
                                         value: "without-discount",
                                         label: "Without Discount",
-                                        count: allCounts?.data?.discount?.find(item => item?.name === 'without-discount')?.count || 0,
+                                        count: allCounts?.discount?.find(item => item?.name === 'without-discount')?.count || 0,
 
                                     },]}
-                                    onSelect={handleSelect.discount}
+                                    onSelect={(e) => {
+                                        const url = new URL(window.location.href);
+                                        if (e?.value) {
+                                            url.searchParams.set('discount', e?.label ?? '');
+                                        } else {
+                                            url.searchParams.delete('discount');
+                                        }
+                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                        // window.history.pushState({}, '', newUrl);
+                                        router.push(`/buy/dubai/off-plan-projects/`);
+                                    }}
                                 />
                             </div>
 
@@ -964,28 +1132,38 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                     }, {
                                         value: "fully-furnished",
                                         label: "Fully Furnished",
-                                        count: allCounts?.data?.furnisheds?.find(item => item?.name === 'fully-furnished')?.count || 0,
+                                        count: allCounts?.furnisheds?.find(item => item?.name === 'fully-furnished')?.count || 0,
 
                                     },
                                     {
                                         value: "semi-furnished",
                                         label: "Semi Furnished",
-                                        count: allCounts?.data?.furnisheds?.find(item => item?.name === 'semi-furnished')?.count || 0,
+                                        count: allCounts?.furnisheds?.find(item => item?.name === 'semi-furnished')?.count || 0,
 
                                     },
                                     {
                                         value: "un-furnishing",
                                         label: "UnFurnished",
-                                        count: allCounts?.data?.furnisheds?.find(item => item?.name === 'un-furnishing')?.count || 0,
+                                        count: allCounts?.furnisheds?.find(item => item?.name === 'un-furnishing')?.count || 0,
                                     },]}
-                                    onSelect={handleSelect.furnishType}
+                                    onSelect={(e) => {
+                                        const url = new URL(window.location.href);
+                                        if (e?.value) {
+                                            url.searchParams.set('furnishing', e?.label ?? '');
+                                        } else {
+                                            url.searchParams.delete('furnishing');
+                                        }
+                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                        // window.history.pushState({}, '', newUrl);
+                                        router.push(`/buy/dubai/off-plan-projects/`);
+                                    }}
                                 />
                             </div>
 
 
 
 
-                            <div onClick={() => handleClear()} className="flex cursor-pointer max-w-[120px] h-[48px] items-center gap-2">
+                            <div onClick={() => handleClear()} className={clsx("flex cursor-pointer max-w-[120px]  items-center gap-2", filters.page && filters.page > 1 ? 'h-[35px]' : 'h-[48px]')}>
                                 <label className="text-[12px] cursor-pointer">Clear Filters</label>
                                 <div className="bg-black cursor-pointer w-[14px] rounded-full h-[14px] flex justify-center items-center">
                                     <IoCloseOutline size={12} color="white" />
@@ -1004,7 +1182,7 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                     {/* Projects Section */}
                     <Container>
                         <SpaceWrapper
-                            className={filters.page && filters.page > 1 ? 'pt-[10px]' : 'pt-[0px]'}
+                            className={filters.page && filters.page > 1 ? 'pt-[3px]' : 'pt-[0px]'}
                         >
 
                             <div className="mb-4 flex gap-2">
@@ -1014,18 +1192,19 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                     {filters.page && filters.page > 1 && <div className={clsx("flex flex-col md:flex-row flex-1 items-start md:items-center w-full", filters?.page && filters?.page >= 1 ? '' : 'hidden')}>
 
                                         <BreadcampNavigation
-                                            title='Offplan Projects :'
+                                            title={`Off-plan projects :`}
                                             items={[
                                                 {
-                                                    title: filters?.cities && filters?.cities?.length > 0 ? filters?.cities?.join(', ') : 'All Cities',
+                                                    title: 'All Cities',
+                                                    link: isMatchCity?.label === 'All' ? '/cities' : `/cities/${cityOptions.find((item: any) => item.value === isMatchCity?.value) || ''}`
 
                                                 },
                                                 {
-                                                    title: 'Off plan Project Residential & Commercial',
+                                                    title: `Off-plan projects for sale in ${isMatchCity?.value === 'all' ? 'UAE' : isMatchCity?.label || 'UAE'}`,
                                                 }
                                             ]}
                                         />
-                                        <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{allProjectsCounts?.data?.[0]?.count ? parsePrice(allProjectsCounts?.data?.[0]?.count) : 0} Properties Available</p>
+                                        <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{totalRecords ? `${parsePrice(totalRecords)} Properties Available` : 'No Properties Available'}</p>
                                     </div>}
 
 
@@ -1043,6 +1222,7 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                                 cities?.data?.slice(0, 4).map((item) => ({
                                                     location: item.name,
                                                     count: item.count,
+                                                    slug: item.slug
                                                 })) || []
                                             }
                                         />
@@ -1098,13 +1278,9 @@ function HomePageFunction({ initialData }: { initialData: any }) {
 
                                     {filters.page && filters.page > 1 && <RecommendedText
                                         title="Recommended For You"
-                                        items={[
-                                            'Smart Picks in Dubai’s Fastest-Growing Zones',
-                                            'Handpicked Homes with High ROI Potential',
-                                            'Investor-Friendly Properties You’ll Love',
-                                            'Move-In Ready Units in Prime Locations',
-                                            'Top-Rated Listings in Family-Friendly Areas',
-                                        ]}
+                                        containerClassName='!mt-0 mb-2 !pb-2'
+                                        items={shuffle(siteMap)?.slice(0, 6)}
+
                                     />}
 
                                     <div className="sticky top-3 left-0">
@@ -1112,30 +1288,19 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                                         <CustomSliderUi
                                             shuffledImages={shuffledImages}
                                         />
-                                        {filters.page && filters.page === 1 && <Recommendations />}
+                                        {filters.page && filters.page === 1 && <Recommendations
+                                            siteMap={siteMap}
+                                        />}
 
 
                                         {filters.page && filters.page > 1 && <>
                                             <RecommendedText
                                                 title="Recommended For You"
-                                                items={[
-                                                    'Smart Picks in Dubai’s Fastest-Growing Zones',
-                                                    'Handpicked Homes with High ROI Potential',
-                                                    'Investor-Friendly Properties You’ll Love',
-                                                    'Move-In Ready Units in Prime Locations',
-                                                    'Top-Rated Listings in Family-Friendly Areas',
-                                                ]}
+                                                items={shuffle(siteMap)?.slice(0, 6)}
                                             />
                                             <RecommendedText
                                                 title="Popular Searches"
-                                                items={[
-                                                    'Downtown Dubai: Iconic City Living',
-                                                    'Dubai Marina: Waterfront Lifestyle at Its Best',
-                                                    'Business Bay: Where Work Meets Luxury',
-                                                    'Yas Island, Abu Dhabi: Island Living Redefined',
-                                                    'Jumeirah Village Circle: Affordable Modern Homes',
-                                                    'Al Reem Island, Abu Dhabi: Urban Peace',
-                                                ]}
+                                                items={shuffle(siteMap)?.slice(0, 6)}
                                             />
                                         </>}
 
@@ -1187,7 +1352,10 @@ function HomePageFunction({ initialData }: { initialData: any }) {
                 </Container>
 
 
-                <HomePageContent />
+                <HomePageContent
+                    content={content}
+                    display={false}
+                />
 
 
                 <SectionDivider
@@ -1221,22 +1389,20 @@ function HomePageFunction({ initialData }: { initialData: any }) {
 
                     <RecommendedText
                         title="Recommended For You"
-                        items={[
-                            'Smart Picks in Dubai’s Fastest-Growing Zones',
-                            'Handpicked Homes with High ROI Potential',
-                            'Investor-Friendly Properties You’ll Love',
-                            'Move-In Ready Units in Prime Locations',
-                            'Top-Rated Listings in Family-Friendly Areas',
-                        ]}
+                        items={shuffle(siteMap)?.slice(0, 6)}
                     />
                 </div>
 
 
                 <MobileFilterOption
-                    bathroomsRange={filters.page && filters.page > 1 ? true : false}
+
+                    // bathroomsRange={filters.page && filters.page > 1 ? true : false}
+                    pagination={pagination}
+                    allCounts={allCounts}
+                    emiratesData={emiratesData}
 
                     resultProjects={() => {
-                        setAllProjects(projects?.data);
+                        // setAllProjects(projects?.data);
                     }}
                     setFiltersHandler={setFilters}
                     onClose={() => setFilterModel(false)}
@@ -1264,12 +1430,12 @@ function HomePageFunction({ initialData }: { initialData: any }) {
 }
 
 
-function HomePage(props: { initialData: any }) {
-    return (
-        <Suspense>
-            <HomePageFunction {...props} />
-        </Suspense>
-    );
-}
+// function HomePage(props: { initialData: any }) {
+//     return (
+//         <Suspense>
+//             <HomePageFunction {...props} />
+//         </Suspense>
+//     );
+// }
 
 export default HomePage;

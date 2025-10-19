@@ -15,6 +15,9 @@
 
 }
 
+.your-class{
+  font-size: clamp(16px,2vw,20px);
+}
 
 @theme {
   --font-poppins:var(--font-poppins); 
@@ -139,3 +142,70 @@ body {
       -moz-appearance: textfield;
       font-size: 14px;
     }
+
+/* .content-wrapper h1,
+.content-wrapper h2,
+.content-wrapper h3,
+.content-wrapper h4,
+.content-wrapper h5,
+.content-wrapper h6 {
+  @apply font-poppins mb-[10px] mt-0 font-medium leading-8 text-4xl;
+} */
+
+/* .content-wrapper-agent-verification h1,
+.content-wrapper-agent-verification h2,
+.content-wrapper-agent-verification h3,
+.content-wrapper-agent-verification h4,
+.content-wrapper-agent-verification h5,
+.content-wrapper-agent-verification h6 {
+  @apply font-poppins mb-[10px] mt-0 font-medium md:leading-8 md:text-2xl text-2xl leading-6;
+} */
+
+
+
+.content-wrapper-home h1{
+  @apply font-poppins mb-2 text-black mt-0 font-medium leading-6 md:leading-4 text-xl;
+}
+.content-wrapper-home h2{
+  @apply font-poppins mb-2 text-black mt-0 font-medium leading-6 md:leading-4 text-lg;
+}
+.content-wrapper-home h3{
+  @apply font-poppins mb-2 text-black mt-0 font-medium leading-6 md:leading-4 text-sm;
+}
+
+.content-wrapper-home h4{
+  @apply font-poppins mb-2 text-black mt-0 font-medium leading-6 md:leading-4 text-sm;
+}
+
+.content-wrapper-about h1{
+  @apply font-poppins mb-2 text-black mt-0 font-medium leading-6 md:leading-10 text-4xl;
+}
+.content-wrapper-about h2{
+  @apply font-poppins mb-2 text-black mt-0 font-medium leading-6 md:leading-[30px] text-3xl;
+}
+.content-wrapper-about h3{
+  @apply font-poppins mb-2 text-black mt-0 font-medium leading-6 md:leading-[26px] text-2xl;
+}
+
+.content-wrapper-about h4{
+  @apply font-poppins mb-2 text-black mt-0 font-medium leading-6 md:leading-[26px] text-xl;
+}
+
+.content-wrapper-agent-verification h1,
+.content-wrapper-agent-verification h2,
+.content-wrapper-agent-verification h3,
+.content-wrapper-agent-verification h4{
+  @apply font-poppins mb-2 text-black mt-0 font-medium leading-6 md:leading-6 text-xl;
+}
+
+.content-wrapper-agent-verification p{
+  @apply font-poppins w-full leading-[24px] text-sm font-normal text-[#666666] mt-0 mb-0
+}
+
+.content-wrapper-about p {
+  @apply font-poppins w-full leading-[28px] text-sm font-normal text-black mt-0 mb-0
+}
+
+.content-wrapper-home p {
+  @apply font-poppins w-full leading-[28px] text-sm font-normal text-black mt-0 mb-0
+}

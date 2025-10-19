@@ -14,9 +14,10 @@ import Container from "@/components/atom/Container/Container";
 import Modal from "@/components/Modal/Modal";
 import AlreadyEnquired from "@/components/EnquiryForm/AlreadyEnquired";
 import { ImageType } from "@/utils/types";
+import { shuffle } from "@/utils/shuffle";
 
 const SidePanel = ({
-    projectId,
+    projectId,siteMap,
     images, videoLink, handleGalleryModal, handleGallerySelect, filteredProjectAdsCard, shuffledImages
 }: {
     mainImage: string,
@@ -28,6 +29,7 @@ const SidePanel = ({
     shuffledImages: any[];
     handleGallerySelect: (value: string) => void;
     projectId: string;
+    siteMap:any[];
 }) => {
 
     const [EnquiryFormState, setEnquiryFormState] = useState({ status: false, count: 0 });
@@ -95,9 +97,14 @@ const SidePanel = ({
 
             <div className="hidden sm:block">
 
-                {RECOMMENDED_LISTS.map((block, idx) => (
+                {/* {RECOMMENDED_LISTS.map((block, idx) => (
                     <RecommendedText key={idx} title={block.title} items={block.items} />
-                ))}
+                ))} */}
+                <RecommendedText
+                                        title="Recommended For You"
+                                        items={shuffle(siteMap)?.slice(0, 6)}
+
+                                    />
             </div>
 
             {/* Project Ads Card */}
@@ -126,9 +133,17 @@ const SidePanel = ({
 
                 <div className="hidden sm:block">
 
-                    {RECOMMENDED_LISTS.map((block, idx) => (
+                    {/* {RECOMMENDED_LISTS.map((block, idx) => (
                         <RecommendedText key={idx} title={block.title} items={block.items} />
-                    ))}
+                    ))} */}
+                      <RecommendedText
+                                                                    title="Recommended For You"
+                                                                    items={shuffle(siteMap)?.slice(0, 6)}
+                                                                />
+                                                                <RecommendedText
+                                                                    title="Popular Searches"
+                                                                    items={shuffle(siteMap)?.slice(0, 6)}
+                                                                />
                 </div>
             </div>
 

@@ -61,7 +61,7 @@ function Talk() {
                 <div className="gap-[31px] mt-4 grid-cols-1 grid sm:grid-cols-2 md:grid-cols-3">
 
 
-                    {
+                    {/* {
                         videoData && videoData.data && videoData.data.map((item, index) => {
                             return (
                                 <div key={index}>
@@ -186,7 +186,7 @@ function Talk() {
                                 </div>
                             )
                         })
-                    }
+                    } */}
 
                 </div>
 

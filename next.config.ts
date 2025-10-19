@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
         hostname: 'res.cloudinary.com',
 
       },
+      {
+        protocol: 'https',
+        hostname: 'property-seller-com.s3.me-central-1.amazonaws.com',
+      }
     ],
    unoptimized: true,
 

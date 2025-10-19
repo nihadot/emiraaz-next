@@ -1,5 +1,6 @@
 import { baseUrl } from '@/api';
 import NewsDetails from '@/components/NewsDetails/NewsDetails';
+import { getSiteMapData } from '@/utils/getSiteMapData';
 import { Metadata } from 'next';
 import { use } from 'react';
 
@@ -59,16 +60,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-const News = ({ params }: { params: Promise<{ id: string }> }) => {
-
-    const { id } = use(params);
-
-
-    return (
-        <NewsDetails
-            id={id}
-        />
-    )
+interface PageProps {
+    params: Promise<{ id: string }>;
 }
 
-export default News
+export default async function Page({ params }: PageProps) {
+
+  // const { id } = use(params);
+  const dataFetchRandomSiteMap = await getSiteMapData(); // fetches only once, then cached
+
+    const { id } = await params; // Await the params Promise
+
+  return (
+    <NewsDetails
+      siteMap={dataFetchRandomSiteMap?.data}
+
+      id={id}
+    />
+  )
+}
+
+// export default News

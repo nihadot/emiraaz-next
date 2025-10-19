@@ -64,13 +64,13 @@ function OpenHouse() {
 
     return (
         <main>
-            <Header     logoSection={
-                           <div className='h-full w-full flex justify-center items-center'>
-                             <MobileHeaderTitle
-                            content='Open House'
-                            />
-                           </div>
-                        }/>
+            <Header logoSection={
+                <div className='h-full w-full flex justify-center items-center'>
+                    <MobileHeaderTitle
+                        content='Open House'
+                    />
+                </div>
+            } />
 
             <SectionDivider
                 containerClassName="mt-[10.5px] mb-[12px]"
@@ -79,8 +79,7 @@ function OpenHouse() {
 
             <Container>
                 <h1 className=' mb-[13px] sm:mb-[33px] font-poppins mt-6 text-center font-medium text-[19.5px] sm:text-[37.5px]'>
-                    Join Us for Upcoming <span className='text-[#FF1645]
-'>Open Houses</span>
+                    Join Us for Upcoming <span className='text-[#FF1645]'>Open Houses</span>
                 </h1>
 
 
@@ -105,9 +104,9 @@ function OpenHouse() {
                                         <div className="flex gap-[7.5px] mt-[4.5px] items-center justify-start">
                                             <FaCalendarAlt size={15} color='#767676' />
                                             <div className="flex gap-1">
-                                            <p className='font-poppins text-[11px] sm:text-[12px] mt-1 font-medium text-[#767676]'>{formatDate(item.date)}</p>
-                                                
-                                            <p className='font-poppins text-[11px] sm:text-[12px] mt-1 font-medium text-[#767676]'>{item.time}</p>
+                                                <p className='font-poppins text-[11px] sm:text-[12px] mt-1 font-medium text-[#767676]'>{formatDate(item.date)}</p>
+
+                                                <p className='font-poppins text-[11px] sm:text-[12px] mt-1 font-medium text-[#767676]'>{item.time}</p>
                                             </div>
                                         </div>
 
