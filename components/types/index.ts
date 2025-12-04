@@ -11,15 +11,19 @@ export type FiltersState = {
     bedAndBath?: string;
     minSqft?: string;
     maxSqft?: string;
+    propertyTypeStatus?:string;
     beds?: string;
+    propertyCategoryTypes?:string;
     bath?: string;
+    propertyCategoryStatus?:string;
+    propertyTypeCategory?:string;
     projectTypeFirst?: string
     projectTypeLast?: string;
     page?: number,
     limit?: number,
     search?: string,
-    propertyType?: string[],
-    propertyTypes?: string,
+    propertyType?: string,
+    propertyTypes?: string[],
     completionType?: string,
     furnishing?: string,
     cities?: string[],

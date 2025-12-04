@@ -20,7 +20,7 @@ const BreadcampNavigation: React.FC<Props> = ({
 }) => {
     return (
       
-            <section className=" flex w-full gap-2 items-center flex-wrap">
+            <section className="hidden md:flex w-full gap-2 items-center flex-wrap">
                 <Link href={link ?? ''} className="font-normal text-[12px]  font-poppins">{title}</Link>
                 <div className="flex gap-2 items-center flex-wrap ">
                     

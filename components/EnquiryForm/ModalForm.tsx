@@ -16,6 +16,9 @@ type Props = {
     }
     setEnquiry: (option: any) => void;
     onClose: () => void;
+    promotion?: boolean;
+    onSuccessToShowThankYou?: () => void;
+    promotionId?:string;
 };
 import { IoMdClose } from "react-icons/io";
 import { useCountryCode } from '@/utils/useCountryCode';
@@ -24,7 +27,7 @@ interface UserData {
     _id: string;
 }
 
-function ModalForm({ item, setEnquiry, onClose }: Props) {
+function ModalForm({ item, onSuccessToShowThankYou,setEnquiry, onClose, promotion,promotionId }: Props) {
     const [formData, setFormData] = useState({
         name: '',
         number: '',
@@ -65,7 +68,8 @@ function ModalForm({ item, setEnquiry, onClose }: Props) {
             const payload: any = {
                 name: formData.name,
                 number: formData.number,
-                projectId: item.id
+                ...( !promotion && {projectId: item.id}),
+                ...(promotion && {promoId: promotionId}),
             };
 
             const userDataString = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA);
@@ -78,8 +82,15 @@ function ModalForm({ item, setEnquiry, onClose }: Props) {
             }
 
 
+            let response = null
+            if (promotion) {
+                response = await axios.post(`${baseUrl}/promo-page/enquiry`, payload);
+                if(onSuccessToShowThankYou) onSuccessToShowThankYou()
+            } else {
 
-            const response = await axios.post(`${baseUrl}/enquiry`, payload);
+                response = await axios.post(`${baseUrl}/enquiry`, payload);
+            }
+
             if (response?.status === 201 && response?.data?.message && response?.data?.exist) {
                 setEnquiry((prev: any) => ({
                     ...prev,
@@ -104,8 +115,8 @@ function ModalForm({ item, setEnquiry, onClose }: Props) {
         }
     };
 
-        const countryCode = useCountryCode();
- 
+    const countryCode = useCountryCode();
+
 
     return (
         <>
@@ -129,7 +140,7 @@ function ModalForm({ item, setEnquiry, onClose }: Props) {
                 />
 
                 <PhoneInput
-                    value={countryCode}
+                    value={countryCode || '+971'}
                     placeholder='Your Phone Number'
                     onChange={handlePhoneChange}
                     inputProps={{
@@ -143,7 +154,7 @@ function ModalForm({ item, setEnquiry, onClose }: Props) {
                         fontSize: '16px',
                         borderColor: '#ccc',
                     }}
-                    countryCodeEditable={false} 
+                    countryCodeEditable={false}
                 />
 
                 <PrimaryButton

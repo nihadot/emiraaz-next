@@ -2,6 +2,7 @@ import React from 'react'
 import Developers from '@/components/Developers/Developers'
 import { Metadata } from 'next';
 import { baseUrl } from '@/api';
+import Script from 'next/script';
 
 // Enable ISR with 60-second revalidation
 export const revalidate = 60;
@@ -83,10 +84,48 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 
-export default function DevelopersComponent() {
+export default async function DevelopersComponent() {
+
+
+    const responseData = await fetch(
+        `${baseUrl}/meta-data?referencePage=developers`,
+        {
+            next: {
+                revalidate: 60 // Revalidate every 10 seconds
+            },
+        }
+    ).then((res) => res.json())
+
+    const dataForMeta = responseData?.data?.[0] || {};
+
+
+    const scripts = dataForMeta?.richSnippets?.match(
+        /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
+    ) || [];
 
     return (
 
-        <Developers />
+
+        <>
+
+            {scripts?.map((script: string, index: number) => {
+                // Remove outer <script> tags to use innerHTML
+                const innerJson = script
+                    .replace(/<script[^>]*>/g, "")
+                    .replace(/<\/script>/g, "")
+                    .trim();
+
+                return (
+                    <Script
+                        key={index}
+                        id={`json-ld-schema-${index}`}
+                        type="application/ld+json"
+                        dangerouslySetInnerHTML={{ __html: innerJson }}
+                        strategy="afterInteractive" // "beforeInteractive" if needed
+                    />
+                );
+            })}
+            <Developers />
+        </>
     )
 }

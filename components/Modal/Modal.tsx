@@ -28,11 +28,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   return (
 
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 min-h-[100svh]"
       onClick={onClose}
     >
       <div
-        className="relative rounded-md w-full"
+        className="relative w-full max-w-[1060px] min-h-[100svh] sm:min-h-0 sm:max-h-[600px] bg-white rounded-md"
+
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}

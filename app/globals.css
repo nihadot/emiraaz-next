@@ -1,7 +1,9 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-
+html{
+  scroll-behavior: smooth;
+}
 @layer utilities {
   .animate-pulse-slow {
     animation: pulse 5s ease-in-out infinite;
@@ -208,4 +210,76 @@ body {
 
 .content-wrapper-home p {
   @apply font-poppins w-full leading-[28px] text-sm font-normal text-black mt-0 mb-0
+}
+
+
+
+.react-tel-input .flag-dropdown{
+     
+    background-color: transparent!important;
+    border: none!important;
+}
+
+.react-tel-input .selected-flag{
+     padding: 0px 0px 0px 12px!important;
+}
+
+.react-tel-input .selected-flag .flag{
+      position: absolute;
+    top: 50%;
+    margin-top: -5px;
+}
+
+.react-tel-input .form-control{
+      border-radius: 0.25rem!important;
+      background-color: #F7F7F7!important;
+    border-width: 1.5px!important;
+    color:#666666!important;
+    border-color: #DEDEDE!important;
+}
+
+.react-tel-input .flag-dropdown.open .selected-flag{
+  background-color: transparent!important;
+}
+
+.react-tel-input .selected-flag:hover, .react-tel-input .selected-flag:focus{
+  background-color: transparent!important;
+
+}
+
+
+
+.dot {
+  width: 12px;
+  height: 12px;
+  background: #dc2626;
+  border-radius: 50%;
+  animation: blink 0.8s infinite ease-in-out;
+  opacity: 0.2;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c2c2c2;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.delay-1 {
+  animation-delay: 0.25s;
+}
+
+.delay-2 {
+  animation-delay: 0.3s;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
 }

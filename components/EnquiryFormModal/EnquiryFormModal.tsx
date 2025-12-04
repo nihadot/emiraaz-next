@@ -4,6 +4,7 @@ import Container from '../atom/Container/Container';
 import ModalForm from '../EnquiryForm/ModalForm';
 import RegistrationSuccess from '../EnquiryForm/RegistrationSuccess';
 import AlreadyEnquired from '../EnquiryForm/AlreadyEnquired';
+import { useRouter } from 'next/navigation';
 
 type Props = {
     EnquiryForm: {
@@ -16,9 +17,14 @@ type Props = {
         id: string;
         count: number;
     }>>
+    promotion?:boolean;
+    promotionId?:string;
 }
 
-function EnquiryFormModal({ EnquiryForm, setEnquiryForm }: Props) {
+function EnquiryFormModal({ EnquiryForm, setEnquiryForm,promotion,promotionId }: Props) {
+
+    const router = useRouter();
+
     return (
         <Modal
             isOpen={EnquiryForm.status}
@@ -31,7 +37,14 @@ function EnquiryFormModal({ EnquiryForm, setEnquiryForm }: Props) {
                     {EnquiryForm.count === 1 && <ModalForm
                         onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
                         item={EnquiryForm}
+                        promotionId={promotionId}
+                        promotion={promotion}
                         setEnquiry={setEnquiryForm}
+                        onSuccessToShowThankYou={()=>{
+                            router.push('/thank-you/property-enquiry')
+
+                        }
+                        }
                     />}
 
                     {EnquiryForm.count === 2 && <RegistrationSuccess

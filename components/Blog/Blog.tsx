@@ -12,6 +12,8 @@ import Link from 'next/link';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
 import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle';
 import clsx from 'clsx';
+import { ChevronRight } from 'lucide-react';
+import { calender } from '@/app/assets';
 
 
 
@@ -53,14 +55,14 @@ function Blog({ initialData }: { initialData: any }) {
 
     return (
         <main>
-            <Header  logoSection={
-                           <div className='h-full w-full flex justify-center items-center'>
-                             <MobileHeaderTitle
-                            content='Blogs'
-                            />
-                           </div>
-                        }  />
-                <SectionDivider
+            <Header logoSection={
+                <div className='h-full w-full flex justify-center items-center'>
+                    <MobileHeaderTitle
+                        content='Blogs'
+                    />
+                </div>
+            } />
+            <SectionDivider
                 containerClassName={clsx("mb-[12px] mt-[12px]")}
                 lineClassName="h-[1px] w-full bg-[#DEDEDE]"
             />
@@ -70,29 +72,61 @@ function Blog({ initialData }: { initialData: any }) {
 
                 <section className='m-auto gap-[30px] pb-20 flex items-start '>
                     <div className="w-full">
-                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[12px] sm:gap-[30px]">
+                        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-[10px]">
 
                             {data && data?.length > 0 ? data?.map((item, index) => {
                                 return (
-                                    <div className="" key={index}>
-                                        <div key={index} className="relative w-full h-[208.5px] object-cover">
-                                            <div className="px-4 py-1 font-poppins font-medium rounded-[3px] absolute text-[10.5px] sm:text-[13.5px] z-30 left-[15px] top-[15px] text-[#FF1645] bg-[#FFE7EC] ">{item.blogCategoryDetails?.name}</div>
+                                    <div key={index} className="border border-[#DEDEDE] flex h-[380px] flex-col gap-1 p-3 rounded-md ">
+                                        <div className="relative w-full h-[170px] object-cover">
 
                                             <Image
                                                 fill
                                                 alt={item.blogTitle}
                                                 src={item.image?.webp?.url || ''}
-                                                className="rounded-[5px] cursor-text"
+                                                className="cursor-text rounded"
                                             />
                                         </div>
 
-                                        {item?.date && <p className='text-[#767676] text-[12px] font-medium font-poppins mt-[13.5px]'>Date Published : {formatDate(item?.date)}</p>
-                                        }
+                                        <div className="flex items-center mt-1  gap-3">
+
+
+
+                                            <div className="flex justify-center    items-center gap-[4.5px]">
+                                                <p className='text-[#767676]   text-[12px] font-medium font-poppins '>{formatDate(item?.date || '')}</p>
+
+                                                <Image
+                                                    src={calender}
+                                                    alt="calender"
+                                                    width={16.5}
+                                                    height={16.5}
+                                                    className="w-[16.5px] cursor-text h-[16.5px]"
+                                                />
+
+                                            </div>
+
+                                            <div className=" flex font-poppins h-5 font-medium justify-center items-center text-ellipsis line-clamp-1 px-3 rounded text-[10px] text-[#FF1645] bg-[#FFE7EC] ">{item?.blogCategoryDetails?.name}</div>
+
+                                        </div>
                                         <Link
                                             href={`/blog/${item.slug}`}
                                         >
-                                            <h4 className='mt-[8.25px] font-poppins font-medium text-[17px] text-black line-clamp-2 text-ellipsis'>{item.blogTitle}</h4>
+                                            <h4 className='leading-4 cursor-pointer font-poppins font-medium text-lg text-black line-clamp-2 text-ellipsis'>{item.blogTitle}</h4>
                                         </Link>
+
+
+                                        <p className="line-clamp-4 font-poppins text-xs font-normal text-[#767676] leading-[20px] overflow-hidden text-ellipsis">
+                                            {item?.blogBody?.text}
+                                        </p>
+
+                                        <Link
+                                            href={`/blog/${item.slug}`}
+                                            className='cursor-pointer text-[#FF1645]  w-fit font-poppins items-center text-xs flex'
+                                        >
+                                            <span className='flex font-medium'>Read More</span>
+                                            <ChevronRight size={16} />
+
+                                        </Link>
+
 
 
                                     </div>

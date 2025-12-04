@@ -1,8 +1,6 @@
-import { drop_up_red_icon } from "@/app/assets";
 import clsx from "clsx";
-import Image from "next/image";
 import { useEffect, useState } from "react";
-import { FaLessThan, FaGreaterThan, FaCaretDown } from "react-icons/fa";
+import {  FaCaretDown } from "react-icons/fa";
 
 const quarters = ["Q1", "Q2", "Q3", "Q4"];
 
@@ -16,6 +14,7 @@ interface YearSelectorProps {
   doneButton?:boolean;
   clearButton?:boolean;
   onChange?: (year: number, quarter: string) => void;
+
 }
 
 const YearSelector = ({
@@ -29,9 +28,12 @@ const YearSelector = ({
   onChange,
   wrapperClassName,
 
+
 }: YearSelectorProps) => {
   const [year, setYear] = useState(initialYear || new Date().getFullYear());
   const [selectedQuarter, setSelectedQuarter] = useState(initialQuarter || "");
+
+
 
   useEffect(() => {
     if (onChange) {
@@ -55,6 +57,7 @@ const YearSelector = ({
     setSelectedQuarter(quarter);
   };
 
+
   const handleReset = () => {
     setSelectedQuarter("");
     onDone('', '');
@@ -65,6 +68,9 @@ const YearSelector = ({
     onDone(year, selectedQuarter);
     onClose?.();
   };
+
+
+ 
 
   return (
     <div className={clsx("flex items-center h-[203px] gap-2 pt-[8.25px] rounded-[3px] shadow-md bg-white outline-[#DEDEDE] flex-col w-[223px]",wrapperClassName)}>
@@ -103,7 +109,7 @@ const YearSelector = ({
       { (clearButton || doneButton) &&  <div className="flex w-full h-[29.25px] sm:px-3 gap-3">
        { clearButton &&  <button
           type="button"
-          className="border w-full font-normal font-poppins text-[10.5px] rounded-[3px] text-[#FF1645] border-[#FF1645]"
+          className="border cursor-pointer w-full font-normal font-poppins text-[10.5px] rounded-[3px] text-[#FF1645] border-[#FF1645]"
           onClick={handleReset}
         >
           Reset

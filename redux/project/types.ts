@@ -13,6 +13,11 @@ export type AllProjectsItems = {
   uniqueId: string;
   projectType: ProjectType;
   numberOfBeds: string;
+  faqQuestions?:{
+    question:string,
+    answer:string
+    _id:string
+  }[];
   averageRent?: string, type: string;
   purpose: string;
   reference: string; furnishing: string;

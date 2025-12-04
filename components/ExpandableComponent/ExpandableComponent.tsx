@@ -21,7 +21,8 @@ export interface ExpandableComponentDropdownProps {
   isSelected?: boolean;
   customCloseControl?: ReactNode;
   isOpen?: boolean; // Optional controlled state
-  onToggle?: (open: boolean) => void; // Callback on toggle
+  onToggle?: (open: boolean) => void; // Callback on toggle,
+  clear?: boolean
 }
 
 export interface ExpandableDropdownRef {
@@ -39,6 +40,7 @@ const ExpandableComponentDropdown = forwardRef<ExpandableDropdownRef, Expandable
       customCloseControl,
       isOpen: controlledIsOpen,
       onToggle,
+      clear,
     },
     ref
   ) => {
@@ -66,6 +68,12 @@ const ExpandableComponentDropdown = forwardRef<ExpandableDropdownRef, Expandable
       e.stopPropagation();
       onClear?.();
     };
+
+    useEffect(()=>{
+        if(clear){
+            onClear?.()
+        }
+    },[clear])
 
     useEffect(() => {
       document.addEventListener('mousedown', handleOutsideClick);

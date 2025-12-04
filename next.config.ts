@@ -5,7 +5,6 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 })
 
 const nextConfig: NextConfig = {
-  /* config options here */
   images: {
 
     remotePatterns: [
@@ -19,20 +18,32 @@ const nextConfig: NextConfig = {
         hostname: 'property-seller-com.s3.me-central-1.amazonaws.com',
       }
     ],
-   unoptimized: true,
+    unoptimized: true,
 
-  
+
   },
   productionBrowserSourceMaps: false, // ⛔ disables .map files in production
 
-  // reactStrictMode: false, // optional if causing too many re-renders
-  // turbo: true,
-  // typescript: {
-  //   ignoreBuildErrors: true, // in dev only!
-  // },
+  reactStrictMode: process.env.NODE_ENV === "production", // enabled only in production
+
+  swcMinify: process.env.NODE_ENV === "production",
+
+  compiler: { removeConsole: process.env.NODE_ENV === "production" },
+
+  ...(process.env.NODE_ENV !== "production" && {
+    turbopack: {
+      resolveAlias: {
+        underscore: "lodash",
+      },
+      resolveExtensions: [".mdx", ".tsx", ".ts", ".jsx", ".js", ".json"],
+    },
+    experimental: {
+      swcTraceProfiling: false,
+    },
+  }),
+
 };
 
-// tsc --noEmit --watch
 
 
 

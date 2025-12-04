@@ -2,6 +2,7 @@ import React from 'react'
 import WhyDubai from '@/components/WhyDubai/WhyDubai'
 import { Metadata } from 'next';
 import { baseUrl } from '@/api';
+import Script from 'next/script';
 
 
 // Enable ISR with 60-second revalidation
@@ -22,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
         const data = responseData?.data?.[0] || {};
 
-       
+
         return {
             title: data.metaTitle || "Property Seller - Trusted Off-Plan Real Estate Marketplace",
             description: data.metaDescription || "Learn how Property Seller is transforming real estate with verified listings, expert support, and exclusive off-plan property opportunities in Dubai and beyond.",
@@ -85,9 +86,50 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 
-function page() {
+async function page() {
+
+
+    // Fetch metadata with cache-busting timestamp to ensure fresh data
+    const responseData = await fetch(
+        `${baseUrl}/meta-data?referencePage=why-dubai`,
+        {
+            next: {
+                revalidate: 60 // Revalidate every 10 seconds
+            },
+        }
+    ).then((res) => res.json())
+
+    const dataForMeta = responseData?.data?.[0] || {};
+
+    const scripts = dataForMeta?.richSnippets?.match(
+        /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
+    )
     return (
-        <WhyDubai />
+        <>
+
+
+
+            {scripts?.map((script: string, index: number) => {
+                // Remove outer <script> tags to use innerHTML
+                const innerJson = script
+                    .replace(/<script[^>]*>/g, "")
+                    .replace(/<\/script>/g, "")
+                    .trim();
+
+                return (
+                    <Script
+                        key={index}
+                        id={`json-ld-schema-${index}`}
+                        type="application/ld+json"
+                        dangerouslySetInnerHTML={{ __html: innerJson }}
+                        strategy="afterInteractive" // "beforeInteractive" if needed
+                    />
+                );
+            })}
+
+
+            <WhyDubai />
+        </>
     )
 }
 

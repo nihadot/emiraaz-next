@@ -1,6 +1,7 @@
 import { baseUrl } from '@/api';
 import City from '@/components/City/City'
 import { Metadata } from 'next';
+import Script from 'next/script';
 import React from 'react'
 
 
@@ -84,9 +85,47 @@ export async function generateMetadata(): Promise<Metadata> {
     }
 }
 
-function page() {
+async function page() {
+
+
+       // Fetch metadata with cache-busting timestamp to ensure fresh data
+        const responseData = await fetch(
+            `${baseUrl}/meta-data?referencePage=cities`,
+            {
+                next: {
+                    revalidate: 60 // Revalidate every 10 seconds
+                },
+            }
+        ).then((res) => res.json())
+    const dataForMeta = responseData?.data?.[0] || {};
+
+
+    const scripts = dataForMeta?.richSnippets?.match(
+      /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
+    ) || [];
+
     return (
-        <City />
+        <>
+              {scripts?.map((script: string, index: number) => {
+        // Remove outer <script> tags to use innerHTML
+        const innerJson = script
+          .replace(/<script[^>]*>/g, "")
+          .replace(/<\/script>/g, "")
+          .trim();
+
+        return (
+          <Script
+            key={index}
+            id={`json-ld-schema-${index}`}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: innerJson }}
+            strategy="afterInteractive" // "beforeInteractive" if needed
+          />
+        );
+      })}
+
+<City />
+        </>
     )
 }
 

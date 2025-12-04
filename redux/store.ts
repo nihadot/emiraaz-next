@@ -20,7 +20,8 @@ import { videosApi } from './talks/talksApi';
 import { campaignApi } from './campaign/campaignApi';
 import { quickEnquiryApi } from './quickEnquiry/quickEnquiryApi';
 import { forSaleApi } from './forSale/forSaleApi';
-
+import socketReducer from "./ai-agent-chat/socketSlice";
+import chatReducer from "./ai-agent-chat/chatSlice";
 
 export const store = configureStore({
   reducer: {
@@ -45,6 +46,8 @@ export const store = configureStore({
     [forSaleApi.reducerPath]: forSaleApi.reducer,
     user: userSlice,
     wishlist: wishlistSlice,
+    socket: socketReducer,
+    chat: chatReducer,
 
   },
   middleware: (getDefaultMiddleware) =>

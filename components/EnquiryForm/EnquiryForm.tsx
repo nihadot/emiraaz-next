@@ -15,7 +15,12 @@ interface UserData {
 }
 
 
-function EnquiryForm({ projectId, setEnquiry }: { projectId: string, setEnquiry: (item: any) => void }) {
+function EnquiryForm({ projectId, 
+    onSuccessToShowThankYou,
+    setEnquiry,promotion,promotionId }: { projectId: string, setEnquiry: (item: any) => void,promotion?:boolean,promotionId?:string,
+    onSuccessToShowThankYou?: () => void;
+
+     }) {
         const countryCode = useCountryCode();
 
     const [formData, setFormData] = useState<{
@@ -61,7 +66,8 @@ function EnquiryForm({ projectId, setEnquiry }: { projectId: string, setEnquiry:
             const payload: any = {
                 name: formData.name,
                 number: formData.number,
-                projectId: projectId
+                  ...( !promotion && {projectId: projectId}),
+                ...(promotion && {promoId: promotionId}),
             };
 
 
@@ -76,8 +82,17 @@ function EnquiryForm({ projectId, setEnquiry }: { projectId: string, setEnquiry:
             }
 
 
+            let response = null
 
-            const response = await axios.post(`${baseUrl}/enquiry`, payload);
+       if (promotion) {
+                response = await axios.post(`${baseUrl}/promo-page/enquiry`, payload);
+                if(onSuccessToShowThankYou) onSuccessToShowThankYou()
+
+            } else {
+
+                response = await axios.post(`${baseUrl}/enquiry`, payload);
+            }
+
             if (response?.status === 201 && response?.data?.message && response?.data?.exist) {
                 setEnquiry((prev: any) => ({
                     status: true,
@@ -111,7 +126,7 @@ function EnquiryForm({ projectId, setEnquiry }: { projectId: string, setEnquiry:
             />
 
             <PhoneInput
-                value={countryCode}
+                value={countryCode || '+971'}
                     placeholder='Your Phone Number'
 
                 onChange={handlePhoneChange}

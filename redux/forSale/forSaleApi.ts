@@ -27,7 +27,7 @@ export const forSaleApi = createApi({
       page?: number,
       limit?: number,
       search?: string,
-      propertyType?: string[],
+      propertyType?: string,
       completionType?: string,
       furnishing?: string,
       cities?: string[],

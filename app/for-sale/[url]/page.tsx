@@ -1,7 +1,9 @@
 import { baseUrl } from '@/api';
 import ForSalePage from '@/components/ForSalePage/ForSalePage';
+import { getPortraitBanners } from '@/utils/getPortraitBanners';
 import { getSiteMapData } from '@/utils/getSiteMapData';
 import { Metadata } from 'next';
+import Script from 'next/script';
 import React from 'react'
 
 interface PageProps {
@@ -36,9 +38,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             }
         ).then((res) => res.json())
 
-        console.log(responseData, 'responseData')
+        // console.log(responseData, 'responseData')
 
         const data = responseData?.data || {};
+        
 
         return {
             title: data.metaTitle || "Property Seller - Trusted Off-Plan Real Estate Marketplace",
@@ -112,6 +115,9 @@ async function Page({ params }: PageProps) {
     const res = await fetch(`${baseUrl}/for-sale/${url}?limit=24&page=1`);
     const data = await res.json();
 
+    // console.log(data?.slice(0,1),'res')
+    // console.log(data,'urrlll')
+
 
     // console.log(data,'data')
 
@@ -135,24 +141,64 @@ async function Page({ params }: PageProps) {
         }
     ).then((res) => res.json())
 
-    console.log(responseData, 'responseData')
+    // console.log(responseData, 'responseData')
 
     const dataMeta = responseData?.data || {};
     const error = !responseData.data;
 
+
+    const dataFetchPortraitBanners = await getPortraitBanners();
+
+    // const dataFetchPortraitBanners = await getPortraitBanners();
+
     // if (error) throw new 
-      if (error) throw new Error('Page not available for this request')
+    if (error) throw new Error('Page not available for this request')
 
 
+    // ✅ Fetch counts data
+    const resFetchCities = await fetch(`${baseUrl}/city/names`, { cache: "no-store" });
+    const dataFetchCities = await resFetchCities.json();
+
+    // const dataForMeta = responseData?.data?.[0] || {};
+
+    const scripts = dataMeta?.richSnippets?.match(
+      /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
+    ) || [];
+    
     return (
+        <>
+        {scripts?.map((script: string, index: number) => {
+        // Remove outer <script> tags to use innerHTML
+        const innerJson = script
+          .replace(/<script[^>]*>/g, "")
+          .replace(/<\/script>/g, "")
+          .trim();
+
+        return (
+          <Script
+            key={index}
+            id={`json-ld-schema-${index}`}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: innerJson }}
+            strategy="afterInteractive" // "beforeInteractive" if needed
+          />
+        );
+      })}
+
+
         <ForSalePage
-            emiratesData={dataResEmirates?.data}
-            metaContent={dataMeta?.content}
-            allCounts={dataFetchCount?.data}
-            initialData={data}
-            error={error}
-            siteMap={dataFetchRandomSiteMap?.data}
-        />
+url={url}
+emiratesData={dataResEmirates?.data}
+metaContent={dataMeta?.content}
+allCounts={dataFetchCount?.data}
+// initialData={data}
+error={error}
+siteMap={dataFetchRandomSiteMap?.data}
+portraitBanners={dataFetchPortraitBanners?.data}
+dataFetchCities={dataFetchCities?.data}
+
+/>
+</>
     )
 }
 

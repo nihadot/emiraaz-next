@@ -7,6 +7,7 @@ import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import clsx from 'clsx'
 import { Metadata, ResolvingMetadata } from 'next'
+import Script from 'next/script'
 import React from 'react'
 
 
@@ -105,8 +106,35 @@ async function page() {
     ).then((res) => res.json())
 
     const content = responseData?.data?.[0]?.content
+    const dataForMeta = responseData?.data?.[0] || {};
+
+
+    const scripts = dataForMeta?.richSnippets?.match(
+      /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
+    ) || [];
 
     return (
+        <>
+
+          {scripts?.map((script: string, index: number) => {
+        // Remove outer <script> tags to use innerHTML
+        const innerJson = script
+          .replace(/<script[^>]*>/g, "")
+          .replace(/<\/script>/g, "")
+          .trim();
+
+        return (
+          <Script
+            key={index}
+            id={`json-ld-schema-${index}`}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: innerJson }}
+            strategy="afterInteractive" // "beforeInteractive" if needed
+          />
+        );
+      })}
+
+        
         <main>
             <Container>
 
@@ -115,10 +143,10 @@ async function page() {
                         <div className='h-full w-full flex justify-center items-center'>
                             <MobileHeaderTitle
                                 content='About Us'
-                            />
+                                />
                         </div>
                     }
-                />
+                    />
 
 
 
@@ -129,17 +157,18 @@ async function page() {
             <SectionDivider
                 containerClassName={clsx("mb-[12px] mt-[12px]")}
                 lineClassName="h-[1px] w-full bg-[#DEDEDE]"
-            />
+                />
 
             <Container>
                 <div
                     className='prose prose-sm mb-20 content-wrapper-about !text-black max-w-none font-poppins'
                     dangerouslySetInnerHTML={{ __html: content?.html || '' }}
-                ></div>
+                    ></div>
             </Container>
 
             <Footer />
         </main>
+                    </>
     )
 }
 

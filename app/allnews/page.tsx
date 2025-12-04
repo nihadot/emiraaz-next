@@ -2,6 +2,7 @@ import { baseUrl } from "@/api";
 import News from "@/components/News/News"
 import { getSiteMapData } from "@/utils/getSiteMapData";
 import { Metadata } from "next";
+import Script from "next/script";
 
 // Enable ISR with 60-second revalidation
 export const revalidate = 60;
@@ -89,13 +90,59 @@ export default async function AllNews() {
       throw new Error(`API returned ${res.status} ${res.statusText}`);
     }
 
+
+
     const data = await res.json();
 
-    return <News
+
+     const responseData = await fetch(
+          `${baseUrl}/meta-data?referencePage=referencePage=news-page`,
+          {
+            next: {
+              revalidate: 60 // Revalidate every 10 seconds
+            },
+          }
+        ).then((res) => res.json())
+        const dataForMeta = responseData?.data?.[0] || {};
+    
+
+
+    const scripts = dataForMeta?.richSnippets?.match(
+      /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
+    ) || [];
+
+
+
+    return(
+      <>
+
+
+      {scripts?.map((script: string, index: number) => {
+        // Remove outer <script> tags to use innerHTML
+        const innerJson = script
+          .replace(/<script[^>]*>/g, "")
+          .replace(/<\/script>/g, "")
+          .trim();
+
+        return (
+          <Script
+            key={index}
+            id={`json-ld-schema-${index}`}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: innerJson }}
+            strategy="afterInteractive" // "beforeInteractive" if needed
+          />
+        );
+      })}
+
+      
+       <News
 
       siteMap={dataFetchRandomSiteMap?.data}
 
-      initialData={data.data} />;
+      initialData={data.data} />
+      </>
+    );
   } catch (err) {
     console.error('Error fetching news:', err);
     return <div>Failed to load news.</div>;

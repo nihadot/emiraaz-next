@@ -1,6 +1,7 @@
 import { baseUrl } from '@/api';
 import Blog from '@/components/Blog/Blog'
 import { Metadata } from 'next';
+import Script from 'next/script';
 import React from 'react'
 
 
@@ -95,7 +96,45 @@ export default async function Page() {
 
     const data = await res.json();
 
-    return <Blog initialData={data.data} />;
+        const responseData = await fetch(
+      `${baseUrl}/meta-data?referencePage=blog-page`,
+      {
+        next: {
+          revalidate: 60 // Revalidate every 10 seconds
+        },
+      }
+    ).then((res) => res.json())
+
+    const dataForMeta = responseData?.data?.[0] || {};
+
+   const scripts = dataForMeta?.richSnippets?.match(
+      /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
+    ) || [];
+    return (
+      <>
+
+
+      {scripts?.map((script: string, index: number) => {
+        // Remove outer <script> tags to use innerHTML
+        const innerJson = script
+          .replace(/<script[^>]*>/g, "")
+          .replace(/<\/script>/g, "")
+          .trim();
+
+        return (
+          <Script
+            key={index}
+            id={`json-ld-schema-${index}`}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: innerJson }}
+            strategy="afterInteractive" // "beforeInteractive" if needed
+          />
+        );
+      })}
+
+      <Blog initialData={data.data} />
+      </>
+    );
   } catch (err) {
     console.error('Error fetching blogs:', err);
     return <div>Failed to load blogs.</div>;

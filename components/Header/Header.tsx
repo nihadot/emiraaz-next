@@ -18,13 +18,27 @@ import CurrencySelect from './CurrencySelect';
 import Link from 'next/link';
 import { useDeviceType } from '@/utils/useDeviceType';
 import { usePathname } from 'next/navigation'
+// import { useChat } from '../Chat/ChatProvider';
 
 interface Props {
   logoSection?: React.ReactNode;
+  onLogoClick?: () => void;
 }
 
-function HeaderComponent({
+// const ChatTrigger = () => {
+//   // const { open } = useChat();
 
+//   return (
+//     // <li
+//     //   onClick={open}
+//     //   className={clsx('font-medium text-black font-poppins text-[12px]')}>
+//     //   <button>Ai Agent</button>
+//     // </li>
+//   )
+// }
+
+function HeaderComponent({
+  onLogoClick,
   logoSection = <Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />,
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,7 +49,7 @@ function HeaderComponent({
     // { name: 'Home', link: '/' },
     { name: 'About', link: '/about-property-seller' },
     { name: 'Featured Projects', link: '/featured-projects' },
-    { name: 'Ai Agent', link: '/ai-agent' },
+    // { name: 'Ai Agent', component: <ChatTrigger /> },
     { name: 'Rental Income', link: '/rental-income' },
     { name: 'Donation', link: '/donations' },
   ];
@@ -43,14 +57,20 @@ function HeaderComponent({
   const deviceType = useDeviceType();
 
 
-const menuItems = menuItemsData.filter((item) => {
-  // if (item.link === '/' && pathname === '/') {
-  //   return true; // hide 'Home' when on home page and not mobile
-  // }
-  return true;
-});
+  const menuItems = menuItemsData.filter((item) => {
+    // if (item.link === '/' && pathname === '/') {
+    //   return true; // hide 'Home' when on home page and not mobile
+    // }
+    return true;
+  });
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const handleLogoClick = () => {
+    sessionStorage.removeItem('scroll-position');
+    onLogoClick?.(); // triggers parent reset if provided
+    router.push("/");
+  };
 
 
 
@@ -89,11 +109,7 @@ const menuItems = menuItemsData.filter((item) => {
 
 
         {/* Logo */}
-        <div onClick={() => {
-          sessionStorage.removeItem('scroll-position');
-
-          // router.push("/")
-        }} className="w-[140px] cursor-pointer sm:w-[138.75px] ms-7 sm:ms-0 h-[50px] sm:h-[32.25px] relative ">
+        <div onClick={handleLogoClick} className="w-[140px] cursor-pointer sm:w-[138.75px] ms-7 sm:ms-0 h-[50px] sm:h-[32.25px] relative ">
           {
             deviceType === 'mobile' ?
               logoSection
@@ -154,19 +170,7 @@ const menuItems = menuItemsData.filter((item) => {
 
           {
             <div className="min-laptop:flex  gap-1 hidden">
-              {/* <PrimaryButton
-                type='button'
-                className='flex w-[66.75px] !py-1 items-center gap-[4px]'
-              >
-                <>
-                  <label htmlFor="" className='text-[12px] font-normal  font-poppins'>AED</label>
-                  <div className="w-[28px] flex justify-center  items-center h-[10px] relative">
-                    <IoChevronDown size={14} />
-                  </div>
-                </>
 
-
-              </PrimaryButton> */}
               <CurrencySelect
                 defaultCurrency={currency}
 
@@ -318,8 +322,8 @@ const menuItems = menuItemsData.filter((item) => {
               </PrimaryButton>
 
               <div className="mt-2">
-              
-                <NavMenu items={[{ name: 'Home', link: '/' },...menuItems]} />
+
+                <NavMenu items={[{ name: 'Home', link: '/' }, ...menuItems]} />
               </div>
               <OtherNavMenus />
 
@@ -343,11 +347,11 @@ const menuItems = menuItemsData.filter((item) => {
 
 
 
-export default function Header(prop:Props) {
+export default function Header(prop: Props) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <HeaderComponent 
-      {...prop}
+      <HeaderComponent
+        {...prop}
       />
     </Suspense>
   );

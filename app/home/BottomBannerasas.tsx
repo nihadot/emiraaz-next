@@ -10,7 +10,7 @@ function BottomBanner({}) {
     <div className='my-[111px] gap-1 md:flex hidden items-center justify-between'>
         <div className="flex flex-col">
             <h4 className='text-[27.75px] pb-[5.25px] font-semibold font-poppins'>Join Our Network of Freelance Agents</h4>
-            <p className='text-[12px] pb-[5.25px] font-normal font-poppins '>Empower your real estate career with PropertySeller. Register now for an 80/20 commission split, work on your own terms, and confidently close deals on our platform!</p>
+            <p className='text-[12px] pb-[5.25px] font-normal font-poppins '>Register now and work independently as a Freelance Agent. Close deals confidently using our trusted platform and access real listings from top developers!</p>
            <Link
            href={'/login'}
            >

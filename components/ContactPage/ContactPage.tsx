@@ -136,7 +136,7 @@ function ContactPage({ data }: Props) {
 
                             <div className="flex flex-col mt-1 justify-start gap-1">
                                 <label htmlFor="" className='text-sm font-poppins font-medium'>Email</label>
-                                <label htmlFor="" className='text-sm font-poppins font-normal'>example@gmail.com</label>
+                                <label htmlFor="" className='text-sm font-poppins font-normal'>hello@propertyseller.com</label>
                             </div>
                         </div>
 

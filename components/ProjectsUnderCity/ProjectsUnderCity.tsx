@@ -35,6 +35,9 @@ import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle';
 type Props = {
     id: string;
     siteMap: any[];
+        videoAds: AllSmallVideoItems[],
+
+
 }
 
 export type FiltersState = {
@@ -48,7 +51,7 @@ export type FiltersState = {
 };
 
 
-export default function ProjectsUnderCityFunction({ id,siteMap }: Props) {
+export default function ProjectsUnderCityFunction({ id,siteMap,videoAds }: Props) {
 
 
 
@@ -88,6 +91,7 @@ export default function ProjectsUnderCityFunction({ id,siteMap }: Props) {
         name: string;
         _id: string;
     }>();
+    
     const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate, slug: '1', });
     const { data: emirateDetails } = useGetEmirateDetalsByCityIdQuery({ slug: id });
     const handleSelect = useMemo(() => ({
@@ -437,20 +441,25 @@ export default function ProjectsUnderCityFunction({ id,siteMap }: Props) {
                             {filters.page && filters.page <= 1 && (smallVideoAds && smallVideoAds.length > 0 ?
                                 <div className={clsx("w-full mb-[12px] relative flex")}>
                                     {/* <div className={clsx("w-full mb-[12px] relative",filters?.page && filters?.page > 1 ? 'hidden':'flex')}> */}
-                                    <VideoPreview
-                                        projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
-                                        src={smallVideoAds?.[0]?.videoFile?.url?.url || ''}
-                                    />
+                                     <VideoPreview
+                                     id={smallVideoAds?.[0]?._id}
+                                            alt={videoAds?.[0]?.name || ''}
+                                            thumbnailUrl={videoAds?.[0]?.thumbnail?.webp?.url || ''}
+                                                projectSlug={videoAds?.[0]?.projectDetails?.slug || ''}
+                                                videoUrl={videoAds?.[0]?.videoFile?.url?.url || ''}
+                                            />
                                 </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>)
                             }
 
 
 
-                            {true && <RecommendedText
-                                title="Recommended For You"
-                               items={shuffle(siteMap)?.slice(0, 6)}
-                                 
-                            />}
+                            {true && <Recommendations siteMap={siteMap}>
+                                            {(items) => (
+                                                <>
+                                                    <RecommendedText title="Recommended For You" items={items} />
+                                                </>
+                                            )}
+                                        </Recommendations>}
 
                             <div className="sticky top-3 left-0">
 
@@ -460,16 +469,14 @@ export default function ProjectsUnderCityFunction({ id,siteMap }: Props) {
 
 
                                 {true && <>
-                                    <RecommendedText
-                                        title="Recommended For You"
-                               items={shuffle(siteMap)?.slice(0, 6)}
-                                        
-                                    />
-                                    <RecommendedText
-                                        title="Popular Searches"
-                               items={shuffle(siteMap)?.slice(0, 6)}
-                                          
-                                    />
+                                    <Recommendations siteMap={siteMap}>
+                                            {(items) => (
+                                                <>
+                                                    <RecommendedText title="Recommended For You" items={items} />
+                                                    <RecommendedText title="Popular Searches" items={items} />
+                                                </>
+                                            )}
+                                        </Recommendations>
                                 </>}
 
 

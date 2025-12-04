@@ -44,7 +44,7 @@ import PaginationNew from '../PaginationNew/PaginationNew';
 import { FiltersState } from '../types';
 import Image from 'next/image';
 import { big_white_logo_icon, ps_logo } from '@/app/assets';
-import { CountItem, useViewAllCountsQuery } from '@/redux/news/newsApi';
+import { CountItem } from '@/redux/news/newsApi';
 import { parsePrice } from '@/utils/parsePrice';
 import { useForceScrollRestore, useScrollToTopOnRefresh } from '@/hooks/useScrollRestoration';
 import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
@@ -56,6 +56,8 @@ import HomePageContent from './HomePageContent';
 import { EmirateNames } from '@/redux/emirates/types';
 import { CityNames } from '@/redux/cities/types';
 import { PortraitBanner } from '@/redux/portraitBannerAd/types';
+import NoDataFound from '../Empty/NoDataFound';
+import { Pagination } from '@/utils/types';
 type PaymentPlan = {
     label?: string;
     value?: string;
@@ -71,10 +73,26 @@ type Props = {
     allCounts: CountItem
     initialCities: CityNames[],
     videoAds: AllSmallVideoItems[],
-    initialData: AllProjectsItems[],
-    portraitBanners: PortraitBanner,
+    initialData: {
+        data: AllProjectsItems[]
+        pagination: Pagination
+    },
+    portraitBanners: PortraitBanner[],
     siteMap: any[],
-    content: object
+    content: object,
+    initialValues: {
+        emirate: string;
+        cities: string[];
+        propertyCategoryType: string;
+        propertyCategoryStatus: string;
+        propertyType?: string;
+        completionType?: string;
+        qtr?: string,
+        year: number | '',
+        paymentPlan?: string,
+        furnishied?: string,
+        discount?: string,
+    }
 }
 
 
@@ -86,12 +104,11 @@ function HomePage({
     allCounts,
     initialData,
     portraitBanners,
+    // portraitBanners,
     content,
     siteMap,
+    initialValues,
 }: Props) {
-
-    // console.log(content,'contentcontentcontent')
-
 
     useForceScrollRestore();
     useScrollToTopOnRefresh();
@@ -126,9 +143,9 @@ function HomePage({
         { skip: !userId } // <- only call if userId is available
     );
 
-    const [smallVideoAds, setSmallVideoAds] = useState<AllSmallVideoItems[]>();
+    // const [smallVideoAds, setSmallVideoAds] = useState<AllSmallVideoItems[]>();
 
-    const { data: smallVideoAdsResponse } = useViewAllSmallVideosQuery({});
+    // const { data: smallVideoAdsResponse } = useViewAllSmallVideosQuery({});
 
     const dispatch = useDispatch();
 
@@ -144,13 +161,13 @@ function HomePage({
 
     }, [wishlistDataItem]);
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        if (smallVideoAdsResponse?.data) {
-            // console.log(smallVideoAdsResponse?.data, 'smallVideoAdsResponse')
-            setSmallVideoAds(smallVideoAdsResponse?.data);
-        }
-    }, [smallVideoAdsResponse]);
+    //     if (smallVideoAdsResponse?.data) {
+    //         // console.log(smallVideoAdsResponse?.data, 'smallVideoAdsResponse')
+    //         setSmallVideoAds(smallVideoAdsResponse?.data);
+    //     }
+    // }, [smallVideoAdsResponse]);
 
 
     useEffect(() => {
@@ -235,7 +252,9 @@ function HomePage({
         skip: false,
     });
 
-    const pagination = data?.pagination;
+    const projects = data?.data || initialData?.data
+
+    const pagination = data?.pagination || initialData?.pagination;
 
     const [clear, setClear] = useState(false);
     const [EnquiryForm, setEnquiryForm] = useState({ status: false, id: '', count: 0 });
@@ -252,37 +271,7 @@ function HomePage({
         return () => clearTimeout(handler);
     }, [filters.search]);
 
-
-
-    // const { data: allCounts } = useViewAllCountsQuery();
-    const { data: allProjectsCounts } = useFetchAllProjectsCountQuery();
-    // const { data: emiratesData } = useFetchAllEmirateNamesQuery();
-    const { data: portraitBannerData } = useFetchAllPortraitBannersQuery({});
-    const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
-    // const { data: projects } = useFetchAllProjectsQuery({ ...queryParams }, {
-    //     skip: false,
-    //     // @ts-expect-error — We know this line might throw a TS error due to initialData
-    //     initialData,
-    // });
-
-
-    const projects = data?.data || initialData;
-
-
-    // projects?.data
-    // Memoized data mapping
-    // const emirateOptions = useMemo(() => {
-    //     const mappedOptions = emiratesData?.data.map((item) => ({
-    //         label: item.name,
-    //         value: item._id,
-    //         count: 100,
-    //     })) || [];
-
-    //     return [
-    //         { label: "All", value: "all" }, // <--- Add "All" option at the top
-    //         ...mappedOptions,
-    //     ];
-    // }, [emiratesData]);
+    //  const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
 
     const emirateOptions = useMemo(() => {
         const preferredOrder = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ras Al Khaimah', 'Ajman', 'Umm Al-Quwain'];
@@ -291,6 +280,7 @@ function HomePage({
             label: item.name,
             value: item._id,
             count: item.count,
+            slug: item.slug,
         })) || [];
 
         const sortedOptions = mappedOptions.sort((a, b) => {
@@ -308,27 +298,40 @@ function HomePage({
             return a.label.localeCompare(b.label);
         });
 
+        // console.log(sortedOptions,'sortedOptions')
+
         return [
-            { label: "All", value: "all" }, // Always first
+            {
+                label: "All", value: "all",
+                count: sortedOptions.reduce((a, b) => a + b.count, 0)
+                // count: allCounts?.propertyTypes?.reduce((a, b) => a + b, 0)
+            },
             ...sortedOptions,
         ];
     }, [emiratesData]);
 
+    // console.log(allCounts,'000')
+
 
     const cityOptions = useMemo(() => {
-        const mappedOptions = cities?.data.map((item) => ({
+        const mappedOptions = initialCities?.map((item) => ({
             label: item.name,
             value: item.name,
             count: item.count,
+            slug: item.slug,
         })) || [];
 
         return [
-            { label: "All", value: "all", count: 0 }, // <--- Add "All" option at the top
+            {
+                label: "All", value: "all",
+                count: mappedOptions.reduce((a, b) => a + b.count, 0)
+
+            }, // <--- Add "All" option at the top
             ...mappedOptions,
         ];
-    }, [cities]);
+    }, [initialCities]);
 
-    const banners = portraitBannerData?.data || [];
+    const banners = portraitBanners || [];
     const shuffledImages = useMemo(() => shuffle(banners), [banners]);
 
     const shuffleArray = (arr: any[]) => {
@@ -345,37 +348,6 @@ function HomePage({
         setFilters(prev => ({ ...prev, search: event.target.value }));
     }, []);
 
-    const handleChangeCities = useCallback((option: any[]) => {
-        if (option.length === 0) {
-            setFilters(prev => ({ ...prev, cities: [] }));
-            return;
-        }
-        setFilters(prev => ({ ...prev, cities: option.map((item) => item.value) }));
-    }, []);
-
-    const handleSelect = useMemo(() => ({
-        emirate: (option: any) => setFilters(prev => ({ ...prev, emirate: option?.value || '' })),
-        propertyType: (option: any) => setFilters(prev => ({ ...prev, propertyType: option?.value || '' })),
-        propertyTypeSecond: (option: any) => setFilters(prev => ({ ...prev, propertyTypeSecond: option })),
-        completionType: (option: any) => setFilters(prev => ({ ...prev, completionType: option })),
-        productTypeOptionFirst: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionFirst: option })),
-        projectTypeFirst: (option: any) => setFilters(prev => ({ ...prev, projectTypeFirst: option })),
-        projectTypeLast: (option: any) => setFilters(prev => ({ ...prev, projectTypeLast: option })),
-        productTypeOptionLast: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionLast: option })),
-        handoverDate: (data: any) => setFilters(prev => ({ ...prev, handoverDate: data })),
-        projectType: (option: any) => setFilters(prev => ({ ...prev, projectType: option })),
-        paymentPlan: (option: any) => setFilters(prev => ({ ...prev, paymentPlan: option?.value || '' })),
-        furnishType: (option: any) => setFilters(prev => ({ ...prev, furnishType: option?.value || '' })),
-        discount: (option: any) => setFilters(prev => ({ ...prev, discount: option?.value || '' })),
-        bedAndBath: (option: any) => setFilters(prev => ({ ...prev, bedAndBath: option?.value || '' })),
-        maxPrice: (option: any) => setFilters(prev => ({ ...prev, maxPrice: option || '' })),
-        minSqft: (option: any) => setFilters(prev => ({ ...prev, minSqft: option || '' })),
-        maxSqft: (option: any) => setFilters(prev => ({ ...prev, maxSqft: option || '' })),
-        minPrice: (option: any) => setFilters(prev => ({ ...prev, minPrice: option || '' })),
-        beds: (option: any) => setFilters(prev => ({ ...prev, beds: option || '' })),
-        bath: (option: any) => setFilters(prev => ({ ...prev, bath: option || '' })),
-    }), []);
-
 
     const totalPages = pagination?.totalPages || 1;
     const totalRecords = pagination?.totalRecords;
@@ -386,8 +358,6 @@ function HomePage({
         const currency = searchParams.get('currency');
 
         const slug = item.slug;
-
-        // Build query string with currency if available
         const queryString = currency ? `?currency=${currency}` : '';
 
         sessionStorage.setItem('scroll-position', window.scrollY.toString());
@@ -402,16 +372,12 @@ function HomePage({
         });
     }, []);
 
-    const handleFilterModal = useCallback(() => {
-        setFilterModel(prev => !prev);
-    }, []);
-
-
-    const [isPropertyType, setIsPropertyType] = useState('all');
+    const handleFilterModal = () => {
+        router.push('/buy/filter')
+    }
 
 
     const handleClear = useCallback(() => {
-        // alert('aler')
         setFilters({
             page: 1,
             search: "",
@@ -420,7 +386,7 @@ function HomePage({
             // productTypeOptionLast: 'all',
             // developers: [],
             // facilities: [],
-            propertyType: [],
+            propertyType: '',
             // propertyTypeSecond: "all",
             emirate: "",
             // completionType: "",
@@ -438,29 +404,30 @@ function HomePage({
             // beds: ''
             // ,
         });
-        setClear(true);
-        setTimeout(() => setClear(false), 100);
+
+        const url = new URL(window.location.href);
+
+        url.searchParams.delete('page');
+
+        window.history.pushState({}, '', url);
+        
+        // setClear(true);
+        // setTimeout(() => setClear(false), 100);
     }, []);
 
 
-    const [allProjects, setAllProjects] = useState<AllProjectsItems[]>();
     const propertyTypesCondition = !((filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'residential') || (filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'commercial') || (filters?.projectType === 'off-plan-secondary' && filters?.propertyTypeSecond === 'commercial') || (filters?.projectType === 'off-plan-resale' && filters?.propertyTypeSecond === 'commercial') || (filters?.projectType === 'off-plan-projects' && filters?.propertyTypeSecond === 'commercial'));
     const furnishTypesCondition = (!((filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'residential') || (filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'commercial')))
 
 
-    useEffect(() => {
-        if (projects) {
-            setAllProjects(projects);
-        }
-    }, [projects]);
     const lastCitySlug = filters.cities?.[filters.cities.length - 1];
 
     const isMatchCity = cityOptions.find((item: any) => item.slug === lastCitySlug);
 
 
-    const [defaultEmirate, setDefaultEmirate] = useState<string>('');
+    // const [defaultEmirate, setDefaultEmirate] = useState<string>('all');
     const [defaultCities, setDefaultCities] = useState<any>('');
-    const [defaultPropertyType, setDefaultPropertyType] = useState<string>('');
+    const [defaultPropertyType, setDefaultPropertyType] = useState<string>('all');
     const [defaultProjectStage, setDefaultProjectStage] = useState<string>('');
     const [defaultCompletionType, setDefaultCompletionType] = useState<string>('all');
 
@@ -475,35 +442,6 @@ function HomePage({
 
     const currentSegments = pathname.split('/').filter(Boolean); // e.g. ['buy', 'abu-dhabi', 'off-plan-projects']
 
-    // useEffect(() => {
-    //     const urlParams = new URLSearchParams(window.location.search);
-    //     // const propertyType = urlParams.get('property-type');
-    //     const emirate = urlParams.get('emirate');
-    //     const cities = urlParams.get('cities');
-    //     const toConvertedCitiesParams = cities?.split(',')
-    //     const completionType = urlParams.get('completion-type') ? urlParams.get('completion-type') : 'all';
-
-
-
-    //     // if (propertyType) {
-    //     //     setDefaultPropertyType(propertyType)
-    //     // }
-    //     // if (emirate) {
-    //     //     setDefaultEmirate(emirate)
-    //     // }
-    //     if (toConvertedCitiesParams) {
-    //         setDefaultCities(toConvertedCitiesParams)
-    //     }
-
-    //     if (completionType) {
-    //         setDefaultCompletionType(completionType)
-    //     }
-
-
-    // }, []);
-
-
-
     useEffect(() => {
         if (pathname === '/') {
             setDefaultProjectStage('all')
@@ -515,70 +453,6 @@ function HomePage({
         window.addEventListener('resize', setRealVH);
 
     }, []);
-
-    function updateUrl({ emirate, propertyFirst, propertySecond }: { emirate?: string, propertyFirst?: string, propertySecond?: string }) {
-        const currentSegments = pathname.split('/').filter(Boolean); // e.g. ['buy', 'abu-dhabi', 'off-plan-projects']
-        const urlParams = new URLSearchParams(searchParams.toString());
-        const cities = urlParams.get('cities');
-        const toConvertedCitiesParams = cities?.split(',')
-
-        const segments = [...currentSegments];
-        const isExistEmirate = segments.find((seg) =>
-            emirateOptions.some((item: any) => item.slug === seg)
-        );
-
-
-        const isExistPropertyType = segments.find((seg) =>
-            productTypeOptionFirstItems.some((item: any) => item.value === seg)
-        );
-
-        const isPropertyTypeSecond = segments.find((seg) =>
-            propertyTypeSecond.some((item: any) => item.value === seg)
-        );
-
-        let fullUrl = '/buy';
-
-
-
-        if (emirate === "all") {
-            fullUrl = `/buy/${isExistPropertyType ? isExistPropertyType : ''}/${isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
-        }
-
-        if (emirate !== 'all' && emirate) {
-            fullUrl += `/${emirate}/${propertyFirst ? propertyFirst : isExistPropertyType ? isExistPropertyType : ''}/${isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
-        }
-
-        if (propertyFirst) {
-            fullUrl += `/${isExistEmirate ? isExistEmirate : ''}/${propertyFirst ? propertyFirst : isExistPropertyType ? isExistPropertyType : ''}/${isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
-        }
-
-        if (propertySecond !== 'all' && propertySecond) {
-            // fullUrl = `/buy/${propertySecond}`;
-            fullUrl += `/${isExistEmirate ? isExistEmirate : ''}/${isExistPropertyType ? isExistPropertyType : ''}/${propertySecond ? propertySecond : isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
-
-        }
-        if (propertySecond === 'all') {
-            fullUrl = `/buy/${isExistEmirate ? isExistEmirate : ''}/${isExistPropertyType ? isExistPropertyType : ''}`;
-        }
-
-
-        fullUrl += `?${urlParams.toString()}`
-
-        // console.log(urlParams, 'urlParamsurlParams')
-
-        if (toConvertedCitiesParams) {
-            setDefaultCities(toConvertedCitiesParams)
-
-        }
-
-        if (pathname === '/') {
-            fullUrl = '/'
-        }
-
-        // console.log(fullUrl)
-
-        window.history.pushState({}, '', fullUrl);
-    }
 
     const totalPropertyTypesCounts = allCounts?.propertyTypes?.map(item => item?.count).reduce((a, b) => a + b, 0)
 
@@ -641,14 +515,19 @@ function HomePage({
     }
     const segments = [...currentSegments];
 
-    const isExistPropertyCategoryType = segments.find((seg) =>
-        productTypeOptionFirstItems.some((item: any) => item.value === seg)
-    );
 
-    // const totalRecords = pagination?.totalRecords;
-    // console.log(propertyTypesLists,'propertyTypesLists')
+
     const allTypes = propertyTypesLists?.getAll()
-    // console.log(allTypes,'allTypes')
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const page = urlParams.get('page');
+
+        if (page) {
+            setFilters(prev => ({ ...prev, page: parseInt(page) }))
+        }
+    }, [filters.page]);
+
 
     if (loading) {
         return (
@@ -665,7 +544,6 @@ function HomePage({
         )
     }
 
-
     return (
 
         <>
@@ -677,11 +555,21 @@ function HomePage({
                 />
 
 
-                <div className=" min-h-screen  w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
+                <div className=" min-h-screen  w-full lg:overflow-visible font-(family-name:--font-geist-sans)">
                     <Header
+
+                        onLogoClick={() => {
+                            const newPage = 1
+                            const url = new URL(window.location.href);
+                            url.searchParams.set('page', newPage.toString());
+                            window.history.pushState({}, '', url);
+                            setFilters(prev => ({ ...prev, page: 1 }));
+                        }}
+
                         logoSection={
                             <Link
                                 href={'/'}
+
                             >
                                 <Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />
                             </Link>
@@ -695,7 +583,7 @@ function HomePage({
                         <section className="  grid grid-cols-1 w-full  lg:grid-cols-[19.8%_9.5%_9.5%_37.5%_21%] gap-2">
 
 
-                            <div className="md:h-[48px] h-[40px]">
+                            <div className="md:h-[48px] h-10">
                                 <SearchNew
 
                                     value={filters?.search || ''}
@@ -705,25 +593,21 @@ function HomePage({
                             </div>
 
 
+
                             <div className="hidden lg:flex h-[48px]">
                                 <SelectLatest
                                     listContainerUlListContainerClassName="w-[200px]"
                                     search
-                                    defaultValue={emirateOptions?.find((item) => item?.label === defaultEmirate)}
+                            defaultValue={emirateOptions?.find((item: any) => item?.slug === initialValues?.emirate)}
                                     clearSelection={clear}
                                     label="Emirates"
                                     options={emirateOptions}
                                     onSelect={(e) => {
-                                        // const url = new URL(window.location.href);
-                                        // if (e?.value) {
-                                        //     url.searchParams.set('emirate', e?.label ?? '');
-                                        // } else {
-                                        //     url.searchParams.delete('emirate');
-                                        // }
-                                        // const newUrl = `/buy/${url.pathname}?${url.searchParams.toString()}`;
-                                        // window.history.pushState({}, '', newUrl);
-                                        // handleSelect.emirate(e)
-                                        router.push(`/buy/${e?.slug}/off-plan-projects`)
+
+                                        if (e) {
+                                            window.location.href = `/buy/${e?.slug}`
+                                        }
+
                                     }}
                                 />
                             </div>
@@ -732,27 +616,13 @@ function HomePage({
 
                             <div className="hidden lg:flex h-[48px]">
                                 <SelectLatest
-                                    defaultValueMultiple={cityOptions?.filter((item) => defaultCities?.includes(item.label))}
                                     search
-                                    multiple
-                                    onSelectMultiple={(e) => {
-                                        const url = new URL(window.location.href);
+                            defaultValueMultiple={cityOptions?.filter((item: any) => initialValues?.cities?.includes(item.slug))}
+
+                                    onSelect={(e) => {
 
                                         if (e) {
-
-                                            if (e && e.length > 0) {
-
-                                                url.searchParams.set('cities', e?.map((item) => item.label).join(','));
-                                            } else {
-                                                url.searchParams.delete('cities');
-                                            }
-                                            const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                            // window.history.pushState({}, '', newUrl);
-
-                                            handleChangeCities(e);
-                                            router.push(`/buy/dubai/off-plan-projects/${newUrl}`)
-
-
+                                            router.push(`/buy?cities=${e?.slug}`)
                                         }
 
 
@@ -761,6 +631,7 @@ function HomePage({
                                     listContainerUlListContainerClassName="w-[220px]"
                                     label="Cities"
                                     options={cityOptions}
+
 
                                 />
                             </div>
@@ -773,47 +644,35 @@ function HomePage({
                             {/* Mobile */}
                             <div className="flex lg:hidden w-full gap-2">
 
-                                <div className=" h-[40px] w-full">
+                                <div className=" h-10 w-full">
                                     <SelectLatest
                                         listContainerUlListContainerClassName="w-[200px]"
                                         search
-                                        defaultValue={emirateOptions?.find((item) => item?.label === defaultEmirate)}
+                            defaultValue={emirateOptions?.find((item: any) => item?.slug === initialValues?.emirate)}
                                         clearSelection={clear}
                                         label="Emirates"
                                         options={emirateOptions}
                                         onSelect={(e) => {
-                                            router.push(`/buy/${e?.slug}/off-plan-projects`)
+                                            if (e) {
+                                                router.push(`/buy/${e?.slug}`)
+                                            }
 
                                         }}
                                     />
                                 </div>
 
 
-                                <div className=" h-[40px] w-full">
+                                <div className=" h-10 w-full">
                                     <SelectLatest
 
-                                        defaultValueMultiple={cityOptions?.filter((item) => defaultCities?.includes(item.label))}
+                            defaultValueMultiple={cityOptions?.filter((item: any) => initialValues?.cities?.includes(item.slug))}
                                         search
-                                        multiple
-                                        onSelectMultiple={(e) => {
-                                            const url = new URL(window.location.href);
+                                        // m
+                                        onSelect={(e) => {
 
-                                            // if (e) {
-
-                                            //     if (e && e.length > 0) {
-
-                                            //         url.searchParams.set('cities', e?.map((item) => item.label).join(','));
-                                            //     } else {
-                                            //         url.searchParams.delete('cities');
-                                            //     }
-                                            const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                            //     window.history.pushState({}, '', newUrl);
-
-                                            //     handleChangeCities(e);
-                                            // router.push(`/buy/dubai/${newUrl}`)
-
-                                            // }
-                                            router.push(`/buy/dubai/off-plan-projects/${e}`)
+                                            if (e) {
+                                            router.push(`/buy?cities=${e?.slug}`)
+                                            }
 
 
                                         }}
@@ -828,23 +687,15 @@ function HomePage({
 
 
                             {/* Done */}
-                            {propertyCategoryType.length > 0 ? <div className="h-[40px] sm:h-[48px]">
+                            {propertyCategoryType.length > 0 ? <div className="h-10 sm:h-[48px]">
                                 <SwitchSelector
                                     containerClassName="sm:!gap-1"
                                     onSelect={(e) => {
-
-
-                                        const url = new URL(window.location.href);
                                         if (e === 'off-plan-projects') {
                                             return;
                                         }
-                                        // updateUrl({ propertyFirst: e });
-                                        // handleSelect.projectTypeFirst(e);
-                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                        //     window.history.pushState({}, '', newUrl);
 
-                                        //     handleChangeCities(e);
-                                        router.push(`/buy/${e}/${newUrl}`)
+                                        router.push(`/buy/${e}`)
 
                                     }}
                                     defaultValue={propertyCategoryType?.[0]?.value}
@@ -855,33 +706,20 @@ function HomePage({
 
 
 
-                            <div className="flex gap-2 h-[40px] sm:h-[48px]">
+                            <div className="flex gap-2 h-10 sm:h-[48px]">
                                 <SwitchSelector
                                     containerClassName="sm:!gap-1"
                                     onSelect={(e) => {
-                                        // updateUrl({ propertySecond: e });
-                                        // handleSelect.propertyTypeSecond(e);
-                                        // setIsPropertyType(e);
                                         if (e === 'all') {
                                             return;
                                         }
-                                        const url = new URL(window.location.href);
-
-                                        // updateUrl({ propertyFirst: e });
-                                        // handleSelect.projectTypeFirst(e);
-                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                        //     window.history.pushState({}, '', newUrl);
-                                        setIsPropertyType(e);
-
-                                        //     handleChangeCities(e);
-                                        router.push(`/buy/off-plan-projects/${e}/${newUrl}`)
+                                        router.push(`/buy/off-plan-projects/${e}`)
                                     }
                                     }
-                                    // onSelect={handleSelect.propertyTypeSecond}
                                     defaultValue={propertyTypeSecond[0].value}
                                     options={propertyTypeSecond}
                                 />
-                                <button onClick={handleFilterModal} className="bg-red-600/10 rounded-[3px] flex justify-center items-center  border-none w-[55px] lg:hidden h-[40px]">
+                                <button onClick={handleFilterModal} className="bg-red-600/10 rounded-[3px] flex justify-center items-center  border-none w-[55px] lg:hidden h-10">
 
                                     <HiOutlineAdjustmentsHorizontal
                                         className="w-[22px] h-[22px]"
@@ -912,30 +750,16 @@ function HomePage({
                                     label="Property Types"
                                     options={
                                         [
-                                            ...(isPropertyType === 'residential' || isPropertyType === 'commercial' ? propertyTypesLists.default : []),
-                                            ...(isPropertyType === 'residential' ? propertyTypesLists.residential : []),
-                                            ...(isPropertyType === 'commercial' ? propertyTypesLists.commercial : []),
-                                            ...((isPropertyType === 'all') ? [
-                                                ...propertyTypesLists.default,
-                                                ...propertyTypesLists.residential,
-                                                ...propertyTypesLists.commercial,
-                                            ] : []),
+                                            ...propertyTypesLists.default,
+                                            ...propertyTypesLists.residential,
+                                            ...propertyTypesLists.commercial,
+
                                         ]
                                     }
                                     onSelect={(e) => {
-                                        const url = new URL(window.location.href);
-                                        // if (e?.value) {
-                                        //     url.searchParams.set('property-type', e?.label ?? '');
-                                        // } else {
-                                        //     url.searchParams.delete('property-type');
-                                        // }
-                                        // if(e?.value === 'all'){
-                                        //     return;
-                                        // }
-                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                        // window.history.pushState({}, '', newUrl);
-                                        // handleSelect.propertyType(e)
-                                        router.push(`/buy/dubai/off-plan-projects/${newUrl}`)
+                                        if (e) {
+                                            router.push(`/buy?pt=${e.value}`)
+                                        }
 
                                     }}
                                     clearSelection={clear}
@@ -955,23 +779,12 @@ function HomePage({
                                 <SwitchSelector
                                     defaultValue={defaultCompletionType}
                                     onSelect={(e) => {
-
-
                                         const url = new URL(window.location.href);
-                                        // if (e == 'all') {
-                                        //     url.searchParams.delete('completion-type');
-                                        // } else {
-                                        //     url.searchParams.set('completion-type', e ?? '');
-                                        // }
-
-                                        if (e === 'all') {
-                                            return;
+                                        if (e !== 'all') {
+                                            url.searchParams.set('ct', e);
+                                            router.push(`/buy?${url.searchParams.toString()}`);
                                         }
-                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                        // window.history.pushState({}, '', newUrl);
-                                        router.push(`/buy/dubai/off-plan-projects/${e}`)
 
-                                        // handleSelect.completionType(e)
                                     }}
                                     clearSelection={clear}
                                     options={CompletionTypes}
@@ -987,6 +800,7 @@ function HomePage({
 
 
                                 <ExpandableComponentDropdown
+                                    clear={clear}
                                     isOpen={showYearSelector}
                                     onToggle={() => setShowYearSelector(prev => !prev)}
                                     label={(filters.handoverDate?.year || filters.handoverDate?.quarter) ? (`${filters.handoverDate?.year}-${filters.handoverDate?.quarter}`) : "Handover"}
@@ -997,27 +811,33 @@ function HomePage({
                                     }}
                                     customCloseControl={<button className="text-xs text-red-600">X</button>}
                                 >
-                                    <Link
-                                        href={`/buy/dubai/off-plan-projects`}
-                                    >
-                                        <SelectHandoverDate
-                                            initialYear={filters.handoverDate?.year ? filters.handoverDate?.year : 2025}
-                                            initialQuarter={filters.handoverDate?.quarter ? filters.handoverDate?.quarter : "Q2"}
 
-                                            onDone={(year, quarter) => {
-                                                // handleSelect.handoverDate({ quarter, year })
-                                                router.push(`/buy/dubai/off-plan-projects`)
+                                    <SelectHandoverDate
+                                        initialYear={filters.handoverDate?.year ? filters.handoverDate?.year : 2025}
+                                        initialQuarter={filters.handoverDate?.quarter ? filters.handoverDate?.quarter : "Q2"}
 
-                                            }}
-                                            onClose={() => setShowYearSelector(false)}
-                                            reset={() => {
+                                        onDone={(year, quarter) => {
+                                            const url = new URL(window.location.href);
 
-                                            }}
-                                            onChange={(year, quarter) => {
+                                            if (year || quarter) {
+                                        url.searchParams.set('y', year + '');
+                                        url.searchParams.set('q', quarter.toLowerCase());
+                                                router.push(`/buy?${url.searchParams.toString()}`);
+                                            }
 
-                                            }}
-                                        />
-                                    </Link>
+                                        
+                                        }}
+
+
+                                        onClose={() => setShowYearSelector(false)}
+                                        reset={() => {
+
+                                        }}
+                                        onChange={(year, quarter) => {
+
+                                        }}
+                                    />
+
                                 </ExpandableComponentDropdown>
 
                             </div>
@@ -1046,6 +866,7 @@ function HomePage({
                                     options={[{
                                         value: "all",
                                         label: "All",
+                                        count: allCounts?.paymentPlans?.reduce((acc, curr) => acc + curr.count, 0),
                                     }, {
                                         value: "on-handover",
                                         label: "On Handover",
@@ -1058,15 +879,14 @@ function HomePage({
                                     },]}
                                     onSelect={(e) => {
                                         const url = new URL(window.location.href);
-                                        if (e?.value) {
-                                            url.searchParams.set('payment-plan', e?.label ?? '');
-                                        } else {
-                                            url.searchParams.delete('payment-plan');
+                                        // console.log(e,'Event')
+                                        if (e) {
+                                    url.searchParams.set('pp', e.value);
+                                            router.push(`/buy/?${url.searchParams.toString()}`);
                                         }
                                         // window.history.pushState({}, '', newUrl);
                                         // handleSelect.paymentPlan(e)
-                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                        router.push(`/buy/dubai/off-plan-projects/`)
+                                        // const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
                                     }}
                                 />
                             </div>
@@ -1088,6 +908,7 @@ function HomePage({
                                     options={[{
                                         value: "all",
                                         label: "All",
+                                        count: allCounts?.discount?.reduce((acc, curr) => acc + curr.count, 0),
                                     },
                                     {
                                         value: "with-discount",
@@ -1102,14 +923,16 @@ function HomePage({
                                     },]}
                                     onSelect={(e) => {
                                         const url = new URL(window.location.href);
+                                        // console.log(e, 'eee')
                                         if (e?.value) {
-                                            url.searchParams.set('discount', e?.label ?? '');
-                                        } else {
-                                            url.searchParams.delete('discount');
+                                    url.searchParams.set('ds', e.value);
+                                            router.push(`/buy/?${url.searchParams.toString()}`);
                                         }
-                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                        // window.history.pushState({}, '', newUrl);
-                                        router.push(`/buy/dubai/off-plan-projects/`);
+                                        // else {
+                                        //     url.searchParams.delete('discount');
+                                        // }
+                                        // const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                        // // window.history.pushState({}, '', newUrl);
                                     }}
                                 />
                             </div>
@@ -1129,6 +952,7 @@ function HomePage({
                                     options={[{
                                         value: "all",
                                         label: "All",
+                                        count: allCounts?.furnisheds?.reduce((acc, curr) => acc + curr.count, 0),
                                     }, {
                                         value: "fully-furnished",
                                         label: "Fully Furnished",
@@ -1148,14 +972,11 @@ function HomePage({
                                     },]}
                                     onSelect={(e) => {
                                         const url = new URL(window.location.href);
-                                        if (e?.value) {
-                                            url.searchParams.set('furnishing', e?.label ?? '');
-                                        } else {
-                                            url.searchParams.delete('furnishing');
+
+                                        if (e) {
+                                            url.searchParams.set('ft', e?.value);
+                                            router.push(`/buy/?${url.searchParams.toString()}`);
                                         }
-                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                        // window.history.pushState({}, '', newUrl);
-                                        router.push(`/buy/dubai/off-plan-projects/`);
                                     }}
                                 />
                             </div>
@@ -1165,7 +986,7 @@ function HomePage({
 
                             <div onClick={() => handleClear()} className={clsx("flex cursor-pointer max-w-[120px]  items-center gap-2", filters.page && filters.page > 1 ? 'h-[35px]' : 'h-[48px]')}>
                                 <label className="text-[12px] cursor-pointer">Clear Filters</label>
-                                <div className="bg-black cursor-pointer w-[14px] rounded-full h-[14px] flex justify-center items-center">
+                                <div className="bg-black cursor-pointer w-3.5 rounded-full h-3.5 flex justify-center items-center">
                                     <IoCloseOutline size={12} color="white" />
                                 </div>
                             </div>
@@ -1178,12 +999,11 @@ function HomePage({
                     />
 
 
-
-                    {/* Projects Section */}
                     <Container>
                         <SpaceWrapper
-                            className={filters.page && filters.page > 1 ? 'pt-[3px]' : 'pt-[0px]'}
+                            className={filters.page && filters.page > 1 ? 'pt-0' : 'pt-0'}
                         >
+
 
                             <div className="mb-4 flex gap-2">
                                 <div className="flex-1 h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
@@ -1209,17 +1029,13 @@ function HomePage({
 
 
                                     {/* Location link */}
-                                    {filters.page && filters.page > 1 && <div className={clsx("pt-[24px]", filters?.page && filters?.page >= 1 ? '' : 'hidden')}>
+                                    {filters.page && filters.page > 1 && <div className={clsx("pt-0 md:pt-4", filters?.page && filters?.page >= 1 ? '' : 'hidden')}>
 
                                         <LocationTags
 
-                                            // data={[{ location: 'Dubai', count: 100 }, { location: 'Abu Dhabi', count: 200 },
-                                            // { location: 'Sharjah', count: 300 },
-                                            // { location: 'Sharjah', count: 300 }
-                                            // ]}
 
                                             data={
-                                                cities?.data?.slice(0, 4).map((item) => ({
+                                                initialCities?.slice(0, 4).map((item) => ({
                                                     location: item.name,
                                                     count: item.count,
                                                     slug: item.slug
@@ -1231,44 +1047,49 @@ function HomePage({
 
 
                                     {/* projects */}
-                                    {allProjects ? (
-                                        allProjects?.map((item, index) => (
-                                            <React.Fragment key={index}>
-                                                <ProjectCard
-                                                    navigateDetailsButton={true}
-                                                    item={item}
-                                                    handleClick={handleClick}
-                                                    handleEnquiryFormClick={handleEnquiryFormClick}
-                                                />
-
-                                                {/* Add separator after every 5 items */}
-                                                {(index + 1) % 5 === 0 && (
-                                                    <>
-                                                        <div className=" flex sm:hidden mt:mt-0">
-                                                            <CustomSlider
-                                                                images={shuffleArray(shuffledImages)}
-                                                                containerClassName="!h-[95px] border border-[#DEDEDE] "
+                                    {
+                                        projects.length === 0 ? <NoDataFound /> : (
+                                            <>
+                                                {projects.length && (
+                                                    projects?.map((item, index) => (
+                                                        <React.Fragment key={index}>
+                                                            <ProjectCard
+                                                                navigateDetailsButton={true}
+                                                                item={item}
+                                                                handleClick={handleClick}
+                                                                handleEnquiryFormClick={handleEnquiryFormClick}
                                                             />
-                                                        </div></>
+
+                                                            {/* Add separator after every 5 items */}
+                                                            {(index + 1) % 5 === 0 && (
+                                                                <>
+                                                                    <div className=" flex sm:hidden mt:mt-0">
+                                                                        <CustomSlider
+                                                                            images={shuffleArray(shuffledImages)}
+                                                                            containerClassName="!h-[95px] border border-[#DEDEDE] "
+                                                                        />
+                                                                    </div></>
+                                                            )}
+                                                        </React.Fragment>
+                                                    ))
                                                 )}
-                                            </React.Fragment>
-                                        ))
-                                    ) : (
-                                        Array.from({ length: 10 }).map((_, index) => (
-                                            <ProjectCardSkelton key={index} />
-                                        ))
-                                    )}
+                                            </>
+                                        )
+                                    }
+
                                 </div>
 
 
                                 <div className={"w-full md:block hidden max-w-[301.5px]"}>
 
-                                    {filters.page && filters.page <= 1 && (smallVideoAds && smallVideoAds.length > 0 ?
-                                        <div className={clsx("w-full mb-[12px] relative flex")}>
-                                            {/* <div className={clsx("w-full mb-[12px] relative",filters?.page && filters?.page > 1 ? 'hidden':'flex')}> */}
+                                    {filters.page && filters.page <= 1 && (videoAds && videoAds.length > 0 ?
+                                        <div className={clsx("w-full mb-3 relative flex")}>
                                             <VideoPreview
-                                                projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
-                                                src={smallVideoAds?.[0]?.videoFile?.url?.url || ''}
+                                                id={videoAds?.[0]?._id}
+                                                alt={videoAds?.[0]?.name || ''}
+                                                thumbnailUrl={videoAds?.[0]?.thumbnail?.webp?.url || ''}
+                                                projectSlug={videoAds?.[0]?.projectDetails?.slug || ''}
+                                                videoUrl={videoAds?.[0]?.videoFile?.url?.url || ''}
                                             />
                                         </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>)
                                     }
@@ -1276,32 +1097,51 @@ function HomePage({
 
 
 
-                                    {filters.page && filters.page > 1 && <RecommendedText
-                                        title="Recommended For You"
-                                        containerClassName='!mt-0 mb-2 !pb-2'
-                                        items={shuffle(siteMap)?.slice(0, 6)}
-
-                                    />}
+                                    {filters.page && filters.page > 1 && <Recommendations siteMap={siteMap}>
+                                        {(items) => (
+                                            <>
+                                                <Recommendations siteMap={siteMap}>
+                                                    {(items) => (
+                                                        <>
+                                                            <RecommendedText title="Recommended For You" items={items} />
+                                                        </>
+                                                    )}
+                                                </Recommendations>
+                                            </>
+                                        )}
+                                    </Recommendations>}
 
                                     <div className="sticky top-3 left-0">
 
                                         <CustomSliderUi
                                             shuffledImages={shuffledImages}
                                         />
-                                        {filters.page && filters.page === 1 && <Recommendations
-                                            siteMap={siteMap}
-                                        />}
+                                        {filters.page && filters.page === 1 && <Recommendations siteMap={siteMap}>
+                                            {(items) => (
+                                                <>
+                                                    <RecommendedText
+                                                        className='my-2'
+                                                        title="Recommended For You" items={items} />
+
+                                                    <RecommendedText title="Trending Areas" items={items} />
+
+                                                    <RecommendedText title="Popular Searches" items={items} />
+                                                </>
+                                            )}
+                                        </Recommendations>
+                                        }
 
 
-                                        {filters.page && filters.page > 1 && <>
-                                            <RecommendedText
-                                                title="Recommended For You"
-                                                items={shuffle(siteMap)?.slice(0, 6)}
-                                            />
-                                            <RecommendedText
-                                                title="Popular Searches"
-                                                items={shuffle(siteMap)?.slice(0, 6)}
-                                            />
+                                        {filters.page && filters.page > 1 && <><Recommendations siteMap={siteMap}>
+                                            {(items) => (
+                                                <>
+                                                    <RecommendedText
+                                                        className='my-2'
+                                                        title="Trending Areas" items={items} />
+                                                    <RecommendedText title="Popular Searches" items={items} />
+                                                </>
+                                            )}
+                                        </Recommendations>
                                         </>}
 
 
@@ -1316,8 +1156,11 @@ function HomePage({
 
                                 </div>
                             </div>
+
+
                         </SpaceWrapper>
                     </Container>
+
 
 
 
@@ -1368,13 +1211,15 @@ function HomePage({
                 <BottomBanner />
 
                 {/* Video ad son mobile */}
-                {filters.page && filters.page <= 1 && smallVideoAds && smallVideoAds.length > 0 &&
+                {filters.page && filters.page <= 1 && videoAds && videoAds.length > 0 &&
                     <Container>
                         <div className="w-full mb-[35px] relative flex sm:hidden">
                             <VideoPreview
-                                projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
-
-                                src={smallVideoAds?.[0]?.videoFile?.url?.url || ''}
+                                id={videoAds?.[0]?._id}
+                                alt={videoAds?.[0]?.name || ''}
+                                projectSlug={videoAds?.[0]?.projectDetails?.slug || ''}
+                                thumbnailUrl={videoAds?.[0]?.thumbnail?.webp?.url || ''}
+                                videoUrl={videoAds?.[0]?.videoFile?.url?.url || ''}
                             />
                         </div>
                     </Container>
@@ -1385,18 +1230,43 @@ function HomePage({
                 <MobileFooterBanner />
 
 
-                <div className="px-5 flex sm:hidden lg:px-8 mt-[16px]">
+                <div className="px-5 flex sm:hidden lg:px-8">
 
-                    <RecommendedText
-                        title="Recommended For You"
-                        items={shuffle(siteMap)?.slice(0, 6)}
-                    />
+                    <Recommendations siteMap={siteMap}>
+                        {(items) => (
+                            <>
+                                <Recommendations siteMap={siteMap}>
+                                    {(items) => (
+                                        <>
+                                            <RecommendedText title="Recommended For You" items={items} />
+                                        </>
+                                    )}
+                                </Recommendations>
+                            </>
+                        )}
+                    </Recommendations>
                 </div>
 
 
-                <MobileFilterOption
 
-                    // bathroomsRange={filters.page && filters.page > 1 ? true : false}
+
+
+
+                <Footer />
+
+
+
+
+            </main >
+
+
+            <EnquiryFormModal
+                EnquiryForm={EnquiryForm}
+                setEnquiryForm={setEnquiryForm}
+            />
+
+            {/* <MobileFilterOption
+
                     pagination={pagination}
                     allCounts={allCounts}
                     emiratesData={emiratesData}
@@ -1407,23 +1277,8 @@ function HomePage({
                     setFiltersHandler={setFilters}
                     onClose={() => setFilterModel(false)}
                     show={filterModel}
-                />
+                /> */}
 
-
-
-
-                <Footer />
-
-
-
-
-            </main>
-
-
-            <EnquiryFormModal
-                EnquiryForm={EnquiryForm}
-                setEnquiryForm={setEnquiryForm}
-            />
 
         </>
     )

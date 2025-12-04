@@ -388,20 +388,20 @@ function AgentAvailabilityCard({
                         value={name}
                     />}
 
-                    {nationality && <Content
+                    {/* {nationality && <Content
                         label='Nationality : '
                         value={nationality}
-                    />}
+                    />} */}
                     {languagesSpoken &&
                         <Content
                             label='Languages Spoken : '
                             value={languagesSpoken}
                         />}
 
-                    {joiningDate && <Content
+                    {/* {joiningDate && <Content
                         label='Joined Date : '
                         value={joiningDate}
-                    />}
+                    />} */}
                     {resigningDate && <Content
                         label='Tenure : '
                         value={resigningDate}

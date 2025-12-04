@@ -1,6 +1,7 @@
 import { baseUrl } from '@/api'
 import AgentVerification from '@/components/AgentVerification/AgentVerification'
 import { Metadata } from 'next';
+import Script from 'next/script';
 import React from 'react'
 
 
@@ -97,12 +98,41 @@ async function page() {
           }
       ).then((res) => res.json())
   
+    
+      const dataForMeta = responseData?.data?.[0] || {};
+  
+
       const content = responseData?.data?.[0]?.content
 
+        const scripts = dataForMeta?.richSnippets?.match(
+      /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
+    ) || [];
+
   return (
+    <>
+      {scripts?.map((script: string, index: number) => {
+        // Remove outer <script> tags to use innerHTML
+        const innerJson = script
+          .replace(/<script[^>]*>/g, "")
+          .replace(/<\/script>/g, "")
+          .trim();
+
+        return (
+          <Script
+            key={index}
+            id={`json-ld-schema-${index}`}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: innerJson }}
+            strategy="afterInteractive" // "beforeInteractive" if needed
+          />
+        );
+      })}
+    
     <AgentVerification
     content={content}
     />
+
+    </>
   )
 }
 

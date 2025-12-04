@@ -27,12 +27,15 @@ export const projectApi = createApi({
       page?: number,
       limit?: number,
       search?: string,
-      propertyType?: string[],
+      propertyType?: string,
       completionType?: string,
       furnishing?: string,
+      furnishied?: string,
       cities?: string[],
-      projectTypeLast?: string
-      projectTypeFirst?: string,
+      propertyTypeCategory?: string
+      propertyTypeSecond?: string,
+      propertyCategoryTypes?: string,
+      propertyCategoryStatus?:string,
       year?: number | '',
       qtr?: string,
       paymentPlan?: string,
@@ -46,7 +49,6 @@ export const projectApi = createApi({
         const {
           page = 1,
           limit = 24,
-          search = "",
           cities,
           ...restParams
         } = params;
@@ -54,7 +56,6 @@ export const projectApi = createApi({
         const queryParams = new URLSearchParams({
           page: page.toString(),
           limit: limit.toString(),
-          search,
           ...Object.fromEntries(
             Object.entries(restParams).filter(([_, v]) => v !== undefined && v !== "")
           ),
@@ -117,7 +118,6 @@ export const projectApi = createApi({
 
 export const {
   useFetchAllProjectsQuery,
-  useLazyFetchAllProjectsQuery,
   useFetchAllProjectNamesQuery,
   useFetchProjectByIdQuery,
   useFetchAllProjectsCountQuery,

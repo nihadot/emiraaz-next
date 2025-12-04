@@ -21,7 +21,7 @@ function LocationTags({ data }: Props) {
                         href={`/cities/${item.slug}`}
                         className='block w-full'
                         >
-                        <div key={index} className="flex w-full justify-start items-center p-2">
+                        <div key={index} className="flex w-full justify-start items-center px-0 md:px-2 py-2">
                             <p className='font-poppins font-normal text-[12px] me-1 text-black'>{item.location} </p>
                             <p className='font-poppins font-normal text-[10px] text-[#333333]'>({item.count})</p>
                         </div>
@@ -35,7 +35,8 @@ function LocationTags({ data }: Props) {
             
   <Link
   href={`/cities`}
-  className="flex justify-center items-center w-full cursor-pointer h-full text-black text-xs font-poppins font-normal">View All Locations</Link>
+  className="flex py-3 md:py-0
+   md:justify-center items-center w-full cursor-pointer h-full text-black text-xs font-poppins font-normal">View All Locations</Link>
         </div>
         </>
 

@@ -14,6 +14,9 @@ import { useRouter } from 'next/navigation';
 import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
 import clsx from 'clsx';
+import { calender } from '@/app/assets';
+import Link from 'next/link';
+import { ChevronRight } from 'lucide-react';
 
 type Props = {
     id: string;
@@ -83,11 +86,11 @@ function BlogDetails({ id,siteMap }: Props) {
 
                                 }
 
-                                {singleBlog?.data?.blogTitle ? <h1 className='font-poppins font-medium text-[19.5px] mt-[10.5px]'>{singleBlog?.data?.blogTitle}</h1> :
+                                {singleBlog?.data?.blogTitle ? <h1 className='font-poppins font-medium text-2xl leading-[32px] mt-[10.5px]'>{singleBlog?.data?.blogTitle}</h1> :
                                     <div className='h-[40px] bg-slate-50 w-full mb-3 rounded-[5px] animate-pulse'></div>
                                 }
                                 {singleBlog && singleBlog.data && singleBlog.data.blogBody && singleBlog?.data?.blogTitle ? <p
-                                    className=" whitespace-pre-wrap w-full text-left font-poppins font-normal mt-[12px]"
+                                    className=" whitespace-pre-wrap content-wrapper-home w-full text-left font-poppins font-normal mt-[12px]"
                                 dangerouslySetInnerHTML={{ __html: `${singleBlog?.data?.blogBody?.html}` }}
                                 >
                                     {/* {singleBlog?.data?.blogBody?.html} */}
@@ -161,31 +164,87 @@ function BlogDetails({ id,siteMap }: Props) {
                     </div>
 
                     <p className=' font-poppins font-medium text-[20px] my-3'>Recomended Blogs :</p>
-                    <div className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 gap-[30px] w-full h-fit">
+                    <div className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-4 gap-2.5 w-full h-fit">
 
                         {
                             allBlogs && allBlogs?.data?.length > 0 ? allBlogs.data
                                 .filter(item => item.slug !== id)
                                 .map((item, index) => {
                                     return (
-                                        <div className="" key={index}>
-                                            <div key={index} className="relative w-full h-[208.5px] object-cover">
-                                                <div className="px-4 py-1 font-poppins font-medium rounded-[3px] absolute text-[10.5px] sm:text-[13.5px] z-30 left-[15px] top-[15px] text-[#FF1645] bg-[#FFE7EC] ">{item.blogCategoryDetails?.name}</div>
+                                        // <div className="" key={index}>
+                                        //     <div key={index} className="relative w-full h-[208.5px] object-cover">
+                                        //         <div className="px-4 py-1 font-poppins font-medium rounded-[3px] absolute text-[10.5px] sm:text-[13.5px] z-30 left-[15px] top-[15px] text-[#FF1645] bg-[#FFE7EC] ">{item.blogCategoryDetails?.name}</div>
 
-                                                <Image
-                                                    fill
-                                                    alt={item.blogTitle}
-                                                    src={item.image?.webp?.url || ''}
-                                                    className="rounded-[5px]"
-                                                />
-                                            </div>
+                                        //         <Image
+                                        //             fill
+                                        //             alt={item.blogTitle}
+                                        //             src={item.image?.webp?.url || ''}
+                                        //             className="rounded-[5px]"
+                                        //         />
+                                        //     </div>
 
-                                            {item?.date && <p className='text-[#767676] text-[12px] font-medium font-poppins mt-[13.5px]'>Date Published : {formatDate(item?.date)}</p>
-                                            }
-                                            <h4 onClick={() => router.push(`/blog/${item.slug}`)} className='mt-[8.25px] font-poppins font-medium text-[17px] text-black line-clamp-2 text-ellipsis'>{item.blogTitle}</h4>
+                                        //     {item?.date && <p className='text-[#767676] text-[12px] font-medium font-poppins mt-[13.5px]'>Date Published : {formatDate(item?.date)}</p>
+                                        //     }
+                                        //     <h4 onClick={() => router.push(`/blog/${item.slug}`)} className='mt-[8.25px] font-poppins font-medium text-[17px] text-black line-clamp-2 text-ellipsis'>{item.blogTitle}</h4>
 
 
-                                        </div>
+                                        // </div>
+
+                                          <div key={index} className="border border-[#DEDEDE] flex h-[380px] flex-col gap-1 p-3 rounded-md ">
+                                                                                <div className="relative w-full h-[170px] object-cover">
+                                        
+                                                                                    <Image
+                                                                                        fill
+                                                                                        alt={item.blogTitle}
+                                                                                        src={item.image?.webp?.url || ''}
+                                                                                        className="cursor-text rounded"
+                                                                                    />
+                                                                                </div>
+                                        
+                                                                                <div className="flex items-center mt-1  gap-3">
+                                        
+                                        
+                                        
+                                                                                    <div className="flex justify-center    items-center gap-[4.5px]">
+                                                                                        <p className='text-[#767676]   text-[12px] font-medium font-poppins '>{formatDate(item?.date || '')}</p>
+                                        
+                                                                                        <Image
+                                                                                            src={calender}
+                                                                                            alt="calender"
+                                                                                            width={16.5}
+                                                                                            height={16.5}
+                                                                                            className="w-[16.5px] cursor-text h-[16.5px]"
+                                                                                        />
+                                        
+                                                                                    </div>
+                                        
+                                                                                    <div className=" flex font-poppins h-5 font-medium justify-center items-center text-ellipsis line-clamp-1 px-3 rounded text-[10px] text-[#FF1645] bg-[#FFE7EC] ">{item?.blogCategoryDetails?.name}</div>
+                                        
+                                                                                </div>
+                                                                                <Link
+                                                                                    href={`/blog/${item.slug}`}
+                                                                                >
+                                                                                    <h4 className='leading-4 cursor-pointer font-poppins font-medium text-lg text-black line-clamp-2 text-ellipsis'>{item.blogTitle}</h4>
+                                                                                </Link>
+                                        
+                                        
+                                                                                <p className="line-clamp-4 font-poppins text-xs font-normal text-[#767676] leading-[20px] overflow-hidden text-ellipsis">
+                                                                                    {item?.blogBody?.text}
+                                                                                </p>
+                                        
+                                                                                <Link
+                                                                                    href={`/blog/${item.slug}`}
+                                                                                    className='cursor-pointer text-[#FF1645]  w-fit font-poppins items-center text-xs flex'
+                                                                                >
+                                                                                    <span className='flex font-medium'>Read More</span>
+                                                                                    <ChevronRight size={16} />
+                                        
+                                                                                </Link>
+                                        
+                                        
+                                        
+                                                                            </div>
+                                        
                                     )
                                 }) :
 

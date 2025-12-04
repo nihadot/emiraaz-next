@@ -5,6 +5,7 @@ import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
 import clsx from 'clsx'
 import { Metadata } from 'next'
+import Script from 'next/script'
 import React, { Suspense } from 'react'
 
 // property-talks
@@ -89,27 +90,70 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 
-export default function Page() {
+export default async function Page() {
+
+    const responseData = await fetch(
+        `${baseUrl}/meta-data?referencePage=property-talks`,
+        {
+            next: {
+                revalidate: 60 // Revalidate every 10 seconds
+            },
+        }
+    ).then((res) => res.json())
+
+    const dataForMeta = responseData?.data?.[0] || {};
+
+
+
+    const scripts = dataForMeta?.richSnippets?.match(
+        /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
+    ) || [];
     return (
-        <main>
-            <Header logoSection={
-                <div className='h-full w-full flex justify-center items-center'>
-                    <MobileHeaderTitle
-                        content='Property Talks'
+
+        <>
+
+
+            {scripts?.map((script: string, index: number) => {
+                // Remove outer <script> tags to use innerHTML
+                const innerJson = script
+                    .replace(/<script[^>]*>/g, "")
+                    .replace(/<\/script>/g, "")
+                    .trim();
+
+                return (
+                    <Script
+                        key={index}
+                        id={`json-ld-schema-${index}`}
+                        type="application/ld+json"
+                        dangerouslySetInnerHTML={{ __html: innerJson }}
+                        strategy="afterInteractive" // "beforeInteractive" if needed
                     />
-                </div>
-            } />
+                );
+            })}
 
-            <SectionDivider
-                containerClassName={clsx("mb-[12px] mt-[12px]")}
-                lineClassName="h-[1px] w-full bg-[#DEDEDE]"
-            />
 
-            <section>
+            <main>
+                <Header logoSection={
+                    <div className='h-full w-full flex justify-center items-center'>
+                        <MobileHeaderTitle
+                            content='Property Talks'
+                        />
+                    </div>
+                } />
 
-            </section>
-            <Footer />
-        </main>
+                <SectionDivider
+                    containerClassName={clsx("mb-[12px] mt-[12px]")}
+                    lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+                />
+
+                <section>
+
+                </section>
+                <Footer />
+            </main>
+
+        </>
+
     )
 }
 

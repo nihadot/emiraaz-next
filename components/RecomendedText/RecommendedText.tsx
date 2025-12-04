@@ -16,7 +16,7 @@ type Props = {
 function RecommendedText({ title, items,className,containerClassName,elementClassName }: Props) {
   return (
     <div className={clsx("w-full",className)}>
-      <p className={clsx("rounded-[3.5px] p-2 my-2 text-[12px] border font-semibold border-[#DEDEDE] bg-[#F5F5F5] font-poppins",containerClassName)}>{title}</p>
+      <p className={clsx("rounded-[3.5px] p-2 mb-2 text-[12px] border font-semibold border-[#DEDEDE] bg-[#F5F5F5] font-poppins",containerClassName)}>{title}</p>
       {items?.map((item, index) => {
 
         if(!item?.url) return
@@ -26,7 +26,7 @@ function RecommendedText({ title, items,className,containerClassName,elementClas
         return (
            
            <Link
-           href={item.url}
+           href={`/for-sale/${item.url}`}
              key={index}
            >
            <p

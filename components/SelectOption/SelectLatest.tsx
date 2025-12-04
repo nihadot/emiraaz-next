@@ -3,7 +3,7 @@ import React, { HTMLAttributes, useCallback, useEffect, useMemo, useRef, useStat
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaCaretDown } from 'react-icons/fa';
 
-interface OptionType {
+export interface OptionType {
   label: string;
   count?: number;
   value: string;
@@ -266,7 +266,7 @@ if (onSelect) onSelect(null);
         dropdownTopContainerClassName
       )}
     >
-      <div className={clsx('', 'flex flex-1 justify-start gap-[13px] sm:justify-between items-center', dropdownContainerClassName)}>
+      <div className={clsx('', 'flex flex-1 gap-[13px] justify-between items-center', dropdownContainerClassName)}>
         <label className={clsx('',
           'text-ellipsis no-scrollbar line-clamp-1 overflow-x-auto capitalize text-[12px] font-normal font-poppins',
           dropdownLabelClassName
@@ -283,7 +283,7 @@ if (onSelect) onSelect(null);
           className={clsx('', dropdownIconContainerClassName)}
         >
           <FaCaretDown
-            className={clsx('', 'w-[20px] h-[20px]', dropdownIconClassName)}
+            className={clsx('', 'w-5 h-5', dropdownIconClassName)}
             color={'#FF1645'}
           />
         </motion.div>
@@ -319,7 +319,7 @@ if (onSelect) onSelect(null);
                       handleSelect(option);
                     }}
                     className={clsx('',
-                      'px-2 py-[8px] rounded-[5px] border border-[#DEDEDE] cursor-pointer flex justify-between items-center text-[12px]',
+                      'px-2 py-2 rounded-[5px] border border-[#DEDEDE] cursor-pointer flex justify-between items-center text-[12px]',
                       dropdownListClassName,
                       selected?.value === option.value ? 'bg-red-700/10' : 'hover:bg-red-700/10',
                       selectedMultiple?.some((item) => item.value === option.value) ? 'bg-red-700/10' : 'hover:bg-red-700/10'

@@ -1,27 +1,27 @@
 'use client'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Container from '../atom/Container/Container';
 import SearchNew from '../SearchField/SearchNew';
 import { FiltersState } from '../types';
 import SelectLatest from '../SelectOption/SelectLatest';
-import { emirateApi, useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
 import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
-import { CompletionTypes, productTypeOptionFirstItems, propertyCategoryType, propertyTypeFirst, PropertyTypes, propertyTypeSecond } from '@/data';
+import { CompletionTypes, productTypeOptionFirstItems, propertyCategoryStatus, propertyCategoryTypes, propertyTypeSecond, propertyTypeStatus } from '@/data';
 import { SwitchSelector } from '../SelectOption';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { HiOutlineAdjustmentsHorizontal } from 'react-icons/hi2';
-import { EmirateFetchAllNamesResponse, EmirateNames } from '@/redux/emirates/types';
+import { EmirateNames } from '@/redux/emirates/types';
 import clsx from 'clsx';
-import { CountItem, useViewAllCountsQuery } from '@/redux/news/newsApi';
+import Skeleton from 'react-loading-skeleton'
+import { CountItem } from '@/redux/news/newsApi';
 import ExpandableComponentDropdown from '../ExpandableComponent/ExpandableComponent';
 import { SelectHandoverDate } from '../SelectHandoverDate';
 import SelectNew from '../SelectOption/SelectNew';
 import { IoCloseOutline } from 'react-icons/io5';
-import { CityNames, FetchCityByIdPayload } from '@/redux/cities/types';
+import { CityNames } from '@/redux/cities/types';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
-import { useFetchAllProjectsCountQuery, useFetchAllProjectsQuery } from '@/redux/project/projectApi';
+import { useFetchAllProjectsQuery } from '@/redux/project/projectApi';
 import { parsePrice } from '@/utils/parsePrice';
 import LocationTags from '../LocationTags/LocationTags';
 import { AllProjectsItems } from '@/redux/project/types';
@@ -30,25 +30,23 @@ import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal';
 import CustomSlider from '../CustomSlider/CustomSlider';
 import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi';
 import { shuffle } from '@/utils/shuffle';
-import ProjectCardSkelton from '../ProjectCard/ProjectCardSkelton';
 import { AllSmallVideoItems } from '@/redux/smallVideo/types';
 import VideoPreview from '@/app/home/VideoPreview';
 import RecommendedText from '../RecomendedText/RecommendedText';
-import CustomSliderUi from '@/app/home/CustomSliderUi';
-import Recommendations from '@/app/home/Recommendations';
-import { useViewAllSmallVideosQuery } from '@/redux/smallVideo/smallViewApi';
-import { Footer } from '../Footer';
-// import MobileFilterOption from '@/app/home/MobileFilterOption';
 import { Pagination } from '@/utils/types';
 import Slider from '@components/CustomSlider/Slider';
 import FilterEmpty from '../Empty/FilterEmpty';
 import NoDataFound from '../Empty/NoDataFound';
-import { FetchAllPortraitBannersResponse, PortraitBanner } from '@/redux/portraitBannerAd/types';
-import MobileFilterOption from '@/app/home/MobileFilterOption';
+import { PortraitBanner } from '@/redux/portraitBannerAd/types';
 import PaginationNew from '../PaginationNew/PaginationNew';
 import { useDeviceType } from '@/utils/useDeviceType';
 import { useForceScrollRestore, useScrollToTopOnRefresh } from '@/hooks/useScrollRestoration';
 import HomePageContent from '../Home/HomePageContent';
+import ProjectCardSkelton from '../ProjectCard/ProjectCardSkelton';
+import MobileFilterOption from '@/app/home/MobileFilterOption';
+import { FaCaretDown } from 'react-icons/fa';
+import { AnimatePresence, motion } from 'framer-motion';
+import { formatAmount, formatCount } from '../atom/button/formatAmount';
 
 type Props = {
     emiratesData: EmirateNames[],
@@ -56,18 +54,43 @@ type Props = {
     allCounts: CountItem
     initialCities: CityNames[],
     videoAds: AllSmallVideoItems[],
-    initialData: AllProjectsItems[],
+    initialData: {
+        data: AllProjectsItems[],
+        pagination: Pagination,
+    },
     portraitBanners: PortraitBanner,
     siteMap: any[],
-    content:object
+    content: object,
+    isOffplanValue: boolean,
+    existingFilter: {
+        emirate: any;
+        cities: any[] | string | undefined;
+    };
+    initialValues: {
+        emirate: string;
+        cities: string[];
+        propertyCategoryType: string;
+        propertyCategoryStatus: string;
+        propertyType?: string;
+        completionType?: string;
+        qtr?: string,
+        year: number | '',
+        paymentPlan?: string,
+        furnishied?: string,
+        discount?: string,
+    }
+    hideHamburger?: boolean;
 }
 
 function BuyPage({
     emiratesData,
+    isOffplanValue,
     videoAds,
     initialCities,
     allCounts,
     initialData,
+    initialValues,
+    hideHamburger,
     portraitBanners,
     siteMap,
     content,
@@ -77,51 +100,48 @@ function BuyPage({
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
+    const currentSegments = pathname.split('/').filter(Boolean);
 
-    const currentSegments = pathname.split('/').filter(Boolean); // e.g. ['buy', 'abu-dhabi', 'off-plan-projects']
     const segments = [...currentSegments];
+
     const allCountsOfEmirate = emiratesData?.reduce((acc, curr) => {
         acc += curr.count || 0;
         return acc;
     }, 0);
 
     const [clear, setClear] = useState(false);
-    const [defaultCities, setDefaultCities] = useState<any>('');
-    const [defaultPropertyType, setDefaultPropertyType] = useState<string>('');
-    const [defaultCompletionType, setDefaultCompletionType] = useState<string>('all');
     const [filterModel, setFilterModel] = useState(false);
+    const [isOffPlan, setIsOffPlan] = useState(isOffplanValue);
     const [filters, setFilters] = useState<FiltersState>({
         page: 1,
         search: "",
-        cities: [],
-        developers: [],
-        facilities: [],
-        propertyTypeSecond: "all",
-        emirate: "",
-        completionType: "",
-        handoverDate: undefined,
-        paymentPlan: undefined,
-        furnishType: "",
-        discount: "",
-        projectTypeFirst: '',
-        projectTypeLast: 'all',
-        bedAndBath: "",
-        minPrice: '',
-        maxPrice: '',
-        minSqft: "",
-        maxSqft: "",
-        beds: "",
-        bath: "",
+        cities: initialValues?.cities,
+        propertyType: initialValues?.propertyType,
+        propertyCategoryStatus: initialValues?.propertyCategoryStatus || "all",
+        emirate: initialValues?.emirate,
+        completionType: initialValues?.completionType,
+        handoverDate: {
+            year: initialValues?.year,
+            quarter: initialValues?.qtr,
+        },
+        paymentPlan: initialValues?.paymentPlan,
+        furnishType: initialValues?.furnishied,
+        discount: initialValues?.discount,
+        propertyCategoryTypes: initialValues?.propertyCategoryType || 'off-plan-projects',
+
+
     });
+
     const { data: citiesData } = useFetchAllCityNamesQuery({ emirate: filters.emirate }, {
         skip: !!initialCities?.length && !filters.emirate
     });
 
+    useEffect(() => {
+        if (segments.includes('off-plan-projects')) {
+            setIsOffPlan(true)
+        }
 
-    // Event Handlers
-    const handleChangeSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        setFilters(prev => ({ ...prev, search: event.target.value }));
-    }, []);
+    }, [segments]);
 
     const emirateOptions = useMemo(() => {
         const preferredOrder = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ras Al Khaimah', 'Ajman', 'Umm Al-Quwain'];
@@ -149,58 +169,30 @@ function BuyPage({
         });
 
         return [
-            { label: "All", value: "all", count: allCountsOfEmirate }, // Always first
+            { label: "All", value: "all", count: allCountsOfEmirate, slug: 'all' }, // Always first
             ...sortedOptions,
         ];
     }, []);
 
-
-
-    // Find emirate from URL on first render
-    const initialEmirate =
-        segments.find((seg) => emirateOptions.some((item: any) => item.slug === seg)) ||
-        "dubai";
-
-    const initialPropertyCategory =
-        segments.find((seg) => productTypeOptionFirstItems.some((item: any) => item.value === seg)) ||
-        "off-plan-projects";
-
-    const initialPropertyType =
-        segments.find((seg) => propertyTypeSecond.some((item: any) => item.value === seg)) ||
-        "all";
-    const [defaultEmirate, _setDefaultEmirate] = useState<string>(initialEmirate);
-
-
     const isExistPropertyCategoryType = segments.find((seg) =>
-        productTypeOptionFirstItems.some((item: any) => item.value === seg)
+        propertyCategoryTypes.some((item: any) => item.value === seg)
     );
 
     const [isPropertyType, setIsPropertyType] = useState('');
 
-
     const [paginationHappened, setPaginationHappened] = useState(false)
 
     const handleSelect = useMemo(() => ({
-        emirate: (option: any) => setFilters(prev => ({ ...prev, emirate: option?.value || '' })),
+        emirate: (option: any) => setFilters(prev => ({ ...prev, emirate: option?.slug || '' })),
         propertyType: (option: any) => setFilters(prev => ({ ...prev, propertyType: option?.value || '' })),
-        propertyTypeSecond: (option: any) => setFilters(prev => ({ ...prev, propertyTypeSecond: option })),
+        propertyCategoryStatus: (option: any) => setFilters(prev => ({ ...prev, propertyCategoryStatus: option })),
         completionType: (option: any) => setFilters(prev => ({ ...prev, completionType: option })),
-        productTypeOptionFirst: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionFirst: option })),
-        projectTypeFirst: (option: any) => setFilters(prev => ({ ...prev, projectTypeFirst: option })),
-        projectTypeLast: (option: any) => setFilters(prev => ({ ...prev, projectTypeLast: option })),
-        productTypeOptionLast: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionLast: option })),
+        propertyCategoryTypes: (option: any) => setFilters(prev => ({ ...prev, propertyCategoryTypes: option })),
         handoverDate: (data: any) => setFilters(prev => ({ ...prev, handoverDate: data })),
         projectType: (option: any) => setFilters(prev => ({ ...prev, projectType: option })),
         paymentPlan: (option: any) => setFilters(prev => ({ ...prev, paymentPlan: option?.value || '' })),
         furnishType: (option: any) => setFilters(prev => ({ ...prev, furnishType: option?.value || '' })),
         discount: (option: any) => setFilters(prev => ({ ...prev, discount: option?.value || '' })),
-        bedAndBath: (option: any) => setFilters(prev => ({ ...prev, bedAndBath: option?.value || '' })),
-        maxPrice: (option: any) => setFilters(prev => ({ ...prev, maxPrice: option || '' })),
-        minSqft: (option: any) => setFilters(prev => ({ ...prev, minSqft: option || '' })),
-        maxSqft: (option: any) => setFilters(prev => ({ ...prev, maxSqft: option || '' })),
-        minPrice: (option: any) => setFilters(prev => ({ ...prev, minPrice: option || '' })),
-        beds: (option: any) => setFilters(prev => ({ ...prev, beds: option || '' })),
-        bath: (option: any) => setFilters(prev => ({ ...prev, bath: option || '' })),
     }), []);
 
     const cities = citiesData?.data || initialCities || [];
@@ -216,7 +208,7 @@ function BuyPage({
         const totalCities = mappedOptions.reduce((a, b) => a + b.count, 0);
 
         return [
-            { label: "All", value: "all", count: totalCities }, // <--- Add "All" option at the top
+            { label: "All", value: "all", count: totalCities, slug: 'all' }, // <--- Add "All" option at the top
             ...mappedOptions,
         ];
     }, [cities]);
@@ -229,14 +221,13 @@ function BuyPage({
         setFilters(prev => ({ ...prev, cities: option.map((item: any) => item.slug) }));
     }, []);
 
-    const [debouncedSearch, setDebouncedSearch] = useState<any>("");
-
+    const [debouncedSearch, setDebouncedSearch] = useState<any>(null);
 
     // Debounce search input
     useEffect(() => {
         const handler = setTimeout(() => {
             setDebouncedSearch(filters.search);
-            setFilters(prev => ({ ...prev, page: 1 }));
+            // setFilters(prev => ({ ...prev, page: 1 }));
         }, 500);
 
         return () => clearTimeout(handler);
@@ -247,135 +238,144 @@ function BuyPage({
     const queryParams = useMemo(() => ({
         limit: 24,
         page: filters.page,
-        search: debouncedSearch,
+        ...(debouncedSearch && { search: debouncedSearch }),
         cities: filters.cities,
-        propertyType: filters.propertyType,
+        ...(filters.propertyType?.length && { propertyType: filters.propertyType }),
         completionType: filters.completionType,
         paymentPlan: filters.paymentPlan,
         year: filters.handoverDate?.year,
         qtr: filters.handoverDate?.quarter,
         discount: filters.discount,
-        projectTypeFirst: filters.projectTypeFirst,
-        projectTypeLast: filters.propertyTypeSecond,
-        furnishing: filters.furnishType,
-        emirate: filters.emirate,
+        propertyCategoryTypes: filters.propertyCategoryTypes,
+        propertyCategoryStatus: filters.propertyCategoryStatus,
+        furnishied: filters.furnishType,
+        emirate: filters.emirate === 'all' ? '' : filters.emirate,
     }), [filters, debouncedSearch]);
 
 
-    const { data } = useFetchAllProjectsQuery(queryParams, {
+    const { data, isLoading, isFetching } = useFetchAllProjectsQuery(queryParams, {
         refetchOnMountOrArgChange: true,
         refetchOnReconnect: true,
         refetchOnFocus: true,
         skip: false,
     });
 
-    const pagination = data?.pagination;
-    const isShowEmptyPages = productTypeOptionFirstItems.filter((i) => i.value !== 'off-plan-projects').some((item: any) => item.value === isExistPropertyCategoryType)
+    const projects: AllProjectsItems[] = data?.data || initialData?.data
 
+    const pagination = data?.pagination || initialData?.pagination;
 
+    const showHamburger = filters.page && filters.page > 1
 
+    const isShowEmptyPages = propertyCategoryTypes.filter((i) => i.value !== 'off-plan-projects').some((item: any) => item.value === isExistPropertyCategoryType);
+
+    const shouldSwapAds =
+  propertyCategoryTypes
+    .filter(i => i.value !== 'off-plan-projects')
+    .some(item => item.value === isExistPropertyCategoryType)
+  || (filters.page && filters?.page > 1);
+    
     const handleFilterModal = useCallback(() => {
+
         setFilterModel(prev => !prev);
+
     }, []);
 
-    function updateUrl({ emirate, propertyFirst, propertySecond }: { emirate?: string, propertyFirst?: string, propertySecond?: string }) {
-        const currentSegments = pathname.split('/').filter(Boolean); // e.g. ['buy', 'abu-dhabi', 'off-plan-projects']
+
+    function updateUrl({
+        emirate,
+        propertyFirst,
+        propertySecond,
+
+    }: {
+        emirate?: string;
+        propertyFirst?: string;
+        propertySecond?: string;
+    }) {
+
+        const segments = pathname.split('/').filter(Boolean);
+
         const urlParams = new URLSearchParams(searchParams.toString());
-        const cities = urlParams.get('cities');
-        const toConvertedCitiesParams = cities?.split(',')
 
-        const segments = [...currentSegments];
-        const isExistEmirate = segments.find((seg) =>
-            emirateOptions.some((item: any) => item.slug === seg)
-        );
+        const findMatch = (list: any[], key: string, field = 'slug') =>
+            list.find((item: any) => item[field] === key);
 
+        const current = {
+            emirate: segments.find((seg) => findMatch(emirateOptions, seg)),
+            propertyFirst: segments.find((seg) => findMatch(propertyCategoryTypes, seg, 'value')),
+            propertySecond: segments.find((seg) => findMatch(propertyCategoryStatus, seg, 'value')),
+        };
 
-        const isExistPropertyType = segments.find((seg) =>
-            productTypeOptionFirstItems.some((item: any) => item.value === seg)
-        );
+        const cleanSegment = (v?: string) => (v && v !== 'all' ? v : '');
 
-        const isPropertyTypeSecond = segments.find((seg) =>
-            propertyTypeSecond.some((item: any) => item.value === seg)
-        );
-
-        let fullUrl = '/buy';
-
-
-
-        if (emirate === "all") {
-            fullUrl = `/buy/${isExistPropertyType ? isExistPropertyType : ''}/${isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
-        }
-
-        if (emirate !== 'all' && emirate) {
-            fullUrl += `/${emirate}/${propertyFirst ? propertyFirst : isExistPropertyType ? isExistPropertyType : ''}/${isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
-        }
-
-        if (propertyFirst) {
-            fullUrl += `/${isExistEmirate ? isExistEmirate : ''}/${propertyFirst ? propertyFirst : isExistPropertyType ? isExistPropertyType : ''}/${isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
-        }
-
-        if (propertySecond !== 'all' && propertySecond) {
-            fullUrl += `/${isExistEmirate ? isExistEmirate : ''}/${isExistPropertyType ? isExistPropertyType : ''}/${propertySecond ? propertySecond : isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
-
-        }
-        if (propertySecond === 'all') {
-            fullUrl = `/buy/${isExistEmirate ? isExistEmirate : ''}/${isExistPropertyType ? isExistPropertyType : ''}`;
-        }
+        const buildPath = [
+            'buy',
+            cleanSegment(emirate ?? current.emirate),
+            cleanSegment(propertyFirst ?? current.propertyFirst),
+            cleanSegment(propertySecond ?? current.propertySecond),
+        ].filter(Boolean);
 
 
-        fullUrl += `?${urlParams.toString()}`
-
-        if (toConvertedCitiesParams) {
-            setDefaultCities(toConvertedCitiesParams)
-
-        }
+        const fullUrl = `/${buildPath.join('/')}${urlParams.toString() ? `?${urlParams}` : ''}`;
 
         window.history.pushState({}, '', fullUrl);
     }
 
-    const propertyTypesCondition = !((filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'residential') || (filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'commercial') || (filters?.projectType === 'off-plan-secondary' && filters?.propertyTypeSecond === 'commercial') || (filters?.projectType === 'off-plan-resale' && filters?.propertyTypeSecond === 'commercial') || (filters?.projectType === 'off-plan-projects' && filters?.propertyTypeSecond === 'commercial'));
+    const propertyTypesCondition = !((filters?.propertyCategoryTypes === 'off-plan-land' && filters?.propertyCategoryStatus === 'residential') || (filters?.propertyCategoryTypes === 'off-plan-land' && filters?.propertyCategoryStatus === 'commercial') || (filters?.propertyCategoryTypes === 'off-plan-secondary' && filters?.propertyCategoryStatus === 'commercial') || (filters?.propertyCategoryTypes === 'off-plan-resale' && filters?.propertyCategoryStatus === 'commercial') || (filters?.propertyCategoryTypes === 'off-plan-projects' && filters?.propertyCategoryStatus === 'commercial'));
     const [showYearSelector, setShowYearSelector] = useState(false);
-    const furnishTypesCondition = (!((filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'residential') || (filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'commercial')))
+    const furnishTypesCondition = (!((filters?.propertyCategoryTypes === 'off-plan-land' && filters?.propertyCategoryStatus === 'residential') || (filters?.propertyCategoryTypes === 'off-plan-land' && filters?.propertyCategoryStatus === 'commercial')))
 
     const handleClear = useCallback(() => {
+
         setFilters({
             page: 1,
             search: "",
             cities: [],
-            developers: [],
-            facilities: [],
-            propertyTypeSecond: "all",
-            emirate: "",
+            propertyCategoryStatus: "all",
+            propertyCategoryTypes: "off-plan-projects",
+            emirate: "all",
             completionType: "",
-            handoverDate: undefined,
+            handoverDate: {
+                quarter: '',
+                year: '',
+            },
             paymentPlan: undefined,
             furnishType: "",
             discount: "",
-            projectTypeFirst: 'off-plan-projects',
-            projectTypeLast: 'all',
-            bedAndBath: "",
-            minPrice: '',
-            maxPrice: '',
-            minSqft: "",
-            maxSqft: "",
-            beds: "",
-            bath: "",
+
         });
+
         setClear(true);
+
         setTimeout(() => setClear(false), 100);
 
 
-    }, []);
+
+
+    }, [setFilters]);
+
+
+
 
     const [EnquiryForm, setEnquiryForm] = useState({ status: false, id: '', count: 0 });
 
+    const [searchText, setSearchText] = useState('');
+
 
     useEffect(() => {
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
     }, [paginationHappened]);
 
     const totalPropertyTypesCounts = allCounts?.propertyTypes?.map(item => item?.count).reduce((a, b) => a + b, 0)
+
+    const totalPropertyTypesCommercialCounts = (allCounts?.propertyTypes || [])
+        .filter(item => ['officespace', 'shop', 'warehouse'].includes(item.name))
+        .reduce((sum, item) => sum + (item.count || 0), 0);
+
+    const totalPropertyTypesResidentailCounts = (allCounts?.propertyTypes || [])
+        .filter(item => ['villa', 'apartment', 'penthouse', 'townhouse'].includes(item.name))
+        .reduce((sum, item) => sum + (item.count || 0), 0);
 
     const propertyTypesLists = {
         commercial: [{
@@ -425,12 +425,17 @@ function BuyPage({
             {
                 value: "all",
                 label: "All",
-                count: totalPropertyTypesCounts,
+                count:
+                    isPropertyType === 'all' ? totalPropertyTypesCounts : isPropertyType === 'residential' ? totalPropertyTypesResidentailCounts : isPropertyType === 'commercial' ? totalPropertyTypesCommercialCounts : 0,
 
-            }
+            },
+
         ],
         getAll: () => {
             return [...propertyTypesLists.default, ...propertyTypesLists.residential, ...propertyTypesLists.commercial]
+        },
+        getAllExcludeAll: () => {
+            return [...propertyTypesLists.default, ...propertyTypesLists.residential, ...propertyTypesLists.commercial].filter(item => item.value !== 'all')
         }
     }
 
@@ -443,39 +448,51 @@ function BuyPage({
         }
     }, [filters.page]);
 
-
     const [smallVideoAds, setSmallVideoAds] = useState<AllSmallVideoItems[]>();
 
     const router = useRouter();
+
     useEffect(() => {
 
         if (videoAds) {
+
             setSmallVideoAds(videoAds);
+
         }
     }, [videoAds]);
 
-
-
-    const allTypes = propertyTypesLists?.getAll()
     const handleClick = (item: AllProjectsItems) => {
 
         const currency = searchParams.get('currency');
 
         const slug = item.slug;
+
         const queryString = currency ? `?currency=${currency}` : '';
 
         sessionStorage.setItem('scroll-position', window.scrollY.toString());
+
         router.push(`/projects/${slug}${queryString}`);
+
     };
+
+    console.log(videoAds,'videoAds')
+
+    const [height, setHeight] = useState(40);
+
     const { data: portraitBannerData } = useFetchAllPortraitBannersQuery({});
 
     const handleEnquiryFormClick = useCallback((item: any) => {
+
         setEnquiryForm({
             status: true,
             id: item._id,
             count: 1,
         });
+
     }, []);
+
+    const loading = isFetching || isLoading
+
 
     const shuffleArray = (arr: any[]) => {
         const copy = [...arr];
@@ -488,35 +505,92 @@ function BuyPage({
 
 
     const banners = portraitBannerData?.data || [];
+
     const shuffledImages = useMemo(() => shuffle(banners), [banners]);
 
     const lastCitySlug = filters.cities?.[filters.cities.length - 1];
 
     const isMatchCity = cityOptions.find((item: any) => item.slug === lastCitySlug);
 
-    const projects = data?.data || initialData;
-    const totalPages = pagination?.totalPages || 1;
-    const totalRecords = pagination?.totalRecords;
+    const totalPages = pagination?.totalPages
 
-    // const cityLink = cityOptions.find(item => item.value === isMatchCity?.value)
+    const totalRecords = pagination.totalRecords
 
-    
+
+    useEffect(() => {
+
+        const t = setTimeout(() => {
+
+            setFilters(p => ({ ...p, search: searchText }));
+
+        }, 400);
+
+        return () => clearTimeout(t);
+
+    }, [searchText]);
+
+    const handleChangeSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+
+        setSearchText(e.target.value);
+
+    }, []);
+
+    useEffect(() => {
+        if (clear) {
+            const url = new URL(window.location.href);
+
+
+            url.searchParams.delete('cities');
+            url.searchParams.delete('pt');
+            url.searchParams.delete('ct');
+            url.searchParams.delete('y');
+            url.searchParams.delete('q');
+            url.searchParams.delete('ds');
+            url.searchParams.delete('ft');
+            url.searchParams.delete('pp');
+            const newUrl = `/buy/dubai/off-plan-projects?${url.searchParams.toString()}`;
+            window.history.pushState({}, '', newUrl);
+        }
+
+
+    }, [clear])
+
+
+
+    useEffect(() => {
+        const updateHeight = () => {
+            if (window.innerWidth >= 1024) setHeight(260); // lg
+            else if (window.innerWidth >= 640) setHeight(500); // md
+            else setHeight(40); // sm
+        };
+        updateHeight();
+        window.addEventListener('resize', updateHeight);
+        return () => window.removeEventListener('resize', updateHeight);
+    }, []);
+
+    // console.log(isOffplanValue,'isOffplanValue')
 
     return (
         <>
 
+
+            {/* {JSON.stringify(isOffPlan)} */}
+
+            {/* {JSON.stringify(isShowEmptyPages)} */}
+
+
             <Container>
+
 
 
                 <section className="  grid grid-cols-1 w-full  lg:grid-cols-[19.8%_9.5%_9.5%_37.5%_21%] gap-2">
 
-                    <div className="md:h-[48px] h-[40px]">
-                        <SearchNew
-                            value={filters?.search || ''}
-                            onChange={handleChangeSearch}
-                            placeholder="Search..."
-                        />
+                    <div className="md:h-[48px] h-10">
+
+                        <SearchNew value={searchText} onChange={handleChangeSearch} placeholder="Search..." />
+
                     </div>
+
 
 
 
@@ -524,14 +598,18 @@ function BuyPage({
                         <SelectLatest
                             listContainerUlListContainerClassName="w-[200px]"
                             search
-                            defaultValue={emirateOptions?.find((item: any) => item?.slug === defaultEmirate)}
+                            defaultValue={emirateOptions?.find((item: any) => item?.slug === initialValues?.emirate)}
                             clearSelection={clear}
                             label="Emirates"
                             options={emirateOptions}
                             onSelect={(e) => {
+
                                 const emirate = e?.slug ? e.slug : 'all';
+
                                 updateUrl({ emirate });
+
                                 handleSelect.emirate(e);
+
                             }}
                         />
                     </div>
@@ -540,7 +618,7 @@ function BuyPage({
 
                     <div className="hidden lg:flex h-[48px]">
                         <SelectLatest
-                            defaultValueMultiple={cityOptions?.filter((item: any) => defaultCities?.includes(item.slug))}
+                            defaultValueMultiple={cityOptions?.filter((item: any) => initialValues?.cities?.includes(item.slug))}
                             search
                             multiple
                             onSelectMultiple={(e) => {
@@ -548,13 +626,19 @@ function BuyPage({
 
                                 if (e) {
 
+
                                     if (e && e.length > 0) {
 
                                         url.searchParams.set('cities', e?.map((item) => item.slug).join(','));
+
                                     } else {
+
                                         url.searchParams.delete('cities');
+
                                     }
+
                                     const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+
                                     window.history.pushState({}, '', newUrl);
 
                                     handleChangeCities(e);
@@ -579,43 +663,51 @@ function BuyPage({
                     {/* Mobile */}
                     <div className="flex lg:hidden w-full gap-2">
 
-                        <div className=" h-[40px] w-full">
+                        <div className=" h-10 w-full">
                             <SelectLatest
                                 listContainerUlListContainerClassName="w-[200px]"
                                 search
-                                defaultValue={emirateOptions?.find((item) => item?.label === defaultEmirate)}
                                 clearSelection={clear}
+                                                            defaultValue={emirateOptions?.find((item: any) => item?.slug === initialValues?.emirate)}
+
                                 label="Emirates"
                                 options={emirateOptions}
                                 onSelect={(e) => {
                                     const emirate = e?.slug ? e.slug : 'all';
 
                                     updateUrl({ emirate });
+
                                     handleSelect.emirate(e);
+
                                 }}
                             />
                         </div>
 
 
-                        <div className=" h-[40px] w-full">
+                        <div className=" h-10 w-full">
                             <SelectLatest
+                            defaultValueMultiple={cityOptions?.filter((item: any) => initialValues?.cities?.includes(item.slug))}
 
-                                defaultValueMultiple={cityOptions?.filter((item) => defaultCities?.includes(item.label))}
                                 search
                                 multiple
                                 onSelectMultiple={(e) => {
                                     const url = new URL(window.location.href);
 
-
                                     if (e) {
+
 
                                         if (e && e.length > 0) {
 
                                             url.searchParams.set('cities', e?.map((item) => item.slug).join(','));
+
                                         } else {
+
                                             url.searchParams.delete('cities');
+
                                         }
+
                                         const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+
                                         window.history.pushState({}, '', newUrl);
 
                                         handleChangeCities(e);
@@ -635,35 +727,45 @@ function BuyPage({
 
 
                     {/* Done */}
-                    {propertyCategoryType.length > 0 ? <div className="h-[40px] sm:h-[48px]">
+                    <div className="h-10 sm:h-[48px]">
                         <SwitchSelector
                             containerClassName="sm:!gap-1"
                             onSelect={(e) => {
 
-                                updateUrl({ propertyFirst: e });
-                                handleSelect.projectTypeFirst(e);
+                                updateUrl({ propertyFirst: e })
+
+                                handleSelect.propertyCategoryTypes(e);
+
+
 
                             }}
-                            defaultValue={initialPropertyCategory}
-                            options={propertyCategoryType}
+
+                            defaultValue={filters.propertyCategoryTypes}
+                            options={propertyCategoryTypes}
 
                         />
-                    </div> : <div className="w-full h-full bg-gray-50"></div>}
+                    </div>
 
 
 
-                    <div className="flex gap-2 h-[40px] sm:h-[48px]">
+                    <div className="flex gap-2 h-10 sm:h-[48px]">
                         <SwitchSelector
                             containerClassName="sm:!gap-1"
                             onSelect={(e) => {
+
+
+
                                 updateUrl({ propertySecond: e });
-                                handleSelect.propertyTypeSecond(e);
+
+                                handleSelect.propertyCategoryStatus(e);
+
                                 setIsPropertyType(e);
                             }
 
                             }
-                            defaultValue={initialPropertyType}
-                            options={propertyTypeSecond}
+                            clearSelection={clear}
+                            defaultValue={initialValues?.propertyCategoryStatus}
+                            options={propertyCategoryStatus}
                         />
                         <button onClick={handleFilterModal} className="bg-red-600/10 rounded-[3px] flex justify-center items-center  border-none w-[55px] lg:hidden h-[40px]">
 
@@ -679,17 +781,14 @@ function BuyPage({
             </Container>
 
 
+
             {/* Additional Filters */}
             <Container>
                 <section className=" lg:flex gap-2  mt-2  hidden">
 
-
-
-
                     <div className={clsx(``, propertyTypesCondition ? 'w-[150px]' : 'flex-[8%]',
-                        true ? 'h-[33px]' : 'h-[48px]'
+                        isShowEmptyPages ? 'h-[33px]' : 'h-[48px]'
                     )}>
-
 
                         <SelectLatest
                             label="Property Types"
@@ -706,19 +805,27 @@ function BuyPage({
                                 ]
                             }
                             onSelect={(e) => {
+
                                 const url = new URL(window.location.href);
+
                                 if (e?.value) {
 
-                                    url.searchParams.set('property-type', e?.value ?? '');
+                                    url.searchParams.set('pt', e?.value ?? '');
+
                                 } else {
-                                    url.searchParams.delete('property-type');
+
+                                    url.searchParams.delete('pt');
+
                                 }
+
                                 const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+
                                 window.history.pushState({}, '', newUrl);
+
                                 handleSelect.propertyType(e)
+
                             }}
                             clearSelection={clear}
-                            defaultValue={(allTypes.find((item) => item?.value === defaultPropertyType))}
                             listContainerUlListContainerClassName="w-[200px]"
 
                         />
@@ -729,24 +836,31 @@ function BuyPage({
 
                     <div className={clsx("lg:flex-[30%]",
 
-                        true ? 'h-[33px]' : 'h-[48px]'
+                        isShowEmptyPages ? 'h-[33px]' : 'h-[48px]'
 
                     )}>
                         <SwitchSelector
-                            defaultValue={defaultCompletionType}
+                            defaultValue={initialValues?.completionType}
                             onSelect={(e) => {
 
-
                                 const url = new URL(window.location.href);
+
                                 if (e == 'all') {
-                                    url.searchParams.delete('completion-type');
+
+                                    url.searchParams.delete('ct');
+
                                 } else {
-                                    url.searchParams.set('completion-type', e ?? '');
+
+                                    url.searchParams.set('ct', e ?? '');
+
                                 }
+
                                 const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+
                                 window.history.pushState({}, '', newUrl);
 
                                 handleSelect.completionType(e)
+
                             }}
                             clearSelection={clear}
                             options={CompletionTypes}
@@ -756,32 +870,66 @@ function BuyPage({
 
                     <div className={clsx("flex-[8%]",
 
-                        true ? 'h-[33px]' : 'h-[48px]'
+                        isShowEmptyPages ? 'h-[33px]' : 'h-[48px]'
 
                     )}>
 
                         <ExpandableComponentDropdown
-                            isOpen={showYearSelector}
+                            isOpen={(showYearSelector)}
                             onToggle={() => setShowYearSelector(prev => !prev)}
                             label={(filters.handoverDate?.year || filters.handoverDate?.quarter) ? (`${filters.handoverDate?.year}-${filters.handoverDate?.quarter}`) : "Handover"}
                             isSelected={false}
-
                             onClear={() => {
-
+                                setShowYearSelector(false)
+                                const url = new URL(window.location.href);
+                                url.searchParams.delete('y');
+                                url.searchParams.delete('q');
+                                const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                window.history.pushState({}, '', newUrl);
+                                handleSelect.handoverDate({
+                                    quarter: '',
+                                    year: ''
+                                })
                             }}
+                            clear={clear}
                             customCloseControl={<button className="text-xs text-red-600">X</button>}
                         >
                             <SelectHandoverDate
-                                initialYear={filters.handoverDate?.year ? filters.handoverDate?.year : 2025}
-                                initialQuarter={filters.handoverDate?.quarter ? filters.handoverDate?.quarter : "Q2"}
+                                // initialYear={filters.handoverDate?.year ? filters.handoverDate?.year : new Date().getFullYear()}
+                                // initialQuarter={filters.handoverDate?.quarter ? filters.handoverDate?.quarter : "Q1"}
+
 
                                 onDone={(year, quarter) => {
+                                    const url = new URL(window.location.href);
+
+                                    if (year) {
+                                        url.searchParams.set('y', year + '');
+                                    }
+
+                                    if (quarter) {
+                                        url.searchParams.set('q', quarter.toLowerCase());
+                                    }
+
+                                    const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                    window.history.pushState({}, '', newUrl);
+
                                     handleSelect.handoverDate({ quarter, year })
                                 }}
                                 onClose={() => setShowYearSelector(false)}
                                 reset={() => {
+                                    setShowYearSelector(false)
+                                    const url = new URL(window.location.href);
+                                    url.searchParams.delete('y');
+                                    url.searchParams.delete('q');
+                                    const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                    window.history.pushState({}, '', newUrl);
+                                    handleSelect.handoverDate({
+                                        quarter: '',
+                                        year: ''
+                                    })
 
                                 }}
+
                                 onChange={(year, quarter) => {
 
                                 }}
@@ -790,26 +938,14 @@ function BuyPage({
 
                     </div>
 
-
-
-
-
-
-
-
-
-
-
-
                     <div className={clsx("flex-[10%]",
-                        true ? 'h-[33px]' : 'h-[48px]'
-
-
+                        isShowEmptyPages ? 'h-[33px]' : 'h-[48px]'
                     )}>
 
                         <SelectNew
                             clearSelection={clear}
                             className="w-[200px]"
+                            defaultValue={filters.paymentPlan}
                             label="Payment Plan"
                             options={[{
                                 value: "all",
@@ -825,7 +961,17 @@ function BuyPage({
                                 label: "Post Handover",
                                 count: allCounts?.paymentPlans?.find(item => item?.name === 'postHandover')?.count || 0,
                             },]}
-                            onSelect={handleSelect.paymentPlan}
+                            onSelect={(e) => {
+                                const url = new URL(window.location.href);
+                                if (e && e?.value !== 'all') {
+                                    url.searchParams.set('pp', e.value);
+                                } else {
+                                    url.searchParams.delete('pp');
+                                }
+                                const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                window.history.pushState({}, '', newUrl);
+                                handleSelect.paymentPlan(e)
+                            }}
                         />
                     </div>
 
@@ -834,9 +980,7 @@ function BuyPage({
 
 
                     <div className={clsx("flex-[7%]",
-
-                        true ? 'h-[33px]' : 'h-[48px]'
-
+                        isShowEmptyPages ? 'h-[33px]' : 'h-[48px]'
                     )}>
 
                         <SelectNew
@@ -859,7 +1003,18 @@ function BuyPage({
                                 count: allCounts?.discount?.find(item => item?.name === 'without-discount')?.count || 0,
 
                             },]}
-                            onSelect={handleSelect.discount}
+                            onSelect={(e) => {
+                                const url = new URL(window.location.href);
+                                if (e && e.value !== 'all') {
+                                    url.searchParams.set('ds', e.value);
+                                } else {
+                                    url.searchParams.delete('ds');
+                                }
+                                const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                window.history.pushState({}, '', newUrl);
+                                handleSelect.discount(e)
+                            }}
+                            defaultValue={filters.discount}
                         />
                     </div>
 
@@ -867,14 +1022,14 @@ function BuyPage({
 
                     <div className={clsx("", furnishTypesCondition ? 'w-[140px]' : 'flex-[8%]',
 
-                        true ? 'h-[33px]' : 'h-[48px]'
+                        isShowEmptyPages ? 'h-[33px]' : 'h-[48px]'
 
                     )}>
 
                         <SelectNew
                             clearSelection={clear}
                             className="w-[200px]"
-                            label="Furnish Type"
+                            label="Furnished Type"
                             options={[{
                                 value: "all",
                                 label: "All",
@@ -894,24 +1049,38 @@ function BuyPage({
                             },
                             {
                                 value: "un-furnishing",
-                                label: "UnFurnished",
+                                label: "Un Furnished",
                                 count: allCounts?.furnisheds?.find(item => item?.name === 'un-furnishing')?.count || 0,
                             },]}
-                            onSelect={handleSelect.furnishType}
+                            onSelect={(e) => {
+                                const url = new URL(window.location.href);
+                                if (e && e.value) {
+                                    url.searchParams.set('ft', e.value);
+                                } else {
+                                    url.searchParams.delete('ft');
+                                }
+                                const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                window.history.pushState({}, '', newUrl);
+                                handleSelect.furnishType(e)
+                            }}
+                            defaultValue={filters.furnishType}
                         />
                     </div>
 
 
 
 
-                    <div onClick={() => handleClear()} className={clsx("flex cursor-pointer max-w-[120px] items-center gap-2", true ? 'h-[33px]' : 'h-[48px]')}>
-                        <label className="text-[12px] cursor-pointer">Clear Filters</label>
-                        <div className="bg-black cursor-pointer w-[14px] rounded-full h-[14px] flex justify-center items-center">
+                    <div onClick={() => handleClear()} className={clsx("flex cursor-pointer max-w-[120px] items-center gap-2", false ? 'h-[33px]' : 'h-[48px]')}>
+                        <label className="text-[12px] cursor-pointer text-nowrap">Clear Filters</label>
+                        <div className="bg-black cursor-pointer w-3.5 rounded-full h-3.5 flex justify-center items-center">
                             <IoCloseOutline size={12} color="white" />
                         </div>
                     </div>
                 </section>
             </Container>
+
+
+
 
 
             <SectionDivider
@@ -924,16 +1093,17 @@ function BuyPage({
             {/* Projects Section */}
             <Container>
                 <SpaceWrapper
-                    className={'pt-[0px]'}
+                    className={'pt-0'}
                 >
 
                     <div className="mb-4 flex gap-2">
-                        {!isShowEmptyPages ? <div className="flex-1 h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                        {!isShowEmptyPages ? <div className="flex-1 h-full  grid  md:gap-3 sm:grid-cols-2 lg:grid-cols-1">
 
-                            {true && <div className={clsx("flex flex-col md:flex-row flex-1 items-start md:items-center w-full", true ? '' : 'hidden')}>
+                            {showHamburger && <div className={clsx("flex flex-col md:flex-row flex-1 items-start md:items-start w-full", true ? '' : 'hidden')}>
 
                                 <BreadcampNavigation
-                                    title={`${productTypeOptionFirstItems.find(item => item.value === isExistPropertyCategoryType)?.label} :`}
+                                
+                                    title={`${propertyCategoryTypes.find(item => item.value === isExistPropertyCategoryType)?.label} :`}
                                     items={[
                                         {
                                             title: isMatchCity?.label === 'All' ? 'All Cities' : isMatchCity?.label || 'All Cities',
@@ -942,15 +1112,31 @@ function BuyPage({
                                                 : `/cities`
                                         },
                                         {
-                                            title: `${productTypeOptionFirstItems.find(item => item.value === isExistPropertyCategoryType)?.label} for sale in ${isMatchCity?.value === 'all' ? 'UAE' : isMatchCity?.label || 'UAE'}`,
+                                            title: `${propertyCategoryTypes.find(item => item.value === isExistPropertyCategoryType)?.label || 'New projects'} for sale in ${isMatchCity?.value === 'all' ? 'UAE' : isMatchCity?.label || 'UAE'}`,
                                         }
                                     ]}
+                                    
                                 />
-                                <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{totalRecords ? `${parsePrice(totalRecords)} Properties Available` : 'No Properties Available'}</p>
+
+                                <div className="md:gap-3 flex flex-col">
+
+
+                                    {/* <div className="flex gap-3 items-center justify-end text-xs w-72 font-normal font-poppins">
+                                        <p>Sort by :</p>
+                                        <div className="w-[150px]">
+                                            <ToggleButton />
+                                        </div>
+                                    </div> */}
+
+                                    <div className="hidden md:flex justify-end items-center">
+                                        <p className='text-xs font-poppins font-normal text-nowrap'>{formatCount(projects.length)} Properties</p>
+                                    </div>
+                                </div>
+                                {/* <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{totalRecords ? `${parsePrice(totalRecords)} Properties Available` : 'No Properties Available'}</p> */}
                             </div>}
 
 
-                            {true && <div className={clsx("pt-0 md:pt-[24px]", true ? '' : 'hidden')}>
+                            {showHamburger && <div className={clsx("pt-0 md:pt-1 pb-3 md:pb-0 ", true ? '' : 'hidden')}>
 
                                 <LocationTags
 
@@ -966,12 +1152,60 @@ function BuyPage({
 
                             </div>}
 
+                            {(projects && projects.length ? false : loading) ? <>
 
-                            {totalRecords === 0 && <NoDataFound />}
+
+                                {
+
+                                    Array.from({ length: 24 }).map((item, index) => {
+                                        return (
+                                            <>
+                                                <div className="lg:flex h-[260px] gap-2 hidden w-full ">
+
+                                                    <div className="flex-[40%]  ">
+
+                                                        <Skeleton
+                                                            height="100%"
+                                                            count={1}
+                                                        />
+                                                    </div>
+
+                                                    <div className="relative flex-[60%] h-full ">
 
 
-                            {projects ? (
-                                projects?.map((item, index) => (
+                                                        <Skeleton
+                                                            height="80%"
+                                                            count={1}
+                                                        />
+
+                                                        <div className="flex   gap-2 mt-1">
+
+
+                                                            <div className="flex-1">
+                                                                <Skeleton
+                                                                    height={40}
+                                                                    count={1}
+                                                                />
+                                                            </div>
+
+                                                            <div className="flex-1">
+                                                                <Skeleton
+                                                                    height={40}
+                                                                    count={1}
+                                                                />
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+
+                                                </div>
+                                            </>
+                                        )
+                                    })
+                                }
+                            </> :
+                                (projects.length === 0) ? <NoDataFound /> : projects?.length && projects?.map((item, index) => (
                                     <React.Fragment key={index}>
                                         <ProjectCard
                                             navigateDetailsButton={true}
@@ -991,11 +1225,10 @@ function BuyPage({
                                         )}
                                     </React.Fragment>
                                 ))
-                            ) : (
-                                Array.from({ length: 10 }).map((_, index) => (
-                                    <ProjectCardSkelton key={index} />
-                                ))
-                            )}
+
+                            }
+
+
                         </div> :
                             <FilterEmpty />
                         }
@@ -1004,11 +1237,14 @@ function BuyPage({
 
                         <div className={"w-full md:block hidden max-w-[301.5px]"}>
 
-                            {true && (smallVideoAds && smallVideoAds.length > 0 ?
-                                <div className={clsx("w-full mb-[12px] relative flex")}>
+                            { !shouldSwapAds && (videoAds && videoAds.length > 0 ?
+                                <div className={clsx("w-full mb-3 relative flex")}>
                                     <VideoPreview
-                                        projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
-                                        src={smallVideoAds?.[0]?.videoFile?.url?.url || ''}
+                                        id={videoAds?.[0]?._id}
+                                        alt={videoAds?.[0]?.name || ''}
+                                        thumbnailUrl={videoAds?.[0]?.thumbnail?.webp?.url || ''}
+                                        projectSlug={videoAds?.[0]?.projectDetails?.slug || ''}
+                                        videoUrl={videoAds?.[0]?.videoFile?.url?.url || ''}
                                     />
                                 </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>)
                             }
@@ -1016,7 +1252,7 @@ function BuyPage({
 
 
 
-                            {true && <RecommendedText
+                            {<RecommendedText
                                 title="Recommended For You"
                                 items={shuffle(siteMap)?.slice(0, 6)}
                             />}
@@ -1027,16 +1263,14 @@ function BuyPage({
                                     images={portraitBanners}
                                 />
 
-                                {true && <>
-                                    <RecommendedText
-                                        title="Recommended For You"
-                                        items={shuffle(siteMap)?.slice(0, 6)}
-                                    />
+                                {<div className='mt-2'>
+                                                                                       <RecommendedText title="Trending Areas" items={shuffle(siteMap)?.slice(0, 6)} />
+                                  
                                     <RecommendedText
                                         title="Popular Searches"
                                         items={shuffle(siteMap)?.slice(0, 6)}
                                     />
-                                </>}
+                                </div>}
 
 
 
@@ -1091,20 +1325,33 @@ function BuyPage({
 
 
             <MobileFilterOption
+                handleSelect={handleSelect}
                 pagination={pagination}
                 allCounts={allCounts}
                 emiratesData={emiratesData}
+                filters={filters}
                 resultProjects={() => {
                 }}
+                clear={clear}
+                setIsPropertyType={setIsPropertyType}
+                handleChangeCities={handleChangeCities}
+                initialValues={initialValues}
+                cityOptions={cityOptions}
+                updateUrl={updateUrl}
+                totalRecords={totalRecords}
                 setFiltersHandler={setFilters}
                 onClose={() => setFilterModel(false)}
                 show={filterModel}
+                isPropertyType={isPropertyType}
+                propertyTypesLists={propertyTypesLists}
+                emirateOptions={emirateOptions}
+                handleClear={handleClear}
             />
 
 
 
             <HomePageContent
-            content={content}
+                content={content}
                 display={false}
             />
 
@@ -1120,3 +1367,85 @@ function BuyPage({
 }
 
 export default BuyPage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const ToggleButton = () => {
+    const [open, setOpen] = useState(false);
+    const [selected, setSelected] = useState<any>(null);
+    const options = ["Newest", "Price High", "Price Low", "Recently Added"];
+    const ref = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+
+    return (
+        <div ref={ref} className="relative w-full">
+            <button
+                onClick={() => setOpen(!open)}
+                className="w-full flex text-xs cursor-pointer items-center justify-between px-3 py-1.5 bg-white border border-[#DEDEDE] rounded"
+            >
+                <span className="text-xs text-gray-700">
+                    {selected ? selected : "Filter"}
+                </span>
+                <FaCaretDown
+                    className={clsx("w-[20px] h-[20px] transition-transform", {
+                        "rotate-180": open,
+                    })}
+                    color={"#FF1645"}
+                />
+            </button>
+
+            <AnimatePresence>
+                {open && (
+                    <motion.ul
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -5 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute z-40 mt-2 w-full bg-white border-[#DEDEDE] border rounded overflow-hidden"
+                    >
+                        {options.map((opt, i) => (
+                            <li
+                                key={i}
+                                className={clsx(
+                                    "px-3 py-2 text-xs text-gray-700 hover:bg-gray-100 cursor-pointer",
+                                    {
+                                        "bg-red-700/10 text-[#FF1645]": selected === opt,
+                                    }
+                                )}
+                                onClick={() => {
+                                    if (selected === opt) {
+                                        setSelected(null);
+                                        return;
+                                    }
+                                    setSelected(opt);
+                                    setOpen(false);
+                                }}
+                            >
+                                {opt}
+                            </li>
+                        ))}
+                    </motion.ul>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+};

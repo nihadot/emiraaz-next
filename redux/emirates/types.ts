@@ -8,7 +8,7 @@ export type EmirateFetchAllNamesResponse = {
 export type EmirateNames = {
     _id:string;
     name:string;
-    count?:number;
+    count:number;
     slug:string;
 }
 

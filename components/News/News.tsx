@@ -18,6 +18,7 @@ import Link from 'next/link'
 import SectionDivider from '../atom/SectionDivider/SectionDivider'
 import clsx from 'clsx'
 import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle'
+import { ChevronRight } from 'lucide-react'
 
 type Props = {
     initialData: any;
@@ -79,33 +80,29 @@ const News = ({
 
             <Container>
 
-                <section className='h-full w-full gap-[30px] pb-20 flex'>
+                <section className='h-full w-full gap-[12px] pb-20 flex'>
                     <div className=" flex-1">
-                        <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-[12px] sm:gap-[37px] ">
+                        <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-[12px] sm:gap-[10px] ">
                             {data && data?.length > 0 ? data?.map((item, index) => {
                                 return (
-                                    <div key={index} className="">
-                                        <div className="relative w-full h-[185px] object-cover">
+                                    <div key={index} className="border border-[#DEDEDE] flex h-[380px] flex-col gap-1 p-3 rounded-md ">
+                                        <div className="relative w-full h-[170px] object-cover">
 
                                             <Image
                                                 fill
                                                 alt={item.newsTitle}
                                                 src={item.image?.webp?.url}
-                                                className="rounded-[5px] cursor-text"
+                                                className="cursor-text rounded"
                                             />
                                         </div>
-                                        <Link
-                                            href={`/news/${item.slug}`}
-                                        >
-                                            <h4 className='mt-[8.25px] cursor-pointer font-poppins font-medium text-[14.25px] text-black line-clamp-2 text-ellipsis'>{item.newsTitle}</h4>
-                                        </Link>
 
-                                        <div className="flex items-center mt-2  gap-[5px]">
-
-                                            <div className=" flex font-poppins h-[24px] font-medium justify-center items-center px-3 rounded-[5px] text-[10.5px] text-[#FF1645] bg-[#FFE7EC] ">{item?.newCategoryDetails?.name}</div>
+                                        <div className="flex items-center mt-1  gap-3">
 
 
-                                            <div className="flex justify-center px-2 py-1  items-center gap-[4.5px]">
+
+                                            <div className="flex justify-center    items-center gap-[4.5px]">
+                                                <p className='text-[#767676]   text-[12px] font-medium font-poppins '>{formatDate(item?.date)}</p>
+                                          
                                                 <Image
                                                     src={calender}
                                                     alt="calender"
@@ -113,10 +110,34 @@ const News = ({
                                                     height={16.5}
                                                     className="w-[16.5px] cursor-text h-[16.5px]"
                                                 />
-                                                <p className='text-[#767676]   text-[12px] font-medium font-poppins'>{formatDate(item?.date)}</p>
 
                                             </div>
+
+                                            <div className=" flex font-poppins h-5 font-medium justify-center items-center text-ellipsis line-clamp-1 px-3 rounded text-[10px] text-[#FF1645] bg-[#FFE7EC] ">{item?.newCategoryDetails?.name}</div>
+
                                         </div>
+                                        <Link
+                                            href={`/news/${item.slug}`}
+                                        >
+                                            <h4 className='leading-4 cursor-pointer font-poppins font-medium text-lg text-black line-clamp-2 text-ellipsis'>{item.newsTitle}</h4>
+                                        </Link>
+
+
+                                        <p className="line-clamp-4 font-poppins text-xs font-normal text-[#767676] leading-[20px] overflow-hidden text-ellipsis">
+                                            {item?.newsBody?.text}
+                                        </p>
+
+                                        <Link
+                                         href={`/news/${item.slug}`}
+                                         className='cursor-pointer text-[#FF1645]  w-fit font-poppins items-center text-xs flex'
+                                         >
+                                         <span className='flex font-medium'>Read More</span>
+                                            <ChevronRight size={16} />
+                                       
+                                        </Link>
+
+
+                                        
                                     </div>
 
 
@@ -207,8 +228,8 @@ const News = ({
                         <div className="mt-4"></div>
                         <RecommendedText
                             title="Recommended For You"
-                                                                   items={shuffle(siteMap)?.slice(0, 6)}
-                           
+                            items={shuffle(siteMap)?.slice(0, 6)}
+
                         />
                         <div className="sticky top-3 mt-3 left-0">
 
@@ -223,12 +244,12 @@ const News = ({
                                 <RecommendedText
                                     title="Recommended For You"
                                     items={shuffle(siteMap)?.slice(0, 6)}
-                                   
+
                                 />
                                 <RecommendedText
                                     title="Popular Searches"
-                                     items={shuffle(siteMap)?.slice(0, 6)}
-                                    
+                                    items={shuffle(siteMap)?.slice(0, 6)}
+
                                 />
                             </>}
 

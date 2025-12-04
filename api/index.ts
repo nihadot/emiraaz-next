@@ -6,6 +6,8 @@ import { logoutStart, logoutSuccess } from "@/redux/userSlice/userSlice";
 
 // export const baseUrl = `https://api.propertyseller.com/api/v1`
 export const baseUrl = process.env.NEXT_PUBLIC_API_URL
+export const socketBaseUrl = process.env.NEXT_PUBLIC_SOCKET_API_URL
+console.log(socketBaseUrl,'socketBaseUrl')
 // export const baseUrl = `http://192.168.196.6:4000/api/v1`
 // export const baseUrl = `http://192.168.196.227:4000/api/v1`
 // export const baseUrl = `http://192.168.1.7:4000/api/v1`

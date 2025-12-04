@@ -4,7 +4,7 @@ export function formatUrl(url: string): string {
   return url
     .split('/')
     .filter(Boolean)
-    .slice(1) // remove first segment (for-sale)
+    // .slice(1) // remove first segment (for-sale)
     .map(segment =>
       segment
         .split('-')

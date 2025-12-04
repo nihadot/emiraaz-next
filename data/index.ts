@@ -120,20 +120,40 @@ export const propertyTypeFirst = [
 export const productTypeOptionFirstItems = [
     // { label: "All", value: "all" },
     { label: "Off-Plan Projects", value: "off-plan-projects",link:"off-plan-projects" },
-    { label: "Off-Plan Resale", value: "resale" ,link:"off-plan-resale"},
+    { label: "Off-Plan Resale", value: "off-plan-resale" ,link:"off-plan-resale"},
+    { label: "Secondary ", value: "secondary",link:"off-plan-secondary" },
+    { label: "Land ", value: "land",link:"off-plan-land" },
+]
+
+export const propertyCategoryTypes = [
+    // { label: "All", value: "all" },
+    { label: "New Projects", value: "off-plan-projects",link:"off-plan-projects" },
+    { label: "Off-Plan Resale", value: "off-plan-resale" ,link:"off-plan-resale"},
     { label: "Secondary ", value: "secondary",link:"off-plan-secondary" },
     { label: "Land ", value: "land",link:"off-plan-land" },
 ]
 
 export const propertyCategoryType = [
     // { label: "All", value: "all" },
-    { label: "Off-Plan Projects", value: "off-plan-projects",link:"off-plan-projects" },
-    { label: "Off-Plan Resale", value: "resale" ,link:"off-plan-resale"},
+    { label: "New Projects", value: "off-plan-projects",link:"off-plan-projects" },
+    { label: "Off-Plan Resale", value: "off-plan-resale" ,link:"off-plan-resale"},
     { label: "Secondary ", value: "secondary",link:"off-plan-secondary" },
     { label: "Land ", value: "land",link:"off-plan-land" },
 ]
 
 export const propertyTypeSecond = [
+    { label: "All", value: "all" },
+    { label: "Residential", value: "residential" },
+    { label: "Commercial", value: "commercial" },
+]
+
+export const propertyTypeStatus = [
+    { label: "All", value: "all" },
+    { label: "Residential", value: "residential" },
+    { label: "Commercial", value: "commercial" },
+]
+
+export const propertyCategoryStatus = [
     { label: "All", value: "all" },
     { label: "Residential", value: "residential" },
     { label: "Commercial", value: "commercial" },

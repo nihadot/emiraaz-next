@@ -1,28 +1,23 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AiOutlineClose } from "react-icons/ai";
 import SectionDivider from '@/components/atom/SectionDivider/SectionDivider';
 import Container from '@/components/atom/Container/Container';
-import { CompletionTypes, productTypeOptionFirstItems, propertyCategoryType, propertyTypeFirst, PropertyTypes, propertyTypeSecond } from '@/data';
-import SwitchSelectorMobile from '@/components/SelectOption/SwitchSelectorMobile';
-import { SelectHandoverDate } from '@/components/SelectHandoverDate';
-import PriceRangeInput from './RangeCalculator';
-import BedBathSelector from './BedBathSelector';
-import clsx from 'clsx';
 import { AllProjectsItems } from '@/redux/project/types';
 import SelectLatest from '@/components/SelectOption/SelectLatest';
-import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
-import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
-import { useFetchAllProjectsQuery } from '@/redux/project/projectApi';
 import { FiltersState } from '@/components/types';
-import { apartment_icon, penthouse_icon, townhouse_icon, villa_icon } from '../assets';
-import Image, { StaticImageData } from 'next/image';
-import { usePathname, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 import { EmirateNames } from '@/redux/emirates/types';
 import { CountItem } from '@/redux/news/newsApi';
 import { Pagination } from '@/utils/types';
+import SwitchSelectorMobile from '@/components/SelectOption/SwitchSelectorMobile';
+import { CompletionTypes, propertyCategoryStatus, propertyCategoryTypes } from '@/data';
+import clsx from 'clsx';
+import { apartment_icon, penthouse_icon, townhouse_icon, villa_icon } from '../assets';
+import { SelectHandoverDate } from '@/components/SelectHandoverDate';
 
 type Props = {
+    handleChangeCities: (option: any[]) => void
     show: boolean;
     onClose: () => void;
     emiratesData: EmirateNames[],
@@ -30,483 +25,175 @@ type Props = {
     handleFilterChanges?: (item: AllProjectsItems[]) => void;
     setFiltersHandler: (item: FiltersState) => void;
     resultProjects: (item: AllProjectsItems[]) => void;
-    // priceRange?: boolean;
-    // bathroomsRange?: boolean;
+    updateUrl: ({ emirate, propertyFirst, propertySecond }: { emirate?: string, propertyFirst?: string, propertySecond?: string }) => void;
     allCounts: CountItem
+    totalRecords: number,
+    handleSelect: {
+        emirate: (option: any) => void;
+        propertyType: (option: any) => void;
+        propertyCategoryStatus: (option: any) => void;
+        completionType: (option: any) => void;
+        propertyCategoryTypes: (option: any) => void;
+        handoverDate: (data: any) => void;
+        projectType: (option: any) => void;
+        paymentPlan: (option: any) => void;
+        furnishType: (option: any) => void;
+        discount: (option: any) => void;
+
+    },
+    emirateOptions: {
+        label: string;
+        value: string;
+        count: number;
+        slug: string;
+    }[],
+    cityOptions: {
+        label: string;
+        value: string;
+        count: number;
+        slug: string;
+    }[]
+    initialValues: {
+        emirate: string;
+        cities: string[];
+        propertyCategoryType: string;
+        propertyCategoryStatus: string;
+        propertyType?: string | undefined;
+        completionType?: string | undefined;
+        qtr?: string | undefined;
+        year: number | "";
+        paymentPlan?: string | undefined;
+        furnishied?: string | undefined;
+        discount?: string | undefined;
+    }
+    setIsPropertyType: (option: any) => void;
+    filters: FiltersState;
+    propertyTypesLists: any;
+    isPropertyType: string;
+    handleClear: () => void;
+    clear: boolean;
 
 };
 
 
-type PropertyOptionProps = {
-    label: string
-    value: string
-    icon: StaticImageData | string
-    selected: boolean
-    onSelect: (option: { label: string; value: string }) => void
-}
-
-
-const PropertyOption = ({ label, value, icon, selected, onSelect }: PropertyOptionProps) => (
-    <div className="flex flex-col gap-1">
-        <div
-            onClick={() => onSelect({ label, value })}
-            className={clsx(
-                "p-3.5 rounded-full cursor-pointer",
-                selected ? "bg-red-700/10" : "outline outline-[#DEDEDE]"
-            )}
-        >
-            <Image className="bg-transparent" src={icon} alt={`${label} icon`} width={30} height={30} />
-        </div>
-        <p className="text-[10px] font-medium font-poppins text-center">{label}</p>
-    </div>
-)
-
-
 function MobileFilterOption({
     show,
+    handleClear,
+    updateUrl,
     onClose,
-    setFiltersHandler,
-    resultProjects,
-    // bathroomsRange,
-    pagination,
-    // priceRange,
-    emiratesData,
-    allCounts,
-
+    clear,
+    totalRecords,
+    isPropertyType,
+    propertyTypesLists,
+    setIsPropertyType,
+    handleSelect,
+    emirateOptions,
+    initialValues,
+    cityOptions,
+    handleChangeCities,
+    filters,
 }: Props) {
-    const [clear, setClear] = React.useState(false);
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
-
-
-    React.useEffect(() => {
-        if (show) {
-            document.body.style.overflow = 'hidden'; // Prevent scroll
-        } else {
-            document.body.style.overflow = 'auto'; // Restore scroll
-        }
-
-        return () => {
-            document.body.style.overflow = 'auto'; // Clean up on unmount
-        };
-    }, [show]);
-    // const { data: emiratesData } = useFetchAllEmirateNamesQuery();
-
-
-    const [filters, setFilters] = useState<FiltersState>({
-        page: 1,
-        search: "",
-        cities: [],
-        developers: [],
-        facilities: [],
-        propertyTypeSecond: "all",
-        emirate: "",
-        completionType: "",
-        handoverDate: undefined,
-        paymentPlan: undefined,
-        furnishType: "",
-        discount: "",
-        projectTypeFirst: 'off-plan-projects',
-        projectTypeLast: 'all',
-        bedAndBath: "",
-        minPrice: '',
-        maxPrice: '',
-        minSqft: "",
-        maxSqft: "",
-        beds: "",
-        bath: "",
-    });
-
-
-    const allCountsOfEmirate = emiratesData?.reduce((acc, curr) => {
-        acc += curr.count || 0;
-        return acc;
-    }, 0);
-
-
-    const emirateOptions = useMemo(() => {
-        const preferredOrder = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ras Al Khaimah', 'Ajman', 'Umm Al-Quwain'];
-
-        const mappedOptions = emiratesData?.map((item) => ({
-            label: item.name,
-            value: item._id,
-            count: item.count,
-            slug: item.slug,
-        })) || [];
-
-        const sortedOptions = mappedOptions?.sort((a, b) => {
-            const aIndex = preferredOrder?.indexOf(a.label);
-            const bIndex = preferredOrder?.indexOf(b.label);
-
-            // If both labels are in the preferredOrder list
-            if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
-
-            // If only one is in the list, put it before the other
-            if (aIndex !== -1) return -1;
-            if (bIndex !== -1) return 1;
-
-            // If neither is in the list, sort alphabetically (optional)
-            return a?.label?.localeCompare(b?.label);
-        });
-
-        return [
-            { label: "All", value: "all", count: allCountsOfEmirate }, // Always first
-            ...sortedOptions,
-        ];
-    }, []);
-    // const emirateOptions = React.useMemo(() => {
-    //     const mappedOptions = emiratesData?.data.map((item) => ({
-    //         label: item.name,
-    //         value: item._id,
-    //          count: item.count,
-    //     })) || [];
-
-    //     return [
-    //         { label: "All", value: "all" }, // <--- Add "All" option at the top
-    //         ...mappedOptions,
-    //     ];
-    // }, [emiratesData]);
-    const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
-    const [rangeCalculator, setRangeCalculator] = useState(false);
-
-
-    const handleSelect = useMemo(() => ({
-        emirate: (option: any) => setFilters(prev => ({ ...prev, emirate: option?.value || '' })),
-        propertyType: (option: any) => setFilters(prev => ({ ...prev, propertyType: option?.value || '' })),
-        propertyTypeSecond: (option: any) => setFilters(prev => ({ ...prev, propertyTypeSecond: option })),
-        completionType: (option: any) => setFilters(prev => ({ ...prev, completionType: option })),
-        productTypeOptionFirst: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionFirst: option })),
-        projectTypeFirst: (option: any) => setFilters(prev => ({ ...prev, projectTypeFirst: option })),
-        projectTypeLast: (option: any) => setFilters(prev => ({ ...prev, projectTypeLast: option })),
-        productTypeOptionLast: (option: any) => setFilters(prev => ({ ...prev, productTypeOptionLast: option })),
-        handoverDate: (data: any) => setFilters(prev => ({ ...prev, handoverDate: data })),
-        projectType: (option: any) => setFilters(prev => ({ ...prev, projectType: option })),
-        paymentPlan: (option: any) => setFilters(prev => ({ ...prev, paymentPlan: option?.value || '' })),
-        furnishType: (option: any) => setFilters(prev => ({ ...prev, furnishType: option?.value || '' })),
-        discount: (option: any) => setFilters(prev => ({ ...prev, discount: option?.value || '' })),
-        bedAndBath: (option: any) => setFilters(prev => ({ ...prev, bedAndBath: option?.value || '' })),
-        maxPrice: (option: any) => setFilters(prev => ({ ...prev, maxPrice: option || '' })),
-        minSqft: (option: any) => setFilters(prev => ({ ...prev, minSqft: option || '' })),
-        maxSqft: (option: any) => setFilters(prev => ({ ...prev, maxSqft: option || '' })),
-        minPrice: (option: any) => setFilters(prev => ({ ...prev, minPrice: option || '' })),
-        beds: (option: any) => setFilters(prev => ({ ...prev, beds: option || '' })),
-        bath: (option: any) => setFilters(prev => ({ ...prev, bath: option || '' })),
-    }), []);
-
-
-
-
-    const cityOptions = useMemo(() => {
-        const mappedOptions = cities?.data?.map((item) => ({
-            label: item.name,
-            value: item.name,
-            count: item.count,
-            slug: item.slug,
-
-        })) || [];
-
-        return [
-            { label: "All", value: "all", count: 0 }, // <--- Add "All" option at the top
-            ...mappedOptions,
-        ];
-    }, [cities]);
-
-
-    const handleChangeCities = useCallback((option: any[]) => {
-        if (option.length === 0) {
-            setFilters(prev => ({ ...prev, cities: [] }));
-            return;
-        }
-        setFilters(prev => ({ ...prev, cities: option.map((item) => item?.value) }));
-    }, []);
-    const [showBedBath, setShowBedBath] = useState(false);
-
-
-    const handleClear = useCallback(() => {
-        setFilters({
-            page: 1,
-            search: "",
-            cities: [],
-            developers: [],
-            facilities: [],
-            propertyType: [],
-            propertyTypeSecond: undefined, // first one propert stage
-            emirate: "",
-            completionType: "",
-            handoverDate: undefined,
-            projectType: '', // last one propert types (offplan ....)
-            paymentPlan: undefined,
-            furnishType: "",
-            discount: "",
-            bedAndBath: '',
-            maxPrice: '',
-            minPrice: '',
-            maxSqft: '',
-            minSqft: '',
-            bath: '',
-            beds: ''
-            ,
-        });
-        setClear(true);
-        setTimeout(() => setClear(false), 100);
-    }, []);
-
-
 
     useEffect(() => {
-        setFilters({
-            page: 1,
-            search: "",
-            cities: [],
-            developers: [],
-            facilities: [],
-            propertyType: [],
-            propertyTypeSecond: "all",
-            projectTypeFirst: "all",
-            projectTypeLast: "all",
-            emirate: "",
-            completionType: "",
-            handoverDate: undefined,
-            projectType: '', // last one propert types (offplan ....)
-            paymentPlan: undefined,
-            furnishType: "",
-            discount: "",
-            bedAndBath: '',
-            maxPrice: '',
-            minPrice: '',
-            maxSqft: '',
-            minSqft: '',
-            bath: '',
-            beds: ''
-            ,
-        });
-    }, [])
+        if (show) {
+            const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+            document.body.style.overflow = "hidden";
+            document.body.style.paddingRight = `${scrollBarWidth}px`;
+        } else {
+            document.body.style.overflow = "";
+            document.body.style.paddingRight = "";
+        }
+    }, [show]);
 
-    const [defaultEmirate, setDefaultEmirate] = useState<string>('');
-    const [defaultCities, setDefaultCities] = useState<any>('');
-
-    // console.log(filters, 'filters')
     const handleDone = () => {
 
-        // setFiltersHandler(filters);
+
         onClose()
 
-        // if (projects?.data) {
-        //     resultProjects(projects?.data)
-        // }
     }
 
+  
+    // Store the scroll position when modal opens
     useEffect(() => {
-        setFiltersHandler(filters)
-    }, [filters])
+        if (show) {
+            // Save current scroll position
+            const scrollY = window.scrollY;
+            const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
 
-    // const [debouncedSearch, setDebouncedSearch] = useState<any>("");
+            // Lock the body
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.width = '100%';
+            document.body.style.paddingRight = `${scrollBarWidth}px`;
+        } else {
+            // Restore scroll position
+            const scrollY = document.body.style.top;
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            document.body.style.paddingRight = '';
 
-    //     // Debounce search input
-    //     useEffect(() => {
-    //         const handler = setTimeout(() => {
-    //             setDebouncedSearch(filters.search);
-    //             setFilters(prev => ({ ...prev, page: 1 }));
-    //         }, 500);
-
-    //         return () => clearTimeout(handler);
-    //     }, [filters.search]);
-
-
-    // Data fetching with memoized query params
-    const queryParams = useMemo(() => ({
-        limit: 20,
-        page: filters.page,
-        cities: filters.cities,
-        // search: debouncedSearch,
-
-        // developers: filters.developers,
-        // facilities: filters.facilities,
-        propertyType: filters.propertyType,
-        completionType: filters.completionType,
-        paymentPlan: filters.paymentPlan,
-        year: filters.handoverDate?.year,
-        qtr: filters.handoverDate?.quarter,
-        discount: filters.discount,
-        projectTypeFirst: filters.projectTypeFirst, // off plan or ....
-        projectTypeLast: filters.propertyTypeSecond, // 'residential' or 'commercial'
-        furnishing: filters.furnishType,
-        emirate: filters.emirate,
-        // maxPrice: filters.maxPrice,
-        // minPrice: filters.minPrice,
-        // minSqft: filters.minSqft,
-        // maxSqft: filters.maxSqft,
-        // beds: filters.beds,
-        // bath: filters.bath,
-    }), [filters]);
-    const [isPropertyType, setIsPropertyType] = useState('');
-
-
-
-    const { data: projects } = useFetchAllProjectsQuery(queryParams);
-
-
-    // useEffect(() => {
-    //     const urlParams = new URLSearchParams(window.location.search);
-    //     const emirate = urlParams.get('emirate');
-    //     const cities = urlParams.get('cities');
-    //     const toConvertedCitiesParams = cities?.split(',')
-
-    //     if (emirate) {
-    //         setDefaultEmirate(emirate)
-    //     }
-    //     if (toConvertedCitiesParams) {
-    //         setDefaultCities(toConvertedCitiesParams)
-    //     }
-
-
-    // }, []);
-
-
-    function updateUrl({ emirate, propertyFirst, propertySecond }: { emirate?: string, propertyFirst?: string, propertySecond?: string }) {
-        const currentSegments = pathname.split('/').filter(Boolean); // e.g. ['buy', 'abu-dhabi', 'off-plan-projects']
-        const urlParams = new URLSearchParams(searchParams.toString());
-        const cities = urlParams.get('cities');
-        const toConvertedCitiesParams = cities?.split(',')
-
-        const segments = [...currentSegments];
-        const isExistEmirate = segments.find((seg) =>
-            emirateOptions.some((item: any) => item.slug === seg)
-        );
-
-
-        const isExistPropertyType = segments.find((seg) =>
-            productTypeOptionFirstItems.some((item: any) => item.value === seg)
-        );
-
-        const isPropertyTypeSecond = segments.find((seg) =>
-            propertyTypeSecond.some((item: any) => item.value === seg)
-        );
-
-        let fullUrl = '/buy';
-
-
-
-        if (emirate === "all") {
-            fullUrl = `/buy/${isExistPropertyType ? isExistPropertyType : ''}/${isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
+            // Restore the exact scroll position
+            window.scrollTo(0, parseInt(scrollY || '0') * -1);
         }
 
-        if (emirate !== 'all' && emirate) {
-            fullUrl += `/${emirate}/${propertyFirst ? propertyFirst : isExistPropertyType ? isExistPropertyType : ''}/${isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
-        }
+        // Cleanup on unmount
+        return () => {
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            document.body.style.paddingRight = '';
+        };
+    }, [show]);
 
-        if (propertyFirst) {
-            fullUrl += `/${isExistEmirate ? isExistEmirate : ''}/${propertyFirst ? propertyFirst : isExistPropertyType ? isExistPropertyType : ''}/${isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
-        }
-
-        if (propertySecond !== 'all' && propertySecond) {
-            // fullUrl = `/buy/${propertySecond}`;
-            fullUrl += `/${isExistEmirate ? isExistEmirate : ''}/${isExistPropertyType ? isExistPropertyType : ''}/${propertySecond ? propertySecond : isPropertyTypeSecond ? isPropertyTypeSecond : ''}`;
-
-        }
-        if (propertySecond === 'all') {
-            fullUrl = `/buy/${isExistEmirate ? isExistEmirate : ''}/${isExistPropertyType ? isExistPropertyType : ''}`;
-        }
-
-
-        fullUrl += `?${urlParams.toString()}`
-
-        // console.log(urlParams, 'urlParamsurlParams')
-
-        if (toConvertedCitiesParams) {
-            setDefaultCities(toConvertedCitiesParams)
-
-        }
-
-        // console.log(fullUrl)
-
-        window.history.pushState({}, '', fullUrl);
-    }
-
-    const icons = [apartment_icon, penthouse_icon, townhouse_icon, villa_icon]
-
-    const totalPropertyTypesCounts = allCounts?.propertyTypes?.map(item => item?.count).reduce((a, b) => a + b, 0)
-
-
-    const propertyTypesLists = {
-        commercial: [{
-            value: "officespace",
-            label: "Office Space",
-            count: allCounts?.propertyTypes?.find(item => item?.name === 'officespace')?.count || 0,
-
-        }, {
+    const icons = [
+        {
+            value: "villa",
+            icon: villa_icon,
+        },
+        {
+            value: "apartment",
+            icon: apartment_icon,
+        },
+        {
+            value: "penthouse",
+            icon: penthouse_icon,
+        },
+        {
+            value: "townhouse",
+            icon: townhouse_icon,
+        },
+        {
             value: "shop",
-            label: "Shop",
-            count: allCounts?.propertyTypes?.find(item => item?.name === 'shop')?.count || 0,
-
-        }, {
+            icon: townhouse_icon,
+        },
+        {
             value: "warehouse",
-            label: "Warehouse",
-            count: allCounts?.propertyTypes?.find(item => item?.name === 'warehouse')?.count || 0,
-        },],
-
-        residential: [
-            {
-                value: "villa",
-                label: "Villa",
-                count: allCounts?.propertyTypes?.find(item => item?.name === 'villa')?.count || 0,
-
-            },
-            {
-                value: "apartment",
-                label: "Apartment",
-                count: allCounts?.propertyTypes?.find(item => item?.name === 'apartment')?.count || 0,
-
-            },
-            {
-                value: "penthouse",
-                label: "Penthouse",
-                count: allCounts?.propertyTypes?.find(item => item?.name === 'penthouse')?.count || 0,
-
-            },
-            {
-                value: "townhouse",
-                label: "Townhouse",
-                count: allCounts?.propertyTypes?.find(item => item?.name === 'townhouse')?.count || 0,
-
-            }
-        ],
-
-        default: [
-            {
-                value: "all",
-                label: "All",
-                count: totalPropertyTypesCounts,
-
-            }
-        ],
-        getAll: () => {
-            return [...propertyTypesLists.default, ...propertyTypesLists.residential, ...propertyTypesLists.commercial]
+            icon: townhouse_icon,
+        },
+        {
+            value: "officespace",
+            icon: townhouse_icon,
         }
-    }
-
-    const allTypes = propertyTypesLists?.getAll()
-    // const pagination = data?.pagination;
-
-    const totalRecords = pagination?.totalRecords;
-
+    ]
 
     return (
-        <AnimatePresence>
+        <AnimatePresence
+        >
             {show && (
                 <motion.section
-                    initial={{ opacity: 0, y: '100%' }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: '100%' }}
-                    transition={{ duration: 0.3 }}
-                    className='fixed sm:hidden top-0 left-0 w-full h-full  bg-black bg-opacity-50 z-[100] overflow-hidden'
+                
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                    className='fixed sm:hidden top-0 left-0 w-full h-full  bg-black bg-opacity-50 z-999 overflow-hidden'
                 >
 
-
-                    <div className='flex flex-col pb-40 w-full h-full overflow-auto bg-white'>
-                        <div className="sticky top-0 left-0 bg-white z-[60]">
+                    <div className='flex flex-col pb-20 w-full h-full overflow-auto bg-white'>
+                        <div className="sticky top-0 left-0 bg-white z-60">
                             <Container>
-                                <div className="flex h-[56px] items-center justify-between w-full">
+                                <div className="flex h-14 items-center justify-between w-full">
                                     <label className='text-[13px] font-poppins font-semibold'>Filters</label>
                                     <AiOutlineClose
                                         onClick={onClose}
@@ -523,47 +210,41 @@ function MobileFilterOption({
 
 
                         <Container>
-                            <div className="flex mt-[12px] flex-col w-full gap-[9px]">
+                            <div className="flex mt-3 flex-col w-full gap-[9px]">
 
 
                                 {/* Emirates */}
-                                <div className=" h-[40px] w-full">
+                                <div className=" h-10 w-full">
                                     <SelectLatest
+                                        defaultValue={emirateOptions?.find((item: any) => item?.slug === initialValues?.emirate)}
+
                                         dropdownContainerClassName="!justify-center"
                                         listContainerUlListContainerClassName="w-[200px]"
                                         search
-                                        defaultValue={emirateOptions?.find((item) => item?.label === defaultEmirate)}
                                         clearSelection={clear}
                                         label="Emirates"
                                         options={emirateOptions}
                                         onSelect={(e) => {
-                                            // const url = new URL(window.location.href);
-                                            // if (e?.value) {
-                                            //     url.searchParams.set('emirate', e?.label ?? '');
-                                            // } else {
-                                            //     url.searchParams.delete('emirate');
-                                            // }
-                                            // const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                            // window.history.pushState({}, '', newUrl);
-                                            // handleSelect.emirate(e)
+
                                             const emirate = e?.slug ? e.slug : 'all';
-                                            // console.log(emirate, 'Hyyy')
+
                                             updateUrl({ emirate });
+
                                             handleSelect.emirate(e);
+
                                         }}
                                     />
                                 </div>
 
-
                                 {/* Cities */}
-                                <div className=" h-[40px] w-full">
+                                <div className=" h-10 w-full">
                                     <SelectLatest
                                         dropdownContainerClassName="!justify-center"
-
-                                        defaultValueMultiple={cityOptions?.filter((item) => defaultCities?.includes(item.label))}
+                                        defaultValueMultiple={cityOptions?.filter((item: any) => initialValues?.cities?.includes(item.slug))}
                                         search
                                         multiple
                                         onSelectMultiple={(e) => {
+
                                             const url = new URL(window.location.href);
 
                                             if (e) {
@@ -571,10 +252,15 @@ function MobileFilterOption({
                                                 if (e && e.length > 0) {
 
                                                     url.searchParams.set('cities', e?.map((item) => item.slug).join(','));
+
                                                 } else {
+
                                                     url.searchParams.delete('cities');
+
                                                 }
+
                                                 const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+
                                                 window.history.pushState({}, '', newUrl);
 
                                                 handleChangeCities(e);
@@ -584,7 +270,6 @@ function MobileFilterOption({
 
                                         }}
                                         clearSelection={clear}
-                                        // listContainerClassName="w-[220px] sm:!left-0 !-left-14 "
                                         label="Cities"
                                         options={cityOptions}
                                     />
@@ -598,27 +283,29 @@ function MobileFilterOption({
                                         clearSelection={clear}
                                         className='!grid-cols-3 '
                                         onSelect={(e) => {
+                                            console.log(e,'eee')
                                             updateUrl({ propertySecond: e });
-                                            handleSelect.propertyTypeSecond(e);
+                                            handleSelect.propertyCategoryStatus(e);
                                             setIsPropertyType(e);
                                         }
                                         }
-                                        defaultValue={propertyTypeSecond[0].value}
-                                        options={propertyTypeSecond}
+                                        defaultValue={initialValues?.propertyCategoryStatus}
+
+                                        options={propertyCategoryStatus}
                                     />
                                 </div>
 
 
                                 {/* Property Type First */}
-                                <div className="h-[80px]">
+                                <div className="h-20">
                                     <SwitchSelectorMobile
                                         clearSelection={clear}
                                         onSelect={(e) => {
                                             updateUrl({ propertyFirst: e });
-                                            handleSelect.projectTypeFirst(e)
+                                            handleSelect.propertyCategoryTypes(e)
                                         }}
-                                        defaultValue={propertyCategoryType[0].value}
-                                        options={propertyCategoryType}
+                                        defaultValue={filters.propertyCategoryTypes}
+                                        options={propertyCategoryTypes}
 
                                     />
                                 </div>
@@ -626,78 +313,64 @@ function MobileFilterOption({
                                 {/* Property Type */}
                                 <label htmlFor="" className='mt-2 font-medium font-poppins flex text-[14px]'>Property Type</label>
 
-                                <div className="flex justify-between ">
-                                    <div className="flex flex-col gap-1 ">
-                                        <div
-                                            onClick={() => handleSelect.propertyType({ label: PropertyTypes[2].label, value: PropertyTypes[2].value })}
+                              
 
-                                            className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[2].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
+                                <div className="flex w-full justify-center gap-3 overflow-auto">
+                                  
+                                    {
+                                        [
+                                            ...(isPropertyType === 'residential' ? propertyTypesLists.residential : []),
+                                            ...(isPropertyType === 'commercial' ? propertyTypesLists.commercial : []),
+                                            ...(isPropertyType === 'all' ? propertyTypesLists.getAllExcludeAll() : [])
+                                        ].map((type: any, i: number) => {
 
-                                            <Image className='bg-transparent' src={apartment_icon} alt="apartment icon" width={30} height={30} />
-                                        </div>
-                                        <p className='text-[10px]  font-medium font-poppins text-center'>Apartment</p>
+                                            const isExistIcon = icons.find((item) => item.value === type.value)
 
-                                    </div>
+                                            return (
+                                                <div
+                                                key={i}
+
+                                                    className="w-[70px] justify-center items-center gap-2 flex flex-col shrink-0 h-[100px] ">
+                                                    <div
+
+                                                        onClick={
+                                                            (e) => {
+                                                                const url = new URL(window.location.href);
+
+                                                                if (type?.value) {
+
+                                                                    url.searchParams.set('pt', type?.value ?? '');
+
+                                                                } else {
+
+                                                                    url.searchParams.delete('pt');
+
+                                                                }
+
+                                                                const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+
+                                                                window.history.pushState({}, '', newUrl);
+
+                                                                handleSelect.propertyType({ label: type?.label, value: type?.value })
+                                                            }
+                                                        }
+
+                                                        className={clsx(" p-3.5 rounded-full  object-cover", filters?.propertyType?.includes(type?.value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
 
 
-                                    <div className="flex flex-col gap-1 ">
-                                        <div
-                                            onClick={() => handleSelect.propertyType({ label: PropertyTypes[3].label, value: PropertyTypes[3].value })}
+                                                        <Image
+                                                            className='bg-transparent' src={icons.find((item) => item?.value === type?.value)?.icon?.src || ''} alt={type?.label} width={30} height={30} />
 
-                                            className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[3].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
-
-                                            <Image className='bg-transparent' src={penthouse_icon} alt="penthouse icon" width={30} height={30} />
-
-                                        </div>
-                                        <p className='text-[10px]  font-medium font-poppins text-center'>Penthouse</p>
-
-                                    </div>
+                                                    </div>
+                                                    <p className='text-[10px] text-nowrap  font-medium font-poppins text-center'>{type['label']}</p>
 
 
-
-                                    <div className="flex flex-col gap-1">
-
-                                        <div
-                                            onClick={() => handleSelect.propertyType({ label: PropertyTypes[4].label, value: PropertyTypes[4].value })}
-
-                                            className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[4].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
-
-                                            <Image className='bg-transparent' src={townhouse_icon} alt="townhouse icon" width={30} height={30} />
-
-                                        </div>
-                                        <p className='text-[10px]  font-medium font-poppins text-center'>Townhouse</p>
-
-                                    </div>
-
-                                    <div className="flex flex-col gap-1">
-
-                                        <div
-                                            onClick={() => handleSelect.propertyType({ label: PropertyTypes[1].label, value: PropertyTypes[1].value })}
-
-                                            className={clsx(" p-3.5 rounded-full", filters?.propertyType?.includes(PropertyTypes[1].value) ? 'bg-red-700/10' : 'outline outline-[#DEDEDE]')}>
-
-                                            <Image className='bg-transparent' src={villa_icon} alt="villa icon" width={30} height={30} />
-
-                                        </div>
-                                        <p className='text-[10px]  font-medium font-poppins text-center'>Villa</p>
-
-                                    </div>
+                                                </div>
+                                            )
+                                        })
+                                    }
 
                                 </div>
-
-                                {/* <div className="flex justify-between">
-                                    {PropertyTypes.map((type, i) => (
-                                        <PropertyOption
-                                            key={type.value}
-                                            label={type.label}
-                                            value={type.value}
-                                            icon={icons[i]}
-
-                                            selected={filters?.propertyType?.includes(type.value) ?? false}
-                                            onSelect={handleSelect.propertyType}
-                                        />
-                                    ))}
-                                </div> */}
 
 
 
@@ -709,12 +382,19 @@ function MobileFilterOption({
                                         defaultValue={CompletionTypes[0].value}
                                         onSelect={(e) => {
                                             const url = new URL(window.location.href);
+
                                             if (e == 'all') {
-                                                url.searchParams.delete('completion-type');
+
+                                                url.searchParams.delete('ct');
+
                                             } else {
-                                                url.searchParams.set('completion-type', e ?? '');
+
+                                                url.searchParams.set('ct', e ?? '');
+
                                             }
+
                                             const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+
                                             window.history.pushState({}, '', newUrl);
 
                                             handleSelect.completionType(e)
@@ -731,14 +411,40 @@ function MobileFilterOption({
                                     clearButton={false}
                                     doneButton={false}
                                     wrapperClassName='!w-full !h-fit !border-none !shadow-none'
-                                    // initialYear={filters.handoverDate?.year ? filters.handoverDate?.year : 2025}
-                                    // initialQuarter={filters.handoverDate?.quarter ? filters.handoverDate?.quarter : "Q3"}
-
+                                  
                                     onDone={(year, quarter) => {
+                                       
+                                    }}
+
+                                    onChange={(year, quarter) => {
+                                                        const url = new URL(window.location.href);
+
+                                        if (year) {
+                                            url.searchParams.set('y', year + '');
+                                        }
+
+                                        if (quarter) {
+                                            url.searchParams.set('q', quarter.toLowerCase());
+                                        }
+
+                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                        window.history.pushState({}, '', newUrl);
+
                                         handleSelect.handoverDate({ quarter, year })
                                     }}
-                                    onChange={(year, quarter) => {
-                                        handleSelect.handoverDate({ quarter, year })
+
+                                    reset={() => {
+                                        // setShowYearSelector(false)
+                                        const url = new URL(window.location.href);
+                                        url.searchParams.delete('y');
+                                        url.searchParams.delete('q');
+                                        const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
+                                        window.history.pushState({}, '', newUrl);
+                                        handleSelect.handoverDate({
+                                            quarter: '',
+                                            year: ''
+                                        })
+
                                     }}
                                 />
 
@@ -775,55 +481,7 @@ function MobileFilterOption({
                                     </button>
                                 </div>
 
-
-
-                                {/* Price Range */}
-                                {false && <div className="">
-                                    <PriceRangeInput
-                                        clearButton={clear}
-                                        doneButton={false}
-                                        wrapperClassName='!border-none !w-full'
-                                        onDone={(minValue, maxValue) => {
-                                            handleSelect.maxPrice(maxValue);
-                                            handleSelect.minPrice(minValue);
-                                        }}
-                                        onChange={(minValue, maxValue) => {
-                                            handleSelect.maxPrice(maxValue);
-                                            handleSelect.minPrice(minValue);
-                                        }}
-                                        onClose={() => setRangeCalculator(prev => !prev)}
-
-                                    />
-                                </div>}
                             </div>
-
-
-
-
-                            {/* Bed And Bath Selector */}
-                            {false && <div className="">
-                                <BedBathSelector
-                                    doneButton={clear}
-                                    clearButton={false}
-                                    wrapperClassName='!border-none !w-full '
-                                    onDone={(beds, baths) => {
-
-                                        handleSelect.bath(baths);
-                                        handleSelect.beds(beds);
-
-                                    }}
-
-                                    onChange={(beds, baths) => {
-
-                                        handleSelect.bath(baths);
-                                        handleSelect.beds(beds);
-
-                                    }}
-
-                                    onClose={() => setShowBedBath(false)}
-                                />
-                            </div>}
-
 
 
                             {/* Furnish Type */}

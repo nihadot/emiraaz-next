@@ -1,45 +1,49 @@
 'use client'
 import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
-import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
-import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi';
-import { useViewAllRentalIncomesQuery } from '@/redux/rentalIncome/rentalIncomeApi';
+import { useViewAllRentalIncomesQuery, ViewRentalIncomeResponse } from '@/redux/rentalIncome/rentalIncomeApi';
 import { shuffle } from '@/utils/shuffle';
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Header from '../Header';
 import Container from '../atom/Container/Container';
-import RecommendedText from '../RecomendedText/RecommendedText';
 import CustomSliderUi from '@/app/home/CustomSliderUi';
 import { Footer } from '../Footer';
-import { AllRentalIncomeItems } from '@/redux/rentalIncome/types';
 import SearchNew from '../SearchField/SearchNew';
 import SelectLatest from '../SelectOption/SelectLatest';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
 import clsx from 'clsx';
 import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle';
-import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import PaginationNew from '../PaginationNew/PaginationNew';
 import { useDeviceType } from '@/utils/useDeviceType';
+import { PortraitBanner } from '@/redux/portraitBannerAd/types';
+import { EmirateNames } from '@/redux/emirates/types';
+import { CityNames } from '@/redux/cities/types';
+import NoDataFound from '../Empty/NoDataFound';
 
-function RentalIncome() {
+function RentalIncome({ portraitBanners, dataFetchRentalIncome, emirates, citiesValue }: { portraitBanners: PortraitBanner[], dataFetchRentalIncome: ViewRentalIncomeResponse, emirates: EmirateNames[], citiesValue: CityNames[] }) {
 
-
-    // Debounce search input
 
     // Consolidated filter state
     const [filters, setFilters] = useState<{
         page: number;
         search: string;
-        cities: string[];            // ✅ allows updating
+        cities: string[];
         propertyType: string;
-        emirate: string;
+        emirate: {
+            slug: string,
+            id: string
+        };
 
     }>({
         page: 1,
         search: "",
         cities: [],
         propertyType: "",
-        emirate: "",
+        emirate: {
+            slug: "",
+            id: "",
+        },
     });
+    const [paginationHappened, setPaginationHappened] = useState(false)
 
     const [debouncedSearch, setDebouncedSearch] = useState("");
 
@@ -53,63 +57,108 @@ function RentalIncome() {
     }, [filters.search]);
 
     const queryParams = useMemo(() => ({
-        limit: 20,
+        limit: 14,
         page: filters.page,
         search: debouncedSearch,
         cities: filters.cities,
+        emirate: filters.emirate?.slug,
     }), [filters, debouncedSearch]);
 
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const page = urlParams.get('page');
+
+        if (page) {
+            setFilters(prev => ({ ...prev, page: parseInt(page) }))
+        }
+    }, [filters.page]);
 
 
-
-    const { data: emiratesData } = useFetchAllEmirateNamesQuery();
-    const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
+    const { data: citiesResponse } = useFetchAllCityNamesQuery({ emirate: filters?.emirate?.id || '' });
     const { data: allRentalIncome } = useViewAllRentalIncomesQuery(queryParams);
 
     const handleSelect = useMemo(() => ({
-        emirate: (option: any) => setFilters(prev => ({ ...prev, emirate: option?.value || '' })),
+        emirate: (option: any) => setFilters(prev => ({
+            ...prev, emirate: {
+                id: option?.value,
+                slug: option?.slug
+            }
+        })),
 
     }), []);
-
 
     // Event Handlers
     const handleChangeSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setFilters(prev => ({ ...prev, search: event.target.value }));
     }, []);
 
-    const emirateOptions = useMemo(() =>
-        emiratesData?.data.map((item) => ({
+    const cities = citiesResponse?.data || citiesValue;
+
+    const emirateOptions = useMemo(() => {
+        const preferredOrder = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ras Al Khaimah', 'Ajman', 'Umm Al-Quwain'];
+
+        const mappedOptions = emirates.map((item) => ({
             label: item.name,
             value: item._id,
-            // count: 100,
-        })) || [],
-        [emiratesData]);
+            // count: item.count,
+            slug: item.slug,
+        })) || [];
 
-    const cityOptions = useMemo(() =>
-        cities?.data.map((item) => ({
+        const sortedOptions = mappedOptions.sort((a, b) => {
+            const aIndex = preferredOrder.indexOf(a.label);
+            const bIndex = preferredOrder.indexOf(b.label);
+
+            // If both labels are in the preferredOrder list
+            if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+
+            // If only one is in the list, put it before the other
+            if (aIndex !== -1) return -1;
+            if (bIndex !== -1) return 1;
+
+            // If neither is in the list, sort alphabetically (optional)
+            return a.label.localeCompare(b.label);
+        });
+
+        return [
+            { label: "All", value: "all" }, // Always first
+            ...sortedOptions,
+        ];
+    }, [emirates]);
+
+    const cityOptions = useMemo(() => {
+        const mappedOptions = cities.map((item) => ({
             label: item.name,
             value: item.name,
-            // count: item.count,
-        })) || [],
-        [cities]);
+            slug: item.slug,
+        })) || [];
+
+        return [
+            { label: "All", value: "all", slug: '' },
+            ...mappedOptions,
+        ];
+    }, [cities]);
 
     const handleChangeCities = useCallback((option: any[]) => {
+        // console.log(option, 'option')
         if (option.length === 0) {
             setFilters(prev => ({ ...prev, cities: [] }));
             return;
         }
-        setFilters(prev => ({ ...prev, cities: option.map((item: { value: any; }) => item.value) }));
+        setFilters(prev => ({ ...prev, cities: option.map((item: { slug: any; }) => item.slug) }));
     }, []);
 
+    const data = allRentalIncome?.data || dataFetchRentalIncome.data;
 
-    const { data: portraitBannerData } = useFetchAllPortraitBannersQuery({});
-    const { data: rentalIncome } = useViewAllRentalIncomesQuery({});
-
-    const banners = portraitBannerData?.data || [];
+    const banners = portraitBanners || [];
 
     const shuffledImages = useMemo(() => shuffle(banners), [banners]);
     const [defaultEmirate, setDefaultEmirate] = useState<string>('');
     const [defaultCities, setDefaultCities] = useState<any>('');
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    }, [paginationHappened]);
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -132,7 +181,7 @@ function RentalIncome() {
 
     }, []);
 
-    const totalPages = rentalIncome?.pagination?.totalPages;
+    const totalPages = allRentalIncome?.pagination?.totalPages || dataFetchRentalIncome.pagination.totalPages;
     const deviceType = useDeviceType();
 
     return (
@@ -162,26 +211,28 @@ function RentalIncome() {
                                 <SelectLatest
                                     listContainerUlListContainerClassName="w-[200px]"
                                     search
-                                    defaultValue={emirateOptions?.find((item) => item?.label === defaultEmirate)}
+                                    defaultValue={emirateOptions?.find((item: any) => item?.slug === defaultEmirate)}
                                     label="Emirates"
                                     options={emirateOptions}
+
                                     onSelect={(e) => {
                                         const url = new URL(window.location.href);
                                         if (e?.value) {
-                                            url.searchParams.set('emirate', e?.label ?? '');
+                                            url.searchParams.set('emirate', e.slug ?? '');
                                         } else {
                                             url.searchParams.delete('emirate');
                                         }
+                                        url.searchParams.delete('page');
                                         const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
                                         window.history.pushState({}, '', newUrl);
-                                        handleSelect.emirate(e)
+                                        handleSelect.emirate(e);
                                     }}
                                 />
                             </div>
 
                             <div className="hidden md:flex max-w-[180px] w-full h-[48px]">
                                 <SelectLatest
-                                    defaultValueMultiple={cityOptions?.filter((item) => defaultCities?.includes(item.label))}
+                                    defaultValueMultiple={cityOptions?.filter((item) => defaultCities?.includes(item.slug))}
                                     search
                                     multiple
                                     onSelectMultiple={(e) => {
@@ -191,12 +242,13 @@ function RentalIncome() {
 
                                             if (e && e.length > 0) {
 
-                                                url.searchParams.set('cities', e?.map((item) => item.label).join(','));
+                                                url.searchParams.set('cities', e?.map((item) => item.slug).join(','));
                                             } else {
                                                 url.searchParams.delete('cities');
                                             }
                                             const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
                                             window.history.pushState({}, '', newUrl);
+                                            url.searchParams.delete('page');
 
                                             handleChangeCities(e);
 
@@ -204,7 +256,6 @@ function RentalIncome() {
 
 
                                     }}
-                                    // clearSelection={clear}
                                     listContainerUlListContainerClassName="w-[220px]"
                                     label="Cities"
                                     options={cityOptions}
@@ -232,6 +283,8 @@ function RentalIncome() {
                                     } else {
                                         url.searchParams.delete('emirate');
                                     }
+                                    url.searchParams.delete('page');
+
                                     const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
                                     window.history.pushState({}, '', newUrl);
                                     handleSelect.emirate(e)
@@ -258,6 +311,8 @@ function RentalIncome() {
                                         } else {
                                             url.searchParams.delete('cities');
                                         }
+                                        url.searchParams.delete('page');
+
                                         const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
                                         window.history.pushState({}, '', newUrl);
 
@@ -293,22 +348,28 @@ function RentalIncome() {
 
                         <section className='h-full w-full gap-3 grid grid-cols-1' >
 
+
+
                             {
-                                allRentalIncome && allRentalIncome.data && allRentalIncome.data.map((item, index) => {
-                                    return (
-                                        <div key={index} className='w-full grid grid-cols-1 md:grid-cols-3 h-full gap-3'>
+                                data && data.length === 0 ? <NoDataFound /> : (
+                                    data && data.map((item, index) => {
+                                        return (
+                                            <div key={index} className='w-full grid grid-cols-1 md:grid-cols-3 h-full gap-3'>
 
 
-                                            <Card item={item} title={'Town Houses'} name={'townhouses'} />
-                                            <Card item={item} title={'Villa'} name={'villas'} />
-                                            <Card item={item} title='Apartment' name={'apartments'} />
+                                                <Card item={item} title={'Town Houses'} name={'townhouses'} />
+                                                <Card item={item} title={'Villa'} name={'villas'} />
+                                                <Card item={item} title='Apartment' name={'apartments'} />
 
 
 
-                                        </div>
-                                    )
-                                })
+                                            </div>
+                                        )
+                                    })
+                                )
                             }
+
+
                         </section>
 
 
@@ -331,18 +392,23 @@ function RentalIncome() {
 
 
 
-               { totalPages && <SpaceWrapper
-                    className='pb-6 sm:pb-10'
-                >
+                <Container>
 
-                    <PaginationNew
-                        currentPage={filters.page || 1}
-                        totalPages={totalPages}
-                        onPageChange={(newPage) => setFilters(prev => ({ ...prev, page: newPage }))}
-                        maxVisiblePages={deviceType === 'mobile' ? 6 : 8} />
+                    <div className="mt-[23.25px]">
 
-                </SpaceWrapper>}
-
+                        <PaginationNew
+                            currentPage={filters.page || 1}
+                            totalPages={totalPages}
+                            onPageChange={(newPage) => {
+                                const url = new URL(window.location.href);
+                                url.searchParams.set('page', newPage.toString());
+                                window.history.pushState({}, '', url);
+                                setPaginationHappened(pre => !pre)
+                                setFilters(prev => ({ ...prev, page: newPage }))
+                            }}
+                            maxVisiblePages={deviceType === 'mobile' ? 4 : 8} />
+                    </div>
+                </Container>
             </div>
 
 
@@ -359,52 +425,52 @@ export default RentalIncome
 
 
 type CardProps = {
-  item: any;
-  title: string;
-  name: "villas" | "townhouses" | "apartments";
+    item: any;
+    title: string;
+    name: "villas" | "townhouses" | "apartments";
 };
 
 function Card({ item, title, name }: CardProps) {
-  const listings = item[name] ?? [];
-  const isEmpty = listings.length === 0;
+    const listings = item[name] ?? [];
+    const isEmpty = listings.length === 0;
 
-  return (
-    <div
-      className={clsx(
-        "border font-poppins flex-1 h-[180px] w-full rounded-[3px] border-[#DEDEDE] p-[17px]",
-        { "bg-[#F7F7F7]": isEmpty }
-      )}
-    >
-      <div className="flex w-full items-center">
-        <p className="text-base mr-[4px] font-medium font-poppins text-nowrap line-clamp-1">
-          {title}
-        </p>
-        <div className="border flex justify-center text-black/40 h-[20px] items-center text-[11px] gap-1 p-1 px-2 border-black/20 rounded-[3px]">
-          <p className="capitalize text-nowrap line-clamp-1">
-            {item.cityDetails?.name}
-          </p>
-          <div className="w-[1px] h-[12px] bg-black/40"></div>
-          <p className="capitalize line-clamp-1">{item.emirateDetails?.name}</p>
+    return (
+        <div
+            className={clsx(
+                "border font-poppins flex-1 h-[180px] w-full rounded-[3px] border-[#DEDEDE] p-[17px]",
+                { "bg-[#F7F7F7]": isEmpty }
+            )}
+        >
+            <div className="flex w-full items-center">
+                <p className="text-base mr-[4px] font-medium font-poppins text-nowrap ">
+                    {title}
+                </p>
+                <div className="border flex justify-center text-black/40 h-[20px] items-center text-[11px] gap-1 p-1 px-2 border-black/20 rounded-[3px]">
+                    <p className="capitalize  line-clamp-1">
+                        {item.cityDetails?.name}
+                    </p>
+                    <div className="w-[1px] h-[12px] bg-black/40"></div>
+                    <p className="capitalize line-clamp-1">{item.emirateDetails?.name}</p>
+                </div>
+            </div>
+
+            <div className={clsx("text-[13.5px] overflow-y-auto max-h-[120px] font-poppins pt-[5px] gap-1 flex flex-col", {
+                "h-full text-center": isEmpty
+            })}>
+                {isEmpty ? (
+                    <div className="flex h-full text-xs justify-center items-center text-[#474747] font-normal">
+                        No {
+                            name === 'villas' ? 'Villas' : name === 'townhouses' ? 'Townhouses' : 'Apartments'
+                        } available in this location
+                    </div>
+                ) : (
+                    listings.map((val: string, i: number) => (
+                        <p key={i} className="font-medium capitalize text-xs">
+                            {val} AED/yearly
+                        </p>
+                    ))
+                )}
+            </div>
         </div>
-      </div>
-
-      <div className={clsx("text-[13.5px] overflow-y-auto max-h-[120px] font-poppins pt-[5px] gap-1 flex flex-col",{
-        "h-full text-center": isEmpty
-      })}>
-        {isEmpty ? (
-          <div className="text-sm flex h-full  justify-center items-center text-[#474747] font-normal">
-            No {
-                name === 'villas' ? 'Villas' : name === 'townhouses' ? 'Townhouses' : 'Apartments'
-            } available in this location
-          </div>
-        ) : (
-          listings.map((val: string, i: number) => (
-            <p key={i} className="font-medium">
-              {val} AED/yearly
-            </p>
-          ))
-        )}
-      </div>
-    </div>
-  );
+    );
 }

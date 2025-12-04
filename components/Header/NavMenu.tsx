@@ -8,7 +8,8 @@ import { motion, AnimatePresence } from "framer-motion"
 
 interface MenuItem {
   name: string;
-  link: string;
+  link?: string;
+  component?: React.ReactNode;
 }
 
 interface NavMenuProps {
@@ -27,7 +28,7 @@ const NavMenuFunction: React.FC<NavMenuProps> = ({ items, linkItemClassName }) =
   return (
     <nav className={'max-w-[600px]'}>
       <ul className='flex rle lg:flex-row flex-col gap-[19px]  items-start laptop:items-center'>
-        {pathname === "/" && <div
+        {/* {pathname === "/" && <div
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           className='flex relative gap-2  items-center'>
@@ -36,13 +37,15 @@ const NavMenuFunction: React.FC<NavMenuProps> = ({ items, linkItemClassName }) =
           />
           <p className='font-medium text-black font-poppins text-[12px]'>Beta</p>
 
-            {/* Only render on hover */}
             <AnimatePresence>
               {hovered && <BetaVersionNotice />}
             </AnimatePresence>
-        </div>}
+        </div>} */}
 
         {items.map((item, index) => {
+
+          if(item.link){
+
 
           const url = new URL(item.link, 'https://www.propertyseller.com');
           if (currency) {
@@ -54,6 +57,17 @@ const NavMenuFunction: React.FC<NavMenuProps> = ({ items, linkItemClassName }) =
               <Link href={`${url.pathname}${url.search}`}>{item.name}</Link>
             </li>
           )
+
+          }
+
+          if(item.component){
+            return (
+              <div key={index}>
+                {item.component}
+              </div>
+            )
+          }
+
         })}
 
       </ul>
@@ -86,7 +100,7 @@ function BetaVersionNotice() {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.25 }}
-      className="absolute -left-10 top-5 z-50 bg-[#FF1645] text-white  rounded-md px-[20px] py-[14px] w-[390px]"
+      className="absolute left-0 md:-left-10 top-6 md:top-5 z-50 bg-[#FF1645] text-white  rounded-md px-[20px] py-[14px] w-[340px]  md:w-[390px]"
     >
 
 <div className="flex gap-2 items-center">

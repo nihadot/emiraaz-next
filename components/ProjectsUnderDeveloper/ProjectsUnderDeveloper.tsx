@@ -32,6 +32,7 @@ import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle';
 type Props = {
     id: string;
     siteMap: any[];
+    videoAds: AllSmallVideoItems[],
 }
 
 export type FiltersState = {
@@ -42,10 +43,10 @@ export type FiltersState = {
     emirate?: string,
     cities?: string[],
     projectTypeFirst?: string,
-    
+
 };
 
-export default function ProjectsUnderDeveloperFunction({ id,siteMap }: Props) {
+export default function ProjectsUnderDeveloperFunction({ id, siteMap, videoAds }: Props) {
     const [filters, setFilters] = useState<FiltersState>({
         page: 1,
         search: "",
@@ -176,13 +177,13 @@ export default function ProjectsUnderDeveloperFunction({ id,siteMap }: Props) {
     return (
         <>
             <main>
-                <Header     logoSection={
-                           <div className='h-full w-full flex justify-center items-center'>
-                             <MobileHeaderTitle
+                <Header logoSection={
+                    <div className='h-full w-full flex justify-center items-center'>
+                        <MobileHeaderTitle
                             content='Projects'
-                            />
-                           </div>
-                        }/>
+                        />
+                    </div>
+                } />
 
 
                 <Container>
@@ -293,10 +294,13 @@ export default function ProjectsUnderDeveloperFunction({ id,siteMap }: Props) {
                                 {true && (smallVideoAds && smallVideoAds.length > 0 ?
                                     <div className={clsx("w-full mb-[12px] relative flex")}>
                                         {/* <div className={clsx("w-full mb-[12px] relative",filters?.page && filters?.page > 1 ? 'hidden':'flex')}> */}
-                                        <VideoPreview
-                                            projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
-                                            src={smallVideoAds?.[0]?.videoFile?.url?.url || ''}
-                                        />
+                                       <VideoPreview
+                                       id={smallVideoAds?.[0]?._id}
+                                            alt={videoAds?.[0]?.name || ''}
+                                            thumbnailUrl={videoAds?.[0]?.thumbnail?.webp?.url || ''}
+                                                projectSlug={videoAds?.[0]?.projectDetails?.slug || ''}
+                                                videoUrl={videoAds?.[0]?.videoFile?.url?.url || ''}
+                                            />
                                     </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>)
                                 }
 
@@ -305,7 +309,7 @@ export default function ProjectsUnderDeveloperFunction({ id,siteMap }: Props) {
                                 {true && <RecommendedText
                                     title="Recommended For You"
                                     items={shuffle(siteMap)?.slice(0, 6)}
-                                   
+
                                 />}
 
                                 <div className="sticky top-3 left-0">
@@ -319,12 +323,12 @@ export default function ProjectsUnderDeveloperFunction({ id,siteMap }: Props) {
                                         <RecommendedText
                                             title="Recommended For You"
                                             items={shuffle(siteMap)?.slice(0, 6)}
-                                         
+
                                         />
                                         <RecommendedText
                                             title="Popular Searches"
-                                             items={shuffle(siteMap)?.slice(0, 6)}
-                                         
+                                            items={shuffle(siteMap)?.slice(0, 6)}
+
                                         />
                                     </>}
 

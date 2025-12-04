@@ -33,10 +33,10 @@ export default function NoInternetWrapper({ children }: { children: React.ReactN
     return (
       <main>
         <Header />
-   <SectionDivider
-                    containerClassName="mt-[10.5px] mb-[12px]"
-                    lineClassName="h-[1px] w-full bg-[#DEDEDE]"
-                />
+        <SectionDivider
+          containerClassName="mt-[10.5px] mb-[12px]"
+          lineClassName="h-[1px] w-full bg-[#DEDEDE]"
+        />
         <Container>
 
           <div className="max-w-[600px] flex flex-col justify-center items-center w-full m-auto py-24">
@@ -53,23 +53,32 @@ export default function NoInternetWrapper({ children }: { children: React.ReactN
               <Paragraph
                 content="We’re unable to connect to the internet right now. Please check your connection and try the following:"
               />
-              <Paragraph
-                content={
-                  <>
-                    <p>
-                      <strong>1.Check Your Wi-Fi Connection:</strong> Ensure that your device is connected to Wi-Fi or mobile data.
-                    </p>
+              <div
+            
+              >
 
-                    <p>
-                      <strong>2.Restart Your Router:</strong> Sometimes, a quick restart of your router can resolve connectivity issues.
-                    </p>
+                <Paragraph
+                  content={<>
+                    <strong>1.Check Your Wi-Fi Connection:</strong> Ensure that your device is connected to Wi-Fi or mobile data.
+                  </>}
+                />
 
-                    <p>
-                      <strong>3.Try Again Later:</strong> If the problem persists, there may be an issue with your internet service provider.
-                    </p>
-                  </>
-                }
-              />
+                <Paragraph
+                  content={<>
+                    <strong>2.Restart Your Router:</strong> Sometimes, a quick restart of your router can resolve connectivity issues.
+                  </>}
+                />
+
+                <Paragraph
+                  content={<>
+                    <strong>3.Try Again Later:</strong> If the problem persists, there may be an issue with your internet service provider.
+                  </>}
+                />
+
+
+
+
+              </div>
             </SpaceWrapper>
 
             <PrimaryButton

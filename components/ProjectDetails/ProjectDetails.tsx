@@ -25,7 +25,7 @@ import PrimaryButton from '../Buttons';
 import MortgageCalculator from './LoanCalculator';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
-import { IoCloseOutline } from 'react-icons/io5';
+import { IoChevronDown, IoChevronUp, IoCloseOutline } from 'react-icons/io5';
 import ProjectHeader from './ProjectHeader';
 import { Footer } from '../Footer';
 import TextareaField from '../TextareaField/TextareaField';
@@ -66,6 +66,9 @@ import Header from '../Header';
 import { TfiLocationPin } from 'react-icons/tfi';
 import { useWindowSize } from '@/utils/useWindowSize';
 import { useFetchCurrencyQuery } from '@/redux/currency/currencyApi';
+import { motion, AnimatePresence } from 'framer-motion'
+import clsx from 'clsx';
+import { AllProjectsItems } from '@/redux/project/types';
 
 
 interface UserData {
@@ -73,29 +76,35 @@ interface UserData {
   // Add more fields if needed
 }
 interface Props {
-  id:string;
-  siteMap:any[];
+  id: string;
+  siteMap: any[];
+  data: {
+    data:AllProjectsItems
+  };
+  lead?:string;
+  promoId?:string;
 }
 
-export default function ProjectDetailsFunction({ id,siteMap }: Props) {
+export default function ProjectDetailsFunction({ id, siteMap,data,lead,promoId}: Props) {
 
+  // console.log(lead,'Lead')
 
   const router = useRouter();
   //   const { id } = use(params);
-  const { data } = useFetchProjectByIdQuery({ id });
+  // const { data } = useFetchProjectByIdQuery({ id });
 
-    const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
 
- const handleBackTo = () => {
-  const currency = searchParams.get('currency');
-  const queryString = currency ? `?currency=${currency}` : '';
+  const handleBackTo = () => {
+    const currency = searchParams.get('currency');
+    const queryString = currency ? `?currency=${currency}` : '';
 
-  if (window.history.length > 1) {
-    router.back();
-  } else {
-    router.push(`/${queryString}`);
-  }
-};
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push(`/${queryString}`);
+    }
+  };
 
   const [galleryModal, setGalleryModal] = useState(false);
   const [layoutModal, setLayoutModal] = useState(false);
@@ -405,8 +414,9 @@ export default function ProjectDetailsFunction({ id,siteMap }: Props) {
   //         }
   //     }, []);
 
-          // const { data: currencyExchange } = useFetchCurrencyQuery({ currency: toggleCurrency });
-      
+  // const { data: currencyExchange } = useFetchCurrencyQuery({ currency: toggleCurrency });
+// console.log('first')
+
   return (
     <div className=" mx-auto w-full   ">
       <div className="hidden sm:block">
@@ -424,7 +434,9 @@ export default function ProjectDetailsFunction({ id,siteMap }: Props) {
 
       {data?.data._id && <StickyScrollHeader
         projectType={data.data.projectType}
+        promotionId={promoId}
         projectId={data?.data._id}
+        promotion={lead ===  'promotion'}
         currency={currency}
         value={value}
         title={data?.data?.projectTitle || ''}
@@ -432,7 +444,7 @@ export default function ProjectDetailsFunction({ id,siteMap }: Props) {
 
 
 
-      <div className="">
+      <div className="mb-20">
         <Container>
 
           <BreadcrumbNavigation
@@ -641,22 +653,22 @@ export default function ProjectDetailsFunction({ id,siteMap }: Props) {
 
 
                 {
-                data?.data?.paymentOptions ?
-                  <PropertyDetailsSectionStringArray
-                    headerTitle="Payment Plan"
-                    data={data?.data?.paymentOptions}
-                  />
-                  :
-                  <div className="gap-2 mt-4 sm:grid pe-0  grid-cols-1 sm:grid-cols-4 ">
+                  data?.data?.paymentOptions ?
+                    <PropertyDetailsSectionStringArray
+                      headerTitle="Payment Plan"
+                      data={data?.data?.paymentOptions}
+                    />
+                    :
+                    <div className="gap-2 mt-4 sm:grid pe-0  grid-cols-1 sm:grid-cols-4 ">
 
-                    {Array.from({ length: width < 640 ? 6 : 24 }).map((_, i) => (
-                      <div key={i} className="w-full mt-2 sm:mt-0.5 h-[30px] sm:h-[26px] rounded bg-gray-50"></div>
-                    ))}
-                  </div>
-              }
+                      {Array.from({ length: width < 640 ? 6 : 24 }).map((_, i) => (
+                        <div key={i} className="w-full mt-2 sm:mt-0.5 h-[30px] sm:h-[26px] rounded bg-gray-50"></div>
+                      ))}
+                    </div>
+                }
 
                 {/* Desktop view */}
-                {totalPrice ? <div className="hidden mt-[24.75px] sm:block">
+                {totalPrice && <div className="hidden mt-[24.75px] sm:block">
                   <MortgageCalculator
                     headerTitle="Mortgage"
                     data={({ monthlyPayment, loanAmount, interestRate, downPayment, years }) => {
@@ -671,9 +683,13 @@ export default function ProjectDetailsFunction({ id,siteMap }: Props) {
                     defaultYears={years}
                     defaultInterestRate={interestRate}
                   />
-                </div> :
-                  <div className="w-full h-[468px] bg-slate-50 rounded-[5px]"></div>
-                }
+                </div>}
+
+
+
+
+
+
               </div>
 
 
@@ -684,8 +700,8 @@ export default function ProjectDetailsFunction({ id,siteMap }: Props) {
                 />
               </div>}
 
-           
-              
+
+
 
 
               {/* <div className="flex mt-[18px] sm:mt-[25.5px] justify-between items-center w-full">
@@ -765,21 +781,34 @@ export default function ProjectDetailsFunction({ id,siteMap }: Props) {
               </div>
 
 
+
+
               <div className="flex sm:hidden">
                 <RecommendedText
                   title="Recommended For You"
-                                                       items={shuffle(siteMap)?.slice(0, 6)}
-               
+                  items={shuffle(siteMap)?.slice(0, 6)}
+
                 />
               </div>
 
+
+
+
+                <FAQQuestions
+                values={data?.data?.faqQuestions}
+              />
+
+            
+
             </div>
             <SidePanel
-            siteMap={siteMap}
+              siteMap={siteMap}
               projectId={data?.data?._id || ''}
               shuffledImages={shuffledImages}
               handleGalleryModal={handleGalleryModal}
               mainImage={mainImage}
+              promotion={lead ===  'promotion'}
+              promotionId={promoId}
               handleGallerySelect={handleGallerySelect}
               images={images}
               videoLink={data?.data.youtubeVideoLink}
@@ -1174,6 +1203,7 @@ export default function ProjectDetailsFunction({ id,siteMap }: Props) {
 
 
 
+
       <Modal
         isOpen={EnquiryForm.status}
         onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
@@ -1185,6 +1215,11 @@ export default function ProjectDetailsFunction({ id,siteMap }: Props) {
             {EnquiryForm.count === 1 && <ModalForm
               onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
               item={EnquiryForm}
+              promotion={lead === 'promotion'}
+              onSuccessToShowThankYou={()=>{
+                router.push('/thank-you/property-enquiry')
+              }}
+              promotionId={promoId}
               setEnquiry={setEnquiryForm}
             />}
 
@@ -1217,3 +1252,117 @@ export default function ProjectDetailsFunction({ id,siteMap }: Props) {
 //   )
 // }
 // export default ProjectDetails;
+
+
+function FAQQuestions({ values }: {
+  values: {
+    question: string;
+    answer: string;
+    _id: string;
+  }[] | undefined
+}) {
+  // console.log('first')
+  // console.log(values,'values')
+  
+  return (
+    <div className='max-w-[880px] w-full mt-10 md:mt-3 mb-0'>
+
+      <h2 className='font-poppins font-medium text-[18px] mb-3 '>Frequently Asked Questions</h2>
+
+      {values?.map((item) => {
+        return (<ToggleButton
+          key={item._id}
+          title={item?.question}
+
+        >
+          <>
+
+            <Paragraph
+  content={item?.answer}
+/>
+
+          </>
+        </ToggleButton>
+
+        )
+      })}
+    </div>
+  )
+}
+
+
+function Paragraph({
+  content,
+  className
+}: {
+  content: string,
+  className?: string
+}) {
+  return (
+    <p className={clsx('font-poppins font-normal text-[10.5px] sm:text-[12px] text-[#767676]', className)}>
+      {content}
+    </p>
+  )
+}
+
+
+function ToggleButton({ title, children }: {
+  title: string,
+  children?: React.ReactNode
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="border-[#E3E5E6] my-2.5 rounded-[5px] border overflow-hidden">
+      <button
+        className="w-full flex justify-between items-center px-3 py-2 cursor-pointer hover:bg-gray-50 transition-colors"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <p className="font-poppins text-start font-medium capitalize text-xs md:text-sm text-black">
+          {title}
+        </p>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+        >
+          <IoChevronDown color="#FF1645" className="w-[16px] h-[16px]" />
+        </motion.div>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            key="content"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ 
+              height: 'auto', 
+              opacity: 1,
+              transition: {
+                height: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+                opacity: { duration: 0.25, ease: 'easeOut' }
+              }
+            }}
+            exit={{ 
+              height: 0, 
+              opacity: 0,
+              transition: {
+                height: { duration: 0.25, ease: [0.4, 0, 0.2, 1] },
+                opacity: { duration: 0.2, ease: 'easeIn' }
+              }
+            }}
+            className="overflow-hidden"
+          >
+            <div className="px-3 pb-3">
+              {children}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+function ContentHeading({ title }: { title: string }) {
+  return (
+    <h3 className=' font-poppins inline font-medium text-[13px]'>{title}</h3>
+  )
+}

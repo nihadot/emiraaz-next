@@ -22,14 +22,18 @@ type Props = {
     title: string;
     projectId: string;
     projectType: string;
+    promotion?:boolean;
+    promotionId?:string
 }
 
 interface UserData {
     _id: string;
     // Add more fields if needed
 }
-const StickyScrollHeader = ({ value, currency, title, projectId, projectType }: Props) => {
+const StickyScrollHeader = ({ value, currency, title, projectId, projectType,promotion,promotionId}: Props) => {
     const [showHeader, setShowHeader] = useState(false);
+    const router = useRouter();
+    console.log(promotion,promotionId,'promotion,promotionId')
 
     useEffect(() => {
         let ticking = false;
@@ -91,7 +95,8 @@ const StickyScrollHeader = ({ value, currency, title, projectId, projectType }: 
             const payload: any = {
                 name: formData.name,
                 number: formData.number,
-                projectId
+                      ...( !promotion && {projectId: projectId}),
+                ...(promotion && {promoId: promotionId}),
             };
 
             const userDataString = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA);
@@ -103,8 +108,14 @@ const StickyScrollHeader = ({ value, currency, title, projectId, projectType }: 
                 if (userData) payload.userId = userData._id
             }
 
+   let response = null
+            if (promotion) {
+                response = await axios.post(`${baseUrl}/promo-page/enquiry`, payload);
 
-            await axios.post(`${baseUrl}/enquiry`, payload);
+            } else {
+
+                response = await axios.post(`${baseUrl}/enquiry`, payload);
+            }
 
             setEnquiryForm((prev: any) => ({
                 ...prev,
@@ -210,9 +221,14 @@ const StickyScrollHeader = ({ value, currency, title, projectId, projectType }: 
                                 {EnquiryForm.count === 1 && <ModalForm
                                     onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
                                     item={EnquiryForm}
+                                    promotion={promotion}
+                                    onSuccessToShowThankYou={()=>{
+                                        router.push('/thank-you/property-enquiry')
+                                    }}
+                                    promotionId={promotionId}
                                     setEnquiry={setEnquiryForm}
                                 />}
-                                {EnquiryForm.count === 2 && <RegistrationSuccess
+                                {( !promotion   && EnquiryForm.count === 2) && <RegistrationSuccess
                                     onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
                                 />}
 

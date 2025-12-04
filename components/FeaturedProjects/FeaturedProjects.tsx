@@ -32,15 +32,23 @@ import MobileFooterBanner from '@/app/home/MobileFooterBanner'
 import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal'
 import { LOCAL_STORAGE_KEYS } from '@/api/storage'
 import MobileHeaderTitle from '../atom/typography/MobileHeaderTitle'
+import Recommendations from '@/app/home/Recommendations'
+import { PortraitBanner } from '@/redux/portraitBannerAd/types'
+import NoDataFound from '../Empty/NoDataFound'
 
 
 function FeaturedProjects({
-    siteMap
+    siteMap,
+    portraitBanners,
+    initialData,
+    
 }: {
-    siteMap: any[]
+    siteMap: any[],
+    portraitBanners: PortraitBanner[],
+    initialData: AllProjectsItems[]
 }) {
 
-
+// console.log(portraitBanners,'portraitBanners')
     useForceScrollRestore();
     useScrollToTopOnRefresh();
     const [loading, setLoading] = useState(false)
@@ -54,7 +62,6 @@ function FeaturedProjects({
     const userDataString = useMemo(() => {
         return typeof window !== "undefined" ? localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA) : null;
     }, []);
-
 
     const userId = useMemo(() => {
         if (!userDataString) return null;
@@ -73,9 +80,9 @@ function FeaturedProjects({
         { skip: !userId } // <- only call if userId is available
     );
 
-    const [smallVideoAds, setSmallVideoAds] = useState<AllSmallVideoItems[]>();
+    // const [smallVideoAds, setSmallVideoAds] = useState<AllSmallVideoItems[]>();
 
-    const { data: smallVideoAdsResponse } = useViewAllSmallVideosQuery({});
+    // const { data: smallVideoAdsResponse } = useViewAllSmallVideosQuery({});
 
     const dispatch = useDispatch();
 
@@ -89,11 +96,11 @@ function FeaturedProjects({
             setWishlistData(wishlistDataItem?.data)
         }
 
-        if (smallVideoAdsResponse?.data) {
-            // console.log(smallVideoAdsResponse?.data, 'smallVideoAdsResponse')
-            setSmallVideoAds(smallVideoAdsResponse?.data);
-        }
-    }, [wishlistDataItem, smallVideoAdsResponse]);
+        // if (smallVideoAdsResponse?.data) {
+        //     // console.log(smallVideoAdsResponse?.data, 'smallVideoAdsResponse')
+        //     setSmallVideoAds(smallVideoAdsResponse?.data);
+        // }
+    }, [wishlistDataItem]);
 
 
     useEffect(() => {
@@ -157,11 +164,11 @@ function FeaturedProjects({
         return () => clearTimeout(handler);
     }, [filters.search]);
 
-    const { data: portraitBannerData } = useFetchAllPortraitBannersQuery({});
+    // const { data: portraitBannerData } = useFetchAllPortraitBannersQuery({});
     const { data: projects } = useFetchFeaturedProjectsQuery();
 
 
-    const banners = portraitBannerData?.data || [];
+    const banners = portraitBanners;
     const shuffledImages = useMemo(() => shuffle(banners), [banners]);
 
     const shuffleArray = (arr: any[]) => {
@@ -189,15 +196,17 @@ function FeaturedProjects({
     }, []);
 
 
+    const allProjects = initialData
 
-    const [allProjects, setAllProjects] = useState<AllProjectsItems[]>();
 
-    useEffect(() => {
+    // const [allProjects, setAllProjects] = useState<AllProjectsItems[]>();
 
-        if (projects?.data) {
-            setAllProjects(projects?.data);
-        }
-    }, [projects]);
+    // useEffect(() => {
+
+    //     if (projects?.data) {
+    //         setAllProjects(projects?.data);
+    //     }
+    // }, [projects]);
 
 
     const [defaultProjectStage, setDefaultProjectStage] = useState<string>('');
@@ -239,7 +248,7 @@ function FeaturedProjects({
         <>
             <main>
 
-                <div className=" min-h-screen  w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
+                <div className="min-h-screen  w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
                     <Header logoSection={
                         <div className='h-full w-full flex justify-center items-center'>
                             <MobileHeaderTitle
@@ -259,96 +268,78 @@ function FeaturedProjects({
 
                     {/* Projects Section */}
                     <Container>
-                        <SpaceWrapper
-                            className={'pt-[0px]'}
-                        >
 
-                            <div className="mb-4 flex gap-2">
-                                <div className="flex-1 h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-
-
-
-                                    {/* projects */}
-                                    {allProjects ? (
-                                        allProjects?.map((item, index) => (
-                                            <React.Fragment key={index}>
-                                                <ProjectCard
-                                                    navigateDetailsButton={true}
-                                                    item={item}
-                                                    handleClick={handleClick}
-                                                    handleEnquiryFormClick={handleEnquiryFormClick}
-                                                />
-
-                                                {/* Add separator after every 5 items */}
-                                                {(index + 1) % 5 === 0 && (
-                                                    <>
-                                                        <div className=" flex sm:hidden mt:mt-0">
-                                                            <CustomSlider
-                                                                images={shuffleArray(shuffledImages)}
-                                                                containerClassName="!h-[95px] border border-[#DEDEDE] "
-                                                            />
-                                                        </div></>
-                                                )}
-                                            </React.Fragment>
-                                        ))
-                                    ) : (
-                                        Array.from({ length: 10 }).map((_, index) => (
-                                            <ProjectCardSkelton key={index} />
-                                        ))
-                                    )}
-                                </div>
-
-
-                                <div className={"w-full md:block hidden max-w-[301.5px]"}>
-
-                                    <RecommendedText
-                                        title="Recommended For You"
-                                        containerClassName='!mb-2 !mt-0'
-                                        items={shuffle(siteMap)?.slice(0, 6)}
-
-                                    />
-
-                                    {/* {(smallVideoAds && smallVideoAds.length > 0 ?
-                                        <div className={clsx("w-full mb-[12px] relative flex")}>
-                                            <VideoPreview
-                                                projectSlug={smallVideoAds?.[0]?.projectDetails?.slug || ''}
-                                                src={smallVideoAds?.[0]?.videoFile?.secure_url || ''}
+                        <div className="mb-4 flex gap-2">
+                            <div className="w-full h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                                {/* projects */}
+                                {allProjects ? (
+                                    allProjects?.map((item, index) => (
+                                        <React.Fragment key={index}>
+                                            <ProjectCard
+                                                navigateDetailsButton={true}
+                                                item={item}
+                                                handleClick={handleClick}
+                                                handleEnquiryFormClick={handleEnquiryFormClick}
                                             />
-                                        </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>)
-                                    } */}
+
+                                            {(index + 1) % 5 === 0 && (
+                                                <>
+                                                    <div className=" flex sm:hidden mt:mt-0">
+                                                        <CustomSlider
+                                                            images={shuffleArray(shuffledImages)}
+                                                            containerClassName="!h-[95px] border border-[#DEDEDE] "
+                                                        />
+                                                    </div></>
+                                            )}
+                                        </React.Fragment>
+                                    ))
+                                ) : (
+                                    <NoDataFound/>
+                                )}
 
 
 
 
-                                    <div className="sticky top-3 left-0">
-
-                                        <CustomSliderUi
-                                            shuffledImages={shuffledImages}
-                                        />
-                                        <RecommendedText
-                                            title="Trending Areas"
-                                            items={shuffle(siteMap)?.slice(0, 6)}
-
-                                        />
-                                        <RecommendedText
-                                            title="Popular Searches"
-                                            items={shuffle(siteMap)?.slice(0, 6)}
-
-                                        />
-
-
-
-                                    </div>
-
-
-
-
-
-
-
-                                </div>
                             </div>
-                        </SpaceWrapper>
+
+                            <div className="w-full xl:block hidden max-w-[301.5px]">
+
+
+                                <div className="sticky top-2 left-0">
+
+                                      <>
+                                                <Recommendations siteMap={siteMap}>
+                                                    {(items) => (
+                                                        <>
+                                                            <RecommendedText title="Recommended For You" items={items} />
+                                                        </>
+                                                    )}
+                                                </Recommendations>
+                                            </>
+
+                                    <CustomSliderUi
+                                        shuffledImages={shuffledImages}
+                                    />  
+
+                                    <>
+                                        <Recommendations siteMap={siteMap}>
+                                            {(items) => (
+                                                <>
+                                                    <RecommendedText title="Trending Areas" items={items} />
+                                                    <RecommendedText title="Popular Searches" items={items} />
+                                                </>
+                                            )}
+                                        </Recommendations>
+                                    </>
+                                </div>
+
+
+
+
+                            </div>
+
+                        </div>
+
                     </Container>
 
 
@@ -380,8 +371,8 @@ function FeaturedProjects({
 
                     <RecommendedText
                         title="Recommended For You"
-                                                        items={shuffle(siteMap)?.slice(0, 6)}
-                        
+                        items={shuffle(siteMap)?.slice(0, 6)}
+
                     />
                 </div>
 

@@ -1,59 +1,45 @@
 'use client'
-import { LOCAL_STORAGE_KEYS } from '@/api/storage';
 import { useForceScrollRestore, useScrollToTopOnRefresh } from '@/hooks/useScrollRestoration';
-import { useViewAllSmallVideosQuery } from '@/redux/smallVideo/smallViewApi';
-import { AllSmallVideoItems } from '@/redux/smallVideo/types';
-import { AllWishlistItems } from '@/redux/wishlist/types';
-import { useViewAllWishlistsQuery } from '@/redux/wishlist/wishlistApi';
-import { setWishlist } from '@/redux/wishlistSlice/wishlistSlice';
 import { useDeviceType } from '@/utils/useDeviceType';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux';
 import { FiltersState } from '../types';
-import { CountItem, useViewAllCountsQuery } from '@/redux/news/newsApi';
+import { CountItem } from '@/redux/news/newsApi';
 import { useFetchAllProjectsCountQuery, useFetchAllProjectsQuery } from '@/redux/project/projectApi';
-import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
-import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi';
 import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
 import { shuffle } from '@/utils/shuffle';
 import { AllProjectsItems } from '@/redux/project/types';
-import HomePageContent from '../Home/HomePageContent';
 import Header from '../Header';
 import Container from '../atom/Container/Container';
 import SearchNew from '../SearchField/SearchNew';
 import SelectLatest from '../SelectOption/SelectLatest';
-import { CompletionTypes, FurnishTypes, productTypeOptionFirstItems, PropertyTypes, propertyTypeSecond } from '@/data';
+import { CompletionTypes, productTypeOptionFirstItems, PropertyTypes, propertyTypeSecond } from '@/data';
 import { SwitchSelector } from '../SelectOption';
 import { HiOutlineAdjustmentsHorizontal } from 'react-icons/hi2';
 import clsx from 'clsx';
 import ExpandableComponentDropdown from '../ExpandableComponent/ExpandableComponent';
 import { SelectHandoverDate } from '../SelectHandoverDate';
 import SelectNew from '../SelectOption/SelectNew';
-import { IoChevronForwardSharp, IoCloseOutline } from 'react-icons/io5';
+import { IoCloseOutline } from 'react-icons/io5';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
-// import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import LocationTags from '../LocationTags/LocationTags';
 import ProjectCard from '../ProjectCard/ProjectCard';
 import CustomSlider from '../CustomSlider/CustomSlider';
-import ProjectCardSkelton from '../ProjectCard/ProjectCardSkelton';
 import Recommendations from '@/app/home/Recommendations';
 import CustomSliderUi from '@/app/home/CustomSliderUi';
 import PaginationNew from '../PaginationNew/PaginationNew';
-import BottomBanner from '@/app/home/BottomBannerasas';
 import { Footer } from '../Footer';
 import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal';
 import MobileFilterOption from '@/app/home/MobileFilterOption';
 import { parsePrice } from '@/utils/parsePrice';
-import { getSiteMapData } from '@/utils/getSiteMapData';
 import { EmirateNames } from '@/redux/emirates/types';
 import Image from 'next/image';
 import home_logo from "@/app/assets/house.png";
 import Link from 'next/link';
 
 type Props = {
-    initialData: any;
+    // initialData: any;
     siteMap: any[];
     emiratesData: EmirateNames[],
     allCounts: CountItem,
@@ -62,15 +48,19 @@ type Props = {
         json: object
         text: string
     }
-    error: boolean
+    error: boolean,
+    // videoAds: AllSmallVideoItems[],
+    portraitBanners: PortraitBanner[],
+    dataFetchCities: CityNames[],
+    url: string,
 }
 
-function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, metaContent }: Props) {
-
-
+function ForSalePage({ dataFetchCities, portraitBanners, url, siteMap, emiratesData, allCounts, metaContent }: Props) {
 
     useForceScrollRestore(); // Default key is "scroll-position"
     useScrollToTopOnRefresh();
+
+    // console.log(initialData, 'initial Data')
 
     const router = useRouter()
     const pathname = usePathname();
@@ -79,27 +69,19 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
     const afterForSale = (pathname?.split('/for-sale/')[1] || '')
     const smallWords = ['for', 'in', 'of', 'and', 'the', 'on', 'at', 'to'];
 
-    // console.log(pathname,'pathname')
-
-    // console.log(afterForSale,'afterForSale')
-    // console.log(afterForSale.split('-'), 'afterForSale.split')
-
     const readable = afterForSale?.split('-')?.map((word, index) => {
         const lower = word?.toLowerCase();
-        // console.log(lower, 'lower')
         if (index !== 0 && smallWords?.includes(lower)) return lower;
         return lower?.charAt(0)?.toUpperCase() + lower?.slice(1);
     })
         ?.join(' ');
+
     const [clear, setClear] = useState(false);
     const [defaultEmirate, setDefaultEmirate] = useState<string>('');
     const [defaultCities, setDefaultCities] = useState<any>('');
     const [filterModel, setFilterModel] = useState(false);
     const [debouncedSearch, setDebouncedSearch] = useState<any>("");
     const [EnquiryForm, setEnquiryForm] = useState({ status: false, id: '', count: 0 });
-    const [rangeCalculator, setRangeCalculator] = useState(false);
-    const [areaRange, setShowAreaRange] = useState(false);
-    const [allProjects, setAllProjects] = useState<AllProjectsItems[]>();
 
     const [filters, setFilters] = useState<FiltersState>({
         page: 1,
@@ -125,6 +107,7 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
         bath: "",
     });
 
+    // console.log('first')
 
     // console.log(filters,'filtersfilters')
     // Event Handlers
@@ -163,12 +146,9 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
 
     // const { data: emiratesData } = useFetchAllEmirateNamesQuery();
     const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
-    // const { data: projects } = useFetchAllProjectsQuery({ ...queryParams });
+    const { data: projectsResponse } = useFetchAllForSaleProjectsQuery({ ...queryParams, url });
 
-    // console.log(initialData, 'initialDatainitialData')
-    // const { data: allCounts } = useViewAllCountsQuery();
-
-    const projects: AllProjectsItems[] = initialData?.data;
+    const projects: AllProjectsItems[] = projectsResponse?.data || [];
 
     const emirateOptions = useMemo(() => {
         const mappedOptions = emiratesData.map((item) => ({
@@ -225,8 +205,6 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
         bath: (option: any) => setFilters(prev => ({ ...prev, bath: option || '' })),
     }), []);
 
-
-
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const emirate = urlParams.get('emirate');
@@ -243,24 +221,6 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
 
     }, []);
 
-    const handleChangeCities = useCallback((option: any[]) => {
-        if (option.length === 0) {
-            setFilters(prev => ({ ...prev, cities: [] }));
-            return;
-        }
-        setFilters(prev => ({ ...prev, cities: option.map((item) => item.value) }));
-    }, []);
-
-
-    //   const { data } = useFetchAllProjectsQuery(queryParams, {
-    //             refetchOnMountOrArgChange: true,
-    //             refetchOnReconnect: true,
-    //             refetchOnFocus: true,
-    //             skip: false,
-    //         });
-
-
-
     // Debounce search input
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -272,19 +232,17 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
     }, [filters.search]);
     const { data: allProjectsCounts } = useFetchAllProjectsCountQuery();
 
-
     const handleFilterModal = useCallback(() => {
         setFilterModel(prev => !prev);
     }, []);
 
     const handleClear = useCallback(() => {
-        // alert('aler')
         setFilters({
             page: 1,
             search: "",
             cities: [],
             productTypeOptionFirst: '',
-            propertyType: [],
+            propertyType: '',
             emirate: "",
         });
         setClear(true);
@@ -306,9 +264,8 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
 
     const [showYearSelector, setShowYearSelector] = useState(false);
 
-    const { data: portraitBannerData } = useFetchAllPortraitBannersQuery({});
 
-    const banners = portraitBannerData?.data || [];
+    const banners = portraitBanners || [];
     const shuffledImages = useMemo(() => shuffle(banners), [banners]);
 
 
@@ -332,23 +289,10 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
         return copy;
     };
 
-    const currentSegments = pathname.split('/').filter(Boolean); // e.g. ['buy', 'abu-dhabi', 'off-plan-projects']
+    const pagination = projectsResponse?.pagination;
 
-    const segments = [...currentSegments];
+    const totalPages = projectsResponse?.pagination?.totalPages || 1;
 
-    const lastCitySlug = filters.cities?.[filters.cities.length - 1];
-
-    const pagination = initialData?.pagination;
-
-    const totalPages = initialData?.pagination?.totalPages || 1;
-
-    const isMatchCity = cityOptions.find((item: any) => item.slug === lastCitySlug);
-
-    const isExistPropertyCategoryType = segments.find((seg) =>
-        productTypeOptionFirstItems.some((item: any) => item.value === seg)
-    );
-
-    const totalRecords = pagination?.totalRecords;
 
     const propertyTypes = [
         {
@@ -370,9 +314,8 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
     ]
 
 
- 
-    return (
 
+    return (
 
         <main>
             <div className="mb-20 min-h-screen  w-full lg:overflow-visible font-[family-name:var(--font-geist-sans)]">
@@ -391,30 +334,19 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
                         <div className="hidden lg:flex h-[48px]">
                             <SelectLatest
                                 listContainerUlListContainerClassName="w-[200px]" search
-                                defaultValue={emirateOptions?.find((item) => item?.label === defaultEmirate)}
                                 clearSelection={clear}
                                 label="Emirates"
                                 options={emirateOptions}
                                 onSelect={(e) => {
-                                    // const url = new URL(window.location.href);
-                                    // if (e?.value) {
-                                    //     url.searchParams.set('emirate', e?.label ?? '');
-                                    // } else {
-                                    //     url.searchParams.delete('emirate');
-                                    // }
-                                    // const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                    // window.history.pushState({}, '', newUrl);
-                                    // handleSelect.emirate(e)
 
                                     let url = pathname;
                                     const match: any = [...emirateOptions, ...cityOptions].find((item: any) => url.includes(item.slug));
-                                    // console.log(e[e?.length - 1], 'E')
 
                                     if (match && "slug" in match && match.slug && e) {
                                         const newValue = e?.slug?.toLowerCase() ?? "";
                                         const regex = new RegExp(match.slug, "i");
                                         url = url.replace(regex, newValue);
-                                        window.location.href = url; // navigate and render page with new URL
+                                        window.location.href = url;
                                     }
 
                                 }}
@@ -428,27 +360,10 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
                                 search
                                 multiple
                                 onSelectMultiple={(e) => {
-                                    // console.log(e, 'event')
-                                    // const url = new URL(window.location.href);
 
-                                    // if (e) {
-
-                                    //     if (e && e.length > 0) {
-
-                                    //         url.searchParams.set('cities', e?.map((item) => item.label).join(','));
-                                    //     } else {
-                                    //         url.searchParams.delete('cities');
-                                    //     }
-                                    //     const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                    //     window.history.pushState({}, '', newUrl);
-
-                                    //     handleChangeCities(e);
-
-                                    // }
 
                                     let url = pathname;
                                     const match: any = [...emirateOptions, ...cityOptions].find((item: any) => url.includes(item.slug));
-                                    // console.log(e[e?.length - 1], 'E')
 
                                     if (match && "slug" in match && match.slug && e && e.length > 0) {
                                         const newValue = e[e.length - 1]?.slug?.toLowerCase() ?? "";
@@ -456,9 +371,6 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
                                         url = url.replace(regex, newValue);
                                         window.location.href = url; // navigate and render page with new URL
                                     }
-
-                                    // console.log(match, 'match')
-
 
                                 }}
                                 clearSelection={clear}
@@ -477,40 +389,9 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
 
                                 onSelect={(e) => {
                                     const url = new URL(window.location.href);
-                                    // const searchParams = url.search;
-                                    // handleSelect.projectTypeFirst(e);
-                                    // let path = url.pathname;
-
-                                    // if (e === 'off-plan-resale') {
-                                    //     return;
-                                    // }
-
-                                    // // console.log(e, 'pathpathpath')
-
-                                    // switch (e) {
-
-                                    //     case 'off-plan-projects':
-                                    //         path = '/';
-                                    //         break;
-                                    //     case 'off-plan-secondary':
-                                    //         path = '/secondary';
-                                    //         break;
-                                    //     case 'off-plan-land':
-                                    //         path = '/land';
-                                    //         break;
-
-                                    // }
-
-
                                     const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
                                     router.push(`/buy/${e}/${newUrl}`)
-
-
-                                    // window.location.href = `${path}${searchParams}`;
-
-
                                 }}
-                                // defaultValue={productTypeOptionFirstItems?.[1]?.value}
                                 options={productTypeOptionFirstItems}
 
                             />
@@ -522,10 +403,6 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
                                 containerClassName="sm:!gap-1"
                                 onSelect={(e) => {
                                     const url = new URL(window.location.href);
-                                    // const searchParams = url.search;
-                                    // handleSelect.projectTypeLast(e);
-
-                                    // let path = '/';
 
                                     if (e === 'all') {
                                         return;
@@ -533,29 +410,9 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
                                     const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
                                     router.push(`/buy/off-plan-projects/${e}/${newUrl}`)
 
-                                    // switch (e) {
-                                    //     case 'residential':
-                                    //         if (pathname === '/off-plan-projects') {
-                                    //             path = '/off-plan-projects/residential';
-                                    //         }
-
-                                    //         break;
-                                    //     case 'commercial':
-                                    //         path = '/off-plan-projects/commercial';
-                                    //         break;
-
-                                    // }
-
-
-
-                                    // window.location.href = `${path}${searchParams}`;
-                                    //    const url = new URL(window.location.href);
-
-
                                 }
 
                                 }
-                                // onSelect={handleSelect.propertyTypeSecond}
                                 defaultValue={filters.propertyTypeSecond}
                                 options={propertyTypeSecond}
                             />
@@ -622,20 +479,6 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
                                         window.location.href = url; // navigate and render page with new URL
                                     }
                                 }}
-
-                                // onSelect={(e) => {
-                                //   if (!e) return;
-
-                                //     let url = pathname;
-                                //     const match = propertyTypes.find((item) => url.includes(item.value));
-
-                                //     if (match) {
-                                //       const regex = new RegExp(match.value, "i");
-                                //       url = url.replace(regex, e.value.toLowerCase());
-                                //     }
-
-                                //     window.location.href = url; // navigate and render page with new URL
-                                // }}
                                 clearSelection={clear}
                                 defaultValue={PropertyTypes?.find((item) => item?.label === defaultPropertyType)}
                                 listContainerUlListContainerClassName="w-[200px]"
@@ -652,21 +495,13 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
 
 
                                     const url = new URL(window.location.href);
-                                    // if (e == 'all') {
-                                    //     url.searchParams.delete('completion-type');
-                                    // } else {
-                                    //     url.searchParams.set('completion-type', e ?? '');
-                                    // }
-                                    // const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                    // window.history.pushState({}, '', newUrl);
+
                                     if (e === 'all') {
                                         return;
                                     }
 
-                                    // handleSelect.completionType(e)
-
                                     const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                    // window.history.pushState({}, '', newUrl);
+
                                     router.push(`/buy/dubai/off-plan-projects/${e}`)
 
                                 }}
@@ -687,6 +522,7 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
                                 onClear={() => {
 
                                 }}
+                                clear={clear}
                                 customCloseControl={<button className="text-xs text-red-600">X</button>}
                             >
                                 <SelectHandoverDate
@@ -694,7 +530,7 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
                                     initialQuarter={filters.handoverDate?.quarter ? filters.handoverDate?.quarter : "Q2"}
 
                                     onDone={(year, quarter) => {
-                                        // handleSelect.handoverDate({ quarter, year })
+
                                         router.push(`/buy/dubai/off-plan-projects`)
 
                                     }}
@@ -874,11 +710,10 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
                                     </div>
 
                                     <div className="flex justify-end items-center">
-                                        <p className='text-xs font-poppins font-normal'>{initialData?.pagination?.totalRecords} Properties</p>
+                                        <p className='text-xs font-poppins font-normal'>{projects.length} Properties</p>
                                     </div>
                                 </div>
 
-                                {/* <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{totalRecords ? `${parsePrice(totalRecords)} Properties Available` : 'No Properties Available'}</p> */}
                             </div>}
 
 
@@ -887,12 +722,12 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
 
                             {/* Location link */}
                             <SpaceWrapper
-                                className='pb-3'
+                                className='pb-0'
                             >
                                 <LocationTags
 
                                     data={
-                                        cities?.data?.slice(0, 4).map((item) => ({
+                                        dataFetchCities?.slice(0, 4).map((item) => ({
                                             location: item.name,
                                             count: item.count,
                                             slug: item.slug,
@@ -901,9 +736,8 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
                                 />
                             </SpaceWrapper>
 
-
                             {/* projects */}
-                            {projects ? (
+                            {projects && projects.length ? (
                                 projects?.map((item, index) => (
                                     <React.Fragment key={index}>
                                         <ProjectCard
@@ -912,8 +746,6 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
                                             handleClick={handleClick}
                                             handleEnquiryFormClick={handleEnquiryFormClick}
                                         />
-
-                                        {/* Add separator after every 5 items */}
                                         {(index + 1) % 5 === 0 && (
                                             <>
                                                 <div className=" flex sm:hidden mt:mt-0">
@@ -925,24 +757,38 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
                                         )}
                                     </React.Fragment>
                                 ))
-                            ) : (
+                            ) :
                                 Array.from({ length: 10 }).map((_, index) => (
                                     <ProjectCardSkelton key={index} />
                                 ))
-                            )}
+                            }
                         </div>
 
                         <div className="w-full xl:block hidden max-w-[301.5px]">
 
 
-                            <div className="sticky -mt-2  left-0">
+                            <div className="sticky -mt-2 top-2 left-0">
 
-                                <Recommendations
-                                    siteMap={siteMap}
-                                />
+                                <Recommendations siteMap={siteMap}>
+                                    {(items) => (
+                                        <>
+                                            <RecommendedText title="Recommended For You" items={items} />
+                                        </>
+                                    )}
+                                </Recommendations>
+
                                 <CustomSliderUi
                                     shuffledImages={shuffledImages}
                                 />
+
+                                <Recommendations siteMap={siteMap}>
+                                    {(items) => (
+                                        <>
+                                            <RecommendedText title="Trending Areas" items={items} />
+                                            <RecommendedText title="Popular Searches" items={items} />
+                                        </>
+                                    )}
+                                </Recommendations>
                             </div>
 
 
@@ -977,22 +823,9 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
                     </div>
                 </Container>
 
-
-
-
-
-                {/* <SectionDivider
-                    containerClassName="mt-[45.75px]"
-                    lineClassName="h-[1px] hidden sm:block w-full bg-[#DEDEDE]"
-                /> */}
-
-
                 <ContentPage
                     content={metaContent}
                 />
-
-
-                {/* <BottomBanner /> */}
 
             </div>
 
@@ -1009,13 +842,11 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
             />
 
 
-            <MobileFilterOption
+            {/* <MobileFilterOption
                 allCounts={allCounts}
                 pagination={pagination}
 
-                // bathroomsRange={filters.page && filters.page > 1 ? true : false}
                 resultProjects={() => {
-                    // setAllProjects(projects?.data);
                 }}
                 emiratesData={emiratesData}
 
@@ -1023,9 +854,10 @@ function ForSalePage({ error,initialData, siteMap, emiratesData, allCounts, meta
                 setFiltersHandler={setFilters}
                 onClose={() => setFilterModel(false)}
                 show={filterModel}
-            />
+            /> */}
         </main>
     )
+
 }
 
 export default ForSalePage
@@ -1111,6 +943,14 @@ const BreadcampNavigation: React.FC<{
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, X } from "lucide-react";
 import { FaCaretDown } from 'react-icons/fa';
+import NoDataFound from '../Empty/NoDataFound';
+import RecommendedText from '../RecomendedText/RecommendedText';
+import { PortraitBanner } from '@/redux/portraitBannerAd/types';
+import { getPortraitBanners } from '@/utils/getPortraitBanners';
+import { CityNames } from '@/redux/cities/types';
+import { useFetchAllForSaleProjectsQuery } from '@/redux/forSale/forSaleApi';
+import Skeleton from '../Skeleton/Skeleton';
+import ProjectCardSkelton from '../ProjectCard/ProjectCardSkelton';
 
 
 const ToggleButton = () => {
@@ -1192,7 +1032,7 @@ const ContentPage = ({ content }: {
 }) => {
     return (
         <Container
-        className='mt-10'
+            className='mt-10'
 
         >
 
