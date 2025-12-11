@@ -142,8 +142,8 @@ href={appUrl.appStore}
                                         link: "/developers"
                                     },
                                     {
-                                        title: "Emirates",
-                                        link: "/"
+                                        title: "Contact Us",
+                                        link: "/contact"
                                     },
                                     {
                                         title: "Cities",
@@ -156,20 +156,20 @@ href={appUrl.appStore}
                                 title="Residential"
                                 items={[
                                     {
-                                        title: "Offplan Projects",
+                                        title: "New Projects",
                                         link: "/"
                                     },
                                     {
                                         title: "Offplan Resale",
-                                        link: "/"
+                                        link: "/buy/off-plan-resale/residential"
                                     },
                                     {
                                         title: "Secondary",
-                                        link: "/"
+                                        link: "/buy/secondary/residential"
                                     },
                                     {
                                         title: "Land",
-                                        link: "/"
+                                        link: "/buy/land/residential"
                                     },
                                     // {
                                     //     title:"Site Map",
@@ -181,20 +181,20 @@ href={appUrl.appStore}
                                 title="Commercial"
                                 items={[
                                     {
-                                        title: "Offplan Projects",
+                                        title: "New Projects",
                                         link: "/"
                                     },
                                     {
                                         title: "Offplan Resale",
-                                        link: "/"
+                                        link: "/buy/off-plan-resale/commercial"
                                     },
                                     {
                                         title: "Secondary",
-                                        link: "/"
+                                        link: "/buy/secondary/commercial"
                                     },
                                     {
                                         title: "Land",
-                                        link: "/"
+                                        link: "/buy/land/commercial"
                                     },
                                     //    {
                                     //     title:"Site Map",
@@ -206,28 +206,28 @@ href={appUrl.appStore}
                                 title="Emirates"
                                 items={[{
                                     title: "Dubai",
-                                    link: "/"
+                                    link: "/buy/dubai/off-plan-projects/commercial"
                                 },{
                                     title: "Abu Dhabi",
-                                    link: "/"
+                                    link: "/buy/abu-dhabi/off-plan-projects/commercial"
                                 },
                              
                                 {
                                     title: "Sharjah",
-                                    link: "/"
+                                    link: "/buy/sharjah/off-plan-projects/commercial"
                                 },
                                     {
                                     title: "Ras Al Khaimah",
-                                    link: "/"
+                                    link: "/buy/ras-al-khaimah/off-plan-projects/commercial"
                                 },
                                 {
                                     title: "Ajman",
-                                    link: "/"
+                                    link: "/buy/ajman/off-plan-projects/commercial"
                                 },
 
                                 {
                                     title: "Umm Al-Quwain",
-                                    link: "/"
+                                    link: "/buy/umm-al-quwain/off-plan-projects/commercial"
                                 },
                                 //    {
                                 //         title:"Site Map",

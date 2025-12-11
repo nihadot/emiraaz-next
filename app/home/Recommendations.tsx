@@ -1,21 +1,41 @@
-import React from 'react'
-import { shuffle } from '@/utils/shuffle'
+/**
+ * Recommendations Component
+ * Randomly selects items from the sitemap for display
+ * Optimized with React.memo and useMemo
+ */
 
-type Props = {
-  siteMap: any[]
-  children: (items: any[]) => React.ReactNode
+import React, { useMemo, memo } from 'react';
+import { shuffle } from '@/utils/shuffle';
+
+interface RecommendationItem {
+  url: string;
+  [key: string]: any;
 }
 
-const RecommendationsComponent = ({ siteMap, children }: Props) => {
-  const shuffled = React.useMemo(() => shuffle(siteMap), [siteMap])
-  return <>{children(shuffled.slice(0, 6))}</>
+interface RecommendationsProps {
+  siteMap: RecommendationItem[];
+  children: (items: RecommendationItem[]) => React.ReactNode;
+  limit?: number; // Allow custom limit
 }
 
-const Recommendations = React.memo(
-  RecommendationsComponent,
-  (prev, next) => prev.siteMap === next.siteMap
-)
+const RecommendationsComponent = ({
+  siteMap,
+  children,
+  limit = 6
+}: RecommendationsProps) => {
+  // ⚡ Memoize shuffled items to prevent re-shuffling on every render
+  // Only re-shuffle if the source data (siteMap) changes
+  const recommendedItems = useMemo(() => {
+    if (!siteMap || siteMap.length === 0) return [];
 
-Recommendations.displayName = 'Recommendations'
+    // Create a shallow copy before shuffling to avoid mutating props
+    const itemsCopy = [...siteMap];
+    return shuffle(itemsCopy).slice(0, limit);
+  }, [siteMap, limit]);
 
-export default Recommendations
+  return <>{children(recommendedItems)}</>;
+};
+
+// ⚡ Export memoized component
+// Default shallow comparison is sufficient for siteMap array reference
+export default memo(RecommendationsComponent);

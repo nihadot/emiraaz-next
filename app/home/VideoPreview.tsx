@@ -1,5 +1,12 @@
-'use client'
-import React, { useRef, useState, useEffect } from "react";
+/**
+ * VideoPreview Component
+ * Handles video playback, fullscreen mode, and controls
+ * Optimized with React.memo and extracted sub-components
+ */
+
+'use client';
+
+import React, { useRef, useState, useEffect, useCallback, memo } from "react";
 import { BsArrowsFullscreen, BsFullscreenExit } from "react-icons/bs";
 import { motion, AnimatePresence } from "framer-motion";
 import CenterControls from "./CenterControls";
@@ -20,6 +27,87 @@ type VideoViewProps = {
   id: string;
 };
 
+// ⚡ Memoized Know More Button
+const KnowMore = memo(({ url, className, id }: { url: string, className?: string, id: string }) => {
+  const handleFun = useCallback(() => {
+    const myDeviceId: string = getOrCreateDeviceId();
+    sentUniqueId({ uniqueId: myDeviceId, type: 'video-more-projects', id }).catch(console.error);
+  }, [id]);
+
+  return (
+    <Link
+      onClick={handleFun}
+      href={`/projects/${url}`}
+      prefetch
+      className={clsx("bg-[#F5F5F5] h-[54px] flex justify-center items-center w-full", className)}
+    >
+      <button
+        type="button"
+        className="font-poppins cursor-pointer text-[9px] w-[97px] h-[25px] flex justify-center items-center bg-[#333333] rounded-[3px] text-white font-medium"
+      >
+        Know More
+      </button>
+    </Link>
+  );
+});
+KnowMore.displayName = 'KnowMore';
+
+// ⚡ Memoized Bottom Controls
+const BottomControl = memo(({
+  isMobile,
+  isFullscreen,
+  toggleFullscreen,
+  toggleMute,
+  isMuted,
+  showControls,
+}: {
+  isMobile: boolean;
+  isFullscreen: boolean;
+  toggleFullscreen: () => void;
+  toggleMute: () => void;
+  isMuted: boolean;
+  showControls: boolean;
+}) => (
+  <>
+    <motion.div
+      onClick={toggleMute}
+      className={clsx("cursor-pointer absolute bottom-3 left-2 z-40 p-1 rounded", {
+        "bg-black/30": showControls,
+        "pointer-events-none": !showControls,
+      })}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: showControls ? 1 : 0 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+    >
+      {!isMuted ? (
+        <FaVolumeUp color="white" size={16} />
+      ) : (
+        <FaVolumeDown color="white" size={16} />
+      )}
+    </motion.div>
+
+    {!isMobile && (
+      <motion.div
+        onClick={toggleFullscreen}
+        className={clsx("cursor-pointer absolute right-3 bottom-3 z-40 p-1 rounded", {
+          "bg-black/30": showControls,
+          "pointer-events-none": !showControls,
+        })}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: showControls ? 1 : 0 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+      >
+        {isFullscreen ? (
+          <BsFullscreenExit color="white" size={14} />
+        ) : (
+          <BsArrowsFullscreen color="white" size={14} />
+        )}
+      </motion.div>
+    )}
+  </>
+));
+BottomControl.displayName = 'BottomControl';
+
 const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, className, projectSlug }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -29,25 +117,26 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
   const [mounted, setMounted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [showThumbnail, setShowThumbnail] = useState(true);
+
   const hideTimeout = useRef<any>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const normalContainerRef = useRef<HTMLDivElement>(null);
   const fullscreenContainerRef = useRef<HTMLDivElement>(null);
+
   const deviceType = useDeviceType();
   const isMobile = deviceType === "mobile";
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const [showThumbnail, setShowThumbnail] = useState(true);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const resetHideTimer = () => {
+  const resetHideTimer = useCallback(() => {
     setShowControls(true);
     if (hideTimeout.current) clearTimeout(hideTimeout.current);
     hideTimeout.current = setTimeout(() => setShowControls(false), 1500);
-  };
+  }, []);
 
   useEffect(() => {
     const container = isFullscreen ? fullscreenContainerRef.current : containerRef.current;
@@ -61,14 +150,9 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
       container.removeEventListener("mousemove", handleMouseMove);
       if (hideTimeout.current) clearTimeout(hideTimeout.current);
     };
-  }, [isFullscreen]);
+  }, [isFullscreen, resetHideTimer]);
 
-  const togglePlay = () => {
-    //  const myDeviceId: string = getOrCreateDeviceId();
-
-    // sentUniqueId({ uniqueId: myDeviceId, type: 'video-full-screen', id }).catch(console.error);
-
-
+  const togglePlay = useCallback(() => {
     const video = videoRef.current;
     if (!video) return;
 
@@ -81,24 +165,27 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
       video.pause();
       setIsPlaying(false);
     }
-  };
+  }, []);
 
-  const toggleMute = async () => {
-    // console.log('first')
+  const toggleMute = useCallback(() => {
     const myDeviceId: string = getOrCreateDeviceId();
-
     sentUniqueId({ uniqueId: myDeviceId, type: 'video-mute', id }).catch(console.error);
-
 
     const video = videoRef.current;
     if (video) {
       video.muted = !video.muted;
       setIsMuted(video.muted);
     }
-  };
+  }, [id]);
 
+  const toggleFullscreen = useCallback(() => {
+    const myDeviceId: string = getOrCreateDeviceId();
+    sentUniqueId({ uniqueId: myDeviceId, type: 'video-full-screen', id }).catch(console.error);
 
-
+    if (!isMobile) {
+      setIsFullscreen((prev) => !prev);
+    }
+  }, [id, isMobile]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -125,41 +212,27 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isFullscreen, togglePlay, toggleMute]);
 
-  const toggleFullscreen = () => {
-
-    const myDeviceId: string = getOrCreateDeviceId();
-    sentUniqueId({ uniqueId: myDeviceId, type: 'video-full-screen', id }).catch(console.error);
-    // console.log(isMobile, 'isMobileisMobile');
-    if (!isMobile) {
-      setIsFullscreen((prev) => !prev);
-
-    }
-  };
-
-
-  const handleVideoEnd = () => {
+  const handleVideoEnd = useCallback(() => {
     setIsVideoLoaded(true);
-    setShowThumbnail(false); // hide thumbnail when video can play
+    setShowThumbnail(false);
     setIsPlaying(false);
-  };
+  }, []);
 
-  const handleTimeUpdate = () => {
+  const handleTimeUpdate = useCallback(() => {
     const video = videoRef.current;
     if (video) {
       setCurrentTime(video.currentTime);
     }
-  };
+  }, []);
 
-  const handleLoadedMetadata = () => {
+  const handleLoadedMetadata = useCallback(() => {
     const video = videoRef.current;
     if (video) {
       setDuration(video.duration);
     }
-  };
+  }, []);
 
-  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
-
-  const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleProgressClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const video = videoRef.current;
     if (!video || !duration) return;
 
@@ -171,23 +244,19 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
 
     video.currentTime = newTime;
     setCurrentTime(newTime);
-  };
+  }, [duration]);
 
-
-  const handleCanPlay = () => {
+  const handleCanPlay = useCallback(() => {
     setIsVideoLoaded(true);
-    setShowThumbnail(false); // hide thumbnail when video can play
-    setIsPlaying(true);       // autoplay state
-  };
+    setShowThumbnail(false);
+    setIsPlaying(true);
+  }, []);
 
-
-
-
+  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   const videoElement = (
-
     <div className="relative w-full h-full">
-      {(showThumbnail) && (
+      {showThumbnail && (
         <img
           src={thumbnailUrl}
           alt="Video thumbnail"
@@ -198,7 +267,7 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
       <video
         ref={videoRef}
         src={videoUrl}
-        autoPlay // Add this line
+        autoPlay
         muted={isMuted}
         playsInline
         preload="metadata"
@@ -206,7 +275,7 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
           "w-full h-full object-contain": isFullscreen,
           "w-full h-[195px] object-cover": !isFullscreen,
         })}
-        onCanPlay={handleCanPlay}  // fires as soon as browser can start playing
+        onCanPlay={handleCanPlay}
         onEnded={handleVideoEnd}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
@@ -226,14 +295,9 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
       }, 100);
       return () => clearTimeout(timeout);
     }
-  }, [isFullscreen, videoRef, setIsPlaying]);
-
-
-
-
+  }, [isFullscreen]);
 
   if (!videoUrl) return <div>No video available</div>;
-
 
   return (
     <>
@@ -248,9 +312,8 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{
               duration: 0.5,
-              ease: [0.4, 0, 0.2, 1], // smooth material-style easing
+              ease: [0.4, 0, 0.2, 1],
             }}
-
             onClick={() => setIsFullscreen(false)}
           >
             <motion.div
@@ -270,18 +333,14 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
               </div>
 
               <CenterControls
-              isFullScreen={mounted && isFullscreen}
+                isFullScreen={mounted && isFullscreen}
                 showControls={showControls}
                 showReplay={showReplay}
                 isPlaying={isPlaying}
                 onTogglePlay={togglePlay}
               />
 
-
-
-              <div className="flex px-3 left-0 right-0 items-center  z-40 absolute bottom-[69px] justify-between">
-
-
+              <div className="flex px-3 left-0 right-0 items-center z-40 absolute bottom-[69px] justify-between">
                 {/* Fullscreen Controls */}
                 <motion.div
                   onClick={toggleMute}
@@ -299,13 +358,9 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
                   )}
                 </motion.div>
 
-
-
-
-
                 {/* Progress Bar - Only in Fullscreen */}
                 <motion.div
-                  className=" w-[90%] h-1 bg-gray-700 cursor-pointer group hover:h-2 transition-all"
+                  className="w-[90%] h-1 bg-gray-700 cursor-pointer group hover:h-2 transition-all"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: showControls ? 1 : 0 }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -320,7 +375,7 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
                 </motion.div>
 
                 <motion.div
-                  className={clsx("cursor-pointer  p-2 rounded bg-black/30", {
+                  className={clsx("cursor-pointer p-2 rounded bg-black/30", {
                     "pointer-events-none": !showControls,
                   })}
                   onClick={() => setIsFullscreen(false)}
@@ -330,13 +385,8 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
                 >
                   <BsFullscreenExit color="white" size={20} />
                 </motion.div>
-
-
               </div>
-              <KnowMore
-              id={id}
-                url={projectSlug} />
-
+              <KnowMore id={id} url={projectSlug} />
             </motion.div>
           </motion.div>
         </AnimatePresence>,
@@ -355,15 +405,14 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
           className="relative w-full"
         >
           {/* Video container for normal view */}
-          <div ref={normalContainerRef}>
+          <div>
             {!isFullscreen && videoElement}
           </div>
-
 
           {/* Center Controls - Only show in normal view */}
           {!isFullscreen && (
             <CenterControls
-            isFullScreen={mounted && isFullscreen}
+              isFullScreen={mounted && isFullscreen}
               showControls={showControls}
               showReplay={showReplay}
               isPlaying={isPlaying}
@@ -375,8 +424,6 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
           {!isFullscreen && (
             <BottomControl
               showControls={showControls}
-              setIsMuted={setIsMuted}
-              videoRef={videoRef}
               isMobile={isMobile}
               isFullscreen={isFullscreen}
               toggleFullscreen={toggleFullscreen}
@@ -384,7 +431,6 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
               isMuted={isMuted}
             />
           )}
-
         </motion.div>
 
         {/* Know More Button */}
@@ -394,85 +440,4 @@ const VideoView: React.FC<VideoViewProps> = ({ id, videoUrl, thumbnailUrl, class
   );
 };
 
-export default VideoView;
-
-function KnowMore({ url, className,id }: { url: string, className?: string,id:string }) {
-  const handleFun = () => {
-    const myDeviceId: string = getOrCreateDeviceId();
-    sentUniqueId({ uniqueId: myDeviceId, type: 'video-more-projects', id }).catch(console.error);
-  }
-  return (
-    <Link
-    onClick={handleFun}
-      href={`/projects/${url}`}
-      className={clsx("bg-[#F5F5F5] h-[54px] flex justify-center items-center w-full", {
-        className
-      })}
-    >
-      <button
-        type="button"
-        className="font-poppins cursor-pointer text-[9px] w-[97px] h-[25px] flex justify-center items-center bg-[#333333] rounded-[3px] text-white font-medium"
-      >
-        Know More
-      </button>
-    </Link>
-  );
-}
-
-function BottomControl({
-  isMobile,
-  isFullscreen,
-  toggleFullscreen,
-  toggleMute,
-  isMuted,
-  showControls,
-}: {
-  isMobile: boolean;
-  isFullscreen: boolean;
-  toggleFullscreen: () => void;
-  videoRef: React.RefObject<HTMLVideoElement | null>;
-  setIsMuted: any;
-  toggleMute: () => void;
-  isMuted: boolean;
-  showControls: boolean;
-}) {
-  return (
-    <>
-      <motion.div
-        onClick={toggleMute}
-        className={clsx("cursor-pointer absolute bottom-3 left-2 z-40 p-1 rounded", {
-          "bg-black/30": showControls,
-          "pointer-events-none": !showControls,
-        })}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: showControls ? 1 : 0 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-      >
-        {!isMuted ? (
-          <FaVolumeUp color="white" size={16} />
-        ) : (
-          <FaVolumeDown color="white" size={16} />
-        )}
-      </motion.div>
-
-      {!isMobile && (
-        <motion.div
-          onClick={toggleFullscreen}
-          className={clsx("cursor-pointer absolute right-3 bottom-3 z-40 p-1 rounded", {
-            "bg-black/30": showControls,
-            "pointer-events-none": !showControls,
-          })}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: showControls ? 1 : 0 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-        >
-          {isFullscreen ? (
-            <BsFullscreenExit color="white" size={14} />
-          ) : (
-            <BsArrowsFullscreen color="white" size={14} />
-          )}
-        </motion.div>
-      )}
-    </>
-  );
-}
+export default memo(VideoView);

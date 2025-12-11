@@ -65,13 +65,29 @@ export { default as flexible_icon } from "./flexible.svg"
 export { default as mega_projects_icon } from "./mega.svg"
 export { default as explore_icon } from "./explore.svg"
 export { default as propertySellerWhiteLogo_icon } from "./PropertysellerWhiteLogo.svg"
-export {default as logoWebP} from "./logo.webp"
-export {default as mobileAppIcon} from "./mobile-menu-app-icon.png"
-export {default as ps_logo} from "./PropertysellerBlackLogo-new.png"
-export {default as trademark} from "./trademark.png";
-export {default as byEmiraaz} from "./backed-by.png";
-export {default as calender} from "./calendar.png";
-export {default as citiesBackIcon} from "./cities-back-btn.png";
-export {default as topArrowIcon} from "./top-arrow.png";
+export { default as logoWebP } from "./logo.webp"
+export { default as mobileAppIcon } from "./mobile-menu-app-icon.png"
+export { default as ps_logo } from "./PropertysellerBlackLogo-new.png"
+export { default as trademark } from "./trademark.png";
+export { default as byEmiraaz } from "./backed-by.png";
+export { default as calender } from "./calendar.png";
+export { default as citiesBackIcon } from "./cities-back-btn.png";
+export { default as topArrowIcon } from "./top-arrow.png";
+export { default as searchAiAgent } from "./search_icon.svg";
+export { default as price } from "./price-ai-agent.svg";
+export { default as recommendationsAiAgent } from "./recommendations-ai-agent.svg";
+export { default as highlightsAiAgent } from "./star-ai-agent.svg";
+export {default as locationPin} from "./location-pin-black.png"
+export {default as menuIconBlack} from "./menu-black.png"
+export {default as searchBlackIcon} from "./search-black.png";
+export {default as filterBlackIcon} from "./filter-black.png";
+// export { default as BlackBlackIcon } from "./back-black-icon.svg";
+export { default as NotificationBlackIcon } from "./bell-black-icon.png"
+export { default as BlackBackIcon } from "./right-arrow.png";
 
 
+export { default as apartment } from "./apartment-mobile.png";
+export {default as villa } from "./villa-mobile-black.png";
+export {default as townhouse } from "./townhouse-mobile-black.png";
+export {default as penthouse } from "./penthouse-black-mobile.png";
+export {default as rightArrowBlackMobile } from "./mobile-right-arrow.png"

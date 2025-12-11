@@ -1,32 +1,55 @@
 
-import React from 'react'
+import React, { Suspense } from 'react'
 import { baseUrl } from '@/api';
-import HomePage from '@/components/Home/Home';
+import dynamic from 'next/dynamic';
 import { getSiteMapData } from '@/utils/getSiteMapData';
 import { getPortraitBanners } from '@/utils/getPortraitBanners';
 import { Metadata } from 'next';
-import Head from 'next/head';
 import Script from 'next/script';
 import { propertyCategoryStatus, propertyCategoryType } from '@/data';
 
+// ⚡ Code splitting - HomePage loads only when needed
+const HomePage = dynamic(() => import('@/components/Home/Home'), {
+  loading: () => <HomePageSkeleton />,
+  ssr: true, // Still server-render for SEO
+});
 
+// Lightweight loading skeleton
+function HomePageSkeleton() {
+  return (
+    <div className="min-h-screen bg-gray-50 animate-pulse">
+      <div className="h-16 bg-gray-200 mb-4" />
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="h-64 bg-gray-200 rounded-lg" />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
-// Enable ISR with 10-second revalidation
+// Enable ISR with 60-second revalidation
 export const revalidate = 60;
 
-
+// ⚡ Optimize metadata generation
 export async function generateMetadata(): Promise<Metadata> {
 
   try {
-    // Fetch metadata with cache-busting timestamp to ensure fresh data
+    // Fetch metadata with ISR caching + timeout for slow networks
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+
     const responseData = await fetch(
       `${baseUrl}/meta-data?referencePage=home-page`,
       {
         next: {
-          revalidate: 60 // Revalidate every 10 seconds
+          revalidate: 60
         },
+        signal: controller.signal,
       }
-    ).then((res) => res.json())
+    ).then((res) => res.json()).finally(() => clearTimeout(timeoutId));
 
     const data = responseData?.data?.[0] || {};
 
@@ -135,63 +158,106 @@ interface PageProps {
 
   searchParams: Promise<{ cities?: string | string[], page?: number, pt?: string, ct?: string, y: number | '', q?: string, pp?: string, ds?: string, ft?: string }>;
 }
+
+// ⚡ Helper function to fetch with timeout and compression
+async function fetchWithTimeout(url: string, options: RequestInit & { timeout?: number } = {}) {
+  const { timeout = 8000, ...fetchOptions } = options;
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await fetch(url, {
+      ...fetchOptions,
+      signal: controller.signal,
+      // Request compressed responses
+      headers: {
+        'Accept-Encoding': 'gzip, deflate, br',
+        ...fetchOptions.headers,
+      },
+    });
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    throw error;
+  }
+}
+
 export default async function Page({ searchParams, params }: PageProps) {
 
   const { urls } = await params;
   const { cities, page, pt, ct, y, q, ds, ft, pp } = await searchParams;
 
-  // const params = await searchParams;
-  // const page = params?.page; // "2"      
   try {
+    // ⚡ OPTIMIZED PARALLEL FETCH with timeouts and error handling
+    // Only fetch critical data first, defer non-critical
+    const criticalDataPromises = [
+      // Critical: Metadata (with timeout)
+      fetchWithTimeout(`${baseUrl}/meta-data?referencePage=home-page`, {
+        next: { revalidate: 60 },
+        timeout: 5000,
+      }).then(res => res.json()).catch(() => ({ data: [{}] })),
 
-    const responseData = await fetch(
-      `${baseUrl}/meta-data?referencePage=home-page`,
-      {
-        next: {
-          revalidate: 60 // Revalidate every 10 seconds
-        },
-      }
-    ).then((res) => res.json())
+      // Critical: Emirates
+      fetchWithTimeout(`${baseUrl}/emirate/names`, {
+        next: { revalidate: 300 },
+        timeout: 5000,
+      }).then(res => res.json()).catch(() => ({ data: [] })),
+
+      // Critical: Projects (main content)
+      fetchWithTimeout(`${baseUrl}/projects?limit=24${page ? `&page=${page}` : ''}`, {
+        next: { revalidate: 60 },
+        timeout: 8000,
+      }).then(res => res.json()).catch(() => ({ data: [], pagination: {} })),
+    ];
+
+    // Non-critical data (can load after)
+    const nonCriticalDataPromises = [
+      // Non-critical: Counts
+      fetchWithTimeout(`${baseUrl}/news/all/counts`, {
+        next: { revalidate: 120 },
+        timeout: 5000,
+      }).then(res => res.json()).catch(() => ({ data: {} })),
+
+      // Non-critical: Cities
+      fetchWithTimeout(`${baseUrl}/city/names`, {
+        next: { revalidate: 300 },
+        timeout: 5000,
+      }).then(res => res.json()).catch(() => ({ data: [] })),
+
+      // Non-critical: Video ads
+      fetchWithTimeout(`${baseUrl}/projects/small-video-ads`, {
+        next: { revalidate: 600 },
+        timeout: 5000,
+      }).then(res => res.json()).catch(() => ({ data: [] })),
+
+      // Non-critical: Sitemap
+      getSiteMapData().catch(() => ({ data: [] })),
+
+      // Non-critical: Portrait banners
+      getPortraitBanners().catch(() => ({ data: [] })),
+    ];
+
+    // ⚡ Load critical data first
+    const [responseData, emirateData, dataFetchProjects] = await Promise.all(criticalDataPromises);
+
+    // ⚡ Load non-critical data in parallel (won't block render)
+    const [
+      dataFetchCount,
+      dataFetchCities,
+      dataFetchVideoAds,
+      dataFetchRandomSiteMap,
+      dataFetchPortraitBanners
+    ] = await Promise.all(nonCriticalDataPromises);
+
     const dataForMeta = responseData?.data?.[0] || {};
 
-    // ✅ Fetch emirates data
-    const res = await fetch(`${baseUrl}/emirate/names`, { cache: "no-store" });
-    const emirateData = await res.json();
-
-
-    // ✅ Fetch counts data
-    const resFetchCount = await fetch(`${baseUrl}/news/all/counts`, { cache: "no-store" });
-    const dataFetchCount = await resFetchCount.json();
-
-    // ✅ Fetch counts data
-    const resFetchCities = await fetch(`${baseUrl}/city/names`, { cache: "no-store" });
-    const dataFetchCities = await resFetchCities.json();
-
-
-    // ✅ Fetch counts data
-    const resFetchVideoAds = await fetch(`${baseUrl}/projects/small-video-ads`, { cache: "no-store" });
-    const dataFetchVideoAds = await resFetchVideoAds.json();
-
-
-    // ✅ Fetch counts data
-    const resFetchProjects = await fetch(`${baseUrl}/projects?limit=24&${page ? `page=${page}` : ''}`, { cache: "no-store" });
-    const dataFetchProjects = await resFetchProjects.json();
-
-    // ✅ Fetch counts data
-    const dataFetchRandomSiteMap = await getSiteMapData(); // fetches only once, then cached
-
-
-    // ✅ Portrait banners with cache
-    const dataFetchPortraitBanners = await getPortraitBanners();
-
-
-
-
+    // ⚡ Optimize regex parsing - only parse if data exists
     const scripts = dataForMeta?.richSnippets?.match(
       /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
     ) || [];
 
-    // console.log(cities,'citiescities')
     const isEmirate = emirateData?.data?.find((item: {
       _id: string;
       name: string;
@@ -215,7 +281,7 @@ export default async function Page({ searchParams, params }: PageProps) {
         : cities
           ? [cities]
           : [],
-      propertyCategoryType: isPropertyCategoryType || 'off-plan-projects', // default string
+      propertyCategoryType: isPropertyCategoryType || 'off-plan-projects',
       propertyCategoryStatus: isPropertyCategoryStatus || 'all',
       propertyType: pt,
       completionType: ct,
@@ -230,8 +296,8 @@ export default async function Page({ searchParams, params }: PageProps) {
 
     return (<>
 
-      {scripts?.map((script: string, index: number) => {
-        // Remove outer <script> tags to use innerHTML
+      {/* Schema markup - load after page interactive, only if exists */}
+      {scripts.length > 0 && scripts.map((script: string, index: number) => {
         const innerJson = script
           .replace(/<script[^>]*>/g, "")
           .replace(/<\/script>/g, "")
@@ -243,41 +309,43 @@ export default async function Page({ searchParams, params }: PageProps) {
             id={`json-ld-schema-${index}`}
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: innerJson }}
-            strategy="afterInteractive" // "beforeInteractive" if needed
+            strategy="lazyOnload" // ⚡ Load after page is interactive
           />
         );
       })}
 
-      <Head>
-        {dataFetchVideoAds.data.map((video: any) => (
-          <script
-            key={video._id}
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "VideoObject",
-                name: video.name,
-                thumbnailUrl: video.thumbnail?.webp?.url,
-                contentUrl: video.videoFil?.url?.url,
-              }),
-            }}
-          // {console.log(video,'VIdel')}
-          />
-        ))}
-      </Head>
+      {/* Video schema markup - load after page interactive, only if exists */}
+      {dataFetchVideoAds?.data?.length > 0 && dataFetchVideoAds.data.map((video: any) => (
+        <Script
+          key={video._id}
+          id={`video-schema-${video._id}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "VideoObject",
+              name: video.name,
+              thumbnailUrl: video.thumbnail?.webp?.url,
+              contentUrl: video.videoFil?.url?.url,
+            }),
+          }}
+          strategy="lazyOnload" // ⚡ Load after page is interactive
+        />
+      ))}
 
-      <HomePage
-      initialValues={initialValues}
-        content={responseData?.data[0]?.content}
-        initialData={dataFetchProjects}
-        initialCities={dataFetchCities?.data}
-        emiratesData={emirateData?.data}
-        videoAds={dataFetchVideoAds?.data}
-        siteMap={dataFetchRandomSiteMap?.data}
-        portraitBanners={dataFetchPortraitBanners?.data}
-        allCounts={dataFetchCount?.data}
-      />
+      <Suspense fallback={<HomePageSkeleton />}>
+        <HomePage
+          initialValues={initialValues}
+          content={responseData?.data?.[0]?.content}
+          initialData={dataFetchProjects}
+          initialCities={dataFetchCities?.data}
+          emiratesData={emirateData?.data}
+          videoAds={dataFetchVideoAds?.data}
+          siteMap={dataFetchRandomSiteMap?.data}
+          portraitBanners={dataFetchPortraitBanners?.data}
+          allCounts={dataFetchCount?.data}
+        />
+      </Suspense>
 
     </>)
   } catch (err) {

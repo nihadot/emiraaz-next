@@ -1,85 +1,108 @@
-'use client'
-import { LOCAL_STORAGE_KEYS } from '@/api/storage';
-import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
-import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
-import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi';
-import { useFetchAllProjectsCountQuery, useFetchAllProjectsQuery } from '@/redux/project/projectApi';
-import { AllProjectsItems } from '@/redux/project/types';
-import { useViewAllSmallVideosQuery } from '@/redux/smallVideo/smallViewApi';
-import { AllSmallVideoItems } from '@/redux/smallVideo/types';
-import { AllWishlistItems } from '@/redux/wishlist/types';
-import { useViewAllWishlistsQuery } from '@/redux/wishlist/wishlistApi';
-import { setWishlist } from '@/redux/wishlistSlice/wishlistSlice';
-import { shuffle } from '@/utils/shuffle';
-import { useDeviceType } from '@/utils/useDeviceType';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
-import { useDispatch } from 'react-redux';
+/**
+ * HomePage Component - Refactored and Optimized
+ * Main landing page for property listings
+ * 
+ * This component has been refactored for better maintainability:
+ * - Custom hooks extracted to hooks.ts
+ * - Utility functions moved to utils.ts
+ * - UI components split into separate files
+ * - Improved code organization and readability
+ * - Performance optimized with React.memo and useMemo
+ */
+
+'use client';
+
+import React, { useMemo, useState, useEffect, memo } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
+import clsx from 'clsx';
+
+// Components
 import Header from '../Header';
 import Container from '../atom/Container/Container';
-import SearchNew from '../SearchField/SearchNew';
-import SelectLatest from '../SelectOption/SelectLatest';
-import SelectNew from '../SelectOption/SelectNew';
-import { SwitchSelector } from '../SelectOption';
-import { CompletionTypes, productTypeOptionFirstItems, propertyCategoryType, PropertyTypes, propertyTypeSecond } from '@/data';
-import { HiOutlineAdjustmentsHorizontal } from 'react-icons/hi2';
-import ExpandableComponentDropdown from '../ExpandableComponent/ExpandableComponent';
-import clsx from 'clsx';
-import { SelectHandoverDate } from '../SelectHandoverDate';
-import { IoCloseOutline } from 'react-icons/io5';
 import SectionDivider from '../atom/SectionDivider/SectionDivider';
-import ProjectCard from '../ProjectCard/ProjectCard';
-import CustomSlider from '../CustomSlider/CustomSlider';
-import ProjectCardSkelton from '../ProjectCard/ProjectCardSkelton';
-import VideoPreview from '@/app/home/VideoPreview';
-import CustomSliderUi from '@/app/home/CustomSliderUi';
-import Recommendations from '@/app/home/Recommendations';
-import BottomBanner from '@/app/home/BottomBannerasas';
-import MobileFooterBanner from '@/app/home/MobileFooterBanner';
-import RecommendedText from '../RecomendedText/RecommendedText';
-import MobileFilterOption from '@/app/home/MobileFilterOption';
-import { Footer } from '../Footer';
-import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal';
-import PaginationNew from '../PaginationNew/PaginationNew';
-import { FiltersState } from '../types';
-import Image from 'next/image';
-import { big_white_logo_icon, ps_logo } from '@/app/assets';
-import { CountItem } from '@/redux/news/newsApi';
-import { parsePrice } from '@/utils/parsePrice';
-import { useForceScrollRestore, useScrollToTopOnRefresh } from '@/hooks/useScrollRestoration';
+import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import LocationTags from '../LocationTags/LocationTags';
-import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
-import pIcon from "@/app/assets/p-icon.png";
-import Link from 'next/link';
+import PaginationNew from '../PaginationNew/PaginationNew';
+import { Footer } from '../Footer';
+import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal';
+
+// Home-specific components
 import HomePageContent from './HomePageContent';
+import SearchFilterBar from './SearchFilterBar';
+import AdvancedFilters from './AdvancedFilters';
+import ProjectsGrid from './ProjectsGrid';
+import Sidebar from './Sidebar';
+import SplashScreen from './SplashScreen';
+
+// App-specific components
+import VideoPreview from '@/app/home/VideoPreview';
+import BottomBanner from '@/app/home/BottomBannerasas';
+import MobileFooterBanner from '@/app/home/MobileFooterBanner';
+import Recommendations from '@/app/home/Recommendations';
+import RecommendedText from '../RecomendedText/RecommendedText';
+
+// Hooks and utilities
+import {
+    useUserAuth,
+    useWishlist,
+    useSplashScreen,
+    useFilters,
+    useProjects,
+    usePagination,
+    useProjectNavigation,
+    useEnquiryForm,
+} from './hooks';
+
+import {
+    generateEmirateOptions,
+    generateCityOptions,
+    generatePropertyTypeOptions,
+    generatePaymentPlanOptions,
+    generateDiscountOptions,
+    generateFurnishTypeOptions,
+} from './utils';
+
+// Redux and types
+import { useDispatch } from 'react-redux';
+import { open } from '@/redux/ai-agent-chat/chatSlice';
+import { Pagination } from '@/utils/types';
+import { shuffle } from '@/utils/shuffle';
+import { setWishlist } from '@/redux/wishlistSlice/wishlistSlice';
+import { useForceScrollRestore, useScrollToTopOnRefresh } from '@/hooks/useScrollRestoration';
+import { useDeviceType } from '@/utils/useDeviceType';
+import { parsePrice } from '@/utils/parsePrice';
+import { filterBlackIcon, ps_logo, searchBlackIcon } from '@/app/assets';
+
+// Types
 import { EmirateNames } from '@/redux/emirates/types';
 import { CityNames } from '@/redux/cities/types';
 import { PortraitBanner } from '@/redux/portraitBannerAd/types';
-import NoDataFound from '../Empty/NoDataFound';
-import { Pagination } from '@/utils/types';
-type PaymentPlan = {
-    label?: string;
-    value?: string;
-};
+import { AllSmallVideoItems } from '@/redux/smallVideo/types';
+import { AllProjectsItems } from '@/redux/project/types';
+import { CountItem } from '@/redux/news/newsApi';
+import MobileHeader from './MobileHeader';
+import SearchMobile from './SearchMobile/SearchMobile';
+import MobileFilter from './MobileFilter/MobileFilter';
+import ProjectCard from '../ProjectCard/ProjectCard';
+import ProjectsGridMobile from './ProjectsGridMobile/ProjectsGridMobile';
+// import SearchMobile from './SearchMobile/SearchMobile';
 
-interface UserData {
-    _id: string;
-    // Add more fields if needed
-}
-type Props = {
-    emiratesData: EmirateNames[],
-    urls?: string[]
-    allCounts: CountItem
-    initialCities: CityNames[],
-    videoAds: AllSmallVideoItems[],
+interface HomePageProps {
+    emiratesData: EmirateNames[];
+    urls?: string[];
+    allCounts: CountItem;
+    initialCities: CityNames[];
+    videoAds: AllSmallVideoItems[];
     initialData: {
-        data: AllProjectsItems[]
-        pagination: Pagination
-    },
-    portraitBanners: PortraitBanner[],
-    siteMap: any[],
-    content: object,
+        data: AllProjectsItems[];
+        pagination: Pagination;
+    };
+    portraitBanners: PortraitBanner[];
+    siteMap: any[];
+    content: object;
     initialValues: {
         emirate: string;
         cities: string[];
@@ -87,910 +110,298 @@ type Props = {
         propertyCategoryStatus: string;
         propertyType?: string;
         completionType?: string;
-        qtr?: string,
-        year: number | '',
-        paymentPlan?: string,
-        furnishied?: string,
-        discount?: string,
-    }
+        qtr?: string;
+        year: number | '';
+        paymentPlan?: string;
+        furnishied?: string;
+        discount?: string;
+    };
 }
 
+// ⚡ Memoized Logo Component
+const LogoSection = memo(() => (
+    <Link href={'/'}>
+        <Image
+            src={ps_logo.src}
+            alt="PropertySeller"
+            width={140}
+            height={50}
+            className='object-contain h-full max-w-[200px] w-full'
+            priority
+        />
+    </Link>
+));
+LogoSection.displayName = 'LogoSection';
+
+// ⚡ Memoized Breadcrumb Component
+const BreadcrumbSection = memo(({
+    isMatchCity,
+    cityOptions,
+    totalRecords
+}: {
+    isMatchCity: any;
+    cityOptions: any[];
+    totalRecords: number | undefined;
+}) => (
+    <div className="flex flex-col md:flex-row flex-1 items-start md:items-center w-full">
+        <BreadcampNavigation
+            title={`Off-plan projects :`}
+            items={[
+                {
+                    title: 'All Cities',
+                    link: isMatchCity?.label === 'All'
+                        ? '/cities'
+                        : `/cities/${cityOptions.find((item: any) => item.value === isMatchCity?.value) || ''}`
+                },
+                {
+                    title: `Off-plan projects for sale in ${isMatchCity?.value === 'all' ? 'UAE' : isMatchCity?.label || 'UAE'}`,
+                }
+            ]}
+        />
+        <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>
+            {totalRecords ? `${parsePrice(totalRecords)} Properties Available` : 'No Properties Available'}
+        </p>
+    </div>
+));
+BreadcrumbSection.displayName = 'BreadcrumbSection';
+
+// ⚡ Memoized Location Tags Component
+const LocationSection = memo(({ initialCities }: { initialCities: CityNames[] }) => (
+    <div className="pt-0 md:pt-4">
+        <LocationTags
+            data={
+                initialCities?.slice(0, 4).map((item) => ({
+                    location: item.name,
+                    count: item.count,
+                    slug: item.slug
+                })) || []
+            }
+        />
+    </div>
+));
+LocationSection.displayName = 'LocationSection';
+
+// ⚡ Memoized Mobile Video Component
+const MobileVideoSection = memo(({ videoAds }: { videoAds: AllSmallVideoItems[] }) => {
+    if (!videoAds || videoAds.length === 0) return null;
+
+    return (
+        <Container>
+            <div className="w-full mb-[35px] relative flex sm:hidden">
+                <VideoPreview
+                    id={videoAds[0]?._id}
+                    alt={videoAds[0]?.name || ''}
+                    projectSlug={videoAds[0]?.projectDetails?.slug || ''}
+                    thumbnailUrl={videoAds[0]?.thumbnail?.webp?.url || ''}
+                    videoUrl={videoAds[0]?.videoFile?.url?.url || ''}
+                />
+            </div>
+        </Container>
+    );
+});
+MobileVideoSection.displayName = 'MobileVideoSection';
+
+// ⚡ Memoized Mobile Recommendations
+const MobileRecommendations = memo(({ siteMap }: { siteMap: any[] }) => (
+    <div className="px-5 flex sm:hidden lg:px-8">
+        <Recommendations siteMap={siteMap}>
+            {(items) => (
+                <RecommendedText title="Recommended For You" items={items} />
+            )}
+        </Recommendations>
+    </div>
+));
+MobileRecommendations.displayName = 'MobileRecommendations';
 
 function HomePage({
     emiratesData,
     videoAds,
-    urls,
     initialCities,
     allCounts,
     initialData,
     portraitBanners,
-    // portraitBanners,
     content,
     siteMap,
     initialValues,
-}: Props) {
-
-    useForceScrollRestore();
-    useScrollToTopOnRefresh();
-    const [loading, setLoading] = useState(false)
-
-    const [paginationHappened, setPaginationHappened] = useState(false)
-    const deviceType = useDeviceType();
-
-    const router = useRouter();
-
-    const pathname = usePathname();
-
-    const userDataString = useMemo(() => {
-        return typeof window !== "undefined" ? localStorage.getItem(LOCAL_STORAGE_KEYS.USER_DATA) : null;
-    }, []);
-
-
-    const userId = useMemo(() => {
-        if (!userDataString) return null;
-        try {
-            const parsed = JSON.parse(userDataString);
-            return parsed?._id || null;
-        } catch (err) {
-            return null;
-        }
-    }, [userDataString]);
-
-
-    const [wishlistData, setWishlistData] = useState<AllWishlistItems[]>();
-    const { data: wishlistDataItem } = useViewAllWishlistsQuery(
-        { userId },
-        { skip: !userId } // <- only call if userId is available
-    );
-
-    // const [smallVideoAds, setSmallVideoAds] = useState<AllSmallVideoItems[]>();
-
-    // const { data: smallVideoAdsResponse } = useViewAllSmallVideosQuery({});
-
+}: HomePageProps) {
     const dispatch = useDispatch();
 
+    // ⚡ Temporary Chat Button for Development
+    const handleOpenChat = () => {
+        dispatch(open());
+    };
 
-    //   useScrollRestoration('home-scroll');
+    // Hooks
+    useForceScrollRestore();
+    useScrollToTopOnRefresh();
 
+    const router = useRouter();
+    const pathname = usePathname();
+    const deviceType = useDeviceType();
 
-    useEffect(() => {
-        if (wishlistDataItem?.data) {
-            dispatch(setWishlist(wishlistDataItem?.data))
-            setWishlistData(wishlistDataItem?.data)
-        }
+    // Custom hooks
+    const { userId } = useUserAuth();
+    const wishlistData = useWishlist(userId);
+    const loading = useSplashScreen();
+    const { filters, setFilters, debouncedSearch, handleChangeSearch, handleClear } = useFilters();
+    const { projects, pagination } = useProjects(filters, debouncedSearch, initialData);
+    const { paginationHappened, handlePageChange } = usePagination();
+    const { handleClick, handleMouseEnter } = useProjectNavigation();
+    const { enquiryForm, setEnquiryForm, handleEnquiryFormClick } = useEnquiryForm();
 
-    }, [wishlistDataItem]);
-
-    // useEffect(() => {
-
-    //     if (smallVideoAdsResponse?.data) {
-    //         // console.log(smallVideoAdsResponse?.data, 'smallVideoAdsResponse')
-    //         setSmallVideoAds(smallVideoAdsResponse?.data);
-    //     }
-    // }, [smallVideoAdsResponse]);
-
-
-    useEffect(() => {
-        const today = new Date().toISOString().split('T')[0]
-        const lastSeen = localStorage.getItem('splashLastSeenDate')
-
-        if (lastSeen !== today) {
-            setLoading(true)
-            const timer = setTimeout(() => {
-                setLoading(false)
-                localStorage.setItem('splashLastSeenDate', today)
-            }, 2000)
-            return () => clearTimeout(timer)
-        }
-    }, []);
-    const [debouncedSearch, setDebouncedSearch] = useState<any>("");
-
-    // console.log(wishlistData, 'wishlistData')
-
-    const [filters, setFilters] = useState<FiltersState>({
-        page: 1,
-        search: "",
-        cities: [],
-        developers: [],
-        facilities: [],
-        propertyTypeSecond: "all",
-        emirate: "",
-        completionType: "",
-        handoverDate: undefined,
-        paymentPlan: undefined,
-        furnishType: "",
-        discount: "",
-        projectTypeFirst: 'off-plan-projects',
-        projectTypeLast: 'all',
-        bedAndBath: "",
-        minPrice: '',
-        maxPrice: '',
-        minSqft: "",
-        maxSqft: "",
-        beds: "",
-        bath: "",
-    });
-
-    useEffect(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    }, [paginationHappened]);
-
-    // Data fetching with memoized query params
-    const queryParams = useMemo(() => ({
-        limit: 24,
-        page: filters.page,
-        search: debouncedSearch,
-        cities: filters.cities,
-        developers: filters.developers,
-        facilities: filters.facilities,
-        propertyType: filters.propertyType,
-        completionType: filters.completionType,
-        paymentPlan: filters.paymentPlan,
-        year: filters.handoverDate?.year,
-        qtr: filters.handoverDate?.quarter,
-        discount: filters.discount,
-        projectTypeFirst: filters.projectTypeFirst,
-        projectTypeLast: filters.projectTypeLast,
-        furnishing: filters.furnishType,
-        emirate: filters.emirate,
-        maxPrice: filters.maxPrice,
-        minPrice: filters.minPrice,
-        minSqft: filters.minSqft,
-        maxSqft: filters.maxSqft,
-        beds: filters.beds,
-        bath: filters.bath,
-        productTypeOptionFirst: filters.productTypeOptionFirst,
-        productTypeOptionLast: filters.productTypeOptionLast,
-    }), [filters, debouncedSearch]);
-
-
-    const { data } = useFetchAllProjectsQuery(queryParams, {
-        refetchOnMountOrArgChange: true,
-        refetchOnReconnect: true,
-        refetchOnFocus: true,
-        skip: false,
-    });
-
-    const projects = data?.data || initialData?.data
-
-    const pagination = data?.pagination || initialData?.pagination;
-
+    // State
     const [clear, setClear] = useState(false);
-    const [EnquiryForm, setEnquiryForm] = useState({ status: false, id: '', count: 0 });
-    const [filterModel, setFilterModel] = useState(false);
-    const [showYearSelector, setShowYearSelector] = useState(false);
 
-    // Debounce search input
+    // Update wishlist in Redux
     useEffect(() => {
-        const handler = setTimeout(() => {
-            setDebouncedSearch(filters.search);
-            setFilters(prev => ({ ...prev, page: 1 }));
-        }, 500);
-
-        return () => clearTimeout(handler);
-    }, [filters.search]);
-
-    //  const { data: cities } = useFetchAllCityNamesQuery({ emirate: filters.emirate });
-
-    const emirateOptions = useMemo(() => {
-        const preferredOrder = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ras Al Khaimah', 'Ajman', 'Umm Al-Quwain'];
-
-        const mappedOptions = emiratesData.map((item) => ({
-            label: item.name,
-            value: item._id,
-            count: item.count,
-            slug: item.slug,
-        })) || [];
-
-        const sortedOptions = mappedOptions.sort((a, b) => {
-            const aIndex = preferredOrder.indexOf(a.label);
-            const bIndex = preferredOrder.indexOf(b.label);
-
-            // If both labels are in the preferredOrder list
-            if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
-
-            // If only one is in the list, put it before the other
-            if (aIndex !== -1) return -1;
-            if (bIndex !== -1) return 1;
-
-            // If neither is in the list, sort alphabetically (optional)
-            return a.label.localeCompare(b.label);
-        });
-
-        // console.log(sortedOptions,'sortedOptions')
-
-        return [
-            {
-                label: "All", value: "all",
-                count: sortedOptions.reduce((a, b) => a + b.count, 0)
-                // count: allCounts?.propertyTypes?.reduce((a, b) => a + b, 0)
-            },
-            ...sortedOptions,
-        ];
-    }, [emiratesData]);
-
-    // console.log(allCounts,'000')
-
-
-    const cityOptions = useMemo(() => {
-        const mappedOptions = initialCities?.map((item) => ({
-            label: item.name,
-            value: item.name,
-            count: item.count,
-            slug: item.slug,
-        })) || [];
-
-        return [
-            {
-                label: "All", value: "all",
-                count: mappedOptions.reduce((a, b) => a + b.count, 0)
-
-            }, // <--- Add "All" option at the top
-            ...mappedOptions,
-        ];
-    }, [initialCities]);
-
-    const banners = portraitBanners || [];
-    const shuffledImages = useMemo(() => shuffle(banners), [banners]);
-
-    const shuffleArray = (arr: any[]) => {
-        const copy = [...arr];
-        for (let i = copy.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [copy[i], copy[j]] = [copy[j], copy[i]];
+        if (wishlistData.length > 0) {
+            dispatch(setWishlist(wishlistData));
         }
-        return copy;
-    };
+    }, [wishlistData, dispatch]);
 
-    // Event Handlers
-    const handleChangeSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        setFilters(prev => ({ ...prev, search: event.target.value }));
-    }, []);
-
-
-    const totalPages = pagination?.totalPages || 1;
-    const totalRecords = pagination?.totalRecords;
-
-    const searchParams = useSearchParams();
-    const handleClick = (item: AllProjectsItems) => {
-
-        const currency = searchParams.get('currency');
-
-        const slug = item.slug;
-        const queryString = currency ? `?currency=${currency}` : '';
-
-        sessionStorage.setItem('scroll-position', window.scrollY.toString());
-        router.push(`/projects/${slug}${queryString}`);
-    };
-
-    const handleEnquiryFormClick = useCallback((item: any) => {
-        setEnquiryForm({
-            status: true,
-            id: item._id,
-            count: 1,
-        });
-    }, []);
-
-    const handleFilterModal = () => {
-        router.push('/buy/filter')
-    }
-
-
-    const handleClear = useCallback(() => {
-        setFilters({
-            page: 1,
-            search: "",
-            cities: [],
-            productTypeOptionFirst: '',
-            // productTypeOptionLast: 'all',
-            // developers: [],
-            // facilities: [],
-            propertyType: '',
-            // propertyTypeSecond: "all",
-            emirate: "",
-            // completionType: "",
-            // handoverDate: undefined,
-            // projectType: 'off-plan-projects',
-            // paymentPlan: undefined,
-            // furnishType: "",
-            // discount: "",
-            // bedAndBath: '',
-            // maxPrice: '',
-            // minPrice: '',
-            // maxSqft: '',
-            // minSqft: '',
-            // bath: '',
-            // beds: ''
-            // ,
-        });
-
-        const url = new URL(window.location.href);
-
-        url.searchParams.delete('page');
-
-        window.history.pushState({}, '', url);
-        
-        // setClear(true);
-        // setTimeout(() => setClear(false), 100);
-    }, []);
-
-
-    const propertyTypesCondition = !((filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'residential') || (filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'commercial') || (filters?.projectType === 'off-plan-secondary' && filters?.propertyTypeSecond === 'commercial') || (filters?.projectType === 'off-plan-resale' && filters?.propertyTypeSecond === 'commercial') || (filters?.projectType === 'off-plan-projects' && filters?.propertyTypeSecond === 'commercial'));
-    const furnishTypesCondition = (!((filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'residential') || (filters?.projectType === 'off-plan-land' && filters?.propertyTypeSecond === 'commercial')))
-
-
-    const lastCitySlug = filters.cities?.[filters.cities.length - 1];
-
-    const isMatchCity = cityOptions.find((item: any) => item.slug === lastCitySlug);
-
-
-    // const [defaultEmirate, setDefaultEmirate] = useState<string>('all');
-    const [defaultCities, setDefaultCities] = useState<any>('');
-    const [defaultPropertyType, setDefaultPropertyType] = useState<string>('all');
-    const [defaultProjectStage, setDefaultProjectStage] = useState<string>('');
-    const [defaultCompletionType, setDefaultCompletionType] = useState<string>('all');
-
+    // Set viewport height for mobile
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const page = urlParams.get('page');
-
-        if (page) {
-            setFilters(prev => ({ ...prev, page: parseInt(page) }))
-        }
-    }, [filters.page]);
-
-    const currentSegments = pathname.split('/').filter(Boolean); // e.g. ['buy', 'abu-dhabi', 'off-plan-projects']
-
-    useEffect(() => {
-        if (pathname === '/') {
-            setDefaultProjectStage('all')
-        }
         function setRealVH() {
             const vh = window.innerHeight * 0.01;
             document.documentElement.style.setProperty('--vh', `${vh}px`);
         }
+        setRealVH();
         window.addEventListener('resize', setRealVH);
-
+        return () => window.removeEventListener('resize', setRealVH);
     }, []);
 
-    const totalPropertyTypesCounts = allCounts?.propertyTypes?.map(item => item?.count).reduce((a, b) => a + b, 0)
+    // ⚡ Memoized options - only recalculate when dependencies change
+    const emirateOptions = useMemo(() =>
+        generateEmirateOptions(emiratesData),
+        [emiratesData]
+    );
 
+    const cityOptions = useMemo(() =>
+        generateCityOptions(initialCities),
+        [initialCities]
+    );
 
-    const propertyTypesLists = {
-        commercial: [{
-            value: "officespace",
-            label: "Office Space",
-            count: allCounts?.propertyTypes?.find(item => item?.name === 'officespace')?.count || 0,
+    const propertyTypesLists = useMemo(() =>
+        generatePropertyTypeOptions(allCounts),
+        [allCounts]
+    );
 
-        }, {
-            value: "shop",
-            label: "Shop",
-            count: allCounts?.propertyTypes?.find(item => item?.name === 'shop')?.count || 0,
+    const paymentPlanOptions = useMemo(() =>
+        generatePaymentPlanOptions(allCounts),
+        [allCounts]
+    );
 
-        }, {
-            value: "warehouse",
-            label: "Warehouse",
-            count: allCounts?.propertyTypes?.find(item => item?.name === 'warehouse')?.count || 0,
-        },],
+    const discountOptions = useMemo(() =>
+        generateDiscountOptions(allCounts),
+        [allCounts]
+    );
 
-        residential: [
-            {
-                value: "villa",
-                label: "Villa",
-                count: allCounts?.propertyTypes?.find(item => item?.name === 'villa')?.count || 0,
+    const furnishTypeOptions = useMemo(() =>
+        generateFurnishTypeOptions(allCounts),
+        [allCounts]
+    );
 
-            },
-            {
-                value: "apartment",
-                label: "Apartment",
-                count: allCounts?.propertyTypes?.find(item => item?.name === 'apartment')?.count || 0,
+    const shuffledImages = useMemo(() =>
+        shuffle(portraitBanners || []),
+        [portraitBanners]
+    );
 
-            },
-            {
-                value: "penthouse",
-                label: "Penthouse",
-                count: allCounts?.propertyTypes?.find(item => item?.name === 'penthouse')?.count || 0,
+    // ⚡ Memoized derived values
+    const totalPages = useMemo(() => pagination?.totalPages || 1, [pagination?.totalPages]);
+    const totalRecords = useMemo(() => pagination?.totalRecords, [pagination?.totalRecords]);
+    const lastCitySlug = useMemo(() => filters.cities?.[filters.cities.length - 1], [filters.cities]);
+    const isMatchCity = useMemo(() =>
+        cityOptions.find((item: any) => item.slug === lastCitySlug),
+        [cityOptions, lastCitySlug]
+    );
 
-            },
-            {
-                value: "townhouse",
-                label: "Townhouse",
-                count: allCounts?.propertyTypes?.find(item => item?.name === 'townhouse')?.count || 0,
+    // ⚡ Memoized handlers
+    const handleFilterModal = useMemo(() => () => {
+        router.push('/buy/filter');
+    }, [router]);
 
-            }
-        ],
+    const handleLogoClick = useMemo(() => () => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('page', '1');
+        window.history.pushState({}, '', url);
+        setFilters(prev => ({ ...prev, page: 1 }));
+    }, [setFilters]);
 
-        default: [
-            {
-                value: "all",
-                label: "All",
-                count: totalPropertyTypesCounts,
-
-            }
-        ],
-        getAll: () => {
-            return [...propertyTypesLists.default, ...propertyTypesLists.residential, ...propertyTypesLists.commercial]
-        }
-    }
-    const segments = [...currentSegments];
-
-
-
-    const allTypes = propertyTypesLists?.getAll()
-
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const page = urlParams.get('page');
-
-        if (page) {
-            setFilters(prev => ({ ...prev, page: parseInt(page) }))
-        }
-    }, [filters.page]);
-
-
+    // Show splash screen
     if (loading) {
-        return (
-            <div className="flex items-center justify-center h-full bg-black" style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
-                <div className="relative animate-pulse sm:block hidden w-full max-w-[320px] sm:max-w-[420px] md:max-w-[500px] lg:max-w-[580.5px] aspect-[574.5/140.5] p-4 sm:p-0">
-                    <Image width={590} height={140} src={big_white_logo_icon} alt="logo" />
-                </div>
+        return <SplashScreen />;
+    }
 
+    const isPageTwo = filters.page && filters.page > 1;
+    const isPageOne = filters.page && filters.page <= 1;
 
-                <div className="relative animate-pulse block sm:hidden w-full max-w-[320px] sm:max-w-[420px]  p-4 sm:p-0">
-                    <Image width={300} height={140} src={pIcon} alt="property seller logo" />
-                </div>
-            </div>
-        )
+    const onClickOnMenuButton = () => {
+        console.log('clicked')
     }
 
     return (
-
         <>
             <main>
+                <HomePageContent content={content} display={true} />
 
-                <HomePageContent
-                    content={content}
-                    display={true}
-                />
+                <div className="min-h-screen w-full lg:overflow-visible font-(family-name:--font-geist-sans)">
+                    {/* Header */}
+                    {/* Desktop */}
+                    <div className="hidden md:flex">
+                        <Header
+                            onLogoClick={handleLogoClick}
+                            logoSection={<LogoSection />}
+                        />
+                    </div>
+                    {/* Mobile Header */}
+                    {/* <div className="flex md:hidden">
+                        <MobileHeader
+                            location='Dubai,Sharja'
+                            onClickOnMenuButton={onClickOnMenuButton}
+                        />
+                    </div> */}
 
-
-                <div className=" min-h-screen  w-full lg:overflow-visible font-(family-name:--font-geist-sans)">
-                    <Header
-
-                        onLogoClick={() => {
-                            const newPage = 1
-                            const url = new URL(window.location.href);
-                            url.searchParams.set('page', newPage.toString());
-                            window.history.pushState({}, '', url);
-                            setFilters(prev => ({ ...prev, page: 1 }));
-                        }}
-
-                        logoSection={
-                            <Link
-                                href={'/'}
-
-                            >
-                                <Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' />
-                            </Link>
-
-                        }
-                    />
-
-                    <Container>
-
-
-                        <section className="  grid grid-cols-1 w-full  lg:grid-cols-[19.8%_9.5%_9.5%_37.5%_21%] gap-2">
-
-
-                            <div className="md:h-[48px] h-10">
-                                <SearchNew
-
-                                    value={filters?.search || ''}
-                                    onChange={handleChangeSearch}
-                                    placeholder="Search..."
-                                />
-                            </div>
-
-
-
-                            <div className="hidden lg:flex h-[48px]">
-                                <SelectLatest
-                                    listContainerUlListContainerClassName="w-[200px]"
-                                    search
-                            defaultValue={emirateOptions?.find((item: any) => item?.slug === initialValues?.emirate)}
-                                    clearSelection={clear}
-                                    label="Emirates"
-                                    options={emirateOptions}
-                                    onSelect={(e) => {
-
-                                        if (e) {
-                                            window.location.href = `/buy/${e?.slug}`
-                                        }
-
-                                    }}
-                                />
-                            </div>
-
-
-
-                            <div className="hidden lg:flex h-[48px]">
-                                <SelectLatest
-                                    search
-                            defaultValueMultiple={cityOptions?.filter((item: any) => initialValues?.cities?.includes(item.slug))}
-
-                                    onSelect={(e) => {
-
-                                        if (e) {
-                                            router.push(`/buy?cities=${e?.slug}`)
-                                        }
-
-
-                                    }}
-                                    clearSelection={clear}
-                                    listContainerUlListContainerClassName="w-[220px]"
-                                    label="Cities"
-                                    options={cityOptions}
-
-
-                                />
-                            </div>
-
-
-
-
-
-
-                            {/* Mobile */}
-                            <div className="flex lg:hidden w-full gap-2">
-
-                                <div className=" h-10 w-full">
-                                    <SelectLatest
-                                        listContainerUlListContainerClassName="w-[200px]"
-                                        search
-                            defaultValue={emirateOptions?.find((item: any) => item?.slug === initialValues?.emirate)}
-                                        clearSelection={clear}
-                                        label="Emirates"
-                                        options={emirateOptions}
-                                        onSelect={(e) => {
-                                            if (e) {
-                                                router.push(`/buy/${e?.slug}`)
-                                            }
-
-                                        }}
-                                    />
-                                </div>
-
-
-                                <div className=" h-10 w-full">
-                                    <SelectLatest
-
-                            defaultValueMultiple={cityOptions?.filter((item: any) => initialValues?.cities?.includes(item.slug))}
-                                        search
-                                        // m
-                                        onSelect={(e) => {
-
-                                            if (e) {
-                                            router.push(`/buy?cities=${e?.slug}`)
-                                            }
-
-
-                                        }}
-                                        clearSelection={clear}
-                                        listContainerClassName="w-[220px] sm:!left-0 !-left-14 "
-                                        label="Cities"
-                                        options={cityOptions}
-                                    />
-                                </div>
-
-                            </div>
-
-
-                            {/* Done */}
-                            {propertyCategoryType.length > 0 ? <div className="h-10 sm:h-[48px]">
-                                <SwitchSelector
-                                    containerClassName="sm:!gap-1"
-                                    onSelect={(e) => {
-                                        if (e === 'off-plan-projects') {
-                                            return;
-                                        }
-
-                                        router.push(`/buy/${e}`)
-
-                                    }}
-                                    defaultValue={propertyCategoryType?.[0]?.value}
-                                    options={propertyCategoryType}
-
-                                />
-                            </div> : <div className="w-full h-full bg-gray-50"></div>}
-
-
-
-                            <div className="flex gap-2 h-10 sm:h-[48px]">
-                                <SwitchSelector
-                                    containerClassName="sm:!gap-1"
-                                    onSelect={(e) => {
-                                        if (e === 'all') {
-                                            return;
-                                        }
-                                        router.push(`/buy/off-plan-projects/${e}`)
-                                    }
-                                    }
-                                    defaultValue={propertyTypeSecond[0].value}
-                                    options={propertyTypeSecond}
-                                />
-                                <button onClick={handleFilterModal} className="bg-red-600/10 rounded-[3px] flex justify-center items-center  border-none w-[55px] lg:hidden h-10">
-
-                                    <HiOutlineAdjustmentsHorizontal
-                                        className="w-[22px] h-[22px]"
-                                        color='red'
-                                    />
-                                </button>
-                            </div>
-
-
-                        </section>
+                    {/* Search & Primary Filters */}
+                    {/* Desktop Search */}
+                    <Container
+                        className='sm:flex hidden'
+                    >
+                        <SearchFilterBar
+                            filters={filters}
+                            emirateOptions={emirateOptions}
+                            cityOptions={cityOptions}
+                            initialValues={initialValues}
+                            clear={clear}
+                            onSearchChange={handleChangeSearch}
+                            onFilterModal={handleFilterModal}
+                        />
                     </Container>
 
+                    {/* Mobile Search */}
+                    {/* <Container
+                        className='sm:hidden block'
+                    >
+                        <SearchMobile
+                            filterBlackIcon={filterBlackIcon}
+                            searchBlackIcon={searchBlackIcon}
+                        />
+                    </Container> */}
 
+                    {/* <div className="block sm:hidden">
+                        <MobileFilter />
+                    </div> */}
 
-
-                    {/* Additional Filters */}
+                    {/* Advanced Filters */}
                     <Container>
-                        <section className=" lg:flex gap-2  mt-2  hidden">
-
-
-
-
-                            <div className={clsx(``, propertyTypesCondition ? 'w-[150px]' : 'flex-[8%]',
-                                filters?.page && filters?.page > 1 ? 'h-[33px]' : 'h-[48px]'
-                            )}>
-
-                                <SelectLatest
-                                    label="Property Types"
-                                    options={
-                                        [
-                                            ...propertyTypesLists.default,
-                                            ...propertyTypesLists.residential,
-                                            ...propertyTypesLists.commercial,
-
-                                        ]
-                                    }
-                                    onSelect={(e) => {
-                                        if (e) {
-                                            router.push(`/buy?pt=${e.value}`)
-                                        }
-
-                                    }}
-                                    clearSelection={clear}
-                                    defaultValue={allTypes?.find((item) => item?.value === defaultPropertyType)}
-                                    listContainerUlListContainerClassName="w-[200px]"
-                                />
-                            </div>
-
-
-
-
-                            <div className={clsx("lg:flex-[30%]",
-
-                                filters?.page && filters?.page > 1 ? 'h-[33px]' : 'h-[48px]'
-
-                            )}>
-                                <SwitchSelector
-                                    defaultValue={defaultCompletionType}
-                                    onSelect={(e) => {
-                                        const url = new URL(window.location.href);
-                                        if (e !== 'all') {
-                                            url.searchParams.set('ct', e);
-                                            router.push(`/buy?${url.searchParams.toString()}`);
-                                        }
-
-                                    }}
-                                    clearSelection={clear}
-                                    options={CompletionTypes}
-                                />
-                            </div>
-
-
-                            <div className={clsx("flex-[8%]",
-
-                                filters?.page && filters?.page > 1 ? 'h-[33px]' : 'h-[48px]'
-
-                            )}>
-
-
-                                <ExpandableComponentDropdown
-                                    clear={clear}
-                                    isOpen={showYearSelector}
-                                    onToggle={() => setShowYearSelector(prev => !prev)}
-                                    label={(filters.handoverDate?.year || filters.handoverDate?.quarter) ? (`${filters.handoverDate?.year}-${filters.handoverDate?.quarter}`) : "Handover"}
-                                    isSelected={false}
-
-                                    onClear={() => {
-
-                                    }}
-                                    customCloseControl={<button className="text-xs text-red-600">X</button>}
-                                >
-
-                                    <SelectHandoverDate
-                                        initialYear={filters.handoverDate?.year ? filters.handoverDate?.year : 2025}
-                                        initialQuarter={filters.handoverDate?.quarter ? filters.handoverDate?.quarter : "Q2"}
-
-                                        onDone={(year, quarter) => {
-                                            const url = new URL(window.location.href);
-
-                                            if (year || quarter) {
-                                        url.searchParams.set('y', year + '');
-                                        url.searchParams.set('q', quarter.toLowerCase());
-                                                router.push(`/buy?${url.searchParams.toString()}`);
-                                            }
-
-                                        
-                                        }}
-
-
-                                        onClose={() => setShowYearSelector(false)}
-                                        reset={() => {
-
-                                        }}
-                                        onChange={(year, quarter) => {
-
-                                        }}
-                                    />
-
-                                </ExpandableComponentDropdown>
-
-                            </div>
-
-
-
-
-
-
-
-
-
-
-
-
-                            <div className={clsx("flex-[10%]",
-                                filters?.page && filters?.page > 1 ? 'h-[33px]' : 'h-[48px]'
-
-
-                            )}>
-
-                                <SelectNew
-                                    clearSelection={clear}
-                                    className="w-[200px]"
-                                    label="Payment Plan"
-                                    options={[{
-                                        value: "all",
-                                        label: "All",
-                                        count: allCounts?.paymentPlans?.reduce((acc, curr) => acc + curr.count, 0),
-                                    }, {
-                                        value: "on-handover",
-                                        label: "On Handover",
-                                        count: allCounts?.paymentPlans?.find(item => item?.name === 'onHandover')?.count || 0,
-                                    },
-                                    {
-                                        value: "post-handover",
-                                        label: "Post Handover",
-                                        count: allCounts?.paymentPlans?.find(item => item?.name === 'postHandover')?.count || 0,
-                                    },]}
-                                    onSelect={(e) => {
-                                        const url = new URL(window.location.href);
-                                        // console.log(e,'Event')
-                                        if (e) {
-                                    url.searchParams.set('pp', e.value);
-                                            router.push(`/buy/?${url.searchParams.toString()}`);
-                                        }
-                                        // window.history.pushState({}, '', newUrl);
-                                        // handleSelect.paymentPlan(e)
-                                        // const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                    }}
-                                />
-                            </div>
-
-
-
-
-
-                            <div className={clsx("flex-[7%]",
-
-                                filters?.page && filters?.page > 1 ? 'h-[33px]' : 'h-[48px]'
-
-                            )}>
-
-                                <SelectNew
-                                    clearSelection={clear}
-                                    className="w-[200px] "
-                                    label="Discount"
-                                    options={[{
-                                        value: "all",
-                                        label: "All",
-                                        count: allCounts?.discount?.reduce((acc, curr) => acc + curr.count, 0),
-                                    },
-                                    {
-                                        value: "with-discount",
-                                        label: "With Discount",
-                                        count: allCounts?.discount?.find(item => item?.name === 'with-discount')?.count || 0,
-                                    },
-                                    {
-                                        value: "without-discount",
-                                        label: "Without Discount",
-                                        count: allCounts?.discount?.find(item => item?.name === 'without-discount')?.count || 0,
-
-                                    },]}
-                                    onSelect={(e) => {
-                                        const url = new URL(window.location.href);
-                                        // console.log(e, 'eee')
-                                        if (e?.value) {
-                                    url.searchParams.set('ds', e.value);
-                                            router.push(`/buy/?${url.searchParams.toString()}`);
-                                        }
-                                        // else {
-                                        //     url.searchParams.delete('discount');
-                                        // }
-                                        // const newUrl = `${url.pathname}?${url.searchParams.toString()}`;
-                                        // // window.history.pushState({}, '', newUrl);
-                                    }}
-                                />
-                            </div>
-
-
-
-                            <div className={clsx("", furnishTypesCondition ? 'w-[140px]' : 'flex-[8%]',
-
-                                filters?.page && filters?.page > 1 ? 'h-[33px]' : 'h-[48px]'
-
-                            )}>
-
-                                <SelectNew
-                                    clearSelection={clear}
-                                    className="w-[200px]"
-                                    label="Furnish Type"
-                                    options={[{
-                                        value: "all",
-                                        label: "All",
-                                        count: allCounts?.furnisheds?.reduce((acc, curr) => acc + curr.count, 0),
-                                    }, {
-                                        value: "fully-furnished",
-                                        label: "Fully Furnished",
-                                        count: allCounts?.furnisheds?.find(item => item?.name === 'fully-furnished')?.count || 0,
-
-                                    },
-                                    {
-                                        value: "semi-furnished",
-                                        label: "Semi Furnished",
-                                        count: allCounts?.furnisheds?.find(item => item?.name === 'semi-furnished')?.count || 0,
-
-                                    },
-                                    {
-                                        value: "un-furnishing",
-                                        label: "UnFurnished",
-                                        count: allCounts?.furnisheds?.find(item => item?.name === 'un-furnishing')?.count || 0,
-                                    },]}
-                                    onSelect={(e) => {
-                                        const url = new URL(window.location.href);
-
-                                        if (e) {
-                                            url.searchParams.set('ft', e?.value);
-                                            router.push(`/buy/?${url.searchParams.toString()}`);
-                                        }
-                                    }}
-                                />
-                            </div>
-
-
-
-
-                            <div onClick={() => handleClear()} className={clsx("flex cursor-pointer max-w-[120px]  items-center gap-2", filters.page && filters.page > 1 ? 'h-[35px]' : 'h-[48px]')}>
-                                <label className="text-[12px] cursor-pointer">Clear Filters</label>
-                                <div className="bg-black cursor-pointer w-3.5 rounded-full h-3.5 flex justify-center items-center">
-                                    <IoCloseOutline size={12} color="white" />
-                                </div>
-                            </div>
-                        </section>
+                        <AdvancedFilters
+                            filters={filters}
+                            propertyTypesLists={propertyTypesLists}
+                            paymentPlanOptions={paymentPlanOptions}
+                            discountOptions={discountOptions}
+                            furnishTypeOptions={furnishTypeOptions}
+                            clear={clear}
+                            onClear={handleClear}
+                        />
                     </Container>
 
                     <SectionDivider
@@ -998,299 +409,109 @@ function HomePage({
                         lineClassName="h-[1px] w-full bg-[#DEDEDE]"
                     />
 
-
+                    {/* Main Content */}
+                    {/* Before only screen Sm */}
                     <Container>
-                        <SpaceWrapper
-                            className={filters.page && filters.page > 1 ? 'pt-0' : 'pt-0'}
-                        >
-
-
-                            <div className="mb-4 flex gap-2">
-                                <div className="flex-1 h-full  grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-
-                                    {/* Breadcrumbs navigation link */}
-                                    {filters.page && filters.page > 1 && <div className={clsx("flex flex-col md:flex-row flex-1 items-start md:items-center w-full", filters?.page && filters?.page >= 1 ? '' : 'hidden')}>
-
-                                        <BreadcampNavigation
-                                            title={`Off-plan projects :`}
-                                            items={[
-                                                {
-                                                    title: 'All Cities',
-                                                    link: isMatchCity?.label === 'All' ? '/cities' : `/cities/${cityOptions.find((item: any) => item.value === isMatchCity?.value) || ''}`
-
-                                                },
-                                                {
-                                                    title: `Off-plan projects for sale in ${isMatchCity?.value === 'all' ? 'UAE' : isMatchCity?.label || 'UAE'}`,
-                                                }
-                                            ]}
+                        <SpaceWrapper className={`hidden sm:block ${isPageTwo ? 'pt-0' : 'pt-0'}`}>
+                            <div className="mb-4   flex gap-2">
+                                {/* Projects Grid */}
+                                <div className="flex-1 h-full grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                                    {/* Breadcrumbs - Page 2+ */}
+                                    {isPageTwo && (
+                                        <BreadcrumbSection
+                                            isMatchCity={isMatchCity}
+                                            cityOptions={cityOptions}
+                                            totalRecords={totalRecords}
                                         />
-                                        <p className='font-poppins font-normal text-[12px] text-nowrap w-fit text-[#333333] pt-2 md:pt-0'>{totalRecords ? `${parsePrice(totalRecords)} Properties Available` : 'No Properties Available'}</p>
-                                    </div>}
+                                    )}
 
+                                    {/* Location Tags - Page 2+ */}
+                                    {isPageTwo && (
+                                        <LocationSection initialCities={initialCities} />
+                                    )}
 
-                                    {/* Location link */}
-                                    {filters.page && filters.page > 1 && <div className={clsx("pt-0 md:pt-4", filters?.page && filters?.page >= 1 ? '' : 'hidden')}>
-
-                                        <LocationTags
-
-
-                                            data={
-                                                initialCities?.slice(0, 4).map((item) => ({
-                                                    location: item.name,
-                                                    count: item.count,
-                                                    slug: item.slug
-                                                })) || []
-                                            }
-                                        />
-
-                                    </div>}
-
-
-                                    {/* projects */}
-                                    {
-                                        projects.length === 0 ? <NoDataFound /> : (
-                                            <>
-                                                {projects.length && (
-                                                    projects?.map((item, index) => (
-                                                        <React.Fragment key={index}>
-                                                            <ProjectCard
-                                                                navigateDetailsButton={true}
-                                                                item={item}
-                                                                handleClick={handleClick}
-                                                                handleEnquiryFormClick={handleEnquiryFormClick}
-                                                            />
-
-                                                            {/* Add separator after every 5 items */}
-                                                            {(index + 1) % 5 === 0 && (
-                                                                <>
-                                                                    <div className=" flex sm:hidden mt:mt-0">
-                                                                        <CustomSlider
-                                                                            images={shuffleArray(shuffledImages)}
-                                                                            containerClassName="!h-[95px] border border-[#DEDEDE] "
-                                                                        />
-                                                                    </div></>
-                                                            )}
-                                                        </React.Fragment>
-                                                    ))
-                                                )}
-                                            </>
-                                        )
-                                    }
-
+                                    {/* Projects */}
+                                    <ProjectsGrid
+                                        projects={projects}
+                                        shuffledImages={shuffledImages}
+                                        onProjectClick={handleClick}
+                                        onEnquiryClick={handleEnquiryFormClick}
+                                        onProjectHover={handleMouseEnter}
+                                    />
                                 </div>
 
-
-                                <div className={"w-full md:block hidden max-w-[301.5px]"}>
-
-                                    {filters.page && filters.page <= 1 && (videoAds && videoAds.length > 0 ?
-                                        <div className={clsx("w-full mb-3 relative flex")}>
-                                            <VideoPreview
-                                                id={videoAds?.[0]?._id}
-                                                alt={videoAds?.[0]?.name || ''}
-                                                thumbnailUrl={videoAds?.[0]?.thumbnail?.webp?.url || ''}
-                                                projectSlug={videoAds?.[0]?.projectDetails?.slug || ''}
-                                                videoUrl={videoAds?.[0]?.videoFile?.url?.url || ''}
-                                            />
-                                        </div> : <div className="w-full h-[250px] rounded bg-gray-50"></div>)
-                                    }
-
-
-
-
-                                    {filters.page && filters.page > 1 && <Recommendations siteMap={siteMap}>
-                                        {(items) => (
-                                            <>
-                                                <Recommendations siteMap={siteMap}>
-                                                    {(items) => (
-                                                        <>
-                                                            <RecommendedText title="Recommended For You" items={items} />
-                                                        </>
-                                                    )}
-                                                </Recommendations>
-                                            </>
-                                        )}
-                                    </Recommendations>}
-
-                                    <div className="sticky top-3 left-0">
-
-                                        <CustomSliderUi
-                                            shuffledImages={shuffledImages}
-                                        />
-                                        {filters.page && filters.page === 1 && <Recommendations siteMap={siteMap}>
-                                            {(items) => (
-                                                <>
-                                                    <RecommendedText
-                                                        className='my-2'
-                                                        title="Recommended For You" items={items} />
-
-                                                    <RecommendedText title="Trending Areas" items={items} />
-
-                                                    <RecommendedText title="Popular Searches" items={items} />
-                                                </>
-                                            )}
-                                        </Recommendations>
-                                        }
-
-
-                                        {filters.page && filters.page > 1 && <><Recommendations siteMap={siteMap}>
-                                            {(items) => (
-                                                <>
-                                                    <RecommendedText
-                                                        className='my-2'
-                                                        title="Trending Areas" items={items} />
-                                                    <RecommendedText title="Popular Searches" items={items} />
-                                                </>
-                                            )}
-                                        </Recommendations>
-                                        </>}
-
-
-
-                                    </div>
-
-
-
-
-
-
-
-                                </div>
+                                {/* Sidebar */}
+                                <Sidebar
+                                    videoAds={videoAds}
+                                    shuffledImages={shuffledImages}
+                                    siteMap={siteMap}
+                                    currentPage={filters.page || 1}
+                                />
                             </div>
-
-
                         </SpaceWrapper>
                     </Container>
 
-
-
-
-
-
+                    {/* Below only screen Sm */}
+                    <Container>
+                        <ProjectsGridMobile
+                            projects={projects}
+                        />
+                    </Container>
                 </div>
 
+                {/* Temporary Dev Button */}
+                <div className="">
+                    <button
+                        onClick={handleOpenChat}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-md shadow-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                    >
+                        Test Chat
+                    </button>
+                </div>
 
-
-                {/* Pagination code */}
-
+                {/* Pagination */}
                 <Container>
-
                     <div className="mt-[23.25px]">
-
                         <PaginationNew
                             currentPage={filters.page || 1}
                             totalPages={totalPages}
-                            onPageChange={(newPage) => {
-                                const url = new URL(window.location.href);
-                                url.searchParams.set('page', newPage.toString());
-                                window.history.pushState({}, '', url);
-                                setPaginationHappened(pre => !pre)
-                                setFilters(prev => ({ ...prev, page: newPage }))
-                            }}
-                            maxVisiblePages={deviceType === 'mobile' ? 4 : 8} />
-
-
-
-                        <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">{filters.page} To {totalPages} of {totalRecords} Listings</div>
+                            onPageChange={(newPage) => handlePageChange(newPage, setFilters)}
+                            maxVisiblePages={deviceType === 'mobile' ? 4 : 8}
+                        />
+                        <div className="text-[10.5px] mt-[8.25px] flex justify-center items-center font-normal font-poppins text-[#767676]">
+                            {filters.page} To {totalPages} of {totalRecords} Listings
+                        </div>
                     </div>
                 </Container>
 
-
-                <HomePageContent
-                    content={content}
-                    display={false}
-                />
-
+                <HomePageContent content={content} display={false} />
 
                 <SectionDivider
                     containerClassName="mt-[45.75px]"
                     lineClassName="h-[1px] hidden sm:block w-full bg-[#DEDEDE]"
                 />
 
-
-
                 <BottomBanner />
 
-                {/* Video ad son mobile */}
-                {filters.page && filters.page <= 1 && videoAds && videoAds.length > 0 &&
-                    <Container>
-                        <div className="w-full mb-[35px] relative flex sm:hidden">
-                            <VideoPreview
-                                id={videoAds?.[0]?._id}
-                                alt={videoAds?.[0]?.name || ''}
-                                projectSlug={videoAds?.[0]?.projectDetails?.slug || ''}
-                                thumbnailUrl={videoAds?.[0]?.thumbnail?.webp?.url || ''}
-                                videoUrl={videoAds?.[0]?.videoFile?.url?.url || ''}
-                            />
-                        </div>
-                    </Container>
-                }
+                {/* Mobile Video Ad */}
+                {isPageOne && <MobileVideoSection videoAds={videoAds} />}
 
-
-                {/* Mobile Footer Banner */}
                 <MobileFooterBanner />
 
-
-                <div className="px-5 flex sm:hidden lg:px-8">
-
-                    <Recommendations siteMap={siteMap}>
-                        {(items) => (
-                            <>
-                                <Recommendations siteMap={siteMap}>
-                                    {(items) => (
-                                        <>
-                                            <RecommendedText title="Recommended For You" items={items} />
-                                        </>
-                                    )}
-                                </Recommendations>
-                            </>
-                        )}
-                    </Recommendations>
-                </div>
-
-
-
-
-
+                {/* Mobile Recommendations */}
+                <MobileRecommendations siteMap={siteMap} />
 
                 <Footer />
+            </main>
 
-
-
-
-            </main >
-
-
+            {/* Enquiry Modal */}
             <EnquiryFormModal
-                EnquiryForm={EnquiryForm}
+                EnquiryForm={enquiryForm}
                 setEnquiryForm={setEnquiryForm}
             />
-
-            {/* <MobileFilterOption
-
-                    pagination={pagination}
-                    allCounts={allCounts}
-                    emiratesData={emiratesData}
-
-                    resultProjects={() => {
-                        // setAllProjects(projects?.data);
-                    }}
-                    setFiltersHandler={setFilters}
-                    onClose={() => setFilterModel(false)}
-                    show={filterModel}
-                /> */}
-
-
         </>
-    )
+    );
 }
 
-
-// function HomePage(props: { initialData: any }) {
-//     return (
-//         <Suspense>
-//             <HomePageFunction {...props} />
-//         </Suspense>
-//     );
-// }
-
-export default HomePage;
+// ⚡ Export memoized component to prevent unnecessary re-renders
+export default memo(HomePage);

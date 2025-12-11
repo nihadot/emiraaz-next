@@ -1,10 +1,16 @@
+/**
+ * CustomSlider Component
+ * Displays a rotating banner of images with animations
+ * Optimized with React.memo and useCallback
+ */
+
 'use client';
 
-import { PortraitBanner } from '@/redux/portraitBannerAd/types';
+import React, { useEffect, useState, memo, useCallback } from 'react';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
+import { PortraitBanner } from '@/redux/portraitBannerAd/types';
 import { getOrCreateDeviceId } from '@/utils/uniquId';
 import { sentUniqueId } from '@/api/auth';
 
@@ -15,7 +21,38 @@ interface CustomSliderProps {
   autoSlideInterval?: number;
 }
 
-// ✅ Name the function component
+// ⚡ Memoized Image Slide Component
+const SlideImage = memo(({
+  image,
+  imageClassName
+}: {
+  image: PortraitBanner;
+  imageClassName: string;
+}) => (
+  <div className="absolute top-0 left-0 h-full w-full">
+    {/* Mobile Image */}
+    <Image
+      alt={image.name || 'ads image'}
+      fill
+      src={image?.mobileImage?.webp?.url || ''}
+      className={`object-cover sm:hidden ${imageClassName}`}
+      priority={true} // Prioritize loading current slide
+      sizes="(max-width: 640px) 100vw, 50vw"
+    />
+
+    {/* Desktop Image */}
+    <Image
+      alt={image.name || 'ads image'}
+      fill
+      src={image?.desktopImage?.webp?.url || ''}
+      className={`object-cover hidden sm:block ${imageClassName}`}
+      priority={true}
+      sizes="(min-width: 640px) 100vw, 50vw"
+    />
+  </div>
+));
+SlideImage.displayName = 'SlideImage';
+
 const CustomSliderComponent = ({
   images,
   containerClassName = '',
@@ -24,38 +61,41 @@ const CustomSliderComponent = ({
 }: CustomSliderProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // ⚡ Auto-slide logic
   useEffect(() => {
-    if (images.length === 0) return;
+    if (!images || images.length === 0) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % images.length);
     }, autoSlideInterval);
 
     return () => clearInterval(interval);
-  }, [images, autoSlideInterval]);
+  }, [images.length, autoSlideInterval]); // Only depend on length, not the array itself
 
-  if (images.length === 0) return null;
-
-  const handleClick = async (id:string) => {
+  // ⚡ Memoized Click Handler
+  const handleClick = useCallback(async (id: string) => {
     try {
-      // console.log('first')
-      // Usage
       const myDeviceId: string = getOrCreateDeviceId();
-      // console.log("Device ID:", myDeviceId);
-      await sentUniqueId({ uniqueId: myDeviceId,type:'banner-ads',id });
+      await sentUniqueId({ uniqueId: myDeviceId, type: 'banner-ads', id });
     } catch (error) {
-      // console.log(error)
+      console.error('Failed to track banner click:', error);
     }
+  }, []);
 
-  };
+  if (!images || images.length === 0) return null;
 
-  // console.log('Ite from Custom Slider')
+  const currentImage = images[currentIndex];
+  if (!currentImage) return null;
+
   return (
     <Link
-      onClick={()=>handleClick(images[currentIndex]._id)}
-      href={`/projects/${images[currentIndex].projectDetails?.slug}`} className={`relative flex w-full overflow-hidden ${containerClassName}`}>
+      prefetch
+      onClick={() => handleClick(currentImage._id)}
+      href={`/projects/${currentImage.projectDetails?.slug}`}
+      className={`relative flex w-full overflow-hidden ${containerClassName}`}
+    >
       <div className="relative h-[95px] sm:h-[550px] w-full">
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
             initial={{ opacity: 0.3 }}
@@ -65,20 +105,11 @@ const CustomSliderComponent = ({
               duration: 0.6,
               ease: 'easeInOut',
             }}
-            className="absolute top-0 left-0 h-full w-full"
+            className="absolute inset-0 w-full h-full"
           >
-            <Image
-              alt={'ads image'}
-              fill
-              src={images[currentIndex]?.mobileImage?.webp?.url || ''}
-              className={`object-cover sm:hidden ${imageClassName}`}
-            />
-
-            <Image
-              alt={'ads image'}
-              fill
-              src={images[currentIndex]?.desktopImage?.webp?.url || ''}
-              className={`object-cover hidden sm:block ${imageClassName}`}
+            <SlideImage
+              image={currentImage}
+              imageClassName={imageClassName}
             />
           </motion.div>
         </AnimatePresence>
@@ -87,7 +118,5 @@ const CustomSliderComponent = ({
   );
 };
 
-// ✅ Wrap the named component with React.memo
-const CustomSlider = React.memo(CustomSliderComponent);
-
-export default CustomSlider;
+// ⚡ Export memoized component
+export default memo(CustomSliderComponent);

@@ -299,12 +299,12 @@ function ProjectCard({ item, handleClick, handleEnquiryFormClick, navigateDetail
 
 
 
-                <div className="flex items-center mt-[9px] rounded-[3.75px] bg-[#FFE7EC] gap-1 px-3  text-[#FF1645]">
+                <div className="flex items-center mt-[9px] lg:w-80 w-full rounded-[3.75px] bg-[#FFE7EC] gap-1 px-3  text-[#FF1645]">
                     {/* <Image src={christmas__icon_star} alt="authenticity icon" width={20} height={20} className="object-cover py-1" /> */}
                     <div className=" ">
                         <BsStars size={16} />
                     </div>
-                    <div className="text-[12px] font-light bg-[#FFE7EC] text-ellipsis line-clamp-1 py-1">
+                    <div className="text-[12px] font-light bg-[#FFE7EC] w-full text-ellipsis truncate py-1">
                         This listing was newly introduced {item.createdAt ? getDaysAgo(item.createdAt) : ''}
                     </div>
                 </div>

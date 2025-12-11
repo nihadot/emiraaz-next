@@ -6,9 +6,8 @@ import { Toaster } from "react-hot-toast";
 import AppInitializer from "./AppInitializer";
 import Script from "next/script";
 import NoInternetWrapper from "@/components/NoInternetWrapper/NoInternetWrapper";
-// import { ChatProvider } from "@/components/Chat/ChatProvider";
-// import ChatTrigger from "@/components/Chat/ChatTrigger";
-// import ChatPopup from "@/components/Chat/ChatPopup";
+import { ChatWidget } from "@/components/Chat";
+// import ChatWidget from "@/components/Chat/ChatWidget";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -124,10 +123,10 @@ export default function RootLayout({
         </noscript>
         <ReduxProvider>
           <NoInternetWrapper>
-              {/* <ChatPopup /> */}
-              {children}
-              <AppInitializer />
-              <Toaster />
+            <ChatWidget />
+            {children}
+            <AppInitializer />
+            <Toaster />
           </NoInternetWrapper>
         </ReduxProvider>
       </body>

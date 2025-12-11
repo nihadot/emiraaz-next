@@ -54,7 +54,7 @@ const NavMenuFunction: React.FC<NavMenuProps> = ({ items, linkItemClassName }) =
 
           return (
             <li className={clsx('font-medium text-black font-poppins text-[12px]', linkItemClassName)} key={index}>
-              <Link href={`${url.pathname}${url.search}`}>{item.name}</Link>
+              <Link prefetch href={`${url.pathname}${url.search}`}>{item.name}</Link>
             </li>
           )
 

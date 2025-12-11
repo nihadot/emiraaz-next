@@ -26,14 +26,14 @@ interface Props {
 }
 
 // const ChatTrigger = () => {
-//   // const { open } = useChat();
+//   const { open } = useChat();
 
 //   return (
-//     // <li
-//     //   onClick={open}
-//     //   className={clsx('font-medium text-black font-poppins text-[12px]')}>
-//     //   <button>Ai Agent</button>
-//     // </li>
+//     <li
+//       onClick={open}
+//       className={clsx('font-medium text-black font-poppins text-[12px]')}>
+//       <button>Ai Agent</button>
+//     </li>
 //   )
 // }
 
@@ -113,7 +113,7 @@ function HeaderComponent({
           {
             deviceType === 'mobile' ?
               logoSection
-              : <Link href={'/'}><Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' /></Link>
+              : <Link href={'/'} prefetch><Image src={ps_logo.src} alt="" width={140} height={50} className='object-contain h-full  max-w-[200px] w-full' /></Link>
 
           }
 
@@ -394,7 +394,7 @@ function OtherNavMenusFunction() {
 
         return (
           <li className={clsx('font-medium text-black font-poppins text-[12px]')} key={index}>
-            <Link href={`${url.pathname}${url.search}`}>{item.name}</Link>
+            <Link prefetch href={`${url.pathname}${url.search}`}>{item.name}</Link>
           </li>
         )
       })}
