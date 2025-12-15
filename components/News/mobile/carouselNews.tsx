@@ -23,16 +23,16 @@ function NewsCarousel({ items }: NewsCarouselProps) {
           setActiveIndex(Math.round(scrollLeft / width));
         }}
       >
-        {items.map((news) => (
+        {items?.map((news) => (
           <Link
-            key={news._id}
-            href={`/news/${news.slug}`}
+            key={news?._id}
+            href={`/news/${news?.slug}`}
             className="relative min-w-full snap-center"
           >
             <div className="relative h-[260px] rounded-xl overflow-hidden">
               <img
-                src={news.image?.webp?.url ?? ""}
-                alt={news.newsTitle ?? ""}
+                src={news?.image?.webp?.url ?? ""}
+                alt={news?.newsTitle ?? ""}
                 className="w-full h-full object-cover"
               />
 
@@ -44,7 +44,7 @@ function NewsCarousel({ items }: NewsCarouselProps) {
 
               <div className="absolute bottom-4 left-4 right-4 text-white">
                 <h3 className="text-lg font-semibold leading-snug line-clamp-2">
-                  {news.newsTitle ?? ""}
+                  {news?.newsTitle ?? ""}
                 </h3>
 
                 <div className="mt-2 mb-3 text-xs opacity-80 flex gap-2 items-center">

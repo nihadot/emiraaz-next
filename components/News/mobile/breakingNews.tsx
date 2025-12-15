@@ -7,18 +7,20 @@ import { NewsItem } from "@/types/news/mobile/newsListApiTypes";
 
 
 interface NewsCardsProps{
-    items:NewsItem[]
+    items:NewsItem[],
+    heading:string
 }
 
 
 
 
- function BreakingNews({items}:NewsCardsProps) {
+
+ function BreakingNews({items,heading}:NewsCardsProps) {
     console.log('the breaking new data :',items)
   return (
     <section className="px-4 mt-6 font-poppins">
       {/* Section title */}
-      <h2 className="text-base font-semibold mb-3">Breaking News</h2>
+      <h2 className="text-base font-semibold mb-3">{heading}</h2>
 
       {/* Horizontal list */}
       <div className="flex gap-4 overflow-x-auto no-scrollbar">

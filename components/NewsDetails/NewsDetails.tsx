@@ -21,6 +21,7 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { calender } from "@/app/assets";
 import MobileNewsDetail from "./mobile/MobileNewDetails";
+import BreakingNews from "../News/mobile/breakingNews";
 
 type Props = {
   id: string;
@@ -37,15 +38,27 @@ function NewsDetails({ id, siteMap }: Props) {
   const banners = portraitBannerData?.data || [];
 
   const shuffledImages = useMemo(() => shuffle(banners), [banners]);
-  console.log(singleNews?.data)
-  const MobileNewsdata = singleNews?.data||""
-
+  console.log(singleNews?.data);
+  const MobileNewsdata = singleNews?.data || "";
+  const filteredReadmoreNews = allNews?.data?.filter(
+    (news) => news?.slug !== singleNews?.data?.slug
+  );
+console.log('the filtered :',filteredReadmoreNews)
   return (
     <main>
-
-        <div className="block md:hidden">
-{MobileNewsdata ? <MobileNewsDetail news={MobileNewsdata} />:<p className="text-sm text-gray-400">No News found</p>}
-        </div>
+      <div className="block md:hidden">
+        {MobileNewsdata ? (
+          <MobileNewsDetail news={MobileNewsdata} />
+        ) : (
+          <p className="text-sm text-gray-400">No News found</p>
+        )}
+        <div className="-mt-7 mb-10">
+          <BreakingNews
+            items={filteredReadmoreNews ?? []}
+            heading="Read more"
+          />
+        </div>{" "}
+      </div>
       <div className="hidden md:block">
         <Header
           logoSection={

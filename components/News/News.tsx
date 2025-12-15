@@ -24,6 +24,8 @@ import CategoryTabs from "./mobile/newsTab";
 import NewsCarousel from "./mobile/carouselNews";
 import BreakingNews from "./mobile/breakingNews";
 import NewsCards from "./mobile/exploreNewsList";
+import MobilePagination from "../mobileUI/ui/MobilePagination";
+import { NewsItem } from "@/types/news/mobile/newsListApiTypes";
 type Props = {
   initialData: any;
   siteMap: any[];
@@ -57,6 +59,22 @@ const News = ({ initialData, siteMap }: Props) => {
 
   const data = newsData?.data || [];
 
+function chunkNewsArray(
+  arr: NewsItem[],
+  chunkSize: number
+): NewsItem[][] {
+  const result: NewsItem[][] = [];
+
+  for (let i = 0; i < arr.length; i += chunkSize) {
+    result.push(arr.slice(i, i + chunkSize));
+  }
+
+  return result;
+}
+
+const [imagedata,breakingdata,listdata]=chunkNewsArray(data,3)
+  
+
   const { data: portraitBannerData } = useFetchAllPortraitBannersQuery({});
 
   const banners = portraitBannerData?.data || [];
@@ -74,14 +92,23 @@ const News = ({ initialData, siteMap }: Props) => {
           <CategoryTabs />
         </div>
         <div className="mt-9">
-          <NewsCarousel items={data} />
+          <NewsCarousel items={imagedata??[]} />
         </div>
         <div>
-          <BreakingNews items={data} />
+          <BreakingNews items={breakingdata??[]} heading="Breaking News" />
         </div>
         <div>
-          <NewsCards items={data} />
+          <NewsCards items={listdata??[]} />
         </div>
+          <div className="relative bottom-7 flex justify-center items-center w-full">
+                <MobilePagination
+                  currentPage={filters.page ?? 1}
+                  totalPages={totalPages}
+                  onPageChange={(newPage) =>
+                    setFilters((prev) => ({ ...prev, page: newPage }))
+                  }
+                />
+              </div>
       </div>
       <div className="hidden md:block">
         <Header
@@ -142,7 +169,7 @@ const News = ({ initialData, siteMap }: Props) => {
                           </div>
                           <Link href={`/news/${item.slug}`}>
                             <h4 className="leading-4 cursor-pointer font-poppins font-medium text-lg text-black line-clamp-2 text-ellipsis">
-                              {item.newsTitle}
+                              {item?.newsTitle}
                             </h4>
                           </Link>
 
