@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import ProjectDetails from "@/components/ProjectDetails/ProjectDetails";
+import ProjectDetails from "@/components/ProjectDetails/New/ui/ProjectDetailsNewUi";
 import { baseUrl } from "@/api";
 import { getSiteMapData } from "@/utils/getSiteMapData";
 import Script from "next/script";

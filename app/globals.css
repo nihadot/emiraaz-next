@@ -209,7 +209,7 @@ body {
 }
 
 .content-wrapper-home p {
-  @apply font-poppins w-full leading-[28px] text-sm font-normal text-black mt-0 mb-0
+  @apply font-poppins w-full leading-[32px] text-base font-normal text-black mt-0 mb-0
 }
 
 

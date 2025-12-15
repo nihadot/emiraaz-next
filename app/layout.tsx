@@ -3,10 +3,14 @@ import "./globals.css";
 import 'react-loading-skeleton/dist/skeleton.css'
 import { ReduxProvider } from "@/redux/provider";
 import { Toaster } from "react-hot-toast";
-import AppInitializer from "./AppInitializer";
+// import AppInitializer from "./AppInitializer";
 import Script from "next/script";
 import NoInternetWrapper from "@/components/NoInternetWrapper/NoInternetWrapper";
+import AppInitializer from "./AppInitializer";
 import { ChatWidget } from "@/components/Chat";
+// import NoInternetWrapper from "@/components/NoInternetWrapper/NoInternetWrapper";
+// import NoInternetWrapper from "@/components/NoInternetWrapper/NoInternetWrapper";
+// import { ChatWidget } from "@/components/Chat";
 // import ChatWidget from "@/components/Chat/ChatWidget";
 
 const poppins = Poppins({

@@ -31,7 +31,7 @@ function EnquiryFormModal({ EnquiryForm, setEnquiryForm,promotion,promotionId }:
             onClose={() => setEnquiryForm({ status: false, id: '', count: 0 })}
         >
             <Container>
-                <div className="relative w-full h-[200px] rounded-[5px]">
+                {/* <div className="relative w-full h-[200px] rounded-[5px]"> */}
 
 
                     {EnquiryForm.count === 1 && <ModalForm
@@ -57,7 +57,7 @@ function EnquiryFormModal({ EnquiryForm, setEnquiryForm,promotion,promotionId }:
 
                     />}
 
-                </div>
+                {/* </div> */}
             </Container>
         </Modal>
     )

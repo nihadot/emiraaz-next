@@ -91,3 +91,6 @@ export {default as villa } from "./villa-mobile-black.png";
 export {default as townhouse } from "./townhouse-mobile-black.png";
 export {default as penthouse } from "./penthouse-black-mobile.png";
 export {default as rightArrowBlackMobile } from "./mobile-right-arrow.png"
+export {default as aedIcon} from "./aed_new_icon.svg";
+export {default as wishlistIcon} from "./wishlist-black.svg";
+export {default as aedBlackIcon} from "./aed-black.svg";

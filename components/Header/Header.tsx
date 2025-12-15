@@ -9,7 +9,7 @@ import { clsx } from 'clsx';
 import PrimaryButton from '../Buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams,usePathname } from 'next/navigation';
 import Container from '../atom/Container/Container';
 import { IoCloseSharp } from 'react-icons/io5';
 import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
@@ -17,25 +17,12 @@ import { PiUserCircle } from "react-icons/pi";
 import CurrencySelect from './CurrencySelect';
 import Link from 'next/link';
 import { useDeviceType } from '@/utils/useDeviceType';
-import { usePathname } from 'next/navigation'
 // import { useChat } from '../Chat/ChatProvider';
 
 interface Props {
   logoSection?: React.ReactNode;
   onLogoClick?: () => void;
 }
-
-// const ChatTrigger = () => {
-//   const { open } = useChat();
-
-//   return (
-//     <li
-//       onClick={open}
-//       className={clsx('font-medium text-black font-poppins text-[12px]')}>
-//       <button>Ai Agent</button>
-//     </li>
-//   )
-// }
 
 function HeaderComponent({
   onLogoClick,
@@ -63,7 +50,6 @@ function HeaderComponent({
     // }
     return true;
   });
-  const dispatch = useDispatch();
   const router = useRouter();
 
   const handleLogoClick = () => {
@@ -124,22 +110,6 @@ function HeaderComponent({
 
           />
         </div>
-        {/* <PrimaryButton
-          type='button'
-          className='flex !rounded-[2.5px] md:hidden w-[66.75px] items-center gap-1'
-        >
-          <>
-            <label htmlFor="" className='text-[11px] font-normal  font-poppins'>AED</label>
-            <div className="w-[28px] flex justify-center items-center h-[20px] relative">
-              <IoChevronDown size={14} />
-            </div>
-
-          </>
-
-
-        </PrimaryButton> */}
-
-
 
         <div className="min-laptop:flex hidden items-center gap-4">
 
@@ -214,67 +184,6 @@ function HeaderComponent({
           }
 
 
-          {/* {isAuthentication ?
-
-            <div className="min-laptop:flex  gap-1 hidden">
-              <PrimaryButton
-                type='button'
-                className='flex items-center gap-1'
-              >
-                <>
-                  <Image src={user_icon} alt='menu icon' width={20} />
-                  <label htmlFor="">User</label>
-                </>
-
-
-              </PrimaryButton>
-
-              <PrimaryButton
-                onClick={() => handleLogout()}
-                type='button'
-                className='flex items-center gap-1'
-              >
-                <>
-                  <Image src={user_icon} alt='menu icon' width={20} />
-                  <label htmlFor="">Lgout</label>
-                </>
-
-
-              </PrimaryButton>
-            </div>
-
-            : <div className="min-laptop:flex  gap-1 hidden">
-              <PrimaryButton
-                type='button'
-                className='flex w-[66.75px] !py-1 items-center gap-[4px]'
-              >
-                <>
-                  <label htmlFor="" className='text-[12px] font-normal  font-poppins'>AED</label>
-                  <div className="w-[28px] flex justify-center  items-center h-[10px] relative">
-                    <IoChevronDown size={14} />
-                  </div>
-                </>
-
-
-              </PrimaryButton>
-
-              <PrimaryButton
-                onClick={() => router.push('/login')}
-                type='button'
-                className='flex w-fit !px-2 h-[33px] items-center'
-              >
-                <>
-
-                  <div className="w-4 h-4 relative flex justify-center items-center">
-                    <PiUserCircle size={18} />
-                  </div>
-
-                  <label htmlFor="" className='text-[12px] font-normal  font-poppins'>Login</label>
-                </>
-
-
-              </PrimaryButton>
-            </div>} */}
         </div>
 
 
@@ -289,13 +198,7 @@ function HeaderComponent({
               className='sm:hidden fixed top-0 left-0 h-full w-[300px] bg-white z-50 p-3 shadow-lg flex flex-col gap-2'
             >
               <div className='flex justify-start'>
-                {/* <button onClick={toggleMenu} className='text-black text-xl font-bold'>
-                  ✕
-                </button> */}
-                {/* <IoCloseOutline
-                  onClick={toggleMenu}
-                  className='w-[30px] h-[30px] text-black'
-                   color="black" /> */}
+             
                 <SpaceWrapper
                   className='mt-2'
                 >

@@ -154,15 +154,15 @@ export function useProjects(filters: FiltersState, debouncedSearch: string, init
     const queryParams = useMemo(() => ({
         limit: 24,
         page: filters.page,
-        search: debouncedSearch,
+        search: debouncedSearch || filters.search,
         cities: filters.cities,
         developers: filters.developers,
         facilities: filters.facilities,
         propertyType: filters.propertyType,
         completionType: filters.completionType,
         paymentPlan: filters.paymentPlan,
-        year: filters.handoverDate?.year,
-        qtr: filters.handoverDate?.quarter,
+        year: filters.handoverDate?.year || filters?.year,
+        qtr: filters.handoverDate?.quarter || filters?.qtr,
         discount: filters.discount,
         projectTypeFirst: filters.projectTypeFirst,
         projectTypeLast: filters.projectTypeLast,
@@ -177,7 +177,6 @@ export function useProjects(filters: FiltersState, debouncedSearch: string, init
         productTypeOptionFirst: filters.productTypeOptionFirst,
         productTypeOptionLast: filters.productTypeOptionLast,
     }), [filters, debouncedSearch]);
-
     const { data } = useFetchAllProjectsQuery(queryParams, {
         refetchOnMountOrArgChange: true,
         refetchOnReconnect: true,

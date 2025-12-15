@@ -6,6 +6,7 @@ import PropertyTypeSection from './PropertyTypeSection';
 import EmiratesCard from './EmiratesCard';
 import { useDeviceType } from '@/utils/useDeviceType';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   category: string;
@@ -19,6 +20,7 @@ type Props = {
 export default function SiteMap({ pagination,category, emirate, data, initialData, initialPage }: Props) {
   const [filters, setFilters] = React.useState({ page: initialPage });
   const deviceType = useDeviceType();
+  const router = useRouter(); // ✅ added
 
   // no client fetch — everything from props
   const dataProducts:any = initialData;
@@ -85,9 +87,9 @@ dataProducts.forEach((item: any) => {
           currentPage={filters.page}
           totalPages={totalPages}
           onPageChange={newPage => {
-            const url = new URL(window.location.href);
-            url.searchParams.set('page', newPage.toString());
-            window.location.href = url.toString(); // reload page for SSR
+                        setFilters({ page: newPage });
+                        router.push(`?page=${newPage}`); // ✅ FIXED (SSR safe)
+
           }}
           maxVisiblePages={deviceType === 'mobile' ? 4 : 8}
         />

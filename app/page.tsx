@@ -18,11 +18,11 @@ const HomePage = dynamic(() => import('@/components/Home/Home'), {
 function HomePageSkeleton() {
   return (
     <div className="min-h-screen bg-gray-50 animate-pulse">
-      <div className="h-16 bg-gray-200 mb-4" />
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="h-16 bg-gray-200 mb-3" />
+      <div className="container mx-auto px-[12px]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-64 bg-gray-200 rounded-lg" />
+            <div key={i} className="h-44 bg-gray-200 rounded-lg" />
           ))}
         </div>
       </div>

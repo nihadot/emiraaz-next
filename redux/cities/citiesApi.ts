@@ -40,11 +40,20 @@ export const citiesApi = createApi({
       query: ({
         emirate,
         slug,
-      }) => ({
-        url: `/names?emirate=${emirate}&${slug ? `slug=${slug}` : ''}`,
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      }),
+        search,
+      }) => {
+        const params = new URLSearchParams();
+
+        if (emirate) params.append("emirate", emirate);
+        if (slug) params.append("slug", slug);
+        if (search) params.append("search", search);
+
+        return {
+          url: `/names?${params.toString()}`,
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        };
+      },
       providesTags: ["AllCities"],
     }),
 

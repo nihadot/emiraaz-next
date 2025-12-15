@@ -7,6 +7,7 @@ import squarefeetSvg from '../assets/svg/squarefeet.svg';
 import bookmarkSvg from '../assets/svg/bookmark.svg'; // man+ icon (bottom-right)
 import bookmarkSave from '../assets/svg/bookmark2.svg'; // bookmark save (top-right)
 import cameraSvg from '../assets/svg/camera.svg';
+import Image from 'next/image';
 
 interface PropertyCardProps {
   id: string;
@@ -64,7 +65,7 @@ export default function PropertyCard({
       <div className="flex gap-3 p-3">
         {/* IMAGE */}
         <div className="relative w-[150px] h-[150px] flex-shrink-0">
-          <img
+          <Image
             src={image}
             alt={title}
             className="w-full h-full object-cover rounded-2xl"
@@ -74,7 +75,7 @@ export default function PropertyCard({
           {imageCount && (
             <div className="absolute top-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
               <span className="font-medium">{imageCount}</span>
-              <img src={cameraSvg} alt="photos" className="w-3.5 h-3.5" />
+              <Image src={cameraSvg} alt="photos" className="w-3.5 h-3.5" />
             </div>
           )}
         </div>
@@ -95,7 +96,7 @@ export default function PropertyCard({
                 type="button"
                 className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 transition absolute top-0 right-0"
               >
-                <img
+                <Image
                   src={bookmarkSave}
                   alt="save"
                   className={`w-5 h-5 transition ${
@@ -108,21 +109,21 @@ export default function PropertyCard({
             </div>
 
             <div className="flex items-start gap-2 mb-3">
-              <img src={locationPin} alt="location" className="w-4 h-4 mt-0.5" />
+              <Image src={locationPin} alt="location" className="w-4 h-4 mt-0.5" />
               <p className="text-xs text-gray-500 line-clamp-1">{location}</p>
             </div>
 
             <div className="flex items-center gap-4 mb-3">
               <div className="flex items-center gap-1">
-                <img src={bedSvg} alt="beds" className="w-5 h-5" />
+                <Image src={bedSvg} alt="beds" className="w-5 h-5" />
                 <span className="text-xs text-gray-600 font-medium">{bedrooms}</span>
               </div>
               <div className="flex items-center gap-1">
-                <img src={bathSvg} alt="baths" className="w-5 h-5" />
+                <Image src={bathSvg} alt="baths" className="w-5 h-5" />
                 <span className="text-xs text-gray-600 font-medium">{bathrooms}</span>
               </div>
               <div className="flex items-center gap-1">
-                <img src={squarefeetSvg} alt="area" className="w-5 h-5" />
+                <Image src={squarefeetSvg} alt="area" className="w-5 h-5" />
                 <span className="text-xs text-gray-600 font-medium">{area.toLocaleString()} {areaUnit}</span>
               </div>
             </div>
@@ -142,7 +143,7 @@ export default function PropertyCard({
             aria-label="Contact seller"
             className="w-9 h-9 rounded-full bg-white/0 flex items-center justify-center hover:bg-gray-50 transition-colors absolute bottom-0 right-0"
           >
-            <img src={bookmarkSvg} alt="contact" className="w-6 h-6" />
+            <Image src={bookmarkSvg} alt="contact" className="w-6 h-6" />
           </button>
         </div>
       </div>

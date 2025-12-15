@@ -49,7 +49,7 @@ export default function ChatPopup() {
                             dispatch={dispatch}
                         />
                     ) : (
-                        <div className="flex flex-col h-full w-full bg-white max-w-[1060px] rounded-[15px]">
+                        <div className="flex flex-col h-full bg-white w-[1060px] rounded-[15px]">
                             {/* Desktop Header with Controls */}
                             <div className="flex-shrink-0 flex justify-end items-center px-3 py-3">
                                 <ControlButtons

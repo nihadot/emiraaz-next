@@ -18,9 +18,11 @@ import { PortraitBanner } from '@/redux/portraitBannerAd/types';
 import { EmirateNames } from '@/redux/emirates/types';
 import { CityNames } from '@/redux/cities/types';
 import NoDataFound from '../Empty/NoDataFound';
+import { useRouter } from 'next/navigation';
 
 function RentalIncome({ portraitBanners, dataFetchRentalIncome, emirates, citiesValue }: { portraitBanners: PortraitBanner[], dataFetchRentalIncome: ViewRentalIncomeResponse, emirates: EmirateNames[], citiesValue: CityNames[] }) {
 
+    const router = useRouter();
 
     // Consolidated filter state
     const [filters, setFilters] = useState<{
@@ -400,11 +402,15 @@ function RentalIncome({ portraitBanners, dataFetchRentalIncome, emirates, cities
                             currentPage={filters.page || 1}
                             totalPages={totalPages}
                             onPageChange={(newPage) => {
-                                const url = new URL(window.location.href);
-                                url.searchParams.set('page', newPage.toString());
-                                window.history.pushState({}, '', url);
-                                setPaginationHappened(pre => !pre)
-                                setFilters(prev => ({ ...prev, page: newPage }))
+                                // const url = new URL(window.location.href);
+                                // url.searchParams.set('page', newPage.toString());
+                                // window.history.pushState({}, '', url);
+                                // setPaginationHappened(pre => !pre)
+                                // setFilters(prev => ({ ...prev, page: newPage }))
+
+                                router.push(`?page=${newPage}`);
+                                setPaginationHappened(pre => !pre);
+                                setFilters(prev => ({ ...prev, page: newPage }));
                             }}
                             maxVisiblePages={deviceType === 'mobile' ? 4 : 8} />
                     </div>

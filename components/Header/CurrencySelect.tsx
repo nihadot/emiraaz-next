@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import currencyCodes from 'currency-codes';
 import { IoChevronDown, IoSearch } from 'react-icons/io5';

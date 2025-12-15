@@ -18,29 +18,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import clsx from 'clsx';
 
-// Components
-import Header from '../Header';
 import Container from '../atom/Container/Container';
-import SectionDivider from '../atom/SectionDivider/SectionDivider';
-import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
 import BreadcampNavigation from '../BreadcampNavigation/BreadcampNavigation';
 import LocationTags from '../LocationTags/LocationTags';
-import PaginationNew from '../PaginationNew/PaginationNew';
-import { Footer } from '../Footer';
-import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal';
 
-// Home-specific components
-import HomePageContent from './HomePageContent';
-import SearchFilterBar from './SearchFilterBar';
-import AdvancedFilters from './AdvancedFilters';
-import ProjectsGrid from './ProjectsGrid';
-import Sidebar from './Sidebar';
 import SplashScreen from './SplashScreen';
 
 // App-specific components
 import VideoPreview from '@/app/home/VideoPreview';
-import BottomBanner from '@/app/home/BottomBannerasas';
-import MobileFooterBanner from '@/app/home/MobileFooterBanner';
 import Recommendations from '@/app/home/Recommendations';
 import RecommendedText from '../RecomendedText/RecommendedText';
 
@@ -66,7 +51,7 @@ import {
 } from './utils';
 
 // Redux and types
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { open } from '@/redux/ai-agent-chat/chatSlice';
 import { Pagination } from '@/utils/types';
 import { shuffle } from '@/utils/shuffle';
@@ -83,12 +68,32 @@ import { PortraitBanner } from '@/redux/portraitBannerAd/types';
 import { AllSmallVideoItems } from '@/redux/smallVideo/types';
 import { AllProjectsItems } from '@/redux/project/types';
 import { CountItem } from '@/redux/news/newsApi';
-import MobileHeader from './MobileHeader';
+import HomePageContent from './HomePageContent';
+import Header from '../Header';
+import MobileHeader from './MobileHeader/MobileHeader';
+import SearchFilterBar from './SearchFilterBar';
 import SearchMobile from './SearchMobile/SearchMobile';
 import MobileFilter from './MobileFilter/MobileFilter';
-import ProjectCard from '../ProjectCard/ProjectCard';
-import ProjectsGridMobile from './ProjectsGridMobile/ProjectsGridMobile';
-// import SearchMobile from './SearchMobile/SearchMobile';
+import PropertyType from '../PropertyType/PropertyType';
+import { useMenuItem } from '../MenuItem/logic/useMenuItem';
+import MenuItemUI from '../MenuItem/ui/MenuItemUI';
+import AdvancedFilters from './AdvancedFilters/AdvancedFilters';
+import SectionDivider from '../atom/SectionDivider/SectionDivider';
+import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper';
+import ProjectsGrid from './ProjectsGrid';
+import Sidebar from './Sidebar';
+import PaginationNew from '../PaginationNew/PaginationNew';
+import BottomBanner from '@/app/home/BottomBannerasas';
+import MobileFooterBanner from '@/app/home/MobileFooterBanner';
+import { Footer } from '../Footer';
+import ProjectsMobileGrid from './ProjectsMobileGrid';
+import { handlePropertyCategoryStatus, handlePropertyCategoryType } from '@/redux/filters/filterSlice';
+import EnquiryFormModal from '../EnquiryFormModal/EnquiryFormModal';
+import ApplicationSubmittedModal from '../ApplicationSubmittedModal/ApplicationSubmittedModal';
+import EnquiryModal from '../EnquiryModal/EnquiryModal';
+import { RootState } from '@/redux/store';
+import { closeEnquiry, closeSuccessEnquiry } from '@/redux/enquiry/enquiry';
+import { useEnquirySubmit } from '@/hooks/useEnquirySubmit';
 
 interface HomePageProps {
     emiratesData: EmirateNames[];
@@ -226,10 +231,6 @@ function HomePage({
 }: HomePageProps) {
     const dispatch = useDispatch();
 
-    // ⚡ Temporary Chat Button for Development
-    const handleOpenChat = () => {
-        dispatch(open());
-    };
 
     // Hooks
     useForceScrollRestore();
@@ -315,6 +316,8 @@ function HomePage({
         [cityOptions, lastCitySlug]
     );
 
+    const { isOpen: isEnquiryOpen, successIsOpen } = useSelector((state: RootState) => state.enquiry);
+
     // ⚡ Memoized handlers
     const handleFilterModal = useMemo(() => () => {
         router.push('/buy/filter');
@@ -327,24 +330,49 @@ function HomePage({
         setFilters(prev => ({ ...prev, page: 1 }));
     }, [setFilters]);
 
-    // Show splash screen
+
+
+    const isPageTwo = filters.page && filters.page > 1;
+
+
+    const logicPropertyCategory = useMenuItem([
+      { label: "New Projects", value: "off-plan-projects" },
+    { label: "Off-Plan Resale", value: "off-plan-resale"},
+    { label: "Secondary ", value: "secondary"},
+    { label: "Land ", value: "land"},
+    ]);
+    const logicPropertyCategoryTypes = useMenuItem([
+        { label: "Residential", value: "residential" },
+    { label: "Commercial", value: "commercial" },
+    ]);
+
+    useEffect(() => {
+        console.log(logicPropertyCategory.selected, 'open')
+        if (logicPropertyCategory.selected) {
+            dispatch(handlePropertyCategoryType(logicPropertyCategory.selected))
+        }
+
+        if (logicPropertyCategoryTypes.selected) {
+            dispatch(handlePropertyCategoryStatus(logicPropertyCategoryTypes.selected))
+        }
+    }, [logicPropertyCategory.selected,
+    logicPropertyCategoryTypes.selected,
+    ]);
+
+
+    const { submitEnquiry, error: submitEnquiryError, loading: submitEnquiryLoading, sucess: submitEnquirySucess } = useEnquirySubmit()
+
+        // Show splash screen
     if (loading) {
         return <SplashScreen />;
     }
-
-    const isPageTwo = filters.page && filters.page > 1;
-    const isPageOne = filters.page && filters.page <= 1;
-
-    const onClickOnMenuButton = () => {
-        console.log('clicked')
-    }
-
+    
     return (
         <>
             <main>
                 <HomePageContent content={content} display={true} />
 
-                <div className="min-h-screen w-full lg:overflow-visible font-(family-name:--font-geist-sans)">
+                <div className=" w-full lg:overflow-visible font-(family-name:--font-geist-sans)">
                     {/* Header */}
                     {/* Desktop */}
                     <div className="hidden md:flex">
@@ -353,18 +381,21 @@ function HomePage({
                             logoSection={<LogoSection />}
                         />
                     </div>
+
+
                     {/* Mobile Header */}
-                    {/* <div className="flex md:hidden">
+                    <Container className="flex md:hidden">
                         <MobileHeader
-                            location='Dubai,Sharja'
-                            onClickOnMenuButton={onClickOnMenuButton}
+                            emirateOptions={emirateOptions}
+                        // location='Dubai,Sharja'
                         />
-                    </div> */}
+                    </Container>
+
 
                     {/* Search & Primary Filters */}
                     {/* Desktop Search */}
                     <Container
-                        className='sm:flex hidden'
+                        className='md:flex hidden'
                     >
                         <SearchFilterBar
                             filters={filters}
@@ -377,19 +408,46 @@ function HomePage({
                         />
                     </Container>
 
+
                     {/* Mobile Search */}
-                    {/* <Container
-                        className='sm:hidden block'
+                    <Container
+                        className='md:hidden block'
                     >
                         <SearchMobile
                             filterBlackIcon={filterBlackIcon}
                             searchBlackIcon={searchBlackIcon}
                         />
-                    </Container> */}
 
-                    {/* <div className="block sm:hidden">
-                        <MobileFilter />
-                    </div> */}
+                    </Container>
+
+
+                    <Container
+                        className='md:hidden block mt-3'
+
+                    >
+                        <div className="border p-3 border-[#DEDEDE] rounded-[13px]">
+
+                            <PropertyType />
+
+                            <div className="flex gap-3 mt-2">
+
+                                <MenuItemUI label="New Projects" {...logicPropertyCategory} />
+                                <MenuItemUI label="Residential" {...logicPropertyCategoryTypes} />
+                            </div>
+                        </div>
+
+                        {/* <MobileFilter /> */}
+                    </Container>
+
+                    <Container
+                        className='md:hidden block mt-3'
+
+                    >
+                        <ProjectsMobileGrid
+                            initialData={initialData}
+                        />
+                    </Container>
+
 
                     {/* Advanced Filters */}
                     <Container>
@@ -404,13 +462,12 @@ function HomePage({
                         />
                     </Container>
 
+
                     <SectionDivider
                         containerClassName={clsx("mb-[12px] mt-[12px]")}
                         lineClassName="h-[1px] w-full bg-[#DEDEDE]"
                     />
 
-                    {/* Main Content */}
-                    {/* Before only screen Sm */}
                     <Container>
                         <SpaceWrapper className={`hidden sm:block ${isPageTwo ? 'pt-0' : 'pt-0'}`}>
                             <div className="mb-4   flex gap-2">
@@ -440,6 +497,7 @@ function HomePage({
                                     />
                                 </div>
 
+
                                 {/* Sidebar */}
                                 <Sidebar
                                     videoAds={videoAds}
@@ -451,27 +509,14 @@ function HomePage({
                         </SpaceWrapper>
                     </Container>
 
-                    {/* Below only screen Sm */}
-                    <Container>
-                        <ProjectsGridMobile
-                            projects={projects}
-                        />
-                    </Container>
+
                 </div>
 
-                {/* Temporary Dev Button */}
-                <div className="">
-                    <button
-                        onClick={handleOpenChat}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-md shadow-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-                    >
-                        Test Chat
-                    </button>
-                </div>
 
                 {/* Pagination */}
-                <Container>
-                    <div className="mt-[23.25px]">
+                <Container
+                >
+                    <div className="mt-[23.25px] hidden md:flex flex-col">
                         <PaginationNew
                             currentPage={filters.page || 1}
                             totalPages={totalPages}
@@ -493,15 +538,28 @@ function HomePage({
 
                 <BottomBanner />
 
-                {/* Mobile Video Ad */}
-                {isPageOne && <MobileVideoSection videoAds={videoAds} />}
-
-                <MobileFooterBanner />
+                <div className="pb-5">
+                    <MobileFooterBanner />
+                </div>
 
                 {/* Mobile Recommendations */}
-                <MobileRecommendations siteMap={siteMap} />
+                {/* <MobileRecommendations siteMap={siteMap} /> */}
 
                 <Footer />
+
+                <ApplicationSubmittedModal
+                    open={successIsOpen}
+                    onClose={() => dispatch(closeSuccessEnquiry())}
+                    onContinue={() => dispatch(closeSuccessEnquiry())}
+                />
+                <EnquiryModal
+                    open={isEnquiryOpen}
+                    onClose={() => dispatch(closeEnquiry())}
+                    onSubmit={submitEnquiry}
+                    reset={submitEnquirySucess}
+                />
+
+
             </main>
 
             {/* Enquiry Modal */}

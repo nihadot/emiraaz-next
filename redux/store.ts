@@ -22,7 +22,8 @@ import { quickEnquiryApi } from './quickEnquiry/quickEnquiryApi';
 import { forSaleApi } from './forSale/forSaleApi';
 // import socketReducer from "./ai-agent-chat/socketSlice";
 import chatReducer from "./ai-agent-chat/chatSlice";
-
+import enquiryReducer from "./enquiry/enquiry";
+import filterReducer from "./filters/filterSlice"
 export const store = configureStore({
   reducer: {
     [emirateApi.reducerPath]: emirateApi.reducer,
@@ -47,7 +48,10 @@ export const store = configureStore({
     user: userSlice,
     wishlist: wishlistSlice,
     // socket: socketReducer,
+        filters: filterReducer,
+
     chat: chatReducer,
+    enquiry: enquiryReducer,
 
   },
   middleware: (getDefaultMiddleware) =>

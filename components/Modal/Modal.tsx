@@ -32,7 +32,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-[1060px] min-h-[100svh] sm:min-h-0 sm:max-h-[600px] bg-white rounded-md"
+        // className="relative w-full max-w-[410px] min-h-[100svh] sm:min-h-0 sm:max-h-[600px] bg-white rounded-md"
 
         onClick={(e) => e.stopPropagation()}
       >

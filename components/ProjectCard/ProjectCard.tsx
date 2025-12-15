@@ -1,11 +1,9 @@
+'use client'
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import {
-    location_icon,
-} from '@/app/assets';
+
 import { BsStars } from "react-icons/bs";
 
-import { RiFileList2Line } from "react-icons/ri";
 
 import { AllProjectsItems } from '@/redux/project/types';
 import { formatCurrencyParts } from '@/utils/formateAmount';
@@ -14,7 +12,6 @@ import { TfiLocationPin } from "react-icons/tfi";
 import PrimaryButton from '../Buttons';
 import FavoriteIcon from './FavoriteIcon';
 import ProjectImageSlider from './ProjectImageSlider';
-import details_icon from "@/app/assets/details_icon.svg";
 import 'swiper/css';
 import 'swiper/css/pagination';
 import Typography from '../atom/typography/Typography';

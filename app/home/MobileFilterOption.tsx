@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AiOutlineClose } from "react-icons/ai";

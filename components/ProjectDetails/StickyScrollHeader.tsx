@@ -1,3 +1,4 @@
+'use client'
 import { baseUrl } from "@/api";
 import { LOCAL_STORAGE_KEYS } from "@/api/storage";
 import { notes_icon, save_icon, share_button_icon } from "@/app/assets";
@@ -174,29 +175,7 @@ const StickyScrollHeader = ({ value, currency, title, projectId, projectType,pro
                                 }</span>
                                 </h4>
                             </div>
-                            {/* <div className="flex gap-3 h-10">
-
-                            <PrimaryButton
-                                type="button"
-
-                            >
-                                <div className="flex items-center gap-2">
-                                    <Image src={save_icon} alt="save icon" width={21} />
-                                    <label className="text-sm font-light text-[#FF1645] font-poppins">Save</label>
-                                </div>
-                            </PrimaryButton>
-                            <PrimaryButton
-                                type="button"
-                                className="bg-[#FFE7EC] border-none text-[#FF1645] font-poppins rounded "
-
-                            >
-
-                                <div className="flex items-center gap-2">
-                                    <Image src={share_button_icon} alt="share icon" width={21} />
-                                    <label className="text-sm font-light text-[#FF1645] font-poppins">Share </label>
-                                </div>
-                            </PrimaryButton>
-                        </div> */}
+                          
 
                             <PrimaryButton
                                 onClick={() => handleEnquiryFormClick()}

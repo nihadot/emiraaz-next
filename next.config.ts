@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
 
+require('./app/memory-log');
+
+
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
@@ -14,6 +17,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'property-seller-com.s3.me-central-1.amazonaws.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
       }
     ],
     // ⚡ Optimize images for slow networks

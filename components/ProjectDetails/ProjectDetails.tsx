@@ -1,13 +1,13 @@
 'use client';
 import { close_icon, floor_plan, notes_red_edit, save_icon, share_button_icon } from '@/app/assets';
 import { useFetchAllPortraitBannersQuery } from '@/redux/portraitBannerAd/portraitBannerAdApi';
-import { useFetchAllProjectsQuery, useFetchProjectByIdQuery } from '@/redux/project/projectApi';
+import { useFetchAllProjectsQuery } from '@/redux/project/projectApi';
 import { useViewAllProjectAdsCardsQuery } from '@/redux/projectAdsCard/projectAdsCardApi';
 import { ProjectType } from '@/redux/types';
 import { formatCurrencyParts } from '@/utils/formateAmount';
 import { shuffle } from '@/utils/shuffle';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { Suspense, use, useEffect, useMemo, useState } from 'react'
+import React, {  useEffect, useMemo, useState } from 'react'
 import { FaImage, FaMap, FaVideo } from 'react-icons/fa';
 import { MdFullscreen } from 'react-icons/md';
 import { errorToast, successToast } from '../Toast';
@@ -65,7 +65,6 @@ import StickyScrollHeader from './StickyScrollHeader';
 import Header from '../Header';
 import { TfiLocationPin } from 'react-icons/tfi';
 import { useWindowSize } from '@/utils/useWindowSize';
-import { useFetchCurrencyQuery } from '@/redux/currency/currencyApi';
 import { motion, AnimatePresence } from 'framer-motion'
 import clsx from 'clsx';
 import { AllProjectsItems } from '@/redux/project/types';

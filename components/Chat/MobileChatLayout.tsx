@@ -32,7 +32,7 @@ export function MobileChatLayout({
     const hasMessages = data?.conversations?.length > 0;
 
     return (
-        <div className="flex flex-col h-[100svh] w-full">
+        <div className="flex flex-col bg-white h-[100svh] w-full">
             {/* Header */}
             <TopBar
                 onBack={() => dispatch(close())}
