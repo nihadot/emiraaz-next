@@ -88,6 +88,7 @@ import SearchMobile from './SearchMobile/SearchMobile';
 import MobileFilter from './MobileFilter/MobileFilter';
 import ProjectCard from '../ProjectCard/ProjectCard';
 import ProjectsGridMobile from './ProjectsGridMobile/ProjectsGridMobile';
+import { baseUrl } from '@/api';
 // import SearchMobile from './SearchMobile/SearchMobile';
 
 interface HomePageProps {
@@ -338,6 +339,8 @@ function HomePage({
     const onClickOnMenuButton = () => {
         console.log('clicked')
     }
+    const base = process.env.NEXT_PUBLIC_API_URL
+    console.log("base url is",base)
 
     return (
         <>
