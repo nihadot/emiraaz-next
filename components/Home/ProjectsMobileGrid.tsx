@@ -102,7 +102,7 @@ function ProjectsMobileGrid({ initialData }: Props) {
                             area: item?.squareFeet,
                             price: item?.priceInAED,
                             discount: item?.discount,
-                            image: item?.mainImages?.[0]?.webp?.url,
+                            images: item?.mainImages?.map((i: any) => i.webp?.url),
                             slug: item?.slug,
                             handleClick: () => handleClick(item),
                         }}

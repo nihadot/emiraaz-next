@@ -18,14 +18,14 @@ export default function DetectLocationButton({ onDetect }: Props) {
       onClick={actions.handleDetect}
       className="
         w-full flex items-center justify-center gap-3
-        bg-white border border-gray-300 
-        rounded-xl py-3
+        bg-white border border-[#DEDEDE] 
+        rounded-xl py-2.5
       "
     >
       <MdMyLocation
-      size={26}
+      size={24}
       />
-      <span className="font-poppins text-[#767676] text-base font-normal">
+      <span className="font-poppins text-[#767676] text-sm font-normal">
         Detect Current Location
       </span>
     </motion.button>

@@ -8,10 +8,12 @@ import SelectableList from "@/components/SelectableList/ui/SelectableList";
 import CitySkeleton from "./CitySkeleton";
 import { useDispatch } from "react-redux";
 import { setCity } from "@/redux/filters/filterSlice";
+import { IoCloseOutline } from "react-icons/io5";
 
 export default function LocationFilterUI({
     emirateOptions,
     logic,
+    onClose,
 }: {
     emirateOptions: any[];
     logic: {
@@ -25,38 +27,45 @@ export default function LocationFilterUI({
         handleSearch: (v: string) => void;
         isSearching: boolean;
     };
+    onClose?: () => void;
 }) {
 
     const dispatch = useDispatch();
 
-
     return (
-        <div className="h-[600px]">
-<div className="pb-3">
-            <SectionTitle text="Location" />
-</div>
+        <div className=" overflow-auto h-full ">
+            <div className="flex justify-between pb-3">
+                <SectionTitle text="Location" />
+                <div className=""
+                onClick={onClose}
+                >
+                    <IoCloseOutline
+                    size={26}
+                    />
+                </div>
+            </div>
             <DetectLocationButton onDetect={() => console.log("detecting...")} />
 
-      <div className="pt-3">
-              <SearchMobileBottomSheet
-            placeholder="Search emirate, city"
-                value={logic.searchTerm}
-                onChange={logic.handleSearch}
+            <div className="pt-3">
+                <SearchMobileBottomSheet
+                    placeholder="Search emirate, city"
+                    value={logic.searchTerm}
+                    onChange={logic.handleSearch}
 
-            />
-      </div>
+                />
+            </div>
 
-        <div className="pt-3">
+            <div className="pt-3">
                 {/* emirate buttons */}
-            <SelectableChips
-                options={emirateOptions}
-                defaultValue={logic.selectedEmirate}
-                onChange={logic.handleEmirateSelect}
-            />
-        </div>
+                <SelectableChips
+                    options={emirateOptions}
+                    defaultValue={logic.selectedEmirate}
+                    onChange={logic.handleEmirateSelect}
+                />
+            </div>
 
             {/* scrollable cities */}
-            <div className="h-full overflow-y-auto no-scrollbar mt-3">
+            <div className="h-full max-h-[380px] flex-1 overflow-y-auto  mt-3">
                 {(logic.isLoading || logic.localLoading) && (
                     <>
                         <CitySkeleton />
@@ -80,11 +89,11 @@ export default function LocationFilterUI({
                                 count: i.count,
                                 slug: i.slug,
                             }))}
-                           onChange={(item) => {
-  if (!item) return;            // item = null when unselected
-  dispatch(setCity(item)); // only pass ID to redux
-}}
- />
+                            onChange={(item) => {
+                                if (!item) return;            // item = null when unselected
+                                dispatch(setCity(item)); // only pass ID to redux
+                            }}
+                        />
                     )}
             </div>
         </div>

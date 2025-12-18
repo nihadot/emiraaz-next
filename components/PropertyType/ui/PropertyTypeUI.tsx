@@ -7,7 +7,7 @@ export default function PropertyTypeUI({ types, selected, selectType }: any) {
   console.log(selected,'selected')
   return (
     <motion.div
-      className="flex gap-6 w-full overflow-x-auto no-scrollbar py-2"
+      className="flex gap-[16px] w-full overflow-x-auto no-scrollbar py-2"
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
@@ -36,12 +36,13 @@ export default function PropertyTypeUI({ types, selected, selectType }: any) {
         >
           <div
             className={`
-              w-[72px] h-[72px] rounded-full flex items-center border border-[#DEDEDE] justify-center 
+              w-[64px] h-[64px] rounded-full flex items-center border border-[#DEDEDE] justify-center 
               ${selected?.value === item.value ? "bg-black/10 " : "bg-[#F5F5F5]"}
             `}
           >
-            {item.icon}
-            {/* <Image src={item.icon} alt={item.label} width={38} height={38} /> */}
+           <div className="">
+             {item.icon}
+           </div>
           </div>
 
           <span

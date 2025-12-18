@@ -4,7 +4,7 @@ type SectionTitleProps = {
 
 export default function SectionTitle({ text }: SectionTitleProps) {
   return (
-    <h2 className="text-[20px] font-poppins font-semibold text-black">
+    <h2 className="text-base font-poppins font-semibold text-black">
       {text}
     </h2>
   );

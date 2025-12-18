@@ -29,10 +29,11 @@ export default function BottomSheetWrapper({
         className="
           absolute bottom-0 
           w-full 
-          bg-white 
-          rounded-t-2xl 
+          bg-white
+          rounded-t-[24px] 
           shadow-xl 
-          max-h-[85vh] 
+          max-h-[70vh]
+          h-full
           flex 
           flex-col
         "
@@ -43,7 +44,7 @@ export default function BottomSheetWrapper({
         </div>
 
         {/* scrollable content */}
-        <div className="overflow-y-auto px-4 pb-6">
+        <div className="px-[16px] overflow-auto">
           {children}
         </div>
       </motion.div>

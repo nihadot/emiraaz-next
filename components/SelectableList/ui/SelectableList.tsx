@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useSelectableList } from "../logic/useSelectableList";
 import { TfiArrowTopRight } from "react-icons/tfi";
+import clsx from "clsx";
 
 type SelectableItem = {
   value: string;
@@ -50,14 +51,15 @@ const isActive = selectedId === item.value;
             layout
             whileTap={{ scale: 0.97 }}
             onClick={() => handleClick(item)}
-            className="flex items-center gap-3 py-3 border-b border-gray-200 text-left"
+            className="flex items-center gap-3 py-3.5 border-b border-[#DFDFDF] text-left"
           >
             <motion.span
-              animate={{ opacity: isActive ? 1 : 0.6 }}
-              className="text-[14px] gap-3 flex justify-center items-center font-poppins text-gray-700 font-normal"
+              className={clsx("text-sm gap-3 flex justify-center items-center font-poppins  ", isActive ? "font-normal text-black" : "font-normal text-[#767676]")}
             >
               <div className="">
-                <TfiArrowTopRight size={20}/>
+                <TfiArrowTopRight
+                color={isActive ? "black" : "#767676"}
+                size={18}/>
               </div>
                {item.label} {item.count ? `(${item.count})` : ""}
             </motion.span>

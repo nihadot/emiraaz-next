@@ -10,7 +10,7 @@ export type PropertyCardData = {
   area: number;
   price: number;
   discount?: number;
-  image: string;
+  images: string[];
   isSaved?: boolean;
   totalFloors?: string;
   handleClick?: () => void;

@@ -20,7 +20,7 @@ export default function SegmentToggleUI({ options, selected, onSelect }: Props) 
           <motion.button
             key={opt.value}
             onClick={() => onSelect(opt.value)}
-            className="flex-1 py-1.5  text-center text-[15px]  font-medium"
+            className="flex-1 py-1.5  text-center text-sm font-poppins  font-normal"
             whileTap={{ scale: 0.95 }}
           >
             <motion.div

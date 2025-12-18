@@ -94,3 +94,5 @@ export {default as rightArrowBlackMobile } from "./mobile-right-arrow.png"
 export {default as aedIcon} from "./aed_new_icon.svg";
 export {default as wishlistIcon} from "./wishlist-black.svg";
 export {default as aedBlackIcon} from "./aed-black.svg";
+export {default as locationIconBlack} from "./location-pin.svg";
+export {default as enquiryIcon} from "./svgcode.svg";

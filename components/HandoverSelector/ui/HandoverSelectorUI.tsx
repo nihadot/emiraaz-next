@@ -3,6 +3,7 @@
 
 import { motion } from "framer-motion";
 import { Play } from "lucide-react";
+import { BsCaretLeftFill } from "react-icons/bs";
 
 export default function HandoverSelectorUI({
   year,
@@ -28,29 +29,35 @@ export default function HandoverSelectorUI({
 
       {/* Year Controls */}
       <div className="flex items-center  w-full justify-between gap-4 mb-5">
-        <button
-          onClick={onPrevYear}
-          className="w-16 h-12 flex items-center justify-center rounded-[12px] border border-[#DFDFDF]"
-        >
-         <Play
-         width={18}
-         height={18}
+       <motion.button
+  onClick={onPrevYear}
+  whileTap={{ scale: 0.85 }}
+  transition={{ duration: 0.15 }}
+  className="w-16 h-12 flex items-center justify-center rounded-[12px] border border-[#DFDFDF]"
+>
+        <div className="">
+           <BsCaretLeftFill
+         size={20}
          />
-        </button>
+        </div>
+        </motion.button>
 
-        <div className="px-6 py-3 rounded-[12px] text-black border border-[#DFDFDF] text-2xl font-medium">
+        <div className="px-4 py-3 rounded-[12px] text-black border border-[#DFDFDF] text-2xl font-medium">
           {year}
         </div>
 
-     <button
-          onClick={onNextYear}
-          className="w-16 h-12 flex items-center justify-center rounded-[12px] border border-[#DFDFDF]"
-        >
-         <Play
-         width={18}
-         height={18}
+    <motion.button
+  onClick={onNextYear}
+  whileTap={{ scale: 0.85 }}
+  transition={{ duration: 0.15 }}
+  className="w-16 h-12 flex items-center justify-center rounded-[12px] border border-[#DFDFDF]"
+>
+        <div className="-rotate-180">
+           <BsCaretLeftFill
+          size={20}
          />
-        </button>
+        </div>
+        </motion.button>
       </div>
 
       {/* Quarter Title */}
@@ -74,8 +81,8 @@ export default function HandoverSelectorUI({
               transition={{ duration: 0.25 }}
               onClick={() => onSelectQuarter(q)}
               className="
-                flex-1 rounded-xl py-3 border 
-                text-base font-normal text-gray-800
+                flex-1 rounded-[10px] py-3 border 
+                text-base font-normal text-black
               "
             >
               {q}

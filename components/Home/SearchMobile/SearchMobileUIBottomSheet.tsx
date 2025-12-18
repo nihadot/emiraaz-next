@@ -1,13 +1,11 @@
-import { Search } from "lucide-react";
-import Image from "next/image";
+import { CiSearch } from "react-icons/ci";
 
 function SearchMobileUIBottomSheet({ value, onChange,placeholder }: any) {
   return (
       <div className="flex items-center gap-3">
-        <div className="flex-1 flex items-center gap-2 bg-white rounded-xl  px-2 py-[14px] border border-[#DEDEDE]">
-          <Search
-           width={24}
-          height={24}
+        <div className="flex-1 flex items-center gap-2 bg-white rounded-xl  px-3 py-[10px] border border-[#DEDEDE] ">
+          <CiSearch
+          size={24}
           className="ml-1"
           />
           <input
@@ -15,7 +13,7 @@ function SearchMobileUIBottomSheet({ value, onChange,placeholder }: any) {
             placeholder={placeholder}
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="flex-1 placeholder:text-base  border-none outline-none text-base text-[#767676] placeholder:text-gray-400"
+            className="flex-1 placeholder:text-sm  border-none font-poppins outline-none text-base text-[#767676] placeholder:text-[#767676] font-normal"
           />
 
         </div>

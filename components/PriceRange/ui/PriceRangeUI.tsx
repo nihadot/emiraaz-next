@@ -22,12 +22,13 @@ export default function PriceRangeUI({
 
             <Subtitle text="Price Range (AED)" />
 
-            <div className="flex justify-between text-sm mb-2 mt-3">
+            <div className="flex justify-between text-[#767676] text-sm mb-2 mt-3">
                 <span>{formatLabel(MIN_VALUE)}</span>
                 <span>{formatLabel(MAX_VALUE)}+</span>
             </div>
 
-            <Slider
+           <div className="px-2">
+             <Slider
                 range
                 min={MIN_VALUE}
                 max={MAX_VALUE}
@@ -49,25 +50,26 @@ export default function PriceRangeUI({
                     }
                 }}
             />
+           </div>
 
             <div className="flex justify-between mt-3 gap-4">
                 <div className="flex-1">
-                    <label className="text-sm font-poppins font-normal text-black">Min</label>
+                    <label className="text-sm font-poppins font-normal text-[#767676]">Min</label>
                     <input
                         value={minText}
                         onChange={(e) => setMinText(e.target.value)}
                         onBlur={onBlurMin}
-                        className="w-full text-sm font-poppins border border-gray-300 rounded-[10px] px-4 py-2 text-center"
+                        className="w-full text-base font-poppins border border-[#DFDFDF] rounded-lg px-4 py-2 text-center"
                     />
                 </div>
 
                 <div className="flex-1">
-                    <label className="text-sm font-poppins font-normal text-black">Max</label>
+                    <label className="text-sm font-poppins font-normal text-[#767676]">Max</label>
                     <input
                         value={maxText}
                         onChange={(e) => setMaxText(e.target.value)}
                         onBlur={onBlurMax}
-                        className="w-full text-sm font-poppins border border-gray-300 rounded-[10px] px-4 py-2 text-center"
+                        className="w-full text-base font-poppins border border-[#DFDFDF] rounded-lg px-4 py-2 text-center"
                     />
                 </div>
             </div>

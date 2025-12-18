@@ -34,16 +34,16 @@ export default function SelectableChips({ options, defaultValue = null, onChange
             whileTap={{ scale: 0.92 }}
             animate={{
               backgroundColor: isActive ? "#f3f3f3" : "#ffffff",
-              borderColor: isActive ? "#d1d1d1" : "#e5e5e5",
+              borderColor: isActive ? "#F5F5F5" : "#DEDEDE",
             }}
             transition={{ duration: 0.18 }}
             onClick={() => handleClick(opt.value)}
-            className="px-4 py-2 rounded border whitespace-nowrap"
+            className="px-[18px] py-1.5 rounded-[5px] border whitespace-nowrap"
           >
             <motion.span
               animate={{ opacity: isActive ? 1 : 0.7 }}
               transition={{ duration: 0.18 }}
-              className="text-[15px] font-medium text-gray-800"
+              className="text-sm font-poppins font-normal text-black"
             >
               {opt.label} {opt.count ? `(${opt.count})` : ""}
             </motion.span>

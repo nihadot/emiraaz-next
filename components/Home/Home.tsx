@@ -387,7 +387,6 @@ function HomePage({
                     <Container className="flex md:hidden">
                         <MobileHeader
                             emirateOptions={emirateOptions}
-                        // location='Dubai,Sharja'
                         />
                     </Container>
 
@@ -411,7 +410,7 @@ function HomePage({
 
                     {/* Mobile Search */}
                     <Container
-                        className='md:hidden block'
+                        className='md:hidden block  z-10'
                     >
                         <SearchMobile
                             filterBlackIcon={filterBlackIcon}

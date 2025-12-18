@@ -40,8 +40,8 @@ export default function CompletionToggleUI({
           transition={{ duration: 0.25 }}
           onClick={() => onSelect(opt.value)}
           className="
-            flex-1 min-w-0 px-3 py-2 rounded-xl border 
-            text-[14px] text-gray-800  font-poppins font-normal text-center truncate
+            flex-1 min-w-0 px-3 py-2 rounded-lg border  border-[#DEDEDE]
+            text-sm text-gray-800  font-poppins font-normal text-center truncate
           "
         >
           {opt.label}

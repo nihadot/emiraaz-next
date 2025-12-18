@@ -30,8 +30,8 @@ export default function ToggleChipsUI({ chips, selected, onSelect }: Props) {
               borderColor: isActive ? "#d0d0d0" : "#e5e5e5",
             }}
             className="
-              px-4 py-2 rounded-xl border transition 
-              whitespace-nowrap text-sm  font-poppins font-normal
+              px-3 py-2 rounded-lg border transition 
+              whitespace-nowrap text-black text-sm  font-poppins font-normal
             "
           >
             {chip.label}

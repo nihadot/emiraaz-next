@@ -20,12 +20,14 @@ export default function SqftRangeUI({
   return (
     <div className="w-full">
 
-                    <Subtitle text="Price Range (AED)" />
+      <Subtitle text="Area (sqft)" />
 
-      <div className="flex justify-between text-sm mb-2 mt-3">
+      <div className="flex justify-between font-normal font-poppins text-[#767676] text-sm mb-2 mt-3">
         <span>{formatLabel(MIN_VALUE)}</span>
         <span>{formatLabel(MAX_VALUE)} sqft</span>
       </div>
+
+<div className="px-2">
 
       <Slider
         range
@@ -47,26 +49,27 @@ export default function SqftRangeUI({
             backgroundColor: "#fff"
           }
         }}
-      />
+        />
+        </div>
 
       <div className="flex justify-between mt-4 gap-4">
         <div className="flex-1">
-          <label className="text-sm">Min</label>
+          <label className="text-sm font-normal font-poppins text-[#767676]">Min</label>
           <input
             value={minText}
             onChange={(e) => setMinText(e.target.value)}
             onBlur={onBlurMin}
-            className="w-full text-sm font-poppins border border-gray-300 rounded-[10px] px-4 py-2 text-center"
+            className="w-full text-base font-poppins border border-gray-300 rounded-[8px] px-4 py-2 text-center"
           />
         </div>
 
         <div className="flex-1">
-          <label className="text-sm">Max</label>
+          <label className="text-sm font-normal font-poppins text-[#767676]">Max</label>
           <input
             value={maxText}
             onChange={(e) => setMaxText(e.target.value)}
             onBlur={onBlurMax}
-            className="w-full text-sm font-poppins border border-gray-300 rounded-[10px] px-4 py-2 text-center"
+            className="w-full text-base font-poppins border border-gray-300 rounded-[8px] px-4 py-2 text-center"
           />
         </div>
       </div>

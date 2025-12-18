@@ -16,10 +16,12 @@ import SqftRange from "@/components/SqftRange/SqftRange";
 import { useDispatch } from "react-redux";
 import { handlePropertyCategoryStatus, handlePropertyCategoryType, setBath, setBeds, setCompletion, setDiscount, setFurnishType, setHandover, setPaymentPlan, setSearchTerm } from "@/redux/filters/filterSlice";
 import { debounce } from "@/utils/debounce";
+import { IoCloseOutline } from "react-icons/io5";
 
-export default function SearchMobile({ searchBlackIcon, filterBlackIcon }: {
+export default function SearchMobile({ searchBlackIcon, filterBlackIcon, onClose }: {
   searchBlackIcon: any;
   filterBlackIcon: any;
+  onClose?: () => void;
 }) {
   const dispatch = useDispatch();
   const sheet = useBottomSheet();
@@ -65,26 +67,42 @@ export default function SearchMobile({ searchBlackIcon, filterBlackIcon }: {
 
       <FilterBottomSheet isOpen={sheet.isOpen} onClose={sheet.close}>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex h-full flex-col">
 
-          <SectionTitle text="Filters" />
+          <div
+            className="flex justify-between pt-0">
+            <SectionTitle text="Filters" />
+            <div className=""
+              onClick={sheet.close}
+            >
+              <IoCloseOutline
+                size={26}
+              />
+            </div>
+          </div>
 
-          <SegmentToggleUI
-            options={propertyCategoryStatus.filter((item: any) => item.value !== 'all')}
-            selected={selected}
-            onSelect={handleSelect}
-          />
 
-          <ToggleChips
-            chips={propertyCategoryTypes}
-            defaultValue={propertyCategoryTypes[0].value}
-            onChange={(e) => {
-              if (!e) return;
-              dispatch(handlePropertyCategoryType(e))
-            }}
-          />
+          <div className="pt-2">
 
-          <div className="">
+            <SegmentToggleUI
+              options={propertyCategoryStatus.filter((item: any) => item.value !== 'all')}
+              selected={selected}
+              onSelect={handleSelect}
+            />
+          </div>
+
+          <div className="pt-2">
+            <ToggleChips
+              chips={propertyCategoryTypes}
+              defaultValue={propertyCategoryTypes[0].value}
+              onChange={(e) => {
+                if (!e) return;
+                dispatch(handlePropertyCategoryType(e))
+              }}
+            />
+          </div>
+
+          <div className="pt-2">
             <Subtitle text="Completion" />
 
 
@@ -98,7 +116,7 @@ export default function SearchMobile({ searchBlackIcon, filterBlackIcon }: {
             />
           </div>
 
-          <div className="mb-3">
+          <div className="pt-2">
 
             <Subtitle text="Handover" />
 
@@ -112,7 +130,8 @@ export default function SearchMobile({ searchBlackIcon, filterBlackIcon }: {
             />
           </div>
 
-          <CompletionToggle
+         <div className="pt-2">
+           <CompletionToggle
             title="Payment Plan"
             options={[
               { label: "On Handover", value: "on-handover" },
@@ -124,18 +143,21 @@ export default function SearchMobile({ searchBlackIcon, filterBlackIcon }: {
               dispatch(setPaymentPlan(v))
             }}
           />
+         </div>
 
-          <PriceRange
+       <div className="pt-2">
+           <PriceRange
 
           />
+       </div>
 
-          <div className="pt-2">
+          <div className="pt-4">
 
             <SqftRange maxSqft={5000} />
           </div>
 
 
-          <div className="">
+          <div className="pt-3">
             <Subtitle text="No of Beds" />
 
 
@@ -184,8 +206,8 @@ export default function SearchMobile({ searchBlackIcon, filterBlackIcon }: {
           </div>
 
 
-          <div className="">
-            <Subtitle text="No of Beds" />
+          <div className="pt-2">
+            <Subtitle text="No of Bath" />
 
 
             <ToggleChips
@@ -230,7 +252,7 @@ export default function SearchMobile({ searchBlackIcon, filterBlackIcon }: {
           </div>
 
 
-          <div className="">
+          <div className="pt-2">
             <Subtitle text="Furnish Type" />
 
 
@@ -260,7 +282,7 @@ export default function SearchMobile({ searchBlackIcon, filterBlackIcon }: {
           </div>
 
 
-          <div className="">
+          <div className="pt-2 pb-8">
             <Subtitle text="Discount" />
 
 

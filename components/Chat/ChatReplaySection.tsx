@@ -35,6 +35,8 @@ export function ChatReplaySection({ data, isLoading, small }: ChatReplaySectionP
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [dataSet]);
+
+    console.log(dataSet,'dataSet')
     return (
         <div className="flex flex-col gap-2 pt-4 ps-2" ref={topRef}>
             {dataSet?.map((item: any, index: number) => {
