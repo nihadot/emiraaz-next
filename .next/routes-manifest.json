@@ -1,0 +1,385 @@
+{
+  "version": 3,
+  "pages404": true,
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "dynamicRoutes": [
+    {
+      "page": "/agent-verification/qr-code/[code]",
+      "regex": "^/agent\\-verification/qr\\-code/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPcode": "nxtPcode"
+      },
+      "namedRegex": "^/agent\\-verification/qr\\-code/(?<nxtPcode>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/blog/[id]",
+      "regex": "^/blog/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/blog/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/buy/[...urls]",
+      "regex": "^/buy/(.+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPurls": "nxtPurls"
+      },
+      "namedRegex": "^/buy/(?<nxtPurls>.+?)(?:/)?$"
+    },
+    {
+      "page": "/campaigns/[slug]",
+      "regex": "^/campaigns/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/campaigns/(?<nxtPslug>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/cities/[id]",
+      "regex": "^/cities/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/cities/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/developers/[id]",
+      "regex": "^/developers/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/developers/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/for-sale/[url]",
+      "regex": "^/for\\-sale/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPurl": "nxtPurl"
+      },
+      "namedRegex": "^/for\\-sale/(?<nxtPurl>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/news/[id]",
+      "regex": "^/news/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/news/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/projects/[id]",
+      "regex": "^/projects/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/projects/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/promotion/[developerId]",
+      "regex": "^/promotion/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPdeveloperId": "nxtPdeveloperId"
+      },
+      "namedRegex": "^/promotion/(?<nxtPdeveloperId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/site-index/[category]/[emirate]",
+      "regex": "^/site\\-index/([^/]+?)/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPcategory": "nxtPcategory",
+        "nxtPemirate": "nxtPemirate"
+      },
+      "namedRegex": "^/site\\-index/(?<nxtPcategory>[^/]+?)/(?<nxtPemirate>[^/]+?)(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/about-property-seller",
+      "regex": "^/about\\-property\\-seller(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/about\\-property\\-seller(?:/)?$"
+    },
+    {
+      "page": "/agent-verification",
+      "regex": "^/agent\\-verification(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/agent\\-verification(?:/)?$"
+    },
+    {
+      "page": "/ai-agent",
+      "regex": "^/ai\\-agent(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/ai\\-agent(?:/)?$"
+    },
+    {
+      "page": "/allnews",
+      "regex": "^/allnews(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/allnews(?:/)?$"
+    },
+    {
+      "page": "/blogs",
+      "regex": "^/blogs(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/blogs(?:/)?$"
+    },
+    {
+      "page": "/buy",
+      "regex": "^/buy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/buy(?:/)?$"
+    },
+    {
+      "page": "/careers",
+      "regex": "^/careers(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/careers(?:/)?$"
+    },
+    {
+      "page": "/cities",
+      "regex": "^/cities(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/cities(?:/)?$"
+    },
+    {
+      "page": "/common-questions",
+      "regex": "^/common\\-questions(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/common\\-questions(?:/)?$"
+    },
+    {
+      "page": "/contact",
+      "regex": "^/contact(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/contact(?:/)?$"
+    },
+    {
+      "page": "/developers",
+      "regex": "^/developers(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/developers(?:/)?$"
+    },
+    {
+      "page": "/donations",
+      "regex": "^/donations(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/donations(?:/)?$"
+    },
+    {
+      "page": "/edit-profile",
+      "regex": "^/edit\\-profile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/edit\\-profile(?:/)?$"
+    },
+    {
+      "page": "/enquired-properties",
+      "regex": "^/enquired\\-properties(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/enquired\\-properties(?:/)?$"
+    },
+    {
+      "page": "/enquiry",
+      "regex": "^/enquiry(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/enquiry(?:/)?$"
+    },
+    {
+      "page": "/featured-projects",
+      "regex": "^/featured\\-projects(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/featured\\-projects(?:/)?$"
+    },
+    {
+      "page": "/forgot-password",
+      "regex": "^/forgot\\-password(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/forgot\\-password(?:/)?$"
+    },
+    {
+      "page": "/forgot-password/otp-verification",
+      "regex": "^/forgot\\-password/otp\\-verification(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/forgot\\-password/otp\\-verification(?:/)?$"
+    },
+    {
+      "page": "/forgot-password/reset-password",
+      "regex": "^/forgot\\-password/reset\\-password(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/forgot\\-password/reset\\-password(?:/)?$"
+    },
+    {
+      "page": "/freelancer-registration",
+      "regex": "^/freelancer\\-registration(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/freelancer\\-registration(?:/)?$"
+    },
+    {
+      "page": "/help-center",
+      "regex": "^/help\\-center(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/help\\-center(?:/)?$"
+    },
+    {
+      "page": "/home",
+      "regex": "^/home(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/home(?:/)?$"
+    },
+    {
+      "page": "/login",
+      "regex": "^/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/login(?:/)?$"
+    },
+    {
+      "page": "/open-house",
+      "regex": "^/open\\-house(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/open\\-house(?:/)?$"
+    },
+    {
+      "page": "/otp",
+      "regex": "^/otp(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/otp(?:/)?$"
+    },
+    {
+      "page": "/otp-verification",
+      "regex": "^/otp\\-verification(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/otp\\-verification(?:/)?$"
+    },
+    {
+      "page": "/privacy-and-policy",
+      "regex": "^/privacy\\-and\\-policy(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/privacy\\-and\\-policy(?:/)?$"
+    },
+    {
+      "page": "/profile",
+      "regex": "^/profile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/profile(?:/)?$"
+    },
+    {
+      "page": "/profile/change-password",
+      "regex": "^/profile/change\\-password(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/profile/change\\-password(?:/)?$"
+    },
+    {
+      "page": "/profile/otp-verification",
+      "regex": "^/profile/otp\\-verification(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/profile/otp\\-verification(?:/)?$"
+    },
+    {
+      "page": "/property-talks",
+      "regex": "^/property\\-talks(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/property\\-talks(?:/)?$"
+    },
+    {
+      "page": "/quick-enquiry",
+      "regex": "^/quick\\-enquiry(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/quick\\-enquiry(?:/)?$"
+    },
+    {
+      "page": "/registration",
+      "regex": "^/registration(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/registration(?:/)?$"
+    },
+    {
+      "page": "/rental-income",
+      "regex": "^/rental\\-income(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/rental\\-income(?:/)?$"
+    },
+    {
+      "page": "/report-suspicious-agent",
+      "regex": "^/report\\-suspicious\\-agent(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/report\\-suspicious\\-agent(?:/)?$"
+    },
+    {
+      "page": "/saved-properties",
+      "regex": "^/saved\\-properties(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/saved\\-properties(?:/)?$"
+    },
+    {
+      "page": "/seller-registration",
+      "regex": "^/seller\\-registration(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/seller\\-registration(?:/)?$"
+    },
+    {
+      "page": "/talks",
+      "regex": "^/talks(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/talks(?:/)?$"
+    },
+    {
+      "page": "/terms-and-conditions",
+      "regex": "^/terms\\-and\\-conditions(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/terms\\-and\\-conditions(?:/)?$"
+    },
+    {
+      "page": "/thank-you/property-enquiry",
+      "regex": "^/thank\\-you/property\\-enquiry(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/thank\\-you/property\\-enquiry(?:/)?$"
+    },
+    {
+      "page": "/why-dubai",
+      "regex": "^/why\\-dubai(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/why\\-dubai(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "RSC",
+    "varyHeader": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch",
+    "prefetchHeader": "Next-Router-Prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSuffix": ".prefetch.rsc",
+    "prefetchSegmentHeader": "Next-Router-Segment-Prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments"
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  },
+  "rewrites": []
+}
