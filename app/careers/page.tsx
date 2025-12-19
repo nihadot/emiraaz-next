@@ -1,5 +1,6 @@
 import { baseUrl } from '@/api';
 import Carriers from '@/components/Carriers/Carriers'
+import CareerResponsive from '@/components/Carriers/Mobile/CareerResponsive';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import React from 'react'
@@ -130,7 +131,7 @@ const page = async () => {
           />
         );
       })}
-      <Carriers />
+    <CareerResponsive />
     </>
   )
 }

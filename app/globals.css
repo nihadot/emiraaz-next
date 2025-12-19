@@ -53,6 +53,119 @@ html{
 .animate-slideUp {
   animation: slideUp 0.25s ease-out;
 }
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeUp {
+  animation: fadeUp 400ms ease-out forwards;
+}
+
+.animate-itemFade {
+  animation: fadeUp 350ms ease-out forwards;
+}
+/* ===== Gradient Card Base ===== */
+.offer-gradient-card {
+  position: relative;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+
+/* ===== TOP RIGHT ANIMATED LINE ===== */
+.offer-gradient-card::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: 14px;
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #ff1645,
+    transparent
+  );
+  animation: gradientSlideX 3s ease-in-out infinite;
+}
+
+/* ===== LEFT BOTTOM ANIMATED LINE ===== */
+.offer-gradient-card::after {
+  content: '';
+  position: absolute;
+  left: -1px;
+  bottom: 14px;
+  width: 2px;
+  height: 120px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    #ff1645,
+    transparent
+  );
+  animation: gradientSlideY 3s ease-in-out infinite;
+}
+
+/* ===== Animations ===== */
+@keyframes gradientSlideX {
+  0% {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  30% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  70% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+
+@keyframes gradientSlideY {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+}
+
+/* ===== Text Fade Animation ===== */
+@keyframes itemFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-itemFade {
+  animation: itemFade 0.5s ease forwards;
+}
 
 @theme {
   --font-poppins:var(--font-poppins); 
