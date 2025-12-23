@@ -22,7 +22,7 @@ import clsx from 'clsx'
 function AgentVerification({
     content
 }: {
-    content: any
+    content?: any
 }) {
 
     const [status, setStatus] = useState({

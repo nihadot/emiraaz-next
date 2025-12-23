@@ -1,5 +1,7 @@
 import { baseUrl } from '@/api'
 import AgentVerification from '@/components/AgentVerification/AgentVerification'
+import AgentVerificationMobile from '@/components/AgentVerification/Mobile/AgentVerificationMobile';
+import ResponsiveSwitch from '@/components/Common/ResponsiveSwitch';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import React from 'react'
@@ -128,9 +130,11 @@ async function page() {
         );
       })}
     
-    <AgentVerification
-    content={content}
-    />
+    <ResponsiveSwitch
+  mobile={<AgentVerificationMobile />}
+  desktop={<AgentVerification content={content} />}
+/>
+
 
     </>
   )
