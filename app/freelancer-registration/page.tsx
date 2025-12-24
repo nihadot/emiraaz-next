@@ -1,11 +1,10 @@
-import Freelancer from '@/components/Freelancer/Freelancer'
+import FreelancerResponsive from '@/components/Freelancer/FreelancerResponsive'
 import React from 'react'
 
 const page = () => {
   return (
     <>
-    <Freelancer/>
-    </>
+<FreelancerResponsive />    </>
   )
 }
 
