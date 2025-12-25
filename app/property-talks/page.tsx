@@ -1,32 +1,24 @@
 import { baseUrl } from '@/api'
-import SectionDivider from '@/components/atom/SectionDivider/SectionDivider'
-import MobileHeaderTitle from '@/components/atom/typography/MobileHeaderTitle'
-import { Footer } from '@/components/Footer'
-import Header from '@/components/Header'
-import clsx from 'clsx'
 import { Metadata } from 'next'
 import Script from 'next/script'
-import React, { Suspense } from 'react'
-
-// property-talks
+import React from 'react'
+import PropertyTalksResponsive from '@/components/PropertyTalks/PropertyTalksResponsive'
 
 // Enable ISR with 60-second revalidation
-export const revalidate = 60;
+export const revalidate = 60
 
 export async function generateMetadata(): Promise<Metadata> {
-
     try {
-        // Fetch metadata with cache-busting timestamp to ensure fresh data
         const responseData = await fetch(
             `${baseUrl}/meta-data?referencePage=property-talks`,
             {
                 next: {
-                    revalidate: 60 // Revalidate every 10 seconds
+                    revalidate: 60
                 },
             }
         ).then((res) => res.json())
 
-        const data = responseData?.data?.[0] || {};
+        const data = responseData?.data?.[0] || {}
 
         return {
             title: data.metaTitle || "Property Talks | Property Seller - Trusted Off-Plan Real Estate Marketplace",
@@ -34,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
             keywords: data.keywords || 'property, real estate, property talks',
             openGraph: {
                 title: data.openGraphTitle || "Property Talks | Simplifying Real Estate Investments",
-                description: data?.openGraphDescription || "Discover Property Seller’s mission to simplify real estate, connect buyers with top developers, and offer transparent, hassle-free property investments.",
+                description: data?.openGraphDescription || "Discover Property Seller's mission to simplify real estate, connect buyers with top developers, and offer transparent, hassle-free property investments.",
                 url: data?.openGraphUrl || "https://www.propertyseller.com/property-talks",
                 siteName: data?.siteName || "Property Seller",
                 images: [
@@ -57,13 +49,11 @@ export async function generateMetadata(): Promise<Metadata> {
             }
         }
     } catch (error) {
-
-        // Return fallback metadata
         return {
             description: "Learn how Property Seller is transforming real estate with verified listings, expert support, and exclusive off-plan property opportunities in Dubai and beyond.",
             openGraph: {
                 title: "Property Seller Talks | Simplifying Real Estate Investments",
-                description: "Discover Property Seller’s mission to simplify real estate, connect buyers with top developers, and offer transparent, hassle-free property investments.",
+                description: "Discover Property Seller's mission to simplify real estate, connect buyers with top developers, and offer transparent, hassle-free property investments.",
                 url: "https://www.propertyseller.com/property-talks",
                 siteName: "Property Seller",
                 images: [
@@ -89,36 +79,29 @@ export async function generateMetadata(): Promise<Metadata> {
     }
 }
 
-
 export default async function Page() {
-
     const responseData = await fetch(
         `${baseUrl}/meta-data?referencePage=property-talks`,
         {
             next: {
-                revalidate: 60 // Revalidate every 10 seconds
+                revalidate: 60
             },
         }
     ).then((res) => res.json())
 
-    const dataForMeta = responseData?.data?.[0] || {};
-
-
+    const dataForMeta = responseData?.data?.[0] || {}
 
     const scripts = dataForMeta?.richSnippets?.match(
         /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
-    ) || [];
+    ) || []
+
     return (
-
         <>
-
-
             {scripts?.map((script: string, index: number) => {
-                // Remove outer <script> tags to use innerHTML
                 const innerJson = script
                     .replace(/<script[^>]*>/g, "")
                     .replace(/<\/script>/g, "")
-                    .trim();
+                    .trim()
 
                 return (
                     <Script
@@ -126,36 +109,12 @@ export default async function Page() {
                         id={`json-ld-schema-${index}`}
                         type="application/ld+json"
                         dangerouslySetInnerHTML={{ __html: innerJson }}
-                        strategy="afterInteractive" // "beforeInteractive" if needed
+                        strategy="afterInteractive"
                     />
-                );
+                )
             })}
 
-
-            <main>
-                <Header logoSection={
-                    <div className='h-full w-full flex justify-center items-center'>
-                        <MobileHeaderTitle
-                            content='Property Talks'
-                        />
-                    </div>
-                } />
-
-                <SectionDivider
-                    containerClassName={clsx("mb-[12px] mt-[12px]")}
-                    lineClassName="h-[1px] w-full bg-[#DEDEDE]"
-                />
-
-                <section>
-
-                </section>
-                <Footer />
-            </main>
-
+            <PropertyTalksResponsive />
         </>
-
     )
 }
-
-// export default page
-
