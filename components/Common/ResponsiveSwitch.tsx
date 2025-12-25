@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-export default function ResponsiveSwitch({
+function ResponsiveSwitch({
   mobile,
   desktop,
 }: {
@@ -14,11 +14,13 @@ export default function ResponsiveSwitch({
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
   if (isMobile === null) return null;
 
   return isMobile ? mobile : desktop;
 }
+
+export default ResponsiveSwitch;
