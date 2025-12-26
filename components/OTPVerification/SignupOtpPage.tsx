@@ -6,6 +6,7 @@ import { errorToast, successToast } from '@/components/Toast';
 import OTPVerification from './OTPVerification';
 import { useOtpSignUpMutation, useSignUpReSentOTPMutation } from '@/redux/auth/authApi';
 import { handleApiError } from '@/utils/handleApiError';
+import OTPVerificationResponsive from './OTPVerificationResponsive';
 
 
 const OTP_LENGTH = 6;
@@ -99,7 +100,7 @@ function SignupOtpPageComponent() {
 
 
     return (
-        <OTPVerification
+  <OTPVerificationResponsive
             handleResentOTP={handleResentOTP}
             email={email}
             handleSubmit={handleSubmit}
