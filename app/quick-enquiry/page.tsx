@@ -1,5 +1,6 @@
 import { baseUrl } from '@/api';
 import QuickEnquiry from '@/components/QuickEnquiry/QuickEnquiry'
+import QuickEnquiryResponsive from '@/components/QuickEnquiry/QuickEnquiryResponsive';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import React from 'react'
@@ -125,8 +126,7 @@ const page = async () => {
         );
       })}
 
-      <QuickEnquiry />
-    </>
+<QuickEnquiryResponsive />;    </>
   )
 }
 

@@ -187,7 +187,7 @@ export default function QuickEnquiryComponent() {
                                         loading={isSubmitting}
                                         rows={4}
 
-                                        className="mt-1 !h-32 pt-3 resize-none"
+                                        className="mt-1 h-32! pt-3 resize-none"
 
                                     />
 
