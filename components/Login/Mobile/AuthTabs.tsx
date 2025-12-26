@@ -26,7 +26,7 @@ export default function AuthTabs() {
             className={clsx(
               'flex-1 py-2 rounded-full text-sm font-medium transition',
               isActive
-                ? 'bg-gray-600 text-white'
+                ? 'bg-gray-900 text-white'
                 : 'text-gray-500 hover:text-gray-700'
             )}
           >
