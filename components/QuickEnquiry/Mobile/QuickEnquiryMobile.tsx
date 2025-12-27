@@ -23,7 +23,7 @@ export default function QuickEnquiryMobile({
     <main className="min-h-screen bg-white px-4 pt-5 pb-6 flex flex-col">
       <Form className="flex flex-col flex-1">
         {/* INFO CARD */}
-        <div className="rounded-2xl border border-[#E5E7EB] bg-white px-5 py-4 text-center text-[13px] text-[#6B7280] leading-[1.6] mb-6">
+        <div className="rounded-2xl border border-[#E5E7EB] bg-white px-5 py-4 text-center text-[14px] text-[#6B7280] leading-[1.6] mb-6">
           Need help? Share your details and we&apos;ll get back to you
         </div>
 
