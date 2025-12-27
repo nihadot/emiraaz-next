@@ -5,6 +5,7 @@ import SpaceWrapper from '@/components/atom/SpaceWrapper/SpaceWrapper'
 import MobileHeaderTitle from '@/components/atom/typography/MobileHeaderTitle';
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
+import PrivacyPolicyResponsive from '@/components/PrivacyPolicy/PrivacyPolicyResponsive';
 import clsx from 'clsx'
 import { Metadata } from 'next';
 import React, { Suspense } from 'react'
@@ -253,34 +254,8 @@ function PageComponent() {
       <Container>
 
 
+      <PrivacyPolicyResponsive terms={terms} />
 
-        <h1 className='font-poppins  mt-[20px] sm:mt-[51px] text-center font-medium text-[19.5px] sm:text-[37.5px]'>
-          Privacy Policy
-        </h1>
-
-        <SpaceWrapper className='sm:mt-[46.5px] mb-20'>
-
-          {
-            terms.map((item, index) => {
-              return <div key={index} className=''>
-                <Title
-
-                  title={item.title}
-                />
-                {item.content.map((content, i) => {
-                  return (
-                    <Paragraph
-                      key={i}
-                      className='mb-2'
-                      content={content}
-                    />
-                  )
-                })}
-              </div>
-            })
-          }
-
-        </SpaceWrapper>
 
       </Container>
 
