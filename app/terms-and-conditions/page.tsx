@@ -5,6 +5,7 @@ import SpaceWrapper from '@/components/atom/SpaceWrapper/SpaceWrapper'
 import MobileHeaderTitle from '@/components/atom/typography/MobileHeaderTitle'
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
+import TermsAndConditionsResponsive from '@/components/TermsAndConditions/TermsAndConditionsResponsive'
 import clsx from 'clsx'
 import { Metadata } from 'next'
 import React from 'react'
@@ -277,42 +278,10 @@ function page() {
 
 
 
-        <h1 className='font-poppins mt-[20px] sm:mt-[51px] text-center font-medium text-[19.5px] sm:text-[37.5px]'>
-          Terms And Conditions
-        </h1>
+      
+      <TermsAndConditionsResponsive terms={terms} />
 
-        <SpaceWrapper className='sm:mt-[46.5px] mb-20'>
-
-          {
-            terms.map((item, index) => {
-              return <div key={index} className=''>
-                <Title
-                  title={item.title}
-                />
-                {item.content.map((content, i) => {
-                  return (
-                    <Paragraph
-                    key={i}
-                      className='mb-2'
-                      content={content}
-                    />
-                  )
-                })}
-              </div>
-            })
-          }
-
-          {/* 
-          {data.map((section, i) => (
-            <div key={i}>
-              <h2 className="font-bold mb-2">{section.title}</h2>
-              {section.content.map((item, j) => (
-                <React.Fragment key={j}>{item}</React.Fragment>
-              ))}
-            </div>
-          ))} */}
-        </SpaceWrapper>
-
+       
       </Container>
 
       <Footer/>
