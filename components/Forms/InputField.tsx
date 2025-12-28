@@ -29,7 +29,7 @@ function InputField({
             id={id}
             name={name}
             placeholder={placeholder}
-            className={clsx("w-full mt-2 outline-none border-[#DEDEDE] border-[2px] bg-[#F7F7F7] rounded-[3px] px-[16px] font-poppins text-base sm:text-xs font-normal  text-black h-[40px]", className)}
+            className={clsx("w-full mt-2 outline-none border-[#DEDEDE] border-2 bg-[#F7F7F7] rounded-[3px] px-[16px] font-poppins text-base sm:text-xs font-normal  text-black h-[45px]", className)}
             disabled={loading}
             rows={rows}
         />

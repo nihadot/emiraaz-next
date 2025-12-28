@@ -1,29 +1,25 @@
 'use client';
 
-import { X } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 
-export default function ReportSuccessModal({
-  onClose,
-}: {
-  onClose: () => void;
-}) {
+export default function ReportSuccessModal() {
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-end justify-center">
       <div className="w-full max-w-sm rounded-t-3xl bg-white px-6 pt-6 pb-8">
         {/* Close */}
         <button
-          onClick={onClose}
+          // onClick={onClose}
           className="absolute right-5 top-5 text-gray-500"
         >
           <X size={18} />
         </button>
 
         {/* Icon */}
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-600 text-white text-xl">
-          ✓
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-700 text-white text-xl">
+          <Check/>
         </div>
 
-        <h3 className="text-center text-[16px] font-semibold">
+        <h3 className="text-center text-[19px] font-semibold">
           Report Submitted Successfully
         </h3>
 
@@ -33,8 +29,8 @@ export default function ReportSuccessModal({
         </p>
 
         <button
-          onClick={onClose}
-          className="mt-6 w-full text-center text-[15px] font-medium"
+          // onClick={onClose}
+          className="mt-6 w-full text-center text-[18px]"
         >
           Continue →
         </button>
@@ -42,3 +38,10 @@ export default function ReportSuccessModal({
     </div>
   );
 }
+
+
+// {
+//   onClose,
+// }: {
+//   onClose: () => void;
+// }

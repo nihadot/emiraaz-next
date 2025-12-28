@@ -18,7 +18,7 @@ export default function AgentNotFoundCard({
   }
 
   return (
-    <div className="relative h-screen overflow-hidden bg-white px-4">
+    <div className="relative h-screen overflow-hidden bg-white px-4 font-poppins">
       {/* Center Content */}
       <div className="flex h-full flex-col items-center justify-center text-center">
         <Image
@@ -34,12 +34,12 @@ export default function AgentNotFoundCard({
           This agent is not in our records.
         </h3>
 
-        <p className="max-w-[280px] text-[13px] leading-[18px] text-gray-500">
+        <p className="max-w-[280px] text-[13px] leading-[18px] text-[#333333]">
           We could not verify this Agent ID. This agent is not affiliated with
           PropertySeller.
         </p>
 
-        <p className="mt-3 max-w-[280px] text-[13px] leading-[18px] text-gray-500">
+        <p className="mt-3 max-w-[280px] text-[13px] leading-[18px] text-[#333333]">
           If you suspect this is a fake agent, please help us keep the community
           safe by reporting them.
         </p>
@@ -49,14 +49,14 @@ export default function AgentNotFoundCard({
       <div className="absolute bottom-4 left-4 right-4 flex gap-3">
         <button
           onClick={onBack}
-          className="flex-1 h-12 rounded-xl bg-[#E5E5E5] text-[15px] font-medium text-black"
+          className="flex-1 h-12 rounded-[9px] bg-[#E5E5E5] text-[15px] font-medium text-black"
         >
           Go Back
         </button>
 
         <button
           onClick={() => setShowReport(true)}
-          className="flex-1 h-12 rounded-xl bg-black text-[15px] font-medium text-white"
+          className="flex-1 h-12 rounded-[9px] bg-black text-[15px] font-medium text-white"
         >
           Report
         </button>

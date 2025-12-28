@@ -3,6 +3,9 @@
 import { Check } from 'lucide-react';
 import AgentProfileCard from './AgentProfileCard';
 import { AgentData } from './types';
+import TickIcon from "../../../public/AgentVerification/tickICon.svg";
+import Image from 'next/image';
+
 
 export default function AgentWorkingCard({
   data,
@@ -12,9 +15,9 @@ export default function AgentWorkingCard({
   onBack: () => void;
 }) {
   return (
-    <div className="text-center">
-      <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-500">
-        <Check className="text-white" />
+    <div className="text-center font-poppins">
+      <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center">
+        <Image src={TickIcon} alt='TickIcon'/>
       </div>
 
       <h3 className="font-semibold text-[16px]">
@@ -27,7 +30,7 @@ export default function AgentWorkingCard({
 
       <button
         onClick={onBack}
-        className="fixed bottom-4 left-4 right-4 h-12 rounded-xl bg-black text-white"
+        className="fixed bottom-4 left-4 right-4 h-12 rounded-[9px] bg-black text-white"
       >
         Go Back
       </button>
