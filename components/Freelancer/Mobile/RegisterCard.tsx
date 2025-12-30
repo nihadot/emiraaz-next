@@ -7,7 +7,7 @@ export default function RegisterCard({
   onRegister: () => void;
 }) {
   return (
-    <div className="mt-8 rounded-3xl border border-gray-200 p-10 text-center bg-white shadow-sm">
+    <div className="mt-8 rounded-[13px] border-[1.7px] border-[#DEDEDE] p-6 text-center bg-white">
       <h3 className="font-semibold text-2xl text-gray-900 leading-tight">
         Start Your Freelance Journey
       </h3>
@@ -27,7 +27,7 @@ export default function RegisterCard({
 
       <button
         onClick={onRegister}
-        className="w-full rounded-xl bg-black py-4 text-white text-base font-medium hover:bg-gray-900 transition-colors"
+        className="w-full rounded-[9px]  bg-black py-3.5  text-white text-2xl font-medium hover:bg-gray-900 transition-colors"
       >
         Register Now
       </button>

@@ -15,24 +15,33 @@ export default function OfferList() {
     <section className="mt-8">
       <h3 className="text-xl font-semibold mb-5 text-gray-900">What we Offer</h3>
 
-      <div className="rounded-3xl border border-gray-200 p-8 bg-white shadow-sm">
+      <div className="rounded-[13px] border-[1.6px] border-[#DEDEDE] px-5 py-7.5 bg-white">
         <p className="text-base text-gray-900 mb-6 leading-relaxed">
           Unlock exclusive advantages designed to boost your real estate success.
         </p>
 
-        <div className="space-y-4">
-          {offers.map((item, i) => (
-            <div key={i} className="flex gap-3 items-start">
-              <div className="shrink-0 mt-0.5">
-                <Image src={roundTick} alt="check" width={24} height={24} />
-              </div>
-              <p className="text-base text-gray-600 leading-relaxed">
-                {item.text}
-                {item.bold && <span className="font-semibold text-gray-700">{item.bold}</span>}
-              </p>
-            </div>
-          ))}
-        </div>
+<div className="space-y-3">
+  {offers.map((item, i) => (
+    <div key={i} className="flex items-center gap-3">
+      {/* Tick */}
+      <div className="shrink-0">
+        <Image src={roundTick} alt="check" width={24} height={24} />
+      </div>
+
+      {/* Text */}
+      <p className="flex-1 text-base text-[#767676] whitespace-nowrap overflow-hidden text-ellipsis">
+        {item.text}
+        {item.bold && (
+          <span className="font-semibold text-gray-500">
+            {item.bold}
+          </span>
+        )}
+      </p>
+    </div>
+  ))}
+</div>
+
+
       </div>
     </section>
   );
