@@ -22,20 +22,36 @@ interface InfoCardMobileProps {
   description: string;
   accentColor: string;
 }
+const InfoCardMobile: React.FC<InfoCardMobileProps> = ({
+  icon,
+  title,
+  description,
+  accentColor,
+}) => {
+  return (
+    <div className="bg-white rounded-xl border border-[#E5E7EB] px-4 py-4 mb-3">
+      <div className="flex items-start gap-3">
+        {/* Icon Box */}
+        <div
+          className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+        >
+          <Image src={icon} alt="" width={50} height={50} />
+        </div>
 
-const InfoCardMobile: React.FC<InfoCardMobileProps> = ({ icon, title, description, accentColor }) => (
-  <div className="bg-white rounded-lg p-4 shadow-sm mb-4">
-    <div className="flex items-start gap-3">
-      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0`} style={{ backgroundColor: `${accentColor}20` }}>
-        <Image src={icon} alt="" width={24} height={24} />
-      </div>
-      <div className="flex-1">
-        <h3 className="text-sm font-semibold mb-2 text-black">{title}</h3>
-        <p className="text-xs text-gray-600 leading-relaxed">{description}</p>
+        {/* Text */}
+        <div className="flex-1">
+          <p className="text-sm font-semibold text-[#111827] leading-tight">
+            {title}
+          </p>
+          <p className="mt-1 text-xs text-[#6B7280] leading-relaxed">
+            {description}
+          </p>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
+
 
 function WhyDubaiMobile() {
   return (
@@ -146,7 +162,7 @@ function WhyDubaiMobile() {
   </div>
 
        {/* Strong Financial Upside */}
-<h2 className="text-lg font-bold mb-3 text-black">
+<h2 className="text-lg font-bold mb-3 mt-4 text-black">
   Strong Financial Upside
 </h2>
 
