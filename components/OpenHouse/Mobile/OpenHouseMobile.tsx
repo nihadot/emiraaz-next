@@ -18,6 +18,8 @@ import Modal from '../../Modal/Modal';
 import { formatDate } from '../../atom/button/formatDate';
 import MobileHeaderTitle from '../../atom/typography/MobileHeaderTitle';
 import { X, Check } from 'lucide-react';
+import { mockOpenHouses } from './data/mockOpenHouse';
+import openhouseTicket from '@/app/assets/openhouseTicket.svg';
 
 // Filter Modal Component
 import FilterBottomSheet from '../Mobile/FilterBottomSheets';
@@ -79,9 +81,16 @@ function MobileOpenHouse() {
 
     const { data: allOpenHouses } = useViewFetchAllOpenHouseQuery(queryParams);
 
-    const totalPages = allOpenHouses?.pagination?.totalPages || 1;
-    const upcomingHouses = allOpenHouses?.data?.slice(0, 5) || [];
-    const allHouses = allOpenHouses?.data || [];
+   // ✅ API → fallback to mock data
+const dataSource =
+  allOpenHouses?.data?.length
+    ? allOpenHouses.data
+    : mockOpenHouses;
+
+const totalPages = allOpenHouses?.pagination?.totalPages || 1;
+const upcomingHouses = dataSource.slice(0, 5);
+const allHouses = dataSource;
+
 
     const emirates = ['All Emirates', 'Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman', 'JVC'];
     const developers = ['All Developers', 'Damac', 'Binghatti', 'Emaar', 'Nakheel', 'Aldar'];
@@ -177,90 +186,85 @@ function MobileOpenHouse() {
       <FiChevronDown size={18} className="text-[#111827]" />
     </button>
   </div>
-              {/* Upcoming Section */}
+      {/* Upcoming Section */}
 {upcomingHouses.length > 0 && (
-  <div className="mb-6">
-    <h2 className="font-poppins font-semibold text-[18px] text-black mb-4">
+  <div className="mb-2">
+    <h2 className="font-semibold text-[18px] text-black mb-4 mt-2">
       Upcoming
     </h2>
 
-    <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+    <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-hide">
       {upcomingHouses.map((item: any, index: number) => (
-        <div
-          key={index}
-          className="flex-shrink-0 w-[300px]"
-        >
-          <div className="bg-white border border-[#E5E7EB] rounded-[20px] overflow-hidden">
-            
-            {/* Image */}
-            <div className="relative w-full h-[170px]">
+        <div key={index} className="flex-shrink-0 w-[340px]">
+          <div className="bg-white rounded-[24px] overflow-hidden shadow-sm border border-gray-100">
+
+            {/* IMAGE */}
+            <div className="relative w-full h-[220px]">
               <Image
-                fill
                 src={item?.image?.webp?.url || '/placeholder.jpg'}
                 alt={item.title}
+                fill
                 className="object-cover"
+                priority
               />
             </div>
 
-            {/* Content */}
-            <div className="px-4 pt-3 pb-4">
-              
-              {/* Meta Row */}
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-[13px] text-[#6B7280]">
-                  Damac
+            {/* CONTENT */}
+            <div className="p-5">
+
+              {/* META */}
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-[14px] text-gray-500 font-normal">
+                  {item.developer || 'Damac'}
                 </span>
 
-                <div className="flex items-center gap-1 text-[#6B7280] text-[13px]">
-                  <span>31 Spots Left</span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
-                      stroke="#6B7280"
-                      strokeWidth="1.5"
-                    />
-                    <circle cx="9" cy="7" r="4" stroke="#6B7280" strokeWidth="1.5" />
-                  </svg>
+                <div className="flex items-center gap-1.5 text-gray-500 text-[14px]">
+                  <span className="font-normal">{item.spots_left || '31'} Spots Left</span>
+                  <Image
+                    src={openhouseTicket}
+                    alt="Slots"
+                    width={20}
+                    height={20}
+                  />
                 </div>
               </div>
 
-              {/* Title */}
-              <h3 className="font-poppins font-semibold text-[18px] text-[#111827] leading-snug mb-3 line-clamp-2">
+              {/* TITLE */}
+              <h3 className="text-[22px] font-semibold text-gray-900 leading-tight mb-4 line-clamp-2">
                 {item.title}
               </h3>
 
-              {/* Location */}
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 rounded-full bg-[#F3F4F6] flex items-center justify-center">
-                  <LuMapPin size={14} className="text-[#6B7280]" />
-                </div>
-                <p className="text-[14px] text-[#6B7280] line-clamp-1">
+              {/* LOCATION */}
+              <div className="flex items-center gap-2 mb-2.5">
+                <LuMapPin size={18} className="text-gray-500" strokeWidth={2} />
+                <p className="text-[15px] text-gray-600">
                   {item.location}
                 </p>
               </div>
 
-              {/* Date & Time */}
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-6 h-6 rounded-full bg-[#F3F4F6] flex items-center justify-center">
-                  <MdAccessTime size={14} className="text-[#6B7280]" />
-                </div>
-                <p className="text-[14px] text-[#6B7280]">
+              {/* DATE */}
+              <div className="flex items-center gap-2 mb-5">
+                <MdAccessTime size={18} className="text-gray-500" />
+                <p className="text-[15px] text-gray-600">
                   {formatDate(item.date)} @ {item.time}
                 </p>
               </div>
 
-              {/* Button */}
+              {/* BUTTON */}
               <button
                 onClick={() => handleClickSlot(item)}
                 className="
-                  h-[40px]
                   px-6
-                  rounded-lg
-                  border border-[#D1D5DB]
+                  py-2.5
+                  rounded-[12px]
+                  border border-gray-300
                   text-[15px]
                   font-medium
-                  text-black
+                  text-gray-900
                   bg-white
+                  hover:bg-gray-50
+                  transition-colors
+                  duration-200
                 "
               >
                 Book Your Slot
@@ -274,97 +278,102 @@ function MobileOpenHouse() {
   </div>
 )}
 
+
                  
 
             {/* All Openhouses Scheduled */}
-<div className="mt-6 mb-20">
-  <h2 className="font-poppins font-semibold text-[16px] text-black mb-4">
+<div className=" mb-10">
+ 
+
+  <div className="space-y-2">
+     <h2 className="font-poppins font-semibold text-[16px] text-black mb-4">
     All Openhouses Scheduled
   </h2>
+{allHouses.map((item: any, index: number) => (
+  <div
+    key={index}
+    className="bg-white border border-gray-200 rounded-[16px] flex gap-4 max-w-md mb-4" 
+  >
+    {/* Image */}
+    <div className="relative w-[160px]  rounded-[12px] overflow-hidden flex-shrink-0">
+      <img
+        src={item?.image?.webp?.url || '/placeholder.jpg'}
+        alt={item.title}
+        className="w-full h-full object-cover"
+      />
+    </div>
 
-  <div className="space-y-4">
-    {allHouses.map((item: any, index: number) => (
-      <div
-        key={index}
-        className="bg-white border border-[#E5E7EB] rounded-[14px] p-3 flex gap-3"
-      >
-        {/* Image */}
-        <div className="relative w-[96px] h-[96px] rounded-[10px] overflow-hidden flex-shrink-0">
-          <Image
-            fill
-            src={item?.image?.webp?.url || '/placeholder.jpg'}
-            alt={item.title}
-            className="object-cover"
-          />
+    {/* Content */}
+    <div className="flex-1 flex flex-col justify-between py-1">
+      
+      {/* Top section */}
+      <div>
+        {/* Developer */}
+        <span className="text-xs text-gray-500 font-normal block mb-1">
+          {item.developer || 'Damoa'}
+        </span>
+
+        {/* Title */}
+        <h3 className="font-bold text-base text-gray-900 leading-tight mb-3">
+          {item.title}
+        </h3>
+
+        {/* Location */}
+        <div className="flex items-center gap-2 text-gray-700 text-xs mb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          <span>{item.location}</span>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 flex flex-col">
-          {/* Developer */}
-          <span className="text-[12px] text-[#9CA3AF] mb-[2px]">
-            Damac
-          </span>
+        {/* Date & Time */}
+        <div className="flex items-center gap-2 text-gray-700 text-xs mb-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span>{formatDate(item.date)} @ {item.time}</span>
+        </div>
 
-          {/* Title */}
-          <h3 className="font-poppins font-semibold text-[15px] text-[#111827] leading-tight mb-1">
-            {item.title}
-          </h3>
-
-          {/* Location */}
-          <div className="flex items-center gap-2 text-[#6B7280] text-[13px] mb-1">
-            <LuMapPin size={14} />
-            <span className="line-clamp-1">
-              {item.location}
-            </span>
-          </div>
-
-          {/* Date & Time */}
-          <div className="flex items-center gap-2 text-[#6B7280] text-[13px] mb-1">
-            <MdAccessTime size={14} />
-            <span>
-              {formatDate(item.date)} @ {item.time}
-            </span>
-          </div>
-
-          {/* Spots + Button */}
-          <div className="flex items-center justify-between mt-auto">
-            <div className="flex items-center gap-1 text-[#6B7280] text-[12px]">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
-                  stroke="#6B7280"
-                  strokeWidth="1.5"
-                />
-                <circle
-                  cx="9"
-                  cy="7"
-                  r="4"
-                  stroke="#6B7280"
-                  strokeWidth="1.5"
-                />
-              </svg>
-              <span>31 Spots Left</span>
-            </div>
-
-            <button
-              onClick={() => handleClickSlot(item)}
-              className="
-                h-[34px]
-                px-4
-                rounded-lg
-                border border-[#D1D5DB]
-                bg-white
-                text-[14px]
-                font-medium
-                text-black
-              "
-            >
-              Book Your Slot
-            </button>
-          </div>
+        {/* Spots Left */}
+        <div className="flex items-center gap-2 text-gray-700 text-xs">
+          <Image
+                    src={openhouseTicket}
+                    alt="Slots"
+                    width={20}
+                    height={20}
+                  />
+          <span>{item.spots_left || '31'} Spots Left</span>
         </div>
       </div>
-    ))}
+
+      {/* Button */}
+      <button
+  onClick={() => handleClickSlot(item)}
+  className="
+    mt-3
+    h-[30px]
+    w-[180px]
+    px-4
+    rounded-[12px]
+    border border-[#D1D5DB]
+    bg-white
+    text-[14px]
+    font-medium
+    text-[#111827]
+    hover:bg-[#F9FAFB]
+    transition
+  "
+>
+  Book Your Slot
+</button>
+
+    </div>
+  </div>
+))}
+
+
   </div>
 </div>
 
