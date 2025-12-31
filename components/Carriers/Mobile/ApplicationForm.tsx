@@ -2,6 +2,8 @@
 
 import { X, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+import { PhoneInput } from 'react-international-phone';
+import Select from 'react-select';
 
 export default function ApplicationForm({
   onClose,
@@ -13,7 +15,12 @@ export default function ApplicationForm({
   const [nationalityOpen, setNationalityOpen] = useState(false);
   const [nationality, setNationality] = useState('');
   const [experience, setExperience] = useState('');
-
+const [phone, setPhone] = useState('');
+const nationalityOptions = [
+  { value: 'India', label: 'India' },
+  { value: 'UAE', label: 'United Arab Emirates' },
+  { value: 'UK', label: 'United Kingdom' },
+];
   return (
     <div className="px-5 pt-5 pb-6">
       {/* Header */}
@@ -35,42 +42,57 @@ export default function ApplicationForm({
       <div className="space-y-4">
         <Input label="Full Name" placeholder="Enter your full name" />
 
-        {/* Nationality */}
-        <div className="relative">
-          <p className="text-[13px] font-medium mb-1">Nationality</p>
+       {/* Nationality */}
+<div>
+  <p className="text-[13px] font-medium mb-1">Nationality</p>
 
-          <button
-            onClick={() => setNationalityOpen(!nationalityOpen)}
-            className="
-              w-full h-[44px] rounded-[14px]
-              border border-[#E5E7EB]
-              px-3 flex justify-between items-center
-              text-[13px] text-[#9CA3AF]
-            "
-          >
-            {nationality || 'Select Nationality'}
-            <ChevronDown size={16} />
-          </button>
+  <Select
+    options={nationalityOptions}
+    placeholder="Select Nationality"
+    onChange={(opt) => setNationality(opt?.value || '')}
+    styles={{
+      control: (base) => ({
+        ...base,
+        minHeight: '44px',
+        borderRadius: '14px',
+        borderColor: '#E5E7EB',
+        boxShadow: 'none',
+        fontSize: '13px',
+      }),
+      placeholder: (base) => ({
+        ...base,
+        color: '#9CA3AF',
+      }),
+      indicatorSeparator: () => ({
+        display: 'none',
+      }),
+    }}
+  />
+</div>
 
-          {nationalityOpen && (
-            <div className="absolute z-20 mt-2 w-full rounded-xl border bg-white shadow">
-              {['India', 'UAE', 'UK'].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => {
-                    setNationality(item);
-                    setNationalityOpen(false);
-                  }}
-                  className="w-full px-4 py-3 text-left text-sm hover:bg-gray-50"
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+{/* Phone no */}
+<div>
+  <p className="text-[13px] font-medium mb-1">Phone no</p>
 
-        <Input label="Phone no" placeholder="Enter Phone no" />
+  <div className="w-full h-[44px] rounded-[14px] border border-[#E5E7EB] px-3 flex items-center">
+    <PhoneInput
+      defaultCountry="ae"
+      value={phone}
+      onChange={setPhone}
+      className="w-full flex items-center gap-2"
+      inputClassName="
+        h-full w-full
+        border-none outline-none
+        text-[13px]
+        placeholder:text-[#9CA3AF]
+      "
+      countrySelectorStyleProps={{
+        buttonClassName:
+          'border-none bg-transparent p-0 flex items-center gap-1',
+      }}
+    />
+  </div>
+</div>
         <Input label="Languages" placeholder="English, Hindi, Arabic" />
 
         {/* Experience */}
