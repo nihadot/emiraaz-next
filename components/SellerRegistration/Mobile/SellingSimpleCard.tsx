@@ -11,11 +11,11 @@ type Props = {
 export default function SellingSimpleCard({ title, points }: Props) {
   return (
     <div className="space-y-3">
-      <h2 className="text-lg font-bold text-gray-900">
+      <h2 className="text-lg font-semibold text-gray-900">
         {title}
       </h2>
 
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="rounded-[13px] border border-[#DEDEDE] bg-white p-6">
         <p className="text-sm text-gray-700 leading-relaxed mb-5">
           List once, and our team takes care of marketing,
           buyer reach, and closing support — all in one place.
@@ -29,9 +29,9 @@ export default function SellingSimpleCard({ title, points }: Props) {
                 alt="check" 
                 width={20} 
                 height={20}
-                className="flex-shrink-0"
+                className="shrink-0"
               />
-              <span className="text-sm text-gray-700">
+              <span className="text-sm text-[#767676]">
                 {item}
               </span>
             </li>

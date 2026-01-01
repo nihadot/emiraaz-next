@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { Check, X } from 'lucide-react';
+import { Check, X } from "lucide-react";
 
 export default function SellerSuccessModal({
   onClose,
@@ -10,10 +10,7 @@ export default function SellerSuccessModal({
   return (
     <div className="px-5 pt-6 pb-8 text-center relative">
       {/* Close */}
-      <button
-        onClick={onClose}
-        className="absolute right-4 top-4"
-      >
+      <button onClick={onClose} className="absolute right-4 top-4">
         <X size={20} />
       </button>
 
@@ -22,19 +19,14 @@ export default function SellerSuccessModal({
         <Check size={22} className="text-white" />
       </div>
 
-      <h3 className="text-[16px] font-semibold">
-        Registration Success
-      </h3>
+      <h3 className="text-[16px] font-semibold">Registration Success</h3>
 
       <p className="mt-2 text-[13px] text-[#6B7280]">
-        We’ve received your application. Our team will
-        contact you for further process shortly.
+        We’ve received your application. Our team will contact you for further
+        process shortly.
       </p>
 
-      <button
-        onClick={onClose}
-        className="mt-4 text-[14px] font-medium"
-      >
+      <button onClick={onClose} className="mt-4 text-[14px] font-medium">
         Continue →
       </button>
     </div>
