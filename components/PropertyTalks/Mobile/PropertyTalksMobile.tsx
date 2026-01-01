@@ -5,24 +5,25 @@ import Tabs from './Tabs';
 import HorizontalCarousel from './HorizontalCarousel';
 import TalkCardVertical from './TalkCardVertical';
 import { Talk } from './types';
-
-/* SAME DATA SOURCE AS DESKTOP */
 const talks: Talk[] = [
   {
     id: '1',
     title: 'How to sell branded buildings in Dubai Downtown?',
-    image: '/images/property-talks/1.jpg',
+    image:
+      'https://images.unsplash.com/photo-1501183638710-841dd1904471?auto=format&fit=crop&w=800&q=80',
     category: 'Real Estate',
     createdAt: '5 Days ago',
   },
   {
     id: '2',
     title: 'Luxury real estate investment strategies',
-    image: '/images/property-talks/2.jpg',
+    image:
+      'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80',
     category: 'Real Estate',
     createdAt: '6 Days ago',
   },
 ];
+
 
 export default function PropertyTalksMobile() {
   const [tab, setTab] = useState('For You');
@@ -35,7 +36,7 @@ export default function PropertyTalksMobile() {
       <HorizontalCarousel talks={talks} />
 
       {/* Explore Content */}
-      <h2 className="text-sm font-semibold mt-6 mb-3">
+      <h2 className="text-lg font-semibold mt-4 mb-3">
         Explore Content
       </h2>
 

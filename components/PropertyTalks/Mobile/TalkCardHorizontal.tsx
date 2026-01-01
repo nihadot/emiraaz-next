@@ -4,7 +4,7 @@ import { Talk } from './types';
 
 export default function TalkCardHorizontal({ talk }: { talk: Talk }) {
   return (
-    <div className="w-[356px] shrink-0 rounded-[20px] border border-[#E5E5E5] overflow-hidden bg-white shadow-sm">
+    <div className="w-[356px] shrink-0 rounded-[20px] border border-[#E5E5E5] mt-6 overflow-hidden bg-white shadow-sm">
       <div className="relative h-[200px]">
         <Image 
           src={talk.image} 

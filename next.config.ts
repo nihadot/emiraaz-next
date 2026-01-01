@@ -15,7 +15,10 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'property-seller-com.s3.me-central-1.amazonaws.com',
-      }
+      },{
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
     ],
     // ⚡ Optimize images for slow networks
     // formats: ['image/avif', 'image/webp'],

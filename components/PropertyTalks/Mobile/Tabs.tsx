@@ -8,24 +8,42 @@ export default function Tabs({
   onChange: (tab: string) => void;
 }) {
   return (
-    <div className="border-b border-gray-200">
-      <div className="flex gap-8 px-6">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => onChange(tab)}
-            className={`pb-3 text-[15px] font-normal relative transition-colors ${
-              active === tab
-                ? 'text-black font-medium'
-                : 'text-gray-400'
-            }`}
-          >
-            {tab}
-            {active === tab && (
-              <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-black" />
-            )}
-          </button>
-        ))}
+    <div className=" border-gray-200">
+      <div className="flex gap-10 px-3 pt-2">
+        {tabs.map((tab) => {
+          const isActive = active === tab;
+
+          return (
+            <button
+              key={tab}
+              onClick={() => onChange(tab)}
+              className={`
+                relative pb-2
+                text-[16px]
+                transition-colors
+                ${
+                  isActive
+                    ? 'text-black font-semibold'
+                    : 'text-gray-500 font-normal'
+                }
+              `}
+            >
+              {tab}
+
+              {isActive && (
+                <span
+                  className="
+                    absolute -bottom-[1px] left-1/2
+                    h-[2px] w-8
+                    -translate-x-1/2
+                    bg-black
+                    rounded-full
+                  "
+                />
+              )}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

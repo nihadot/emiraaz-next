@@ -129,10 +129,10 @@ href={appUrl.appStore}
                                         title: "News",
                                         link: "/allnews"
                                     },
-                                    // {
-                                    //     title: "Property Talks",
-                                    //     link: "/property-talks"
-                                    // },
+                                    {
+                                        title: "Property Talks",
+                                        link: "/property-talks"
+                                    },
                                     {
                                         title: "Rental Income",
                                         link: "/rental-income"
