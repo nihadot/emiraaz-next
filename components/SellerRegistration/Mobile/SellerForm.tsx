@@ -9,6 +9,7 @@ import { successToast, errorToast } from '@/components/Toast';
 import { useFetchAllEmirateNamesQuery } from '@/redux/emirates/emiratesApi';
 import { useFetchAllCityNamesQuery } from '@/redux/cities/citiesApi';
 import { X, ChevronDown } from 'lucide-react';
+import { PhoneInput } from 'react-international-phone';
 
 /* ===== SAME SCHEMA AS DESKTOP ===== */
 const SellerSchema = Yup.object().shape({
@@ -120,7 +121,7 @@ onSuccess();
             <h3 className="text-lg font-bold text-gray-900">
               Seller Registeration Form
             </h3>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-gray-500 mt-2">
               Tell us a bit about yourself.
             </p>
           </div>
@@ -133,7 +134,7 @@ onSuccess();
         </div>
 
         {/* Scrollable Form */}
-        <div className="overflow-y-auto px-5 py-6 flex-1">
+        <div className="overflow-y-auto px-5 py-4 flex-1">
           <Formik
             initialValues={initialValues}
             validationSchema={SellerSchema}
@@ -153,40 +154,37 @@ onSuccess();
                   />
                   <ErrorMessage name="name" component="div" className="text-xs text-red-500 mt-1" />
                 </div>
+{/* Phone no */}
+<div>
+  <label className="block text-sm font-medium text-gray-900 mb-2">
+    Phone no
+  </label>
 
-                {/* Phone no */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 mb-2">
-                    Phone no
-                  </label>
-                  <div className="flex gap-2">
-                    {/* Country Code Dropdown */}
-                    <div className="relative w-32">
-                      <Field
-                        as="select"
-                        name="countryCode"
-                        className="w-full h-12 rounded-xl border border-gray-200 pl-3 pr-8 text-sm text-gray-900 appearance-none focus:outline-none focus:border-gray-300"
-                      >
-                        {countryCodes.map((item) => (
-                          <option key={item.code} value={item.code}>
-                            {item.flag} {item.code}
-                          </option>
-                        ))}
-                      </Field>
-                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                    </div>
+ <PhoneInput
+  defaultCountry="ae"
+  value={values.number ? values.countryCode + values.number : ''}
+  onChange={(phone: string) => {
+    const match = phone.match(/^(\+\d{1,4})(.*)$/);
+    if (match) {
+      setFieldValue('countryCode', match[1]);
+      setFieldValue('number', match[2].replace(/\s/g, ''));
+    }
+  }}
+  placeholder="Enter Phone no"
+  className="w-full"
+  inputClassName="input w-full"
+  countrySelectorStyleProps={{
+    buttonClassName: 'h-12 rounded-l-xl border-r border-gray-200',
+  }}
+/>
 
-                    {/* Phone Number Input */}
-                    <div className="flex-1">
-                      <Field
-                        name="number"
-                        placeholder="Enter Phone no"
-                        className="w-full h-12 rounded-xl border border-gray-200 px-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-gray-300"
-                      />
-                    </div>
-                  </div>
-                  <ErrorMessage name="number" component="div" className="text-xs text-red-500 mt-1" />
-                </div>
+
+  <ErrorMessage
+    name="number"
+    component="div"
+    className="text-xs text-red-500 mt-1"
+  />
+</div>
 
                 {/* Property Type */}
                 <div>

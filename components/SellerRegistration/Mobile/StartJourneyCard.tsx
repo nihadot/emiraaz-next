@@ -12,11 +12,11 @@ export default function StartJourneyCard({
         Start Your Freelance Journey
       </h3>
 
-      <p className="mt-3 text-sm text-gray-600 leading-relaxed">
+      <p className="mt-3 text-[12px] text-gray-600 leading-relaxed">
         Submit your details and unlock new opportunities in<br />real estate.
       </p>
 
-      <div className="my-8 flex justify-center">
+      <div className="my-4 flex justify-center">
         <Image 
           src={sellerFreelance} 
           alt="Start Journey" 
