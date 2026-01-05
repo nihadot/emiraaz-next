@@ -25,7 +25,7 @@ export default function JoinCard() {
 
         <button
           onClick={() => setOpen(true)}
-          className="w-full rounded-xl bg-black py-3 text-white text-[14px] font-medium"
+          className="w-full rounded-lg bg-black py-3 text-white text-[14px] font-medium hover:bg-gray-800"
         >
           Join Now
         </button>

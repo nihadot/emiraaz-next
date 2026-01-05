@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from "react";
 
 export default function BottomModal({
   open,
@@ -11,30 +11,43 @@ export default function BottomModal({
   onClose: () => void;
   children: React.ReactNode;
 }) {
+  const [visible, setVisible] = useState(open);
+
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) {
+      setVisible(true);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+      // wait for animation before unmount
+      setTimeout(() => setVisible(false), 300);
+    }
+
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, [open]);
 
-  if (!open) return null;
+  if (!visible) return null;
 
   return (
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-40 bg-black/40"
+        className={`fixed inset-0 z-40 bg-black/40 transition-opacity duration-300 ${
+          open ? "opacity-100" : "opacity-0"
+        }`}
         onClick={onClose}
       />
 
       {/* Modal */}
       <div
-        className="
+        className={`
           fixed inset-x-0 bottom-0 z-50
           bg-white rounded-t-[28px]
-          animate-slideUp
-        "
+          transition-transform duration-300 ease-out
+          ${open ? "animate-slideUp" : "translate-y-full"}
+        `}
       >
         {children}
       </div>

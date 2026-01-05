@@ -2,6 +2,8 @@
 
 import { X, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+import { TfiClose } from "react-icons/tfi";
+
 
 export default function ApplicationForm({
   onClose,
@@ -28,12 +30,12 @@ export default function ApplicationForm({
         </div>
 
         <button onClick={onClose}>
-          <X size={20} />
+          <TfiClose size={20} className="hover:scale-125"/>
         </button>
       </div>
 
       <div className="space-y-4">
-        <Input label="Full Name" placeholder="Enter your full name" />
+        <Input label="Full Name"  placeholder="Enter your full name" />
 
         {/* Nationality */}
         <div className="relative">
@@ -42,8 +44,8 @@ export default function ApplicationForm({
           <button
             onClick={() => setNationalityOpen(!nationalityOpen)}
             className="
-              w-full h-[44px] rounded-[14px]
-              border border-[#E5E7EB]
+              w-full h-11 rounded-[11px]
+              border-[1.5px] border-[#DEDEDE]
               px-3 flex justify-between items-center
               text-[13px] text-[#9CA3AF]
             "
@@ -84,10 +86,10 @@ export default function ApplicationForm({
                 key={y}
                 onClick={() => setExperience(y)}
                 className={`
-                  h-9 px-3 rounded-full border text-[13px]
+                  h-9 px-3 rounded-[10px] border-[1.7px] text-[13px]
                   ${experience === y
                     ? 'border-black bg-black text-white'
-                    : 'border-[#E5E7EB]'
+                    : 'border-[#DEDEDE]'
                   }
                 `}
               >
@@ -122,9 +124,9 @@ function Input({ label, placeholder }: any) {
       <input
         placeholder={placeholder}
         className="
-          w-full h-[44px]
-          rounded-[14px]
-          border border-[#E5E7EB]
+          w-full h-11
+          rounded-[11px]
+          border-[1.5px] border-[#DEDEDE]
           px-3 text-[13px]
           placeholder:text-[#9CA3AF]
         "

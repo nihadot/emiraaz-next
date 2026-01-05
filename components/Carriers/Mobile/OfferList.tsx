@@ -1,39 +1,50 @@
-'use client';
+"use client";
 
-import { FaCheckCircle } from 'react-icons/fa';
+import "./styles/OfferCard.css";
+import Image from "next/image";
+import LikeIcon from "../../../public/careerPage/mobile/LikeIcon.svg";
 
 const offers = [
-  'Competitive commission structure & transparent payouts',
-  'High-quality verified leads every week',
-  'Strong brand marketing support',
-  'Partner network access across prime locations',
-  'Technology-driven CRM and sales tools',
-  'In-house training and mentorship programs',
+  "Competitive commission structure & transparent payouts",
+  "High-quality verified leads every week",
+  "Strong brand marketing support",
+  "Partner network access across prime locations",
+  "Technology-driven CRM and sales tools",
+  "In-house training and mentorship programs",
 ];
 
 export default function OfferList() {
   return (
-    <section className="mt-6">
-      <h2 className="text-[16px] font-semibold mb-3">
+    <section className="mt-6 px-4">
+      {/* Title */}
+      <h2 className="text-[16px] font-semibold mb-2 text-gray-900">
         What we Offer
       </h2>
 
-      <div className="offer-gradient-card rounded-2xl bg-white p-4 space-y-4">
-        {offers.map((text, i) => (
-          <div
-            key={i}
-            className="flex gap-3 opacity-0 animate-itemFade"
-            style={{ animationDelay: `${i * 120}ms` }}
-          >
-            <FaCheckCircle
-              size={18}
-              className="text-[#FF1645] shrink-0 mt-[2px]"
-            />
-            <p className="text-[13px] text-[#6B7280] leading-relaxed">
-              {text}
-            </p>
-          </div>
-        ))}
+      {/* Card */}
+      <div className="offer-card relative rounded-2xl bg-white px-4 py-5">
+        {/* Intro text */}
+        <p className="text-[13px] text-gray-700 mb-4 leading-relaxed">
+          Everything you need to perform at your best and build a strong career
+          in real estate
+        </p>
+
+        {/* List */}
+        <div className="space-y-3">
+          {offers.map((text, i) => (
+            <div key={i} className="flex items-start gap-3">
+              {/* Icon */}
+              <div className="h-5 w-5 rounded-full bg-[#FF1645] flex items-center justify-center shrink-0">
+                <Image src={LikeIcon} alt="Like" width={12} height={12} />
+              </div>
+
+              {/* Text */}
+              <p className="text-[13px] text-[#6B7280] leading-[18px] relative top-0.5">
+                {text}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
