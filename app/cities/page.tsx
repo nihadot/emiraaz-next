@@ -1,5 +1,6 @@
 import { baseUrl } from '@/api';
 import City from '@/components/City/City'
+import CityResponsive from '@/components/City/CityResponsive';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import React from 'react'
@@ -124,7 +125,7 @@ async function page() {
         );
       })}
 
-<City />
+<CityResponsive />
         </>
     )
 }

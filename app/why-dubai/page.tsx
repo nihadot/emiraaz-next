@@ -3,6 +3,8 @@ import WhyDubai from '@/components/WhyDubai/WhyDubai'
 import { Metadata } from 'next';
 import { baseUrl } from '@/api';
 import Script from 'next/script';
+import WhyDubaiMobile from '@/components/WhyDubai/Mobile/WhyDubaiMobile';
+import ResponsiveSwitch from '@/components/Common/ResponsiveSwitch';
 
 
 // Enable ISR with 60-second revalidation
@@ -105,32 +107,31 @@ async function page() {
         /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
     )
     return (
-        <>
+  <>
+    {scripts?.map((script: string, index: number) => {
+      const innerJson = script
+        .replace(/<script[^>]*>/g, "")
+        .replace(/<\/script>/g, "")
+        .trim();
 
+      return (
+        <Script
+          key={index}
+          id={`json-ld-schema-${index}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: innerJson }}
+          strategy="afterInteractive"
+        />
+      );
+    })}
 
+    <ResponsiveSwitch
+      mobile={<WhyDubaiMobile />}
+      desktop={<WhyDubai />}
+    />
+  </>
+);
 
-            {scripts?.map((script: string, index: number) => {
-                // Remove outer <script> tags to use innerHTML
-                const innerJson = script
-                    .replace(/<script[^>]*>/g, "")
-                    .replace(/<\/script>/g, "")
-                    .trim();
-
-                return (
-                    <Script
-                        key={index}
-                        id={`json-ld-schema-${index}`}
-                        type="application/ld+json"
-                        dangerouslySetInnerHTML={{ __html: innerJson }}
-                        strategy="afterInteractive" // "beforeInteractive" if needed
-                    />
-                );
-            })}
-
-
-            <WhyDubai />
-        </>
-    )
 }
 
 export default page

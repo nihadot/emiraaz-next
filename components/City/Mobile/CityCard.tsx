@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { citiesBackIcon } from '@/app/assets';
-
 import citiesOffplan from '@/app/assets/citiesoffplan.svg';
 import citiesResale from '@/app/assets/citiesresale.svg';
 import citiesSecondary from '@/app/assets/citiessecondary.svg';
@@ -47,14 +46,14 @@ export default function CityCard({
             src={item.image?.webp?.url}
             alt={item.name}
             fill
-            className="object-cover"
+            className="object-cover rounded-[15px]"
           />
         </div>
 
         {/* Content */}
-        <div className="p-4">
+        <div className="p-3">
           {/* Emirate pill */}
-          <span className="inline-block mb-2 px-3 py-[4px] rounded-md border border-[#E5E7EB] text-[12px] text-[#6B7280]">
+          <span className="inline-block mb-2 px-3 py-1 rounded-md border border-[#dbdde1] text-[12px] text-[#6B7280]">
             {item.emirate?.name || 'Dubai'}
           </span>
 
@@ -122,9 +121,9 @@ export default function CityCard({
   /* ========================= */
    return (
     <Link href={`/cities/${item.slug}`}>
-      <div className="relative flex gap-4 rounded-[20px] border border-[#ECECEC] bg-white p-2 mb-4">
+      <div className="relative flex gap-4 rounded-[20px] border border-[#e0dbdb] bg-white p-2 mb-2">
         {/* Image */}
-       <div className="relative w-[100px] aspect-[3/4] rounded-[16px] overflow-hidden shrink-0">
+    <div className="relative w-[120px] aspect-square rounded-xl overflow-hidden shrink-0">
   <Image
     src={item.image?.webp?.url}
     alt={item.name}
@@ -132,6 +131,7 @@ export default function CityCard({
     className="object-cover"
   />
 </div>
+
 
 
         {/* Content */}
@@ -142,29 +142,29 @@ export default function CityCard({
           </span>
 
           {/* City name */}
-          <p className="text-[16px] mb-2 font-medium leading-tight">
+          <p className="text-[14px] mb-1 font-semibold leading-tight">
             {item.name}
           </p>
 
           {/* Meta */}
-         <div className="space-y-2 text-[14px] text-[#6B7280]">
+         <div className="space-y-2 text-[12px] text-[#6B7280]">
   <div className="flex items-center gap-2">
-    <Image src={citiesOffplan} alt="Offplan" width={16} height={16} />
+    <Image src={citiesOffplan} alt="Offplan" width={14} height={14} />
     <span>Offplan projects – {offplan}</span>
   </div>
 
   <div className="flex items-center gap-2">
-    <Image src={citiesResale} alt="Resale" width={16} height={16} />
+    <Image src={citiesResale} alt="Resale" width={14} height={14} />
     <span>Offplan Resale – {resale}</span>
   </div>
 
- <div className="flex items-center gap-2 text-[14px] text-[#6B7280]">
+ <div className="flex items-center gap-3 text-[12px] text-[#6B7280]">
   <div className="flex items-center gap-2">
     <Image
       src={citiesSecondary}
       alt="Secondary"
-      width={16}
-      height={16}
+      width={14}
+      height={14}
       className="shrink-0"
     />
     <span>Secondary – {secondary}</span>
@@ -174,8 +174,8 @@ export default function CityCard({
     <Image
       src={citiesLand}
       alt="Land"
-      width={16}
-      height={16}
+      width={14}
+      height={14}
       className="shrink-0"
     />
     <span>Land – {land}</span>

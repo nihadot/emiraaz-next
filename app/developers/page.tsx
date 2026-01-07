@@ -1,8 +1,8 @@
 import React from 'react'
-import Developers from '@/components/Developers/Developers'
 import { Metadata } from 'next';
 import { baseUrl } from '@/api';
 import Script from 'next/script';
+import DevelopersResponsive from '@/components/Developers/DevelopersResponsive';
 
 // Enable ISR with 60-second revalidation
 export const revalidate = 60;
@@ -125,7 +125,7 @@ export default async function DevelopersComponent() {
                     />
                 );
             })}
-            <Developers />
+<DevelopersResponsive />
         </>
     )
 }

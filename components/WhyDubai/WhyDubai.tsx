@@ -6,21 +6,20 @@ import SpaceWrapper from '../atom/SpaceWrapper/SpaceWrapper'
 import InfoCardRight, { ColorsTypes } from '@/app/why-dubai/InfoCardRight'
 import InfoCardLeft from '@/app/why-dubai/InfoCardLeft'
 import { Footer } from '../Footer'
-
-import high_roi_icon from "@/app/assets/high_roi_icon.png";
-import no_tax from "@/app/assets/no-tax.png";
-import ownership_icon from "@/app/assets/ownership_icon.png";
-import economy_icon from "@/app/assets/economy_icon.png";
-import tourism_icon from "@/app/assets/tourism_icon.png";
-import world_class_icon from "@/app/assets/world_class_icon.png";
-import security_icon from "@/app/assets/security_icon.png";
-import residency_icon from "@/app/assets/residency_icon.png";
-import property_options_icon from "@/app/assets/property_options_icon.png";
-import flexible_icon from "@/app/assets/flexible_icon.png";
-import mega_projects_icon from "@/app/assets/mega_projects_icon.png";
-import explore_icon from "@/app/assets/explore_icon.png";
-
-
+import { 
+  high_roi_icon,
+  no_tax,
+  ownership_icon,
+  economy_icon,
+  tourism_icon,
+  world_class_icon,
+  security_icon,
+  residency_icon,
+  property_options_icon,
+  flexible_icon,
+  mega_projects_icon,
+  explore_icon
+} from '@/app/assets';
 function WhyDubai() {
     return (
         <main>
