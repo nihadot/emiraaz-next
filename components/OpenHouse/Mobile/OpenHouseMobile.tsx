@@ -26,7 +26,8 @@ import FilterBottomSheet from '../Mobile/FilterBottomSheets';
 
 import BookingFormModal from '@/components/OpenHouse/Mobile/BookingFormModal';
 import BookingSuccessModal from '@/components/OpenHouse/Mobile/BookingSuccessModal';
-
+import openHouseLoc from '@/app/assets/openhouseloc.svg';
+import openHouseTime from '@/app/assets/openhousetime.svg';
 function MobileOpenHouse() {
     const { isAuthentication } = useSelector((state: RootState) => state.user);
 
@@ -101,7 +102,8 @@ const allHouses = dataSource;
     };
 
     return (
-        <main>
+        <main className='font-poppins'>
+
             <Header logoSection={
                 <div className='h-full w-full flex justify-center items-center'>
                     <MobileHeaderTitle content='Open House' />
@@ -189,14 +191,14 @@ const allHouses = dataSource;
       {/* Upcoming Section */}
 {upcomingHouses.length > 0 && (
   <div className="mb-2">
-    <h2 className="font-semibold text-[18px] text-black mb-4 mt-2">
+    <h2 className="font-semibold text-[18px] text-black mb-2 mt-2">
       Upcoming
     </h2>
 
     <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-hide">
       {upcomingHouses.map((item: any, index: number) => (
         <div key={index} className="flex-shrink-0 w-[340px]">
-          <div className="bg-white rounded-[24px] overflow-hidden shadow-sm border border-gray-100">
+          <div className="bg-white rounded-[24px] overflow-hidden  border border-[#DEDEDE]">
 
             {/* IMAGE */}
             <div className="relative w-full h-[220px]">
@@ -204,39 +206,45 @@ const allHouses = dataSource;
                 src={item?.image?.webp?.url || '/placeholder.jpg'}
                 alt={item.title}
                 fill
-                className="object-cover"
+                className="object-cover rounded-[15px]"
                 priority
               />
             </div>
 
             {/* CONTENT */}
-            <div className="p-5">
+            <div className="p-3">
 
               {/* META */}
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-[14px] text-gray-500 font-normal">
-                  {item.developer || 'Damac'}
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] text-gray-500 font-normal">
+                  {item.developer || 'Damaa'}
                 </span>
 
-                <div className="flex items-center gap-1.5 text-gray-500 text-[14px]">
+                <div className="flex items-center gap-1.5 text-gray-500 text-[10px]">
                   <span className="font-normal">{item.spots_left || '31'} Spots Left</span>
                   <Image
                     src={openhouseTicket}
                     alt="Slots"
-                    width={20}
-                    height={20}
+                    width={15}
+                    height={15}
                   />
                 </div>
               </div>
 
               {/* TITLE */}
-              <h3 className="text-[22px] font-semibold text-gray-900 leading-tight mb-4 line-clamp-2">
+              <h3 className="text-[18px] font-semibold text-gray-900 leading-tight mb-2 line-clamp-2">
                 {item.title}
               </h3>
 
               {/* LOCATION */}
-              <div className="flex items-center gap-2 mb-2.5">
-                <LuMapPin size={18} className="text-gray-500" strokeWidth={2} />
+              <div className="flex items-center gap-2 mb-2">
+<Image
+  src={openHouseLoc}
+  alt="Location"
+  width={18}
+  height={18}
+  className="opacity-70"
+/>
                 <p className="text-[15px] text-gray-600">
                   {item.location}
                 </p>
@@ -244,7 +252,13 @@ const allHouses = dataSource;
 
               {/* DATE */}
               <div className="flex items-center gap-2 mb-5">
-                <MdAccessTime size={18} className="text-gray-500" />
+<Image
+  src={openHouseTime}
+  alt="Time"
+  width={18}
+  height={18}
+  className="opacity-70"
+/>
                 <p className="text-[15px] text-gray-600">
                   {formatDate(item.date)} @ {item.time}
                 </p>
@@ -256,15 +270,16 @@ const allHouses = dataSource;
                 className="
                   px-6
                   py-2.5
-                  rounded-[12px]
-                  border border-gray-300
+                  rounded-[8px]
+                  border 
                   text-[15px]
                   font-medium
                   text-gray-900
-                  bg-white
                   hover:bg-gray-50
                   transition-colors
                   duration-200
+                  border-[#DEDEDE]
+    bg-[#F5F5F5]
                 "
               >
                 Book Your Slot
@@ -309,12 +324,12 @@ const allHouses = dataSource;
       {/* Top section */}
       <div>
         {/* Developer */}
-        <span className="text-xs text-gray-500 font-normal block mb-1">
-          {item.developer || 'Damoa'}
+        <span className="text-[10px] text-gray-500 font-normal block mt-1 mb-1">
+          {item.developer || 'Damaa'}
         </span>
 
         {/* Title */}
-        <h3 className="font-bold text-base text-gray-900 leading-tight mb-3">
+        <h3 className="font-bold text-base text-gray-900 leading-tight mb-2">
           {item.title}
         </h3>
 
@@ -328,7 +343,7 @@ const allHouses = dataSource;
         </div>
 
         {/* Date & Time */}
-        <div className="flex items-center gap-2 text-gray-700 text-xs mb-2">
+        <div className="flex items-center gap-2 text-gray-700 text-xs mb-3">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0">
             <circle cx="12" cy="12" r="10"/>
             <polyline points="12 6 12 12 16 14"/>
@@ -337,12 +352,12 @@ const allHouses = dataSource;
         </div>
 
         {/* Spots Left */}
-        <div className="flex items-center gap-2 text-gray-700 text-xs">
+        <div className="flex items-center gap-2 text-gray-700 text-[10px] mt-2">
           <Image
                     src={openhouseTicket}
                     alt="Slots"
-                    width={20}
-                    height={20}
+                    width={15}
+                    height={15}
                   />
           <span>{item.spots_left || '31'} Spots Left</span>
         </div>
@@ -352,13 +367,14 @@ const allHouses = dataSource;
       <button
   onClick={() => handleClickSlot(item)}
   className="
-    mt-3
-    h-[30px]
-    w-[180px]
-    px-4
-    rounded-[12px]
-    border border-[#D1D5DB]
-    bg-white
+    mt-2
+    h-[35px]
+    w-[140px]
+    px-2
+    mb-2
+    rounded-[8px]
+    border border-[#DEDEDE]
+    bg-[#F5F5F5]
     text-[14px]
     font-medium
     text-[#111827]

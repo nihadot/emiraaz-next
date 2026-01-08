@@ -32,7 +32,7 @@ export default function FilterBottomSheet({
       {/* Bottom Sheet */}
       <div className="relative w-full bg-white rounded-t-[20px] animate-sheet-up">
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-4 border-b border-[#E5E7EB]">
+        <div className="flex items-center justify-between px-4 py-4 border-b border-[#DEDEDE]">
           <h3 className="text-[16px] font-semibold text-[#111827]">
             {title}
           </h3>
@@ -58,12 +58,12 @@ export default function FilterBottomSheet({
                     onClose();
                   }}
                   className={`
-                    px-4 py-2 rounded-full text-[14px] font-medium
+                    px-4 py-2 rounded-[10px] text-[14px] font-medium
                     border transition
                     ${
                       isSelected
-                        ? 'bg-[#F3F4F6] border-[#D1D5DB] text-[#111827]'
-                        : 'bg-white border-[#E5E7EB] text-[#374151]'
+                        ? 'bg-[#F5F5F5] border-[#DEDEDE] text-[#111827]'
+                        : 'bg-white border-[#DEDEDE] text-[#374151]'
                     }
                   `}
                 >
