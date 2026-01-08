@@ -335,19 +335,25 @@ const allHouses = dataSource;
 
         {/* Location */}
         <div className="flex items-center gap-2 text-gray-700 text-xs mb-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0">
-            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
-            <circle cx="12" cy="10" r="3"/>
-          </svg>
+         <Image
+  src={openHouseLoc}
+  alt="Location"
+  width={16}
+  height={16}
+  className="opacity-70"
+/>
           <span>{item.location}</span>
         </div>
 
         {/* Date & Time */}
         <div className="flex items-center gap-2 text-gray-700 text-xs mb-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0">
-            <circle cx="12" cy="12" r="10"/>
-            <polyline points="12 6 12 12 16 14"/>
-          </svg>
+          <Image
+  src={openHouseTime}
+  alt="Time"
+  width={16}
+  height={16}
+  className="opacity-70"
+/>
           <span>{formatDate(item.date)} @ {item.time}</span>
         </div>
 
