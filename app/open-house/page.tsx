@@ -1,6 +1,6 @@
 import { baseUrl } from '@/api';
 import OpenHouse from '@/components/OpenHouse/OpenHouse';
-import MobileOpenHouse from '@/components/OpenHouse/Mobile/OpenHouseMobile';
+import MobileOpenHouse from '@/components/OpenHouse/Mobile/MobileOpenHouse';
 import ResponsiveSwitch from '@/components/Common/ResponsiveSwitch';
 import { Metadata } from 'next';
 import React from 'react';
